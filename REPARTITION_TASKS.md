@@ -8,6 +8,12 @@
 ✅ **Autonomie** : Chaque dev livre une feature complète du début à la fin
 ✅ **Reviews croisées** : 2 autres devs reviewent chaque feature
 
+### Architecture Technique
+- **Backend** : Express.js + MySQL 8.0+ (SQL direct, **pas d'ORM**)
+- **Services Layer** : Requêtes SQL avec prepared statements et transactions
+- **Authentification** : JWT pour **admin** et **selector** uniquement
+- **Soumission publique** : Les créateurs de films soumettent **sans compte**
+
 ### Avantages
 - 🎯 **Responsabilité claire** : "C'est ma feature, je la gère"
 - 🔄 **Moins de dépendances** : Pas besoin d'attendre un autre dev
@@ -53,14 +59,19 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 **Owner : Dev 1 (Toi)**
 
 **Backend (7 pts) :**
-- `models/User.js` : CRUD user, findByEmail, comparePassword, updateLastLogin
-- `models/Role.js` : CRUD roles (admin, selector, creator)
+- `services/userService.js` : Requêtes SQL (findByEmail, createUser, updateLastLogin, comparePassword)
+- `services/roleService.js` : Requêtes SQL (getRoles - admin, selector uniquement)
 - `controllers/authController.js` : register, login, logout, me, refreshToken
 - `routes/auth.routes.js` : POST /register, POST /login, GET /me, POST /refresh-token
 - `middleware/auth.js` : verifyToken, requireRole(['admin', 'selector'])
 - `config/jwt.js` : generateToken, verifyToken, generateRefreshToken
 - `utils/schemas.js` : registerSchema, loginSchema (Zod)
 - `middleware/validate.js` : Middleware validation Zod
+
+**Note importante** : 
+- **Rôles système uniquement** : `admin` et `selector` (pas de role "creator")
+- Les créateurs de films ne sont **pas des utilisateurs** du système
+- Soumission de films = formulaire public **sans authentification**
 
 **Frontend (6 pts) :**
 - `pages/Auth.jsx` : Page auth avec tabs (Login/Register)
@@ -86,12 +97,17 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 
 **Backend (7 pts) :**
 - `middleware/upload.js` : Config Multer (cover 5MB, gallery 3x5MB, subtitles .srt)
-- `models/Submission.js` : create, addCollaborators, addTags, addGallery, addSocials, updateStatus
-- `models/Collaborator.js` : CRUD collaborateurs (firstname, lastname, email, gender, role)
-- `models/Gallery.js` : addImages, deleteImage
-- `controllers/submissionController.js` : submit (upload + création BDD complète)
-- `routes/submission.routes.js` : POST /submissions, PATCH /submissions/:id, GET /submissions/my-submissions
+- `services/submissionService.js` : Requêtes SQL (INSERT submission, INSERT collaborators, INSERT gallery, INSERT socials)
+- `services/collaboratorService.js` : Requêtes SQL (INSERT/UPDATE/DELETE collaborateurs)
+- `services/galleryService.js` : Requêtes SQL (INSERT images, DELETE image)
+- `controllers/submissionController.js` : submit (upload + transaction SQL complète)
+- `routes/submission.routes.js` : POST /submissions (public, pas d'auth), GET /admin/submissions (admin)
 - `utils/schemas.js` : submissionSchema, collaboratorSchema (Zod)
+
+**Note importante** :
+- **Route POST /submissions est publique** (pas d'authentification requise)
+- Les créateurs remplissent un formulaire sans créer de compte
+- Utilisation de **transactions SQL** pour garantir la cohérence (submission + collaborators + gallery + socials)
 
 **Frontend (5 pts) :**
 - `pages/Submit.jsx` : Page soumission film (multi-steps form)
@@ -148,9 +164,8 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 **Owner : Dev 4**
 
 **Backend (3 pts) :**
-- `models/Tag.js` : create, list, findOrCreate, getPopular
-- `models/SubmissionTag.js` : addToSubmission, removeFromSubmission
-- `controllers/tagController.js` : list, create (admin), getPopular
+- `services/tagService.js` : Requêtes SQL (SELECT tags, INSERT tag, SELECT popular, INSERT submissions_tags)
+- `controllers/tagController.js` : list, create (admin), getPopular, addToSubmission
 - `routes/tag.routes.js` : GET /tags, POST /tags (admin), GET /tags/popular
 - `utils/schemas.js` : tagSchema (Zod)
 
@@ -172,32 +187,33 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 
 ---
 
-### 👤 Feature 5 : Profil Utilisateur & Mes Soumissions (8 pts)
+### 🎨 Feature 5 : Fondations Frontend + Design System (8 pts)
 **Owner : Dev 5**
 
-**Backend (3 pts) :**
-- `controllers/userController.js` : getProfile, updateProfile
-- `controllers/submissionController.js` : Extension getMySubmissions, deleteSubmission (draft only)
-- `routes/user.routes.js` : GET /users/me, PATCH /users/me
-- `utils/schemas.js` : updateProfileSchema (firstname, lastname, email)
-
-**Frontend (5 pts) :**
-- `pages/Profile.jsx` : Page profil éditable + liste mes soumissions
-- `components/ProfileForm.jsx` : Formulaire édition (firstname, lastname, email)
-- `components/MySubmissions.jsx` : Liste mes soumissions (status + actions)
-- `components/SubmissionStatusBadge.jsx` : Badge statut soumission
-- `components/DeleteButton.jsx` : Bouton suppression (draft only) avec confirmation
-- `hooks/useProfile.js` : Hook gestion profil
+**Frontend (8 pts) :**
+- `components/ui/Button.jsx` : Composant bouton réutilisable (variants: primary, secondary, danger)
+- `components/ui/Input.jsx` : Composant input avec validation visuelle
+- `components/ui/Select.jsx` : Composant select stylisé
+- `components/ui/Modal.jsx` : Composant modal réutilisable
+- `components/ui/Card.jsx` : Composant carte réutilisable
+- `components/ui/Badge.jsx` : Composant badge (status, tags)
+- `components/ui/Loader.jsx` : Composant loading spinner
+- `components/layout/Navbar.jsx` : Navbar principale (responsive)
+- `components/layout/Footer.jsx` : Footer avec liens
+- `styles/theme.js` : Variables couleurs, typographie, breakpoints
+- `hooks/useToast.js` : Hook notifications toast
+- Configuration TailwindCSS complète
 
 **Tests :**
-- Édition profil (firstname, lastname)
-- Validation email unique
-- Affichage mes soumissions (creator_email = user.email)
-- Suppression soumission draft uniquement
+- Storybook ou page démo des composants UI
+- Tests responsive (mobile, tablet, desktop)
+- Accessibilité (ARIA labels, keyboard navigation)
 
 **Reviews par :** Dev 1, Dev 2
 
 **Durée estimée :** 4 jours
+
+**Note** : Cette feature pose les fondations pour que les autres devs puissent utiliser des composants cohérents et réutilisables.
 
 ---
 
@@ -208,7 +224,7 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 **Owner : Dev 1 (Toi)**
 
 **Backend (6 pts) :**
-- `models/SubmissionModeration.js` : create, updateStatus, getBySubmissionId, listByUser
+- `services/moderationService.js` : Requêtes SQL (INSERT submission_moderation, UPDATE status, SELECT avec JOIN users)
 - `controllers/moderationController.js` : listSubmissions, updateStatus, assignToSelector, getHistory
 - `routes/moderation.routes.js` : GET /admin/submissions, PATCH /admin/submissions/:id/status, POST /admin/submissions/:id/assign
 - `middleware/auth.js` : Extension requireRole(['admin'])
@@ -239,7 +255,7 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 **Owner : Dev 2**
 
 **Backend (4 pts) :**
-- Extension `models/SelectorMemo.js` : getPlaylist, getRecentDislikes, deleteDislike
+- Extension `services/selectorService.js` : Requêtes SQL (SELECT playlist WHERE selection_list=1, SELECT recent dislikes, DELETE memo)
 - `controllers/selectorController.js` : getMyPlaylist, undoDislike
 - Logique annulation dislike (vidéo réapparaît dans feed)
 
@@ -268,7 +284,7 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 **Owner : Dev 3**
 
 **Backend (5 pts) :**
-- `models/SelectorMemo.js` : rate, getByUserAndSubmission, getFeed, getPlaylist, getRecentDislikes
+- `services/selectorService.js` : Requêtes SQL (INSERT/UPDATE selector_memo, SELECT feed avec filtres, SELECT playlist)
 - `controllers/selectorController.js` : getFeed, rateSubmission, togglePlaylist, getMyPlaylist, undoDislike
 - `routes/selector.routes.js` : GET /selector/feed, POST /selector/rate/:id, PATCH /selector/playlist/:id, GET /selector/playlist, GET /selector/recent-dislikes/:id
 - `utils/schemas.js` : rateSubmissionSchema (rating 1-10, comment, selection_list)
@@ -307,9 +323,8 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 **Owner : Dev 4**
 
 **Backend (4 pts) :**
-- `models/Sponsor.js` : create, list, update, delete
-- `models/SocialNetwork.js` : create, list, update, delete
-- `models/Social.js` : addToSubmission, listBySubmission, delete
+- `services/sponsorService.js` : Requêtes SQL (INSERT/UPDATE/DELETE sponsors, SELECT actifs)
+- `services/socialService.js` : Requêtes SQL (SELECT networks, INSERT socials, SELECT par submission)
 - `controllers/sponsorController.js` : CRUD sponsors, listActive
 - `controllers/socialController.js` : listNetworks, addToSubmission
 - `routes/sponsor.routes.js` : CRUD complet (admin) + GET /sponsors (public)
@@ -339,8 +354,7 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 **Owner : Dev 5**
 
 **Backend (4 pts) :**
-- `models/Newsletter.js` : create, list, delete
-- `models/NewsletterListing.js` : subscribe, unsubscribe, list
+- `services/newsletterService.js` : Requêtes SQL (INSERT/DELETE newsletter, INSERT/DELETE newsletter_listings)
 - `controllers/newsletterController.js` : subscribe, unsubscribe, create (admin), send (admin), list (admin)
 - `routes/newsletter.routes.js` : POST /newsletter/subscribe, POST /newsletter/unsubscribe, POST /admin/newsletter (create + send), GET /admin/newsletter
 - `utils/email.js` : sendNewsletter (bulk email avec service comme SendGrid)
@@ -374,11 +388,12 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 **Owner : Dev 1 (Toi)**
 
 **Backend (5 pts) :**
+- `services/catalogueService.js` : Requêtes SQL complexes avec JOINs (submissions + tags + awards + collaborators)
 - `controllers/catalogueController.js` : listSubmissions, search, getFilters
 - `routes/catalogue.routes.js` : GET /catalogue (public), GET /catalogue/filters
-- Filtres SQL (classification, country, language, tags, awards)
-- Recherche full-text (english_title, original_title, synopsis)
-- Pagination (20/page) + tri (date, rating, titre)
+- Requêtes SQL avec filtres dynamiques (classification, country, language, tags, awards)
+- Recherche full-text SQL (LIKE sur english_title, original_title, synopsis)
+- Pagination SQL (LIMIT/OFFSET) + tri (ORDER BY date, rating, titre)
 
 **Frontend (7 pts) :**
 - `pages/Catalogue.jsx` : Grille responsive films (3 colonnes desktop, 1 mobile)
@@ -407,8 +422,7 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 **Owner : Dev 2**
 
 **Backend (5 pts) :**
-- `models/Award.js` : create, list, update, delete, addToSubmission, removeFromSubmission
-- `models/SubmissionAward.js` : addToSubmission, listBySubmission, listByAward
+- `services/awardService.js` : Requêtes SQL (INSERT/UPDATE/DELETE awards, INSERT/DELETE submissions_awards, SELECT avec JOINs)
 - `controllers/awardController.js` : CRUD awards, assignToSubmission, removeFromSubmission, getWinners
 - `routes/award.routes.js` : POST /admin/awards, PATCH /admin/awards/:id, DELETE /admin/awards/:id, POST /admin/submissions/:id/awards/:awardId, GET /awards/winners
 - `utils/schemas.js` : awardSchema (title, rank, cover, description)
@@ -439,9 +453,9 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 **Owner : Dev 3**
 
 **Backend (3 pts) :**
+- `services/statsService.js` : Requêtes SQL agrégées (COUNT, AVG, GROUP BY, avec JOINs multiples)
 - `controllers/statsController.js` : getGlobalStats, getSubmissionStats, getSelectorStats
 - `routes/stats.routes.js` : GET /admin/stats (admin)
-- Requêtes SQL agrégées (COUNT, AVG, GROUP BY)
 - Stats : total submissions, par pays, par classification, moyenne ratings, top selectors
 
 **Frontend (3 pts) :**
@@ -467,9 +481,10 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 **Owner : Dev 4**
 
 **Backend (3 pts) :**
-- `controllers/catalogueController.js` : getSubmissionById (avec JOINs)
-- Requête optimisée : 1 query avec JOIN collaborators, tags, gallery, awards, socials
-- Agrégation ratings selector_memo (moyenne + count)
+- `services/catalogueService.js` : Extension avec requête SQL complexe (JOINs multiples)
+- `controllers/catalogueController.js` : getSubmissionById
+- Requête SQL optimisée avec JOINs (collaborators, tags, gallery, awards, socials)
+- Agrégation ratings avec AVG et COUNT sur selector_memo
 
 **Frontend (8 pts) :**
 - `pages/FilmDetail.jsx` : Page détail complète (layout hero + infos)
@@ -498,10 +513,7 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 **Owner : Dev 5**
 
 **Backend (6 pts) :**
-- `models/SectionCMS.js` : create, list, update, delete, getActiveSections
-- `models/ThemeCMS.js` : update, getCurrent
-- `models/GeneralCMS.js` : update, getCurrent, getCurrentPhase
-- `models/CardCMS.js` : create, list, update, delete
+- `services/cmsService.js` : Requêtes SQL (INSERT/UPDATE/DELETE sections_cms, theme_cms, general_cms, cards_cms)
 - `controllers/cmsController.js` : CRUD sections, updateTheme, updateGeneral, CRUD cards
 - `routes/cms.routes.js` : CRUD complet (admin) + GET /cms/public
 - `utils/phaseDetector.js` : getCurrentPhase() (before/during/after selon submissions_end_date)
@@ -548,10 +560,11 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 **Owner : Dev 1 (Toi)**
 
 **Backend (5 pts) :**
-- `models/Event.js` : create, list, update, delete, getUpcoming, getPast, checkStock
+- `services/eventService.js` : Requêtes SQL (INSERT/UPDATE/DELETE events, SELECT avec calcul stock disponible)
 - `controllers/eventController.js` : CRUD événements, getUpcoming, getPast, getById
 - `routes/event.routes.js` : CRUD complet (admin) + GET /events (public), GET /events/upcoming
 - `utils/schemas.js` : eventSchema (title, cover, description, start_date, end_date, location, places)
+- Calcul stock SQL : `places - (SELECT COUNT(*) FROM reservations WHERE confirmation IS NOT NULL)`
 
 **Frontend (5 pts) :**
 - `pages/Events.jsx` : Liste événements (filtres : upcoming, past)
@@ -578,12 +591,13 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 **Owner : Dev 2**
 
 **Backend (8 pts) :**
-- `models/Reservation.js` : create, listByUser, listByEvent, verifyQR, confirm, cancel
+- `services/reservationService.js` : Requêtes SQL (INSERT/UPDATE reservation, SELECT avec JOIN events, vérification stock avec transaction)
 - `controllers/reservationController.js` : createReservation, getMyReservations, listByEvent (admin), verifyQR, confirmReservation, cancelReservation
 - `routes/reservation.routes.js` : POST /reservations, GET /reservations/my-reservations, GET /admin/reservations/event/:id, GET /reservations/verify/:qrcode, PATCH /reservations/:id/confirm, PATCH /reservations/:id/cancel
 - `utils/qrcode.js` : generateQRHash (SHA256), generateQRImage (PNG base64 avec qrcode lib)
 - `utils/email.js` : sendConfirmationEmail, sendQRCodeEmail
 - `utils/schemas.js` : reservationSchema (first_name, last_name, email)
+- **Utilisation de transactions SQL** pour éviter l'overbooking (verrou sur event.places)
 
 **Logique :**
 - Vérifier stock disponible avant création
@@ -951,13 +965,21 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 
 ### Backend
 - **Framework** : Express.js
-- **ORM** : mysql2 (pool) ou Sequelize
+- **Base de données** : MySQL 8.0+ avec **mysql2** (pas d'ORM)
+- **Connection Pool** : mysql2/promise avec pool de connexions
+- **Architecture** : Services → Controllers → Routes (pas de Models ORM)
 - **Validation** : Zod
 - **Auth** : jsonwebtoken
 - **Upload** : Multer
 - **Email** : Nodemailer + SendGrid
 - **QR Code** : qrcode
 - **Documentation** : swagger-jsdoc + swagger-ui-express
+
+**Note importante** : 
+- Toutes les interactions BDD se font via **requêtes SQL directes**
+- Layer `services/` contient les fonctions avec requêtes SQL
+- Utilisation de **transactions** pour opérations critiques (submissions, réservations)
+- **Prepared statements** pour prévenir les injections SQL
 
 ### Frontend
 - **Framework** : React + Vite
@@ -993,8 +1015,8 @@ MarsAI-Bordeaux-Pokemons/
 ├── backend/
 │   ├── src/
 │   │   ├── config/
-│   │   │   ├── db_config.js
-│   │   │   ├── db_pool.js
+│   │   │   ├── db_config.js (config MySQL)
+│   │   │   ├── db_pool.js (pool mysql2/promise)
 │   │   │   └── jwt.js
 │   │   ├── controllers/
 │   │   │   ├── authController.js
@@ -1008,21 +1030,25 @@ MarsAI-Bordeaux-Pokemons/
 │   │   │   ├── reservationController.js
 │   │   │   ├── sponsorController.js
 │   │   │   ├── newsletterController.js
-│   │   │   ├── userController.js
 │   │   │   └── statsController.js
-│   │   ├── models/
-│   │   │   ├── User.js
-│   │   │   ├── Role.js
-│   │   │   ├── Submission.js
-│   │   │   ├── SubmissionModeration.js
-│   │   │   ├── SelectorMemo.js
-│   │   │   ├── Tag.js
-│   │   │   ├── Award.js
-│   │   │   ├── Sponsor.js
-│   │   │   ├── Event.js
-│   │   │   ├── Reservation.js
-│   │   │   ├── Newsletter.js
-│   │   │   └── CMS.js
+│   │   ├── services/ (requêtes SQL directes)
+│   │   │   ├── userService.js
+│   │   │   ├── roleService.js
+│   │   │   ├── submissionService.js
+│   │   │   ├── collaboratorService.js
+│   │   │   ├── galleryService.js
+│   │   │   ├── moderationService.js
+│   │   │   ├── selectorService.js
+│   │   │   ├── tagService.js
+│   │   │   ├── catalogueService.js
+│   │   │   ├── awardService.js
+│   │   │   ├── sponsorService.js
+│   │   │   ├── socialService.js
+│   │   │   ├── cmsService.js
+│   │   │   ├── eventService.js
+│   │   │   ├── reservationService.js
+│   │   │   ├── newsletterService.js
+│   │   │   └── statsService.js
 │   │   ├── routes/
 │   │   │   ├── index.js
 │   │   │   ├── auth.routes.js

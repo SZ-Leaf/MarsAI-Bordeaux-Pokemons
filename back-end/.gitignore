@@ -3,6 +3,7 @@ node_modules/
 
 uploads/videos/*
 uploads/covers/*
+uploads/gallery/*
 
 # Fichiers d'environnement
 .env

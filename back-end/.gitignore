@@ -1,0 +1,12 @@
+# Dépendances
+node_modules/
+
+uploads/videos/*
+uploads/covers/*
+
+# Fichiers d'environnement
+.env
+
+# Logs
+logs/
+*.log

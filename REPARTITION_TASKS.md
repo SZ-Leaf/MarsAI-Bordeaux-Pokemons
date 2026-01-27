@@ -52,7 +52,7 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 
 ---
 
-## 📦 SPRINT 1 - Fondations (Auth + Soumissions + Profil) (46 pts)
+## 📦 SPRINT 1 - Fondations (Auth + Soumissions + UI) (46 pts)
 **Tous les devs travaillent en parallèle**
 
 ### 🔐 Feature 1 : Authentification & Rôles (13 pts)
@@ -112,17 +112,23 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 **Frontend (5 pts) :**
 - `pages/Submit.jsx` : Page soumission film (multi-steps form)
 - `components/SubmissionForm.jsx` : Formulaire principal (infos film)
-- `components/CollaboratorsForm.jsx` : Formulaire ajout collaborateurs (dynamique)
+- `components/CollaboratorsForm.jsx` : Formulaire ajout collaborateurs 
 - `components/GalleryUpload.jsx` : Upload 3 images gallery + preview
 - `components/SocialLinksForm.jsx` : Liens réseaux sociaux (dynamic fields)
-- `components/FileUploader.jsx` : Drag & drop cover + subtitles
+- `components/FileUploader.jsx` : Cover + subtitles
 - `components/StepIndicator.jsx` : Indicateur progression (Step 1/4)
 - `hooks/useSubmission.js` : Hook gestion soumission complète
 
+**Note importante** :
+Le formulaire d'upload de vidéo doit se faire en 3 parties distinctes :
+- `Première partie : règlement + validation des CGU + 18 ans`
+- `Deuxième partie : infos de la vidéo + upload`
+- `Troisième partie : infos du réalisateur`
+
 **Tests :**
-- Upload cover JPG/PNG (max 5MB)
-- Upload 3 images gallery
-- Ajout 3+ collaborateurs dynamiques
+- Upload cover JPEG/JPG/PNG (max 5MB)
+- Upload 3 images gallery (max) 
+- Ajout collaborateurs 
 - Vérification stockage : `/uploads/submissions/{submission_id}/`
 - Erreur : format invalide, taille dépassée
 
@@ -705,7 +711,7 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 | **Dev 2** | F2 (Soumissions), F7 (Playlist), F12 (Awards), F17 (QR Codes) | 47 pts | ~24 jours |
 | **Dev 3** | F3 (YouTube), F8 (Jury), F13 (Stats), F18 (Tests E2E) | 45 pts | ~22 jours |
 | **Dev 4** | F4 (Tags), F9 (Sponsors), F14 (Détail Film), F19 (Swagger) | 32 pts | ~17 jours |
-| **Dev 5** | F5 (Profil), F10 (Newsletter), F15 (CMS), F20 (Deploy) | 32 pts | ~17 jours |
+| **Dev 5** | F5 (Design System), F10 (Newsletter), F15 (CMS), F20 (Deploy) | 32 pts | ~17 jours |
 
 **Total : 203 points**
 **Durée : 40 jours ouvrés (8 semaines)**
@@ -722,7 +728,7 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 | F2 - Soumissions | Dev 2 | Dev 1 | Dev 4 | 2.5h |
 | F3 - YouTube | Dev 3 | Dev 2 | Dev 4 | 1.5h |
 | F4 - Tags | Dev 4 | Dev 1 | Dev 5 | 1h |
-| F5 - Profil | Dev 5 | Dev 1 | Dev 2 | 1h |
+| F5 - Design System | Dev 5 | Dev 1 | Dev 2 | 1h |
 | F6 - Modération | Dev 1 | Dev 2 | Dev 3 | 2h |
 | F7 - Playlist | Dev 2 | Dev 3 | Dev 5 | 1.5h |
 | F8 - Jury | Dev 3 | Dev 2 | Dev 4 | 3h |
@@ -756,7 +762,7 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 | Dev 2 | F2 - Soumissions | 7 pts | 5 pts | 2 reviews | 6j |
 | Dev 3 | F3 - YouTube | 5 pts | 4 pts | 2 reviews | 5j |
 | Dev 4 | F4 - Tags | 3 pts | 3 pts | 2 reviews | 4j |
-| Dev 5 | F5 - Profil | 3 pts | 5 pts | 2 reviews | 4j |
+| Dev 5 | F5 - Design System | 0 pts | 8 pts | 2 reviews | 4j |
 
 **Parallélisation** : Les 5 features sont développées en parallèle. Aucune dépendance critique.
 **Optimisation** : Travail intensif, reviews quotidiennes, pair programming si blocage.
@@ -1084,19 +1090,18 @@ MarsAI-Bordeaux-Pokemons/
 ├── frontend/
 │   ├── src/
 │   │   ├── pages/
-│   │   │   ├── Auth.jsx
-│   │   │   ├── Submit.jsx
-│   │   │   ├── Profile.jsx
+│   │   │   ├── Auth.jsx (admin/selector uniquement)
+│   │   │   ├── Submit.jsx (public - formulaire sans compte)
 │   │   │   ├── AdminModeration.jsx
 │   │   │   ├── SelectorFeed.jsx
 │   │   │   ├── SelectorPlaylist.jsx
-│   │   │   ├── Catalogue.jsx
-│   │   │   ├── FilmDetail.jsx
-│   │   │   ├── Winners.jsx
-│   │   │   ├── Home.jsx
-│   │   │   ├── Events.jsx
-│   │   │   ├── EventDetail.jsx
-│   │   │   ├── Reservations.jsx
+│   │   │   ├── Catalogue.jsx (public)
+│   │   │   ├── FilmDetail.jsx (public)
+│   │   │   ├── Winners.jsx (public)
+│   │   │   ├── Home.jsx (public)
+│   │   │   ├── Events.jsx (public)
+│   │   │   ├── EventDetail.jsx (public)
+│   │   │   ├── Reservations.jsx (public)
 │   │   │   └── AdminCMS.jsx
 │   │   ├── components/
 │   │   ├── hooks/

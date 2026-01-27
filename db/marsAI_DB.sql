@@ -21,6 +21,7 @@ CREATE TABLE `submissions` (
   `creator_lastname` VARCHAR(255) NOT NULL,
   `creator_country` VARCHAR(255) NOT NULL,
   `creator_address` VARCHAR(255) NOT NULL,
+  `terms_of_use` BOOLEAN NOT NULL,
   `status_id` INT UNIQUE NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

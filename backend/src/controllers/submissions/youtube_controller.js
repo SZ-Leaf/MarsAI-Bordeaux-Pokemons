@@ -8,27 +8,43 @@ export const uploadToYoutube = async (req, res) => {
     const videoId = req.params.id;
     const video = await findById(videoId);
 
-    if (!video) return res.status(404).json({ error: 'Vidéo introuvable' });
+    if (!video) return res.status(404).json({ error: 'Vidéo introuvable en base de données' });
 
-    const localPath = path.resolve('uploads', path.basename(video.video_url));
+    // Nettoyage du chemin : assure-toi que video.video_url contient le nom du fichier
+    const fileName = path.basename(video.video_url);
+    const localPath = path.resolve('uploads', fileName);
+
+    console.log('Tentative d\'accès au fichier :', localPath);
 
     if (!fs.existsSync(localPath)) {
-      console.error('Fichier manquant à ce path:', localPath);
-      return res.status(404).json({ error: 'Fichier manquant' });
+      return res.status(404).json({
+        error: 'Fichier physique introuvable sur le serveur',
+        path: localPath
+      });
     }
 
-    const response = await uploadVideo({
-      title: video.original_title,
-      description: video.original_synopsis,
+    const youtubeResponse = await uploadVideo({
+      title: video.original_title || 'Sans titre',
+      description: video.original_synopsis || 'Pas de description',
       filePath: localPath,
     });
 
+    // Google API renvoie l'ID dans data.id
+    if (!youtubeResponse || !youtubeResponse.id) {
+        throw new Error("Réponse YouTube invalide");
+    }
+
     res.json({
       success: true,
-      youtubeVideoId: response.data.id,
+      youtubeVideoId: youtubeResponse.id,
     });
+
   } catch (err) {
-    console.error('Erreur upload YouTube:', err);
-    res.status(500).json({ error: 'Upload YouTube échoué' });
+    console.error(err.response?.data || err.message);
+    res.status(500).json({
+      success: false,
+      error: 'Upload YouTube échoué',
+      message: err.message
+    });
   }
 };

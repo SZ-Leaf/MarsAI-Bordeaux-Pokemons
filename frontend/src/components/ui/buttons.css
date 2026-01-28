@@ -11,14 +11,12 @@
 .btn-primary {
   @apply relative overflow-hidden;
   @apply bg-white text-black;
-  @apply border border-mars-blue/10;
+  @apply border border-blue/10;
   @apply shadow-lg shadow-black/20;
-  @apply transition-all duration-500 ease-in-out;
-  @apply hover:text-mars-blue hover:border-mars-blue/30;
+  @apply hover:text-blue hover:border-blue/30;
   @apply hover:shadow-xl hover:shadow-black/30;
   @apply hover:-translate-y-0.5;
 }
-
 
 .btn-secondary {
   @apply bg-white/10 backdrop-blur-md;
@@ -30,28 +28,26 @@
 }
 
 .btn-modern {
-  @apply bg-linear-to-r from-mars-blue to-mars-cyan;
+  @apply bg-linear-to-r from-blue to-cyan;
   @apply text-white;
-  @apply shadow-lg shadow-mars-blue/20;
-  @apply hover:scale-105 hover:shadow-xl hover:shadow-mars-cyan/30;
-  @apply hover:from-mars-sky hover:to-mars-blue;
+  @apply shadow-lg shadow-blue/20;
+  @apply hover:scale-105 hover:shadow-xl hover:shadow-cyan/30;
+  @apply hover:from-sky hover:to-blue;
 }
 
 .btn-info {
   @apply px-5 py-2.5;
-  @apply bg-mars-cyan text-white;
-  @apply shadow-lg shadow-mars-cyan/20;
-  @apply border border-mars-cyan/30;
-  @apply hover:bg-mars-green hover:border-mars-green hover:shadow-mars-green/30;
+  @apply bg-cyan text-white;
+  @apply shadow-lg shadow-cyan/20;
+  @apply border border-cyan/30;
+  @apply hover:bg-green hover:border-green hover:shadow-green/30;
   @apply hover:-translate-y-0.5;
 }
 
 .btn-danger {
-  @apply bg-linear-to-r from-mars-red to-red-600;
+  @apply bg-linear-to-r from-red to-red-600;
   @apply text-white;
-  @apply shadow-lg shadow-mars-red/20;
+  @apply shadow-lg shadow-red/20;
   @apply hover:scale-105 hover:shadow-xl hover:shadow-red-600/30;
   @apply hover:brightness-110;
 }
-
-

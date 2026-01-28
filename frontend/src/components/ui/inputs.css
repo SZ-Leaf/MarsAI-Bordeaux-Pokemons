@@ -1,0 +1,23 @@
+/* Classe de base commune à tous les inputs */
+.input-dark {
+  @apply bg-white/10 backdrop-blur-md;
+  @apply w-full px-4 py-2;
+  @apply rounded-lg;
+  @apply border-2 border-gray-400;
+  @apply text-sm font-medium;
+  @apply transition-all duration-300 ease-out;
+  @apply focus:outline-none focus:ring-2;
+  @apply placeholder:text-gray-400;
+}
+
+.input-light {
+  @apply bg-white text-black backdrop-blur-md;
+  @apply w-full px-4 py-2;
+  @apply rounded-lg;
+  @apply border-2 border-gray-400;
+  @apply text-sm font-medium;
+  @apply transition-all duration-300 ease-out;
+  @apply focus:outline-none focus:ring-2;
+  @apply placeholder:text-gray-400;
+}
+

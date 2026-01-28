@@ -79,11 +79,27 @@ export const validateFileSize = (file, maxSizeMB) => {
 export const validateURL = (url) => {
   if (!url) return false;
   try {
-    new URL(url);
-    return true;
+    const urlObj = new URL(url);
+    // Vérifier que l'URL commence par https://
+    return urlObj.protocol === 'https:';
   } catch {
     return false;
   }
+};
+
+/**
+ * Valide un numéro de téléphone
+ * Accepte les formats internationaux avec ou sans espaces, tirets, parenthèses
+ * @param {string} phone - Numéro de téléphone à valider
+ * @returns {boolean} - True si valide
+ */
+export const validatePhone = (phone) => {
+  if (!phone) return false;
+  // Supprimer les espaces, tirets, parenthèses et le + pour la validation
+  const cleaned = phone.replace(/[\s\-\(\)\+]/g, '');
+  // Doit contenir uniquement des chiffres et avoir entre 8 et 15 chiffres
+  const phoneRegex = /^\d{8,15}$/;
+  return phoneRegex.test(cleaned);
 };
 
 /**
@@ -203,14 +219,20 @@ export const validateSubmissionData = (data) => {
     errors.creator_email = 'Email invalide';
   }
   
-  if (data.creator_phone && !validateMaxLength(data.creator_phone, 30)) {
-    errors.creator_phone = 'Le téléphone ne peut pas dépasser 30 caractères';
+  if (data.creator_phone) {
+    if (!validateMaxLength(data.creator_phone, 30)) {
+      errors.creator_phone = 'Le téléphone ne peut pas dépasser 30 caractères';
+    } else if (!validatePhone(data.creator_phone)) {
+      errors.creator_phone = 'Numéro de téléphone invalide';
+    }
   }
   
   if (!validateRequired(data.creator_mobile)) {
     errors.creator_mobile = 'Le mobile est requis';
   } else if (!validateMaxLength(data.creator_mobile, 30)) {
     errors.creator_mobile = 'Le mobile ne peut pas dépasser 30 caractères';
+  } else if (!validatePhone(data.creator_mobile)) {
+    errors.creator_mobile = 'Numéro de téléphone invalide';
   }
   
   if (!validateRequired(data.creator_gender)) {
@@ -225,7 +247,9 @@ export const validateSubmissionData = (data) => {
     errors.creator_address = 'L\'adresse est requise';
   }
   
-  if (data.referral_source && !validateMaxLength(data.referral_source, 255)) {
+  if (!validateRequired(data.referral_source)) {
+    errors.referral_source = 'La source de référence est requise';
+  } else if (!validateMaxLength(data.referral_source, 255)) {
     errors.referral_source = 'La source de référence ne peut pas dépasser 255 caractères';
   }
   
@@ -263,7 +287,7 @@ export const validateSubmissionData = (data) => {
       if (!validateRequired(social.url)) {
         errors[`social_${index}_url`] = 'L\'URL est requise';
       } else if (!validateURL(social.url)) {
-        errors[`social_${index}_url`] = 'URL invalide';
+        errors[`social_${index}_url`] = 'URL invalide. L\'URL doit commencer par https://';
       } else if (!validateMaxLength(social.url, 500)) {
         errors[`social_${index}_url`] = 'URL trop longue (max 500 caractères)';
       }

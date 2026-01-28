@@ -1,8 +1,10 @@
+import { validateEmail } from '../utils/validation.js';
+
 /**
  * Formulaire collaborateurs (Partie 4)
  * Design épuré et simple
  */
-const CollaboratorsForm = ({ formData, errors, updateField }) => {
+const CollaboratorsForm = ({ formData, errors, updateField, updateCollaboratorField }) => {
   const addCollaborator = () => {
     const newCollaborators = [
       ...formData.collaborators,
@@ -23,12 +25,18 @@ const CollaboratorsForm = ({ formData, errors, updateField }) => {
   };
   
   const updateCollaborator = (index, field, value) => {
-    const newCollaborators = [...formData.collaborators];
-    newCollaborators[index] = {
-      ...newCollaborators[index],
-      [field]: value
-    };
-    updateField('collaborators', newCollaborators);
+    // Utiliser updateCollaboratorField si disponible pour la validation en temps réel
+    if (updateCollaboratorField) {
+      updateCollaboratorField(index, field, value);
+    } else {
+      // Fallback vers l'ancienne méthode
+      const newCollaborators = [...formData.collaborators];
+      newCollaborators[index] = {
+        ...newCollaborators[index],
+        [field]: value
+      };
+      updateField('collaborators', newCollaborators);
+    }
   };
   
   return (

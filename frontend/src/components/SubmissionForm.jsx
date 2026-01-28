@@ -128,6 +128,9 @@ const SubmissionForm = ({ formData, errors, updateField }) => {
           maxLength={500}
           placeholder="Technologies utilisées (max 500 caractères)"
         />
+        <div className="text-xs text-gray-500 mt-1">
+          {formData.tech_stack.length}/500 caractères
+        </div>
         {errors.tech_stack && (
           <p className="text-red-500 text-sm mt-1">{errors.tech_stack}</p>
         )}
@@ -145,6 +148,9 @@ const SubmissionForm = ({ formData, errors, updateField }) => {
           maxLength={500}
           placeholder="Décrivez votre méthode créative (max 500 caractères)"
         />
+        <div className="text-xs text-gray-500 mt-1">
+          {formData.creative_method.length}/500 caractères
+        </div>
         {errors.creative_method && (
           <p className="text-red-500 text-sm mt-1">{errors.creative_method}</p>
         )}

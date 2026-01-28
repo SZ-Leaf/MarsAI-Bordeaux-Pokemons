@@ -1,4 +1,4 @@
-import getVideoDuration from 'get-video-duration';
+import { getVideoDurationInSeconds } from 'get-video-duration';
 import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
@@ -11,6 +11,11 @@ import db from '../../config/db_pool.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Chemin de base pour les uploads (depuis backend/src/)
+const getUploadsBasePath = () => {
+  return path.join(__dirname, '../../uploads');
+};
 
 /**
  * Crée une nouvelle soumission de film
@@ -104,14 +109,14 @@ export const submit = async (req, res) => {
     // 7. Début transaction
     await connection.beginTransaction();
     
-    // 8. Créer dossier temporaire pour calcul durée
-    const tempDir = path.join(__dirname, '../../uploads/submissions/temp');
+    // 8. Créer dossier temporaire pour calcul durée (déjà créé par Multer, mais on s'assure qu'il existe)
+    const tempDir = path.join(getUploadsBasePath(), 'submissions/temp');
     await fs.mkdir(tempDir, { recursive: true });
     
     // 9. Calculer durée avec get-video-duration
     let durationSeconds = null;
     try {
-      durationSeconds = await getVideoDuration(videoFile.path);
+      durationSeconds = await getVideoDurationInSeconds(videoFile.path);
       // Arrondir à l'entier le plus proche
       durationSeconds = Math.round(durationSeconds);
       console.log(`✅ Durée vidéo calculée : ${durationSeconds} secondes (${Math.floor(durationSeconds / 60)}min ${durationSeconds % 60}sec)`);
@@ -123,13 +128,15 @@ export const submit = async (req, res) => {
     
     // 10. INSERT submission (obtenir submission_id)
     const submissionId = await submissionModel.createSubmission(
+      connection,
       validatedData,
       videoFile.path, // Chemin temporaire (sera mis à jour après déplacement)
+      coverFile.path, // Chemin temporaire du cover (sera mis à jour après déplacement)
       durationSeconds
     );
     
     // 11. Créer dossier final
-    const finalDir = path.join(__dirname, '../../uploads/submissions', submissionId.toString());
+    const finalDir = path.join(getUploadsBasePath(), 'submissions', submissionId.toString());
     await fs.mkdir(finalDir, { recursive: true });
     await fs.mkdir(path.join(finalDir, 'gallery'), { recursive: true });
     
@@ -154,7 +161,7 @@ export const submit = async (req, res) => {
       ? `/uploads/submissions/${submissionId}/subtitles${path.extname(subtitlesFile.originalname)}`
       : null;
     
-    await submissionService.updateFilePaths(submissionId, videoUrl, coverUrl, subtitlesUrl);
+    await submissionModel.updateFilePaths(connection, submissionId, videoUrl, coverUrl, subtitlesUrl);
     
     // 15. INSERT gallery images
     const galleryUrls = [];
@@ -169,17 +176,17 @@ export const submit = async (req, res) => {
         galleryUrls.push(galleryUrl);
       }
       
-      await galleryModel.createGalleryImages(submissionId, galleryUrls);
+      await galleryModel.createGalleryImages(connection, submissionId, galleryUrls);
     }
     
     // 16. INSERT collaborators
     if (validatedData.collaborators && validatedData.collaborators.length > 0) {
-      await collaboratorService.createCollaborators(submissionId, validatedData.collaborators);
+      await collaboratorModel.createCollaborators(connection, submissionId, validatedData.collaborators);
     }
     
     // 17. INSERT socials
     if (validatedData.socials && validatedData.socials.length > 0) {
-      await socialModel.createSocials(submissionId, validatedData.socials);
+      await socialModel.createSocials(connection, submissionId, validatedData.socials);
     }
     
     // 18. Commit transaction
@@ -236,9 +243,17 @@ export const submit = async (req, res) => {
     }
     
     console.error('❌ Erreur soumission:', error);
+    console.error('❌ Stack trace:', error.stack);
+    console.error('❌ Error name:', error.name);
+    console.error('❌ Error message:', error.message);
+    
     res.status(500).json({ 
       error: 'Erreur lors de la création de la soumission',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      details: process.env.NODE_ENV === 'development' ? {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      } : undefined
     });
   } finally {
     connection.release();

@@ -2,42 +2,35 @@ import db from '../../config/db_pool.js';
 
 /**
  * Crée plusieurs collaborateurs pour une soumission
+ * @param {Object} connection - Connexion MySQL (déjà en transaction)
  * @param {number} submissionId - ID de la soumission
  * @param {Array} collaborators - Tableau de collaborateurs
  * @returns {Promise<void>}
  */
-const createCollaborators = async (submissionId, collaborators) => {
+const createCollaborators = async (connection, submissionId, collaborators) => {
   if (!collaborators || collaborators.length === 0) {
     return;
   }
   
-  const connection = await db.pool.getConnection();
+  // Préparer les valeurs pour INSERT multiple
+  const values = collaborators.map(collab => [
+    collab.firstname,
+    collab.lastname,
+    collab.email,
+    collab.gender,
+    collab.role,
+    submissionId
+  ]);
   
-  try {
-    // Préparer les valeurs pour INSERT multiple
-    const values = collaborators.map(collab => [
-      collab.firstname,
-      collab.lastname,
-      collab.email,
-      collab.gender,
-      collab.role,
-      submissionId
-    ]);
-    
-    // INSERT multiple avec une seule requête
-    const placeholders = collaborators.map(() => '(?, ?, ?, ?, ?, ?)').join(', ');
-    const flatValues = values.flat();
-    
-    await connection.execute(
-      `INSERT INTO collaborators (firstname, lastname, email, gender, role, submission_id) 
-       VALUES ${placeholders}`,
-      flatValues
-    );
-  } catch (error) {
-    throw error;
-  } finally {
-    connection.release();
-  }
+  // INSERT multiple avec une seule requête
+  const placeholders = collaborators.map(() => '(?, ?, ?, ?, ?, ?)').join(', ');
+  const flatValues = values.flat();
+  
+  await connection.execute(
+    `INSERT INTO collaborators (firstname, lastname, email, gender, role, submission_id) 
+     VALUES ${placeholders}`,
+    flatValues
+  );
 };
 
 /**

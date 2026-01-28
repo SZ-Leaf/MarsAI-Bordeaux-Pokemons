@@ -23,6 +23,8 @@ const Submit = () => {
     submitError,
     submitSuccess,
     updateField,
+    updateCollaboratorField,
+    updateSocialField,
     nextStep,
     prevStep,
     submit,
@@ -128,17 +130,8 @@ const Submit = () => {
         
         {/* Partie 3 : Infos réalisateur */}
         {currentStep === 3 && (
-          <CreatorForm
-            formData={formData}
-            errors={errors}
-            updateField={updateField}
-          />
-        )}
-        
-        {/* Partie 4 : Contributeurs */}
-        {currentStep === 4 && (
           <div className="space-y-6">
-            <CollaboratorsForm
+            <CreatorForm
               formData={formData}
               errors={errors}
               updateField={updateField}
@@ -149,9 +142,20 @@ const Submit = () => {
                 formData={formData}
                 errors={errors}
                 updateField={updateField}
+                updateSocialField={updateSocialField}
               />
             </div>
           </div>
+        )}
+        
+        {/* Partie 4 : Contributeurs */}
+        {currentStep === 4 && (
+            <CollaboratorsForm
+              formData={formData}
+              errors={errors}
+              updateField={updateField}
+              updateCollaboratorField={updateCollaboratorField}
+            />
         )}
       </div>
       

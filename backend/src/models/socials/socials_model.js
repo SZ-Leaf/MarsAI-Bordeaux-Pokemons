@@ -2,38 +2,31 @@ import db from '../../config/db_pool.js';
 
 /**
  * Crée plusieurs liens sociaux pour une soumission
+ * @param {Object} connection - Connexion MySQL (déjà en transaction)
  * @param {number} submissionId - ID de la soumission
  * @param {Array} socials - Tableau de liens sociaux { network_id, url }
  * @returns {Promise<void>}
  */
-const createSocials = async (submissionId, socials) => {
+const createSocials = async (connection, submissionId, socials) => {
   if (!socials || socials.length === 0) {
     return;
   }
   
-  const connection = await db.pool.getConnection();
+  // Préparer les valeurs pour INSERT multiple
+  const values = socials.map(social => [
+    social.url,
+    submissionId,
+    social.network_id
+  ]);
   
-  try {
-    // Préparer les valeurs pour INSERT multiple
-    const values = socials.map(social => [
-      social.url,
-      submissionId,
-      social.network_id
-    ]);
-    
-    // INSERT multiple avec une seule requête
-    const placeholders = socials.map(() => '(?, ?, ?)').join(', ');
-    const flatValues = values.flat();
-    
-    await connection.execute(
-      `INSERT INTO socials (url, submission_id, network_id) VALUES ${placeholders}`,
-      flatValues
-    );
-  } catch (error) {
-    throw error;
-  } finally {
-    connection.release();
-  }
+  // INSERT multiple avec une seule requête
+  const placeholders = socials.map(() => '(?, ?, ?)').join(', ');
+  const flatValues = values.flat();
+  
+  await connection.execute(
+    `INSERT INTO socials (url, submission_id, network_id) VALUES ${placeholders}`,
+    flatValues
+  );
 };
 
 /**

@@ -2,34 +2,27 @@ import db from '../../config/db_pool.js';
 
 /**
  * Crée plusieurs images de galerie pour une soumission
+ * @param {Object} connection - Connexion MySQL (déjà en transaction)
  * @param {number} submissionId - ID de la soumission
  * @param {Array<string>} filenames - Tableau des chemins des fichiers
  * @returns {Promise<void>}
  */
-const createGalleryImages = async (submissionId, filenames) => {
+const createGalleryImages = async (connection, submissionId, filenames) => {
   if (!filenames || filenames.length === 0) {
     return;
   }
   
-  const connection = await db.pool.getConnection();
+  // Préparer les valeurs pour INSERT multiple
+  const values = filenames.map(filename => [filename, submissionId]);
   
-  try {
-    // Préparer les valeurs pour INSERT multiple
-    const values = filenames.map(filename => [filename, submissionId]);
-    
-    // INSERT multiple avec une seule requête
-    const placeholders = filenames.map(() => '(?, ?)').join(', ');
-    const flatValues = values.flat();
-    
-    await connection.execute(
-      `INSERT INTO gallery (filename, submission_id) VALUES ${placeholders}`,
-      flatValues
-    );
-  } catch (error) {
-    throw error;
-  } finally {
-    connection.release();
-  }
+  // INSERT multiple avec une seule requête
+  const placeholders = filenames.map(() => '(?, ?)').join(', ');
+  const flatValues = values.flat();
+  
+  await connection.execute(
+    `INSERT INTO gallery (filename, submission_id) VALUES ${placeholders}`,
+    flatValues
+  );
 };
 
 /**

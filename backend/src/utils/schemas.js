@@ -38,7 +38,7 @@ export const submissionSchema = z.object({
   creator_gender: z.string().min(1, 'Le genre du créateur est requis'),
   creator_country: z.string().min(1, 'Le pays est requis'),
   creator_address: z.string().min(1, 'L\'adresse est requise'),
-  referral_source: z.string().max(255, 'La source de référence ne peut pas dépasser 255 caractères').optional(),
+  referral_source: z.string().min(1, 'La source de référence est requise').max(255, 'La source de référence ne peut pas dépasser 255 caractères'),
   terms_of_use: z.boolean().refine(val => val === true, {
     message: 'Vous devez accepter les conditions d\'utilisation'
   }),

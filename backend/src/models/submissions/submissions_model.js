@@ -2,87 +2,68 @@ import db from '../../config/db_pool.js';
 
 /**
  * Crée une nouvelle soumission dans la base de données
+ * @param {Object} connection - Connexion MySQL (déjà en transaction)
  * @param {Object} data - Données de la soumission validées
  * @param {string} videoPath - Chemin du fichier vidéo
+ * @param {string} coverPath - Chemin du fichier cover
  * @param {number|null} durationSeconds - Durée de la vidéo en secondes (calculée avec get-video-duration)
  * @returns {Promise<number>} - ID de la soumission créée
  */
-const createSubmission = async (data, videoPath, durationSeconds = null) => {
-  const connection = await db.pool.getConnection();
-  
-  try {
-    await connection.beginTransaction();
-    
-    const [result] = await connection.execute(
-      `INSERT INTO submissions (
-        cover, video_url, english_title, original_title, language,
-        english_synopsis, original_synopsis, classification,
-        tech_stack, creative_method, subtitles,
-        duration_seconds, youtube_URL,
-        creator_gender, creator_email, creator_phone, creator_mobile,
-        creator_firstname, creator_lastname, creator_country,
-        creator_address, referral_source, terms_of_use
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        data.cover,                    // Chemin cover
-        videoPath,                    // Chemin vidéo (sera mis à jour après déplacement)
-        data.english_title,
-        data.original_title || null,
-        data.language,
-        data.english_synopsis,
-        data.original_synopsis || null,
-        data.classification,
-        data.tech_stack,
-        data.creative_method,
-        data.subtitles || null,       // Optionnel
-        durationSeconds,              // Durée calculée (peut être null)
-        null,                         // youtube_URL NULL (ajouté par admin)
-        data.creator_gender,
-        data.creator_email,
-        data.creator_phone || null,
-        data.creator_mobile,
-        data.creator_firstname,
-        data.creator_lastname,
+const createSubmission = async (connection, data, videoPath, coverPath, durationSeconds = null) => {
+  const [result] = await connection.execute(
+    `INSERT INTO submissions (
+      cover, video_url, english_title, original_title, language,
+      english_synopsis, original_synopsis, classification,
+      tech_stack, creative_method, subtitles,
+      duration_seconds, youtube_URL,
+      creator_gender, creator_email, creator_phone, creator_mobile,
+      creator_firstname, creator_lastname, creator_country,
+      creator_address, referral_source, terms_of_use
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      coverPath,                      // Chemin cover
+      videoPath,                     // Chemin vidéo (sera mis à jour après déplacement)
+      data.english_title,
+      data.original_title || null,
+      data.language,
+      data.english_synopsis,
+      data.original_synopsis || null,
+      data.classification,
+      data.tech_stack,
+      data.creative_method,
+      data.subtitles || null,        // Optionnel
+      durationSeconds,               // Durée calculée (peut être null)
+      null,                          // youtube_URL NULL (ajouté par admin)
+      data.creator_gender,
+      data.creator_email,
+      data.creator_phone || null,
+      data.creator_mobile,
+      data.creator_firstname,
+      data.creator_lastname,
         data.creator_country,
         data.creator_address,
-        data.referral_source || null, // Optionnel
+        data.referral_source,  // Requis
         data.terms_of_use
-      ]
-    );
-    
-    const submissionId = result.insertId;
-    await connection.commit();
-    
-    return submissionId;
-  } catch (error) {
-    await connection.rollback();
-    throw error;
-  } finally {
-    connection.release();
-  }
+    ]
+  );
+  
+  return result.insertId;
 };
 
 /**
  * Met à jour les chemins des fichiers dans la soumission
+ * @param {Object} connection - Connexion MySQL (déjà en transaction)
  * @param {number} submissionId - ID de la soumission
  * @param {string} videoUrl - Chemin final de la vidéo
  * @param {string} cover - Chemin final du cover
  * @param {string|null} subtitles - Chemin final des subtitles (optionnel)
  * @returns {Promise<void>}
  */
-const updateFilePaths = async (submissionId, videoUrl, cover, subtitles = null) => {
-  const connection = await db.pool.getConnection();
-  
-  try {
-    await connection.execute(
-      'UPDATE submissions SET video_url = ?, cover = ?, subtitles = ? WHERE id = ?',
-      [videoUrl, cover, subtitles, submissionId]
-    );
-  } catch (error) {
-    throw error;
-  } finally {
-    connection.release();
-  }
+const updateFilePaths = async (connection, submissionId, videoUrl, cover, subtitles = null) => {
+  await connection.execute(
+    'UPDATE submissions SET video_url = ?, cover = ?, subtitles = ? WHERE id = ?',
+    [videoUrl, cover, subtitles, submissionId]
+  );
 };
 
 /**

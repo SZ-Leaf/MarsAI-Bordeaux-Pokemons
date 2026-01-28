@@ -1,17 +1,58 @@
-import FileUploader from './FileUploader.jsx';
+import { useState, useEffect, useRef } from 'react';
 
 /**
  * Composant upload galerie (3 images max)
  * Design épuré et simple
+ * Permet de supprimer les images une par une et d'en ajouter jusqu'à 3
  */
 const GalleryUpload = ({ formData, errors, updateField }) => {
-  const handleGalleryChange = (files) => {
-    if (files && files.length > 3) {
-      // Limiter à 3 fichiers
-      updateField('gallery', Array.from(files).slice(0, 3));
-    } else {
-      updateField('gallery', files || []);
+  const [previews, setPreviews] = useState([]);
+  const fileInputRef = useRef(null);
+  
+  const gallery = formData.gallery || [];
+  const maxImages = 3;
+  const canAddMore = gallery.length < maxImages;
+  
+  // Générer les previews pour les images
+  useEffect(() => {
+    const newPreviews = gallery.map(file => URL.createObjectURL(file));
+    setPreviews(newPreviews);
+    
+    // Cleanup des previews précédents
+    return () => {
+      newPreviews.forEach(preview => URL.revokeObjectURL(preview));
+    };
+  }, [gallery]);
+  
+  const handleAddImages = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+    
+    const currentCount = gallery.length;
+    const remainingSlots = maxImages - currentCount;
+    const filesToAdd = files.slice(0, remainingSlots);
+    
+    if (filesToAdd.length > 0) {
+      updateField('gallery', [...gallery, ...filesToAdd]);
     }
+    
+    // Réinitialiser l'input pour permettre de ré-uploader le même fichier
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+  
+  const handleRemoveImage = (index) => {
+    const newGallery = gallery.filter((_, i) => i !== index);
+    updateField('gallery', newGallery);
+  };
+  
+  const formatFileSize = (bytes) => {
+    if (!bytes) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
   };
   
   return (
@@ -19,36 +60,67 @@ const GalleryUpload = ({ formData, errors, updateField }) => {
       <h3 className="text-lg font-medium mb-4">Galerie d'images</h3>
       <p className="text-sm text-gray-600 mb-4">
         Ajoutez jusqu'à 3 images pour illustrer votre vidéo (optionnel).
+        {gallery.length > 0 && ` (${gallery.length}/${maxImages})`}
       </p>
       
-      <FileUploader
-        label="Images de galerie"
-        accept="image/jpeg,image/jpg,image/png"
-        maxSizeMB={5}
-        value={formData.gallery}
-        onChange={handleGalleryChange}
-        error={errors.gallery}
-        multiple={true}
-      />
-      
-      {formData.gallery && formData.gallery.length > 0 && (
-        <div className="grid grid-cols-3 gap-4 mt-4">
-          {formData.gallery.map((file, index) => {
-            const preview = URL.createObjectURL(file);
-            return (
-              <div key={index} className="relative">
-                <img
-                  src={preview}
-                  alt={`Preview ${index + 1}`}
-                  className="w-full h-32 object-cover rounded border"
-                />
-                {errors[`gallery_${index}`] && (
-                  <p className="text-red-500 text-xs mt-1">{errors[`gallery_${index}`]}</p>
-                )}
-              </div>
-            );
-          })}
+      {/* Zone d'upload si on peut encore ajouter des images */}
+      {canAddMore && (
+        <div className="border-2 border-dashed border-gray-300 rounded p-6 text-center mb-4">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/jpg,image/png"
+            multiple={true}
+            onChange={handleAddImages}
+            className="hidden"
+            id="gallery-upload"
+          />
+          <label
+            htmlFor="gallery-upload"
+            className="text-blue-500 cursor-pointer underline"
+          >
+            Cliquez pour ajouter {gallery.length === 0 ? 'des images' : 'une image supplémentaire'}
+          </label>
+          <p className="text-xs text-gray-500 mt-2">
+            Formats acceptés: JPEG, JPG, PNG • Taille max: 5MB par image
+          </p>
         </div>
+      )}
+      
+      {/* Affichage des images avec boutons de suppression */}
+      {gallery.length > 0 && (
+        <div className="grid grid-cols-3 gap-4 mt-4">
+          {gallery.map((file, index) => (
+            <div key={index} className="relative group">
+              <img
+                src={previews[index]}
+                alt={`Preview ${index + 1}`}
+                className="w-full h-32 object-cover rounded border"
+              />
+              <button
+                type="button"
+                onClick={() => handleRemoveImage(index)}
+                className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                title="Supprimer cette image"
+              >
+                ×
+              </button>
+              <div className="text-xs text-gray-600 mt-1 truncate">
+                {file.name}
+              </div>
+              <div className="text-xs text-gray-500">
+                {formatFileSize(file.size)}
+              </div>
+              {errors[`gallery_${index}`] && (
+                <p className="text-red-500 text-xs mt-1">{errors[`gallery_${index}`]}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      
+      {errors.gallery && (
+        <p className="text-red-500 text-sm mt-2">{errors.gallery}</p>
       )}
     </div>
   );

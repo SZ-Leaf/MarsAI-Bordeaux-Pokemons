@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { submitFilm } from '../utils/api.js';
-import { validateSubmissionData } from '../utils/validation.js';
+import { validateSubmissionData, validateEmail, validatePhone, validateURL } from '../utils/validation.js';
 
 /**
  * Hook de gestion de soumission de film
@@ -60,13 +60,125 @@ export const useSubmission = () => {
       ...prev,
       [field]: value
     }));
-    // Effacer l'erreur du champ si présente
-    if (errors[field]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[field];
-        return newErrors;
-      });
+    
+    // Validation en temps réel pour les emails
+    if (field === 'creator_email') {
+      if (value.trim() && !validateEmail(value.trim())) {
+        setErrors(prev => ({
+          ...prev,
+          [field]: 'Email invalide'
+        }));
+      } else {
+        // Effacer l'erreur si l'email est valide ou vide
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors[field];
+          return newErrors;
+        });
+      }
+    } else {
+      // Effacer l'erreur du champ si présente
+      if (errors[field]) {
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors[field];
+          return newErrors;
+        });
+      }
+    }
+  };
+  
+  /**
+   * Met à jour un collaborateur spécifique
+   */
+  const updateCollaboratorField = (index, field, value) => {
+    const newCollaborators = [...formData.collaborators];
+    newCollaborators[index] = {
+      ...newCollaborators[index],
+      [field]: value
+    };
+    setFormData(prev => ({
+      ...prev,
+      collaborators: newCollaborators
+    }));
+    
+    // Validation en temps réel pour les emails de collaborateurs
+    if (field === 'email') {
+      const errorKey = `collaborator_${index}_email`;
+      if (value.trim() && !validateEmail(value.trim())) {
+        setErrors(prev => ({
+          ...prev,
+          [errorKey]: 'Email invalide'
+        }));
+      } else {
+        // Effacer l'erreur si l'email est valide ou vide
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors[errorKey];
+          return newErrors;
+        });
+      }
+    } else {
+      // Effacer l'erreur du champ si présente
+      const errorKey = `collaborator_${index}_${field}`;
+      if (errors[errorKey]) {
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors[errorKey];
+          return newErrors;
+        });
+      }
+    }
+  };
+  
+  /**
+   * Met à jour un lien social spécifique avec validation
+   */
+  const updateSocialField = (index, field, value) => {
+    const newSocials = [...formData.socials];
+    newSocials[index] = {
+      ...newSocials[index],
+      [field]: field === 'network_id' ? (value === '' ? '' : parseInt(value)) : value
+    };
+    setFormData(prev => ({
+      ...prev,
+      socials: newSocials
+    }));
+    
+    // Validation en temps réel
+    if (field === 'network_id') {
+      const errorKey = `social_${index}_network_id`;
+      if (!value || value === '') {
+        setErrors(prev => ({
+          ...prev,
+          [errorKey]: 'Le réseau social est requis'
+        }));
+      } else {
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors[errorKey];
+          return newErrors;
+        });
+      }
+    } else if (field === 'url') {
+      const errorKey = `social_${index}_url`;
+      if (!value.trim()) {
+        setErrors(prev => ({
+          ...prev,
+          [errorKey]: 'L\'URL est requise'
+        }));
+      } else if (!validateURL(value.trim())) {
+        setErrors(prev => ({
+          ...prev,
+          [errorKey]: 'URL invalide. L\'URL doit commencer par https://'
+        }));
+      } else {
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors[errorKey];
+          return newErrors;
+        });
+      }
     }
   };
   
@@ -102,15 +214,55 @@ export const useSubmission = () => {
         // Validation infos créateur
         if (!formData.creator_firstname) stepErrors.creator_firstname = 'Requis';
         if (!formData.creator_lastname) stepErrors.creator_lastname = 'Requis';
-        if (!formData.creator_email) stepErrors.creator_email = 'Requis';
-        if (!formData.creator_mobile) stepErrors.creator_mobile = 'Requis';
+        if (!formData.creator_email) {
+          stepErrors.creator_email = 'Requis';
+        } else if (!validateEmail(formData.creator_email.trim())) {
+          stepErrors.creator_email = 'Email invalide';
+        }
+        if (formData.creator_phone && !validatePhone(formData.creator_phone.trim())) {
+          stepErrors.creator_phone = 'Numéro de téléphone invalide';
+        }
+        if (!formData.creator_mobile) {
+          stepErrors.creator_mobile = 'Requis';
+        } else if (!validatePhone(formData.creator_mobile.trim())) {
+          stepErrors.creator_mobile = 'Numéro de téléphone invalide';
+        }
         if (!formData.creator_gender) stepErrors.creator_gender = 'Requis';
         if (!formData.creator_country) stepErrors.creator_country = 'Requis';
         if (!formData.creator_address) stepErrors.creator_address = 'Requis';
+        if (!formData.referral_source) stepErrors.referral_source = 'Requis';
+        
+        // Validation des réseaux sociaux si des liens sont ajoutés
+        // Si l'utilisateur a ajouté des réseaux sociaux, ils doivent tous être valides
+        if (formData.socials && formData.socials.length > 0) {
+          formData.socials.forEach((social, index) => {
+            if (!social.network_id || social.network_id <= 0 || social.network_id === '') {
+              stepErrors[`social_${index}_network_id`] = 'Le réseau social est requis';
+            }
+            if (!social.url || !social.url.trim()) {
+              stepErrors[`social_${index}_url`] = 'L\'URL est requise';
+            } else if (!validateURL(social.url.trim())) {
+              stepErrors[`social_${index}_url`] = 'URL invalide. L\'URL doit commencer par https://';
+            }
+          });
+        }
         break;
         
       case 4:
-        // Pas de validation obligatoire pour la partie 4 (optionnel)
+        // Validation des réseaux sociaux si des liens sont ajoutés
+        // Si l'utilisateur a ajouté des réseaux sociaux, ils doivent tous être valides
+        if (formData.socials && formData.socials.length > 0) {
+          formData.socials.forEach((social, index) => {
+            if (!social.network_id || social.network_id <= 0 || social.network_id === '') {
+              stepErrors[`social_${index}_network_id`] = 'Le réseau social est requis';
+            }
+            if (!social.url || !social.url.trim()) {
+              stepErrors[`social_${index}_url`] = 'L\'URL est requise';
+            } else if (!validateURL(social.url.trim())) {
+              stepErrors[`social_${index}_url`] = 'URL invalide. L\'URL doit commencer par https://';
+            }
+          });
+        }
         break;
     }
     
@@ -252,6 +404,8 @@ export const useSubmission = () => {
     submitError,
     submitSuccess,
     updateField,
+    updateCollaboratorField,
+    updateSocialField,
     nextStep,
     prevStep,
     submit,

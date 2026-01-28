@@ -1,8 +1,17 @@
+import { validateEmail } from '../utils/validation.js';
+
 /**
  * Formulaire infos réalisateur (Partie 3)
  * Design épuré et simple
  */
 const CreatorForm = ({ formData, errors, updateField }) => {
+  const handleEmailBlur = (e) => {
+    const email = e.target.value.trim();
+    if (email && !validateEmail(email)) {
+      // L'erreur sera gérée par la validation globale
+      // On peut aussi ajouter une validation locale ici si nécessaire
+    }
+  };
   return (
     <div className="space-y-6 pl-4">
       <h2 className="text-2xl font-bold mb-4">Informations du réalisateur</h2>
@@ -45,7 +54,15 @@ const CreatorForm = ({ formData, errors, updateField }) => {
           <input
             type="email"
             value={formData.creator_email}
-            onChange={(e) => updateField('creator_email', e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              updateField('creator_email', value);
+              // Validation en temps réel si l'email n'est pas vide
+              if (value.trim() && !validateEmail(value.trim())) {
+                // L'erreur sera affichée via la validation globale
+              }
+            }}
+            onBlur={handleEmailBlur}
             className={`w-full border rounded p-2 ${errors.creator_email ? 'border-red-500' : ''}`}
           />
           {errors.creator_email && (
@@ -121,7 +138,7 @@ const CreatorForm = ({ formData, errors, updateField }) => {
         
         <div>
           <label className="block text-sm font-medium mb-1">
-            Source de référence
+            Source de référence <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -130,6 +147,7 @@ const CreatorForm = ({ formData, errors, updateField }) => {
             className={`w-full border rounded p-2 ${errors.referral_source ? 'border-red-500' : ''}`}
             placeholder="Comment avez-vous connu le festival ?"
             maxLength={255}
+            required
           />
           {errors.referral_source && (
             <p className="text-red-500 text-sm mt-1">{errors.referral_source}</p>

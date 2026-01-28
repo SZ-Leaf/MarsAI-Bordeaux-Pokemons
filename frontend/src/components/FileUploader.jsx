@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 /**
  * Composant d'upload de fichier générique
@@ -15,6 +15,28 @@ const FileUploader = ({
   multiple = false
 }) => {
   const [dragActive, setDragActive] = useState(false);
+  const [preview, setPreview] = useState(null);
+  const fileInputRef = useRef(null);
+  
+  // Générer preview pour les images
+  useEffect(() => {
+    if (value && !Array.isArray(value) && value.type && value.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(value);
+    } else {
+      setPreview(null);
+    }
+    
+    // Cleanup
+    return () => {
+      if (preview && preview.startsWith('data:')) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+  }, [value]);
   
   const handleFile = (files) => {
     const file = multiple ? Array.from(files) : files[0];
@@ -49,6 +71,8 @@ const FileUploader = ({
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
   };
   
+  const isImage = value && !Array.isArray(value) && value.type && value.type.startsWith('image/');
+  
   return (
     <div className="mb-4 pl-4">
       <label className="block text-sm font-medium mb-2">
@@ -65,6 +89,7 @@ const FileUploader = ({
         onDrop={handleDrop}
       >
         <input
+          ref={fileInputRef}
           type="file"
           accept={accept}
           multiple={multiple}
@@ -97,13 +122,31 @@ const FileUploader = ({
                 ))}
               </div>
             ) : (
-              <div className="text-sm">
-                {value.name} ({formatFileSize(value.size)})
+              <div>
+                <div className="text-sm mb-2">
+                  {value.name} ({formatFileSize(value.size)})
+                </div>
+                {isImage && preview && (
+                  <div className="mt-4">
+                    <img
+                      src={preview}
+                      alt="Preview"
+                      className="max-w-full max-h-64 mx-auto rounded border"
+                    />
+                  </div>
+                )}
               </div>
             )}
             <button
               type="button"
-              onClick={() => onChange(null)}
+              onClick={() => {
+                onChange(null);
+                setPreview(null);
+                // Réinitialiser l'input pour permettre de ré-uploader le même fichier
+                if (fileInputRef.current) {
+                  fileInputRef.current.value = '';
+                }
+              }}
               className="mt-2 text-red-500 text-sm underline"
             >
               Supprimer

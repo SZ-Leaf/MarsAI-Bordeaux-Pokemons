@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 /**
  * Composant d'upload de vidéo (MP4/MOV)
@@ -6,6 +6,7 @@ import { useState } from 'react';
  */
 const VideoUpload = ({ value, onChange, error }) => {
   const [preview, setPreview] = useState(null);
+  const fileInputRef = useRef(null);
   
   const handleFile = (file) => {
     if (file) {
@@ -38,6 +39,7 @@ const VideoUpload = ({ value, onChange, error }) => {
       
       <div className={`border-2 border-dashed rounded p-6 ${error ? 'border-red-500' : 'border-gray-300'}`}>
         <input
+          ref={fileInputRef}
           type="file"
           accept="video/mp4,video/quicktime,.mp4,.mov"
           onChange={(e) => handleFile(e.target.files[0])}
@@ -71,7 +73,13 @@ const VideoUpload = ({ value, onChange, error }) => {
             )}
             <button
               type="button"
-              onClick={() => handleFile(null)}
+              onClick={() => {
+                handleFile(null);
+                // Réinitialiser l'input pour permettre de ré-uploader le même fichier
+                if (fileInputRef.current) {
+                  fileInputRef.current.value = '';
+                }
+              }}
               className="text-red-500 text-sm underline"
             >
               Supprimer

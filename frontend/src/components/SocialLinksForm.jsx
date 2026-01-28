@@ -1,8 +1,10 @@
+import { validateURL } from '../utils/validation.js';
+
 /**
  * Formulaire liens sociaux (Partie 4)
  * Design épuré et simple
  */
-const SocialLinksForm = ({ formData, errors, updateField }) => {
+const SocialLinksForm = ({ formData, errors, updateField, updateSocialField }) => {
   // Réseaux sociaux disponibles (devrait venir de l'API mais hardcodé pour l'instant)
   const socialNetworks = [
     { id: 1, title: 'fb', label: 'Facebook' },
@@ -30,12 +32,18 @@ const SocialLinksForm = ({ formData, errors, updateField }) => {
   };
   
   const updateSocial = (index, field, value) => {
-    const newSocials = [...formData.socials];
-    newSocials[index] = {
-      ...newSocials[index],
-      [field]: value
-    };
-    updateField('socials', newSocials);
+    // Utiliser updateSocialField si disponible pour la validation en temps réel
+    if (updateSocialField) {
+      updateSocialField(index, field, value);
+    } else {
+      // Fallback vers l'ancienne méthode
+      const newSocials = [...formData.socials];
+      newSocials[index] = {
+        ...newSocials[index],
+        [field]: field === 'network_id' ? (value === '' ? '' : parseInt(value)) : value
+      };
+      updateField('socials', newSocials);
+    }
   };
   
   return (
@@ -74,13 +82,15 @@ const SocialLinksForm = ({ formData, errors, updateField }) => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Réseau social</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Réseau social <span className="text-red-500">*</span>
+                  </label>
                   <select
-                    value={social.network_id}
-                    onChange={(e) => updateSocial(index, 'network_id', parseInt(e.target.value))}
+                    value={social.network_id || ''}
+                    onChange={(e) => updateSocial(index, 'network_id', e.target.value)}
                     className={`w-full border rounded p-2 ${errors[`social_${index}_network_id`] ? 'border-red-500' : ''}`}
                   >
-                    <option value="">Sélectionner</option>
+                    <option value="">Sélectionner un réseau</option>
                     {socialNetworks.map(network => (
                       <option key={network.id} value={network.id}>
                         {network.label}
@@ -93,16 +103,23 @@ const SocialLinksForm = ({ formData, errors, updateField }) => {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-1">URL</label>
+                  <label className="block text-sm font-medium mb-1">
+                    URL <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="url"
                     value={social.url}
                     onChange={(e) => updateSocial(index, 'url', e.target.value)}
                     className={`w-full border rounded p-2 ${errors[`social_${index}_url`] ? 'border-red-500' : ''}`}
-                    placeholder="https://..."
+                    placeholder="https://exemple.com"
                   />
                   {errors[`social_${index}_url`] && (
                     <p className="text-red-500 text-sm mt-1">{errors[`social_${index}_url`]}</p>
+                  )}
+                  {!errors[`social_${index}_url`] && social.url && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      L'URL doit commencer par https://
+                    </p>
                   )}
                 </div>
               </div>

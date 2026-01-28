@@ -1,15 +1,27 @@
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Chemin de base pour les uploads (depuis backend/src/)
+const getUploadsBasePath = () => {
+  return path.join(__dirname, '../../uploads');
+};
+
 // Configuration du stockage temporaire
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // Les fichiers seront stockés temporairement avant déplacement final
-    const tempDir = path.join(__dirname, '../uploads/submissions/temp');
+    const tempDir = path.join(getUploadsBasePath(), 'submissions/temp');
+    
+    // Créer le répertoire s'il n'existe pas
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
+    }
+    
     cb(null, tempDir);
   },
   filename: (req, file, cb) => {

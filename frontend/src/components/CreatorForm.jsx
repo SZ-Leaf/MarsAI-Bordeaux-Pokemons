@@ -140,15 +140,22 @@ const CreatorForm = ({ formData, errors, updateField }) => {
           <label className="block text-sm font-medium mb-1">
             Source de référence <span className="text-red-500">*</span>
           </label>
-          <input
-            type="text"
+          <select
             value={formData.referral_source}
             onChange={(e) => updateField('referral_source', e.target.value)}
             className={`w-full border rounded p-2 ${errors.referral_source ? 'border-red-500' : ''}`}
-            placeholder="Comment avez-vous connu le festival ?"
-            maxLength={255}
             required
-          />
+          >
+            <option value="">Sélectionner une source</option>
+            <option value="Réseaux sociaux">Réseaux sociaux</option>
+            <option value="Recommandation d'un ami">Recommandation d'un ami</option>
+            <option value="Média (presse, radio, TV)">Média (presse, radio, TV)</option>
+            <option value="École / Université">École / Université</option>
+            <option value="Partenaire / Sponsor">Partenaire / Sponsor</option>
+            <option value="Événement précédent">Événement précédent</option>
+            <option value="Moteur de recherche">Moteur de recherche</option>
+            <option value="Autre">Autre</option>
+          </select>
           {errors.referral_source && (
             <p className="text-red-500 text-sm mt-1">{errors.referral_source}</p>
           )}

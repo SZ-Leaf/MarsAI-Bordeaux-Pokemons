@@ -1,7 +1,38 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 @import "tailwindcss";
+
+@import "./components/ui/buttons.css";
+
+@theme {
+  --color-mars-bg: #050505;
+  --color-mars-surface: #080808;
+  --color-mars-blue: #2b7fff;
+  --color-mars-cyan: #00b8da;
+  --color-mars-sky: #51a2ff;
+  --color-mars-green: #00d491;
+  --color-mars-red: #ef4444;
+  --color-white: #fffefe;
+}
+
+:root {
+  --mars-bg: #050505;
+  --mars-surface: #080808;
+  --mars-blue: #2b7fff;
+  --mars-cyan: #00b8da;
+  --mars-sky: #51a2ff;
+  --mars-green: #00d491;
+  --mars-red: #ef4444;
+  --color-white: #fffefe;
+}
+
+body {
+  background-color: var(--mars-bg);
+  color: var(--color-white);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}

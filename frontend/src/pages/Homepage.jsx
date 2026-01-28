@@ -1,7 +1,7 @@
 import React from 'react';
 import '../App.css';
 import useModal from '../utils/useModal';
-import Modal from '../components/ui/modal/Modal';
+import Modal from '../components/Modal';
 
 export default function Homepage() {
   const loginModal = useModal();

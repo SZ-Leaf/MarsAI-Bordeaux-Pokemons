@@ -8,9 +8,10 @@
 
 @import "./components/ui/buttons.css";
 @import "./components/ui/inputs.css";
-@import "./components/ui/modal/modal.css";
+@import "./components/ui/modal.css";
 
 @theme {
+  --color-black: #000000;
   --color-bg: #050505;
   --color-surface: #080808;
   --color-blue: #2b7fff;
@@ -22,6 +23,7 @@
 }
 
 :root {
+  --color-black: #000000;
   --color-bg: #050505;
   --color-surface: #080808;
   --color-blue: #2b7fff;

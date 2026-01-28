@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import './modal.css';
+import '../components/ui/modal.css';
 
 export default function Modal({ 
   isOpen, 

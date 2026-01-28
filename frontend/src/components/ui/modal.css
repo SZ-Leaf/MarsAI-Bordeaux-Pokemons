@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 /* Overlay de la modal */
 .modal-overlay {
   position: fixed;
@@ -5,122 +7,104 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  z-index: 50;  
+  @apply flex items-center justify-center;
+  @apply p-4;
   background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(4px);
-  padding: 1rem;
   animation: modalFadeIn 0.3s ease-out;
 }
 
 /* Container principal de la modal */
 .modal-container {
-  position: relative;
+  @apply relative;
+  @apply rounded-2xl;
+  @apply border border-white/10;
+  @apply shadow-2xl;
+  @apply max-h-[90vh] overflow-hidden;
+  @apply flex flex-col;
   background-color: var(--color-surface);
   backdrop-filter: blur(12px);
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  max-height: 90vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
   animation: modalSlideIn 0.3s ease-out;
 }
 
 /* Tailles de modal */
 .modal-sm {
-  width: 100%;
-  max-width: 24rem;
+  @apply w-full max-w-sm;
 }
 
 .modal-md {
-  width: 100%;
-  max-width: 28rem;
+  @apply w-full max-w-md;
 }
 
 .modal-lg {
-  width: 100%;
-  max-width: 42rem;
+  @apply w-full max-w-2xl;
 }
 
 .modal-xl {
-  width: 100%;
-  max-width: 56rem;
+  @apply w-full max-w-4xl;
 }
 
 /* Header de la modal */
 .modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  @apply flex items-center justify-between;
+  @apply px-6 py-4;
+  @apply border-b border-white/10;
 }
 
 .modal-title {
-  font-size: 1.25rem;
-  font-weight: bold;
+  @apply text-xl font-bold;
+  @apply pr-8;
   color: var(--color-white);
-  padding-right: 2rem;
 }
 
 /* Bouton de fermeture */
 .modal-close-btn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 2.5rem;
-  height: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  background-color: rgba(255, 255, 255, 0.05);
+  @apply absolute top-4 right-4;
+  @apply w-10 h-10;
+  @apply flex items-center justify-center;
+  @apply rounded-full;
+  @apply bg-white/5;
+  @apply border border-white/10;
+  @apply text-white/70;
+  @apply cursor-pointer;
+  @apply transition-all duration-300 ease-out;
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.7);
-  cursor: pointer;
-  transition: all 0.3s ease-out;
 }
 
 .modal-close-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  @apply bg-white/10;
+  @apply border-white/20;
+  @apply rotate-90;
   color: var(--color-white);
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: rotate(90deg);
 }
 
 .modal-close-btn:active {
-  transform: scale(0.95) rotate(90deg);
+  @apply scale-95 rotate-90;
 }
 
 /* Contenu de la modal */
 .modal-content {
-  padding: 1.25rem 1.5rem;
-  overflow-y: auto;
-  flex: 1;
+  @apply px-6 py-5;
+  @apply overflow-y-auto;
+  @apply flex-1;
 }
 
 /* Scrollbar personnalisée pour le contenu */
 .modal-content::-webkit-scrollbar {
-  width: 0.5rem;
+  @apply w-2;
 }
 
 .modal-content::-webkit-scrollbar-track {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 9999px;
+  @apply bg-white/5 rounded-full;
 }
 
 .modal-content::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 9999px;
+  @apply bg-white/20 rounded-full;
 }
 
 .modal-content::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+  @apply bg-white/30;
 }
 
 /* Animations */
@@ -176,26 +160,23 @@
 /* Responsive */
 @media (max-width: 640px) {
   .modal-container {
-    border-radius: 0.75rem;
-    max-height: 95vh;
+    @apply rounded-xl max-h-[95vh];
   }
 
   .modal-header {
-    padding: 0.75rem 1rem;
+    @apply px-4 py-3;
   }
 
   .modal-title {
-    font-size: 1.125rem;
+    @apply text-lg;
   }
 
   .modal-content {
-    padding: 1rem;
+    @apply p-4;
   }
 
   .modal-close-btn {
-    top: 0.75rem;
-    right: 0.75rem;
-    width: 2.25rem;
-    height: 2.25rem;
+    @apply top-3 right-3;
+    @apply w-9 h-9;
   }
 }

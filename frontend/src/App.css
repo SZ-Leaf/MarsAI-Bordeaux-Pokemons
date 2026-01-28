@@ -8,6 +8,7 @@
 
 @import "./components/ui/buttons.css";
 @import "./components/ui/inputs.css";
+@import "./components/ui/modal/modal.css";
 
 @theme {
   --color-bg: #050505;

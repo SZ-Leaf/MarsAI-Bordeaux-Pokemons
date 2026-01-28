@@ -25,7 +25,7 @@ const createSocials = async (submissionId, socials) => {
     const placeholders = socials.map(() => '(?, ?, ?)').join(', ');
     const flatValues = values.flat();
     
-    await connection.query(
+    await connection.execute(
       `INSERT INTO socials (url, submission_id, network_id) VALUES ${placeholders}`,
       flatValues
     );
@@ -45,7 +45,7 @@ const getSocialsBySubmissionId = async (submissionId) => {
   const connection = await db.pool.getConnection();
   
   try {
-    const [rows] = await connection.query(
+    const [rows] = await connection.execute(
       `SELECT s.*, sn.title as network_title, sn.logo as network_logo 
        FROM socials s 
        JOIN social_networks sn ON s.network_id = sn.id 

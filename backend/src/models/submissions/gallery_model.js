@@ -21,7 +21,7 @@ const createGalleryImages = async (submissionId, filenames) => {
     const placeholders = filenames.map(() => '(?, ?)').join(', ');
     const flatValues = values.flat();
     
-    await connection.query(
+    await connection.execute(
       `INSERT INTO gallery (filename, submission_id) VALUES ${placeholders}`,
       flatValues
     );
@@ -41,7 +41,7 @@ const deleteGalleryImage = async (galleryId) => {
   const connection = await db.pool.getConnection();
   
   try {
-    await connection.query('DELETE FROM gallery WHERE id = ?', [galleryId]);
+    await connection.execute('DELETE FROM gallery WHERE id = ?', [galleryId]);
   } catch (error) {
     throw error;
   } finally {
@@ -58,7 +58,7 @@ const getGalleryBySubmissionId = async (submissionId) => {
   const connection = await db.pool.getConnection();
   
   try {
-    const [rows] = await connection.query(
+    const [rows] = await connection.execute(
       'SELECT * FROM gallery WHERE submission_id = ? ORDER BY created_at ASC',
       [submissionId]
     );

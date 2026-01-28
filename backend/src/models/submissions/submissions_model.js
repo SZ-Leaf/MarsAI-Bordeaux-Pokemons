@@ -13,7 +13,7 @@ const createSubmission = async (data, videoPath, durationSeconds = null) => {
   try {
     await connection.beginTransaction();
     
-    const [result] = await connection.query(
+    const [result] = await connection.execute(
       `INSERT INTO submissions (
         cover, video_url, english_title, original_title, language,
         english_synopsis, original_synopsis, classification,
@@ -74,7 +74,7 @@ const updateFilePaths = async (submissionId, videoUrl, cover, subtitles = null) 
   const connection = await db.pool.getConnection();
   
   try {
-    await connection.query(
+    await connection.execute(
       'UPDATE submissions SET video_url = ?, cover = ?, subtitles = ? WHERE id = ?',
       [videoUrl, cover, subtitles, submissionId]
     );
@@ -114,7 +114,7 @@ const getSubmissions = async (filters = {}) => {
       }
     }
     
-    const [rows] = await connection.query(query, params);
+    const [rows] = await connection.execute(query, params);
     return rows;
   } catch (error) {
     throw error;
@@ -133,7 +133,7 @@ const getSubmissionById = async (submissionId) => {
   
   try {
     // Récupérer la soumission de base
-    const [submissions] = await connection.query(
+    const [submissions] = await connection.execute(
       `SELECT s.*, 
               sm.status as moderation_status,
               sm.details as moderation_details,
@@ -152,21 +152,21 @@ const getSubmissionById = async (submissionId) => {
     const submission = submissions[0];
     
     // Récupérer les collaborateurs
-    const [collaborators] = await connection.query(
+    const [collaborators] = await connection.execute(
       'SELECT * FROM collaborators WHERE submission_id = ? ORDER BY created_at ASC',
       [submissionId]
     );
     submission.collaborators = collaborators;
     
     // Récupérer les images de galerie
-    const [gallery] = await connection.query(
+    const [gallery] = await connection.execute(
       'SELECT * FROM gallery WHERE submission_id = ? ORDER BY created_at ASC',
       [submissionId]
     );
     submission.gallery = gallery;
     
     // Récupérer les liens sociaux avec infos réseau
-    const [socials] = await connection.query(
+    const [socials] = await connection.execute(
       `SELECT s.*, sn.title as network_title, sn.logo as network_logo
        FROM socials s
        JOIN social_networks sn ON s.network_id = sn.id
@@ -176,7 +176,7 @@ const getSubmissionById = async (submissionId) => {
     submission.socials = socials;
     
     // Récupérer les tags
-    const [tags] = await connection.query(
+    const [tags] = await connection.execute(
       `SELECT t.* FROM tags t
        JOIN submissions_tags st ON t.id = st.tag_id
        WHERE st.submission_id = ?`,
@@ -185,7 +185,7 @@ const getSubmissionById = async (submissionId) => {
     submission.tags = tags;
     
     // Récupérer les awards
-    const [awards] = await connection.query(
+    const [awards] = await connection.execute(
       `SELECT a.* FROM awards a
        JOIN submissions_awards sa ON a.id = sa.award_id
        WHERE sa.submission_id = ?

@@ -12,7 +12,7 @@ const pool = mysql.createPool({
 
 const testConnection = async () => {
    try {
-      const [rows] = await pool.query("SELECT NOW() AS NOW");
+      const [rows] = await pool.execute("SELECT NOW() AS NOW");
       console.log(rows[0].NOW);
 
    } catch (error) {

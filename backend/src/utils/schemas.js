@@ -23,8 +23,8 @@ export const submissionSchema = z.object({
   language: z.string().min(1, 'La langue est requise'),
   english_synopsis: z.string().min(1, 'Le synopsis anglais est requis').max(300, 'Le synopsis ne peut pas dépasser 300 caractères'),
   original_synopsis: z.string().max(300, 'Le synopsis original ne peut pas dépasser 300 caractères').optional(),
-  classification: z.enum(['IA', 'hybrid', 'manual'], {
-    errorMap: () => ({ message: 'Classification invalide. Valeurs acceptées : IA, hybrid, manual' })
+  classification: z.enum(['IA', 'hybrid'], {
+    errorMap: () => ({ message: 'Classification invalide. Valeurs acceptées : 100% IA, Hybrid' })
   }),
   tech_stack: z.string().min(1, 'La stack technique est requise').max(500, 'La stack technique ne peut pas dépasser 500 caractères'),
   creative_method: z.string().min(1, 'La méthode créative est requise').max(500, 'La méthode créative ne peut pas dépasser 500 caractères'),

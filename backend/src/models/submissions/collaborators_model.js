@@ -28,7 +28,7 @@ const createCollaborators = async (submissionId, collaborators) => {
     const placeholders = collaborators.map(() => '(?, ?, ?, ?, ?, ?)').join(', ');
     const flatValues = values.flat();
     
-    await connection.query(
+    await connection.execute(
       `INSERT INTO collaborators (firstname, lastname, email, gender, role, submission_id) 
        VALUES ${placeholders}`,
       flatValues
@@ -80,7 +80,7 @@ const updateCollaborator = async (collaboratorId, data) => {
     
     values.push(collaboratorId);
     
-    await connection.query(
+    await connection.execute(
       `UPDATE collaborators SET ${fields.join(', ')} WHERE id = ?`,
       values
     );
@@ -100,7 +100,7 @@ const deleteCollaborator = async (collaboratorId) => {
   const connection = await db.pool.getConnection();
   
   try {
-    await connection.query('DELETE FROM collaborators WHERE id = ?', [collaboratorId]);
+    await connection.execute('DELETE FROM collaborators WHERE id = ?', [collaboratorId]);
   } catch (error) {
     throw error;
   } finally {

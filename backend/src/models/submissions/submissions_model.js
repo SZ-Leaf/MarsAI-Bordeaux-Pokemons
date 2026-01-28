@@ -1,12 +1,13 @@
-// src/models/submissions/submissions_model.js
 import db from '../../config/db_pool.js';
 
 const pool = db.pool;
 
 export const findById = async (id) => {
-  const [rows] = await pool.query(
-    'SELECT * FROM submissions WHERE id = ?',
-    [id]
-  );
-  return rows[0];
+  try {
+    const sql = 'SELECT * FROM submissions WHERE id = ?';
+    const [rows] = await pool.execute(sql, [id]);
+    return rows[0];
+  } catch (err) {
+    console.error('Erreur DB findById:', err);
+  }
 };

@@ -1,0 +1,287 @@
+@import "tailwindcss" reference;
+@import "../../../theme.css";
+
+/* ============================================
+   FOOTER CONTAINER
+   ============================================ */
+.footer-container {
+  @apply relative w-full mt-20 mb-24;
+  @apply px-4 md:px-8;
+}
+
+.footer-content {
+  @apply max-w-7xl mx-auto;
+  @apply px-8 md:px-12 py-12;
+  @apply bg-white/10 backdrop-blur-xl;
+  @apply border border-white/10 rounded-3xl;
+  @apply shadow-2xl;
+}
+
+/* ============================================
+   GRID PRINCIPAL
+   ============================================ */
+.footer-grid {
+  @apply grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 mb-12;
+}
+
+/* ============================================
+   SECTION BRAND (Logo + Description + Social)
+   ============================================ */
+.footer-brand {
+  @apply col-span-1 md:col-span-4;
+  @apply flex flex-col gap-6;
+}
+
+.footer-logo {
+  @apply font-sans text-3xl font-black text-white uppercase tracking-wide;
+}
+
+.footer-logo .gradient-text {
+  @apply bg-gradient-to-r from-blue-400 to-cyan-400;
+  @apply bg-clip-text text-transparent font-black;
+}
+
+.footer-tagline {
+  @apply text-white/60 text-sm leading-relaxed italic;
+  @apply max-w-sm;
+}
+
+/* Icônes sociales */
+.footer-social {
+  @apply flex gap-3;
+}
+
+.social-icon {
+  @apply w-11 h-11 flex items-center justify-center;
+  @apply bg-white/5 backdrop-blur-sm;
+  @apply border border-white/10 rounded-full;
+  @apply text-white/60;
+  @apply transition-all duration-300;
+  @apply hover:bg-gradient-to-br hover:from-blue-500/20 hover:to-cyan-500/20;
+  @apply hover:text-white hover:border-blue-400/30;
+  @apply hover:scale-110 hover:-translate-y-1;
+  @apply hover:shadow-lg hover:shadow-blue-500/20;
+}
+
+.social-icon svg {
+  @apply w-5 h-5;
+}
+
+/* ============================================
+   COLONNES DE LIENS
+   ============================================ */
+.footer-column {
+  @apply col-span-1 md:col-span-2;
+  @apply flex flex-col;
+}
+
+.footer-column-title {
+  @apply text-sm font-bold mb-4;
+  @apply tracking-widest uppercase;
+  @apply transition-all duration-300;
+}
+
+.navigation-title {
+  @apply text-blue-400;
+}
+
+.legal-title {
+  @apply text-cyan-400;
+}
+
+.footer-links {
+  @apply flex flex-col gap-3;
+}
+
+.footer-links li a {
+  @apply text-white/50 text-sm;
+  @apply transition-all duration-300;
+  @apply hover:text-white hover:translate-x-1;
+  @apply inline-block;
+}
+
+/* ============================================
+   NEWSLETTER CARD
+   ============================================ */
+.footer-newsletter-card {
+  @apply col-span-1 md:col-span-4;
+  @apply p-8;
+  @apply bg-gradient-to-br from-white/5 to-white/[0.02];
+  @apply backdrop-blur-md;
+  @apply border border-white/20 rounded-2xl;
+  @apply shadow-xl;
+  @apply transition-all duration-500;
+  @apply hover:border-blue-400/30 hover:shadow-2xl hover:shadow-blue-500/10;
+}
+
+.newsletter-card-title {
+  @apply text-2xl font-bold text-white mb-6;
+  @apply tracking-wide;
+  @apply bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400;
+  @apply bg-clip-text text-transparent;
+  background-size: 200% auto;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+}
+
+/* Formulaire Newsletter */
+.newsletter-form {
+  @apply flex gap-2;
+}
+
+.newsletter-input {
+  @apply flex-1 px-5 py-3.5;
+  @apply bg-black/20 backdrop-blur-sm;
+  @apply border border-white/20 rounded-xl;
+  @apply text-white placeholder-white/40;
+  @apply outline-none transition-all duration-300;
+  @apply focus:border-blue-400 focus:bg-black/30;
+  @apply focus:ring-2 focus:ring-blue-400/20;
+  @apply text-sm;
+}
+
+.newsletter-button {
+  @apply px-8 py-3.5 font-bold;
+  @apply bg-gradient-to-r from-blue-500 to-cyan-500;
+  @apply text-white rounded-xl;
+  @apply transition-all duration-300;
+  @apply hover:scale-105 hover:shadow-lg hover:shadow-blue-500/50;
+  @apply active:scale-95;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-400/50;
+  @apply uppercase tracking-wider text-sm;
+}
+
+/* ============================================
+   FOOTER BOTTOM (Copyright)
+   ============================================ */
+.footer-bottom {
+  @apply flex flex-col md:flex-row items-center justify-between gap-4;
+  @apply pt-8 border-t border-white/10;
+}
+
+.footer-copyright {
+  @apply text-white/40 text-xs tracking-wider;
+  @apply uppercase;
+}
+
+.footer-credits {
+  @apply flex items-center gap-4 text-xs;
+}
+
+.credits-text {
+  @apply text-white/30 uppercase tracking-wider;
+}
+
+.legal-link {
+  @apply text-white/40 uppercase tracking-wider;
+  @apply transition-colors duration-300;
+  @apply hover:text-blue-400;
+}
+
+/* ============================================
+   RESPONSIVE - MOBILE
+   ============================================ */
+@media (max-width: 768px) {
+  .footer-container {
+    @apply mb-32;
+  }
+
+  .footer-content {
+    @apply px-6 py-8;
+    @apply rounded-2xl;
+  }
+
+  .footer-grid {
+    @apply gap-8;
+  }
+
+  .footer-brand {
+    @apply col-span-1;
+  }
+
+  .footer-logo {
+    @apply text-2xl;
+  }
+
+  .footer-tagline {
+    @apply text-xs;
+  }
+
+  .footer-column {
+    @apply col-span-1;
+  }
+
+  .footer-newsletter-card {
+    @apply col-span-1 p-6;
+  }
+
+  .newsletter-card-title {
+    @apply text-xl mb-4;
+  }
+
+  .newsletter-form {
+    @apply flex-col gap-3;
+  }
+
+  .newsletter-button {
+    @apply w-full;
+  }
+
+  .footer-bottom {
+    @apply flex-col text-center gap-3;
+  }
+
+  .footer-copyright {
+    @apply text-[10px];
+  }
+
+  .footer-credits {
+    @apply flex-col gap-2;
+  }
+
+  .credits-text,
+  .legal-link {
+    @apply text-[10px];
+  }
+
+  .social-icon {
+    @apply w-10 h-10;
+  }
+}
+
+/* Animation au scroll */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.footer-container {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Effet de lueur subtile sur la newsletter card */
+.footer-newsletter-card::before {
+  content: '';
+  @apply absolute inset-0 rounded-2xl;
+  @apply bg-gradient-to-br from-blue-500/10 to-cyan-500/10;
+  @apply opacity-0 transition-opacity duration-500;
+  z-index: -1;
+}
+
+.footer-newsletter-card:hover::before {
+  @apply opacity-100;
+}

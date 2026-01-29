@@ -366,9 +366,11 @@ export const useSubmission = () => {
       if (formData.subtitles) {
         formDataToSend.append('subtitles', formData.subtitles);
       }
-      formData.gallery.forEach(file => {
-        formDataToSend.append('gallery', file);
-      });
+      if (formData.gallery && Array.isArray(formData.gallery)) {
+        formData.gallery.forEach(file => {
+          formDataToSend.append('gallery', file);
+        });
+      }
       
       // Préparer données JSON
       const data = {
@@ -390,8 +392,8 @@ export const useSubmission = () => {
         creator_address: formData.creator_address,
         referral_source: formData.referral_source || undefined,
         terms_of_use: formData.termsAccepted,
-        collaborators: formData.collaborators.length > 0 ? formData.collaborators : undefined,
-        socials: formData.socials.length > 0 ? formData.socials : undefined
+        collaborators: (formData.collaborators && formData.collaborators.length > 0) ? formData.collaborators : undefined,
+        socials: (formData.socials && formData.socials.length > 0) ? formData.socials : undefined
       };
       
       formDataToSend.append('data', JSON.stringify(data));

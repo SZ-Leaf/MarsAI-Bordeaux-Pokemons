@@ -6,9 +6,9 @@ import SubmissionForm from '../components/SubmissionForm.jsx';
 import VideoUpload from '../components/VideoUpload.jsx';
 import FileUploader from '../components/FileUploader.jsx';
 import CreatorForm from '../components/CreatorForm.jsx';
-import CollaboratorsForm from '../components/CollaboratorsForm.jsx';
+import CollaboratorsList from '../components/CollaboratorsList.jsx';
 import GalleryUpload from '../components/GalleryUpload.jsx';
-import SocialLinksForm from '../components/SocialLinksForm.jsx';
+import SocialLinksList from '../components/SocialLinksList.jsx';
 
 /**
  * Page de soumission de film (4 étapes)
@@ -55,7 +55,6 @@ const Submit = () => {
       setTimeout(() => {
         // Chercher le premier champ en erreur en cherchant les éléments avec border-red-500
         // ou les messages d'erreur
-        const firstErrorKey = errorKeys[0];
         
         // Chercher d'abord les messages d'erreur (plus fiable)
         const errorMessages = document.querySelectorAll('.text-red-500');
@@ -218,7 +217,7 @@ const Submit = () => {
             />
             
             <div className="border-t pt-6">
-              <SocialLinksForm
+              <SocialLinksList
                 formData={formData}
                 errors={errors}
                 updateField={updateField}
@@ -227,7 +226,7 @@ const Submit = () => {
             </div>
             
             <div className="border-t pt-6">
-              <CollaboratorsForm
+              <CollaboratorsList
                 formData={formData}
                 errors={errors}
                 updateField={updateField}

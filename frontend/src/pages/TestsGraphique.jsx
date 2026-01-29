@@ -3,9 +3,17 @@ import '../App.css';
 import useModal from '../utils/useModal';
 import Modal from '../components/Modal';
 import Card from '../components/Card';
+import Form from '../components/forms/Form';
 
 export default function Homepage() {
   const loginModal = useModal();
+  const formLightModal = useModal();
+  const formDarkModal = useModal();
+
+  const handleFormSubmit = (data) => {
+    console.log('Données du formulaire:', data);
+    alert('Formulaire soumis ! Vérifiez la console pour voir les données.');
+  };
 
   return (
     <div className="pb-20">
@@ -53,27 +61,61 @@ export default function Homepage() {
 
         {/* Boutons pour ouvrir les différentes modals */}
         <div className="flex flex-col gap-4">
+          <h2 className="text-2xl font-bold text-blue">Tester les Modals avec Formulaires</h2>
           <div className="flex gap-3 flex-wrap justify-center">
             <button 
               className="btn btn-modern" 
               onClick={loginModal.openModal}
             >
-              Modal
+              Modal Simple
             </button>
-            
+            <button 
+              className="btn btn-primary" 
+              onClick={formLightModal.openModal}
+            >
+              Formulaire Light
+            </button>
+            <button 
+              className="btn btn-secondary" 
+              onClick={formDarkModal.openModal}
+            >
+              Formulaire Dark
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Modal de Connexion */}
+      {/* Modal Simple */}
       <Modal
         isOpen={loginModal.isOpen}
         onClose={loginModal.closeModal}
-        title="Modal"
+        title="Modal Simple"
         size="md"
       >
-        <p>Contenu du modal</p>
+        <p className="mb-4">Contenu basique d'une modal</p>
         <input type="text" className="input-dark" placeholder="Input Dark" />
+      </Modal>
+
+      {/* Modal avec Formulaire Light */}
+      <Modal
+        isOpen={formLightModal.isOpen}
+        onClose={formLightModal.closeModal}
+        title="Formulaire - Version Light"
+        size="lg"
+      >
+        <Form variant="light" onSubmit={handleFormSubmit} />
+      </Modal>
+
+      {/* Modal avec Formulaire Dark */}
+      <Modal
+        isOpen={formDarkModal.isOpen}
+        onClose={formDarkModal.closeModal}
+        title="Formulaire - Version Dark"
+        size="lg"
+      >
+        <div className="p-6 rounded-xl">
+          <Form variant="dark" onSubmit={handleFormSubmit} />
+        </div>
       </Modal>
     </div>
   );

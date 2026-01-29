@@ -1,3 +1,4 @@
+@import "../../theme.css";
 /* Classe de base commune à tous les inputs */
 .input-dark {
   @apply bg-white/10 backdrop-blur-md;

@@ -12,7 +12,7 @@ import db from '../../config/db_pool.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Chemin de base pour les uploads (depuis backend/src/)
+// Chemin de base pour les uploads (depuis backend/src/controllers/submissions/)
 const getUploadsBasePath = () => {
   return path.join(__dirname, '../../uploads');
 };

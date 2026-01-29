@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 
 // Chemin de base pour les uploads (depuis backend/src/)
 const getUploadsBasePath = () => {
-  return path.join(__dirname, '../../uploads');
+  return path.join(__dirname, '../uploads');
 };
 
 // Configuration du stockage temporaire

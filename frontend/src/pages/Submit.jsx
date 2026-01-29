@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useSubmission } from '../hooks/useSubmission.js';
 import StepIndicator from '../components/StepIndicator.jsx';
 import CGUForm from '../components/CGUForm.jsx';
@@ -34,8 +33,8 @@ const Submit = () => {
   const handleSubmit = async () => {
     try {
       await submit();
-    } catch (error) {
-      // Erreur déjà gérée dans le hook
+    } catch {
+      // Erreur déjà gérée dans le hook 
     }
   };
   

@@ -5,10 +5,13 @@ export const startYoutubeAuth = (req, res) => {
     access_type: 'offline',
     prompt: 'consent',
     scope: ['https://www.googleapis.com/auth/youtube.upload'],
+    redirect_uri: process.env.REDIRECT_URI, // 👈 AJOUTE ÇA
   });
 
+  console.log('👉 OAuth URL =', url); // DEBUG
   res.redirect(url);
 };
+
 
 export const youtubeCallback = async (req, res) => {
   try {

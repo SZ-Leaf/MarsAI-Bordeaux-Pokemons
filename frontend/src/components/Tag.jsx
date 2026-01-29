@@ -1,10 +1,10 @@
 import React from 'react';
-import '../ui/tags.css';
+import '../components/ui/tags.css';
 
 /**
- * TagInput Component - Composant visuel pour les tags
+ * Tag Component - Composant visuel pour les tags
  */
-export default function TagInput({ variant = 'dark', tags = [], status = null }) {
+export default function Tag({ variant = 'dark', tags = [], status = null }) {
   return (
     <div className="tag-input-container">
       {/* Affichage du statut (tag spécial) */}

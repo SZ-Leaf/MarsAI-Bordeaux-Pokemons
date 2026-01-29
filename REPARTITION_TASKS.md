@@ -176,7 +176,7 @@ Le formulaire d'upload de vidéo doit se faire en 3 parties distinctes :
 - `utils/schemas.js` : tagSchema (Zod)
 
 **Frontend (3 pts) :**
-- `components/TagInput.jsx` : Input tags avec suggestions (autocomplete)
+- `components/Tag.jsx` : Affichage des tags (variant light/dark + status)
 - `components/TagList.jsx` : Liste tags sélectionnés (suppression possible)
 - `components/ClassificationSelect.jsx` : Select classification (IA/hybrid/manual)
 - `hooks/useTags.js` : Hook gestion tags (fetch, create, suggestions)

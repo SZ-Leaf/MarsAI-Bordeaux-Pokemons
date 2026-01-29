@@ -4,7 +4,7 @@ import useModal from '../utils/useModal';
 import Modal from '../components/Modal';
 import Card from '../components/Card';
 import Form from '../components/forms/Form';
-import TagInput from '../components/forms/TagInput';
+import Tag from '../components/Tag';
 import '../components/ui/loading.css';
 
 export default function Homepage() {
@@ -68,7 +68,7 @@ export default function Homepage() {
           <div className="flex flex-col gap-8">
             {/* Tags Light avec Statut */}
             <div className="p-6 bg-white rounded-xl shadow-md">
-              <TagInput
+              <Tag
                 variant="light"
                 status="En attente"
                 tags={['Animation', 'VFX', 'Motion Design', 'Court-métrage']}
@@ -77,7 +77,7 @@ export default function Homepage() {
 
             {/* Tags Dark avec Statut */}
             <div className="p-6 bg-gray-900 rounded-xl shadow-md">
-              <TagInput
+              <Tag
                 variant="dark"
                 status="Approuvé"
                 tags={['3D', 'Cinématique', 'Sci-Fi', 'Prix du Jury']}

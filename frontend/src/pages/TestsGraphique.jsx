@@ -14,7 +14,6 @@ export default function Homepage() {
         
         {/* Section Cards */}
         <div className="w-full max-w-4xl">
-          <h2 className="text-2xl font-semibold mb-6">Cartes</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card 
               type="text" 
@@ -31,7 +30,6 @@ export default function Homepage() {
         </div>
 
         <div className="flex flex-col gap-4 w-full max-w-md">
-          <h2 className="text-2xl font-semibold mb-2">Inputs</h2>
           <input type="text" className="input-dark" placeholder="Input Dark" />
           <input type="text" className="input-light" placeholder="Input Light" />
           <select className="select-dark">

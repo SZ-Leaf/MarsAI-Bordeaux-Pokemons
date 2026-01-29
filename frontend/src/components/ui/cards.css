@@ -3,7 +3,8 @@
 .card {
   @apply bg-sky rounded-2xl overflow-hidden flex flex-col;
   @apply transition-transform duration-200 ease-in-out;
-  @apply border border-black/5;
+  @apply border-black/5;
+  @apply shadow-sm shadow-white;
 }
 
 .card:hover {
@@ -16,7 +17,7 @@
 }
 
 .card-title-accent {
-  @apply text-[#2b7fff] font-extrabold mb-6 uppercase tracking-wider text-[48px];
+  @apply text-blue font-extrabold mb-6 uppercase tracking-wider text-[48px];
 }
 
 .card-description {

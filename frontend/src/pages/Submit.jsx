@@ -27,8 +27,6 @@ const Submit = () => {
     submitError,
     submitSuccess,
     updateField,
-    updateCollaboratorField,
-    updateSocialField,
     nextStep,
     prevStep,
     submit,
@@ -221,7 +219,6 @@ const Submit = () => {
                 formData={formData}
                 errors={errors}
                 updateField={updateField}
-                updateSocialField={updateSocialField}
               />
             </div>
             
@@ -230,7 +227,6 @@ const Submit = () => {
                 formData={formData}
                 errors={errors}
                 updateField={updateField}
-                updateCollaboratorField={updateCollaboratorField}
               />
             </div>
           </div>

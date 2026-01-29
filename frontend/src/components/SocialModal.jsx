@@ -6,12 +6,6 @@ import { validateURL } from '../utils/validation.js';
  * Modal pour ajouter/modifier un réseau social
  */
 const SocialModal = ({ isOpen, onClose, social, socialIndex, onSave, errors }) => {
-  const [formData, setFormData] = useState({
-    network_id: '',
-    url: ''
-  });
-  const [localErrors, setLocalErrors] = useState({});
-
   // Réseaux sociaux disponibles
   const socialNetworks = [
     { id: 1, title: 'fb', label: 'Facebook' },
@@ -22,19 +16,34 @@ const SocialModal = ({ isOpen, onClose, social, socialIndex, onSave, errors }) =
     { id: 6, title: 'website', label: 'Site web' }
   ];
 
+  // Calculer les données initiales basées sur le social
+  const initialFormData = social ? {
+    network_id: social.network_id || '',
+    url: social.url || ''
+  } : {
+    network_id: '',
+    url: ''
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
+  const [localErrors, setLocalErrors] = useState({});
+
+  // Réinitialiser le formulaire quand le social change (seulement quand le modal s'ouvre)
   useEffect(() => {
-    if (social) {
-      setFormData({
+    if (isOpen) {
+      const newFormData = social ? {
         network_id: social.network_id || '',
         url: social.url || ''
-      });
-    } else {
-      setFormData({
+      } : {
         network_id: '',
         url: ''
-      });
+      };
+      // Utiliser setTimeout pour éviter l'appel synchrone
+      setTimeout(() => {
+        setFormData(newFormData);
+        setLocalErrors({});
+      }, 0);
     }
-    setLocalErrors({});
   }, [social, isOpen]);
 
   const handleChange = (field, value) => {

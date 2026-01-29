@@ -1,5 +1,3 @@
-import { validateURL } from '../utils/validation.js';
-
 /**
  * Formulaire liens sociaux (Partie 4)
  * Design épuré et simple

@@ -6,34 +6,46 @@ import { validateEmail } from '../utils/validation.js';
  * Modal pour ajouter/modifier un contributeur
  */
 const CollaboratorModal = ({ isOpen, onClose, collaborator, collaboratorIndex, onSave, errors }) => {
-  const [formData, setFormData] = useState({
+  // Calculer les données initiales basées sur le collaborator
+  const initialFormData = collaborator ? {
+    firstname: collaborator.firstname || '',
+    lastname: collaborator.lastname || '',
+    email: collaborator.email || '',
+    gender: collaborator.gender || '',
+    role: collaborator.role || ''
+  } : {
     firstname: '',
     lastname: '',
     email: '',
     gender: '',
     role: ''
-  });
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
   const [localErrors, setLocalErrors] = useState({});
 
+  // Réinitialiser le formulaire quand le collaborator change (seulement quand le modal s'ouvre)
   useEffect(() => {
-    if (collaborator) {
-      setFormData({
+    if (isOpen) {
+      const newFormData = collaborator ? {
         firstname: collaborator.firstname || '',
         lastname: collaborator.lastname || '',
         email: collaborator.email || '',
         gender: collaborator.gender || '',
         role: collaborator.role || ''
-      });
-    } else {
-      setFormData({
+      } : {
         firstname: '',
         lastname: '',
         email: '',
         gender: '',
         role: ''
-      });
+      };
+      // Utiliser setTimeout pour éviter l'appel synchrone
+      setTimeout(() => {
+        setFormData(newFormData);
+        setLocalErrors({});
+      }, 0);
     }
-    setLocalErrors({});
   }, [collaborator, isOpen]);
 
   const handleChange = (field, value) => {

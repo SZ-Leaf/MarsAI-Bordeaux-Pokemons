@@ -1,5 +1,3 @@
-import { validateEmail } from '../utils/validation.js';
-
 /**
  * Formulaire collaborateurs (Partie 4)
  * Design épuré et simple

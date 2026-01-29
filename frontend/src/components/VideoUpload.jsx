@@ -11,6 +11,8 @@ const VideoUpload = ({ value, onChange, error }) => {
   
   // Recréer le preview si le fichier existe mais le preview n'existe pas
   useEffect(() => {
+    let isMounted = true;
+    
     if (value) {
       // Nettoyer l'ancien preview s'il existe
       if (previewUrlRef.current) {
@@ -19,18 +21,31 @@ const VideoUpload = ({ value, onChange, error }) => {
       // Créer un nouveau preview
       const videoUrl = URL.createObjectURL(value);
       previewUrlRef.current = videoUrl;
-      setPreview(videoUrl);
+      
+      // Utiliser setTimeout pour éviter l'appel synchrone
+      setTimeout(() => {
+        if (isMounted) {
+          setPreview(videoUrl);
+        }
+      }, 0);
     } else {
       // Nettoyer si value est null
       if (previewUrlRef.current) {
         URL.revokeObjectURL(previewUrlRef.current);
         previewUrlRef.current = null;
       }
-      setPreview(null);
+      
+      // Utiliser setTimeout pour éviter l'appel synchrone
+      setTimeout(() => {
+        if (isMounted) {
+          setPreview(null);
+        }
+      }, 0);
     }
     
     // Nettoyer l'URL quand le composant est démonté
     return () => {
+      isMounted = false;
       if (previewUrlRef.current) {
         URL.revokeObjectURL(previewUrlRef.current);
       }

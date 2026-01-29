@@ -4,7 +4,7 @@ import SocialModal from './SocialModal.jsx';
 /**
  * Liste des réseaux sociaux avec modals pour ajout/modification
  */
-const SocialLinksList = ({ formData, errors, updateField, updateSocialField }) => {
+const SocialLinksList = ({ formData, errors, updateField }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
 

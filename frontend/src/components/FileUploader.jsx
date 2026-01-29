@@ -17,23 +17,38 @@ const FileUploader = ({
   const [dragActive, setDragActive] = useState(false);
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);
+  const previewRef = useRef(null);
   
   // Générer preview pour les images
   useEffect(() => {
+    let isMounted = true;
+    
     if (value && !Array.isArray(value) && value.type && value.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreview(reader.result);
+        // Le callback est déjà asynchrone, donc pas de problème ici
+        if (isMounted) {
+          setPreview(reader.result);
+          previewRef.current = reader.result;
+        }
       };
       reader.readAsDataURL(value);
     } else {
-      setPreview(null);
+      // Utiliser setTimeout pour éviter l'appel synchrone
+      setTimeout(() => {
+        if (isMounted) {
+          setPreview(null);
+          previewRef.current = null;
+        }
+      }, 0);
     }
     
     // Cleanup
     return () => {
-      if (preview && preview.startsWith('data:')) {
-        URL.revokeObjectURL(preview);
+      isMounted = false;
+      if (previewRef.current && previewRef.current.startsWith('data:')) {
+        // Note: data URLs n'ont pas besoin de revokeObjectURL
+        previewRef.current = null;
       }
     };
   }, [value]);

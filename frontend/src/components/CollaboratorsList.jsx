@@ -4,7 +4,7 @@ import CollaboratorModal from './CollaboratorModal.jsx';
 /**
  * Liste des contributeurs avec modals pour ajout/modification
  */
-const CollaboratorsList = ({ formData, errors, updateField, updateCollaboratorField }) => {
+const CollaboratorsList = ({ formData, errors, updateField }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
 

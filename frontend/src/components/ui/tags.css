@@ -1,0 +1,80 @@
+@import "tailwindcss" reference;
+@import "../../theme.css";
+
+
+
+/* Style de base des tags */
+.tag {
+  @apply px-2 py-1;
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200;
+  animation: tagAppear 0.2s ease;
+}
+
+/* Tag variant light */
+.tag-light {
+  @apply text-white shadow-md;
+  @apply bg-linear-to-r from-blue to-cyan;
+}
+
+.tag-light:hover {
+  @apply hover:scale-102 hover:shadow-xl
+}
+
+/* Tag variant dark */
+.tag-dark {
+  @apply border;
+  background: linear-gradient(135deg, 
+    rgba(255, 107, 107, 0.2) 0%, 
+    rgba(78, 205, 196, 0.2) 100%);
+  color: var(--primary-color, #FF6B6B);
+  border-color: var(--primary-color, #FF6B6B);
+  @apply hover:scale-102 hover:shadow-xl
+}
+
+.tag-dark:hover {
+  background: linear-gradient(135deg, 
+    rgba(255, 107, 107, 0.3) 0%, 
+    rgba(78, 205, 196, 0.3) 100%);
+}
+
+/* Tag statut - style spécial */
+.tag-status {
+  @apply font-semibold px-5 py-2.5 text-base tracking-wide w-fit;
+}
+
+.tag-status.tag-light {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  @apply shadow-lg shadow-blue/20;
+}
+
+.tag-status.tag-dark {
+  @apply border-2;
+  background: linear-gradient(135deg, 
+    rgba(102, 126, 234, 0.2) 0%, 
+    rgba(118, 75, 162, 0.2) 100%);
+  @apply text-blue;
+  @apply border-blue/30;
+}
+
+/* Animation d'apparition */
+@keyframes tagAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .tag {
+    @apply text-xs px-3 py-1.5;
+  }
+  
+  .tag-status {
+    @apply text-sm px-4 py-2;
+  }
+}

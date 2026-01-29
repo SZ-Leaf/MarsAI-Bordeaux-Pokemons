@@ -4,6 +4,7 @@ import useModal from '../utils/useModal';
 import Modal from '../components/Modal';
 import Card from '../components/Card';
 import Form from '../components/forms/Form';
+import TagInput from '../components/forms/TagInput';
 
 export default function Homepage() {
   const loginModal = useModal();
@@ -57,6 +58,31 @@ export default function Homepage() {
           <button className="btn btn-secondary">Secondary Action</button>
           <button className="btn btn-modern">Modern Action</button>
           <button className="btn btn-danger">Danger Action</button>
+        </div>
+
+        {/* Section Tags */}
+        <div className="w-full max-w-2xl">
+          <h2 className="text-2xl font-bold text-blue mb-6 text-center">Tags</h2>
+          
+          <div className="flex flex-col gap-8">
+            {/* Tags Light avec Statut */}
+            <div className="p-6 bg-white rounded-xl shadow-md">
+              <TagInput 
+                variant="light" 
+                status="En attente"
+                tags={['Animation', 'VFX', 'Motion Design', 'Court-métrage']}
+              />
+            </div>
+
+            {/* Tags Dark avec Statut */}
+            <div className="p-6 bg-gray-900 rounded-xl shadow-md">
+              <TagInput 
+                variant="dark" 
+                status="Approuvé"
+                tags={['3D', 'Cinématique', 'Sci-Fi', 'Prix du Jury']}
+              />
+            </div>
+          </div>
         </div>
 
         {/* Boutons pour ouvrir les différentes modals */}

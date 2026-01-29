@@ -110,9 +110,11 @@
 .newsletter-card-title {
   @apply text-2xl font-bold text-white mb-6;
   @apply tracking-wide;
-  @apply bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400;
-  @apply bg-clip-text text-transparent;
+  background: linear-gradient(to right, #60a5fa, #22d3ee, #60a5fa);
   background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   animation: gradient-shift 3s ease infinite;
 }
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './footer.css';
 import '../navbar/navbar.css';
+import '../../ui/buttons.css';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
@@ -93,8 +94,8 @@ const Footer = () => {
                 className="newsletter-input"
                 required
               />
-              <button type="submit" className="newsletter-button">
-                {isSubscribed ? '✓' : 'OK'}
+              <button type="submit" className="btn btn-primary newsletter-btn">
+                {isSubscribed ? '✓ Inscrit' : "S'inscrire"}
               </button>
             </form>
           </div>

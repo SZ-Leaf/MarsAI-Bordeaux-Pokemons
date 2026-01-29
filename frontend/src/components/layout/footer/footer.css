@@ -28,7 +28,7 @@
    SECTION BRAND (Logo + Description + Social)
    ============================================ */
 .footer-brand {
-  @apply col-span-1 md:col-span-4;
+  @apply col-span-1 md:col-span-3;
   @apply flex flex-col gap-6;
 }
 
@@ -97,7 +97,7 @@
    NEWSLETTER CARD
    ============================================ */
 .footer-newsletter-card {
-  @apply col-span-1 md:col-span-4;
+  @apply col-span-1 md:col-span-5;
   @apply p-8;
   @apply bg-gradient-to-br from-white/5 to-white/[0.02];
   @apply backdrop-blur-md;
@@ -141,15 +141,11 @@
   @apply text-sm;
 }
 
-.newsletter-button {
-  @apply px-8 py-3.5 font-bold;
-  @apply bg-gradient-to-r from-blue-500 to-cyan-500;
-  @apply text-white rounded-xl;
-  @apply transition-all duration-300;
-  @apply hover:scale-105 hover:shadow-lg hover:shadow-blue-500/50;
-  @apply active:scale-95;
-  @apply focus:outline-none focus:ring-2 focus:ring-blue-400/50;
-  @apply uppercase tracking-wider text-sm;
+/* Ajustement du bouton newsletter */
+.newsletter-btn {
+  @apply px-5 py-3;
+  @apply shrink-0;
+  @apply w-auto;
 }
 
 /* ============================================
@@ -180,6 +176,45 @@
 }
 
 /* ============================================
+   RESPONSIVE - TABLETTE
+   ============================================ */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .footer-grid {
+    @apply gap-8;
+  }
+
+  .footer-brand {
+    @apply col-span-12;
+    @apply text-center;
+  }
+
+  .footer-tagline {
+    @apply mx-auto;
+  }
+
+  .footer-social {
+    @apply justify-center;
+  }
+
+  .footer-column {
+    @apply col-span-6;
+  }
+
+  .footer-newsletter-card {
+    @apply col-span-12;
+    @apply p-6;
+  }
+
+  .newsletter-card-title {
+    @apply text-xl;
+  }
+
+  .footer-bottom {
+    @apply flex-col text-center gap-3;
+  }
+}
+
+/* ============================================
    RESPONSIVE - MOBILE
    ============================================ */
 @media (max-width: 768px) {
@@ -197,11 +232,12 @@
   }
 
   .footer-brand {
-    @apply col-span-1;
+    @apply col-span-12;
   }
 
-  .footer-logo {
-    @apply text-2xl;
+  /* Forcer l'affichage du logo dans le footer (contrairement au header) */
+  .footer-brand .navbar-logo {
+    @apply block text-2xl;
   }
 
   .footer-tagline {
@@ -209,11 +245,11 @@
   }
 
   .footer-column {
-    @apply col-span-1;
+    @apply col-span-6;
   }
 
   .footer-newsletter-card {
-    @apply col-span-1 p-6;
+    @apply col-span-12 p-6;
   }
 
   .newsletter-card-title {

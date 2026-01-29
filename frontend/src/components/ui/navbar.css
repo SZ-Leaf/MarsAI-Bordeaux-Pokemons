@@ -6,8 +6,9 @@
 }
 
 .header-pill-content {
-  @apply flex items-center justify-between;
-  @apply px-10 py-2 pr-3;
+  @apply grid items-center;
+  grid-template-columns: 1fr auto 1fr;
+  @apply px-10 py-2;
   @apply bg-white/10 backdrop-blur-xl;
   @apply border border-white/10 rounded-full;
   @apply shadow-2xl;
@@ -17,6 +18,7 @@
 .navbar-logo {
   @apply font-sans text-2xl font-black text-white uppercase tracking-wide;
   @apply flex-shrink-0 cursor-default;
+  @apply justify-self-start;
 }
 
 .navbar-logo span {
@@ -26,7 +28,8 @@
 
 /* Navbar Links */
 .navbar-links {
-  @apply flex items-center justify-center flex-grow gap-10;
+  @apply flex items-center justify-center gap-10;
+  @apply col-start-2;
 }
 
 .navbar-item {
@@ -59,10 +62,11 @@
   }
 
   .header-pill-content {
+    @apply flex justify-around;
+    grid-template-columns: none;
     @apply px-4 py-3;
     @apply rounded-t-3xl rounded-b-none;
     @apply border-t border-x border-b-0;
-    @apply justify-around;
   }
 
   /* Masquer le logo en version mobile */

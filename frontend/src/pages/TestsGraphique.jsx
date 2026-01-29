@@ -5,6 +5,7 @@ import Modal from '../components/Modal';
 import Card from '../components/Card';
 import Form from '../components/forms/Form';
 import TagInput from '../components/forms/TagInput';
+import '../components/ui/loading.css';
 
 export default function Homepage() {
   const loginModal = useModal();
@@ -20,20 +21,20 @@ export default function Homepage() {
     <div className="pb-20">
       <section className="flex flex-col items-center justify-center min-h-screen gap-10 mb-10">
         <h1 className="text-4xl font-bold text-blue mb-4">Composants UI</h1>
-        
+
         {/* Section Cards */}
         <div className="w-full max-w-4xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card 
-              type="text" 
-              title="1 MINUTE" 
-              description="FORMAT ULTRA-COURT POUR UN IMPACT MAXIMUM." 
+            <Card
+              type="text"
+              title="1 MINUTE"
+              description="FORMAT ULTRA-COURT POUR UN IMPACT MAXIMUM."
             />
-            <Card 
-              type="image" 
-              image="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=1000&auto=format&fit=crop" 
-              title="PROTOCOL ALPHA" 
-              subtitle="DIR. STARK" 
+            <Card
+              type="image"
+              image="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=1000&auto=format&fit=crop"
+              title="PROTOCOL ALPHA"
+              subtitle="DIR. STARK"
             />
           </div>
         </div>
@@ -63,12 +64,12 @@ export default function Homepage() {
         {/* Section Tags */}
         <div className="w-full max-w-2xl">
           <h2 className="text-2xl font-bold text-blue mb-6 text-center">Tags</h2>
-          
+
           <div className="flex flex-col gap-8">
             {/* Tags Light avec Statut */}
             <div className="p-6 bg-white rounded-xl shadow-md">
-              <TagInput 
-                variant="light" 
+              <TagInput
+                variant="light"
                 status="En attente"
                 tags={['Animation', 'VFX', 'Motion Design', 'Court-métrage']}
               />
@@ -76,8 +77,8 @@ export default function Homepage() {
 
             {/* Tags Dark avec Statut */}
             <div className="p-6 bg-gray-900 rounded-xl shadow-md">
-              <TagInput 
-                variant="dark" 
+              <TagInput
+                variant="dark"
                 status="Approuvé"
                 tags={['3D', 'Cinématique', 'Sci-Fi', 'Prix du Jury']}
               />
@@ -89,25 +90,31 @@ export default function Homepage() {
         <div className="flex flex-col gap-4">
           <h2 className="text-2xl font-bold text-blue mb-10">Modals</h2>
           <div className="flex gap-3 flex-wrap justify-center">
-            <button 
-              className="btn btn-modern" 
+            <button
+              className="btn btn-modern"
               onClick={loginModal.openModal}
             >
               Modal Simple
             </button>
-            <button 
-              className="btn btn-primary" 
+            <button
+              className="btn btn-primary"
               onClick={formLightModal.openModal}
             >
               Formulaire Light
             </button>
-            <button 
-              className="btn btn-secondary" 
+            <button
+              className="btn btn-secondary"
               onClick={formDarkModal.openModal}
             >
               Formulaire Dark
             </button>
           </div>
+        </div>
+        <div>
+          <div class="flex items-center justify-center">
+            <div className="loading"></div>
+          </div>
+
         </div>
       </section>
 
@@ -129,8 +136,8 @@ export default function Homepage() {
         title="Formulaire - Version Light"
         size="lg"
       >
-        <Form 
-          variant="light" 
+        <Form
+          variant="light"
           onSubmit={handleFormSubmit}
           onCancel={formLightModal.closeModal}
         />
@@ -144,8 +151,8 @@ export default function Homepage() {
         size="lg"
       >
         <div className="p-6 rounded-xl">
-          <Form 
-            variant="dark" 
+          <Form
+            variant="dark"
             onSubmit={handleFormSubmit}
             onCancel={formDarkModal.closeModal}
           />

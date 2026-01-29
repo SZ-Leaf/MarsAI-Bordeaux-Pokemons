@@ -1,10 +1,9 @@
 import { Router } from 'express';
+import authRoutes from './auth/auth_routes.js';
+
+const indexRoutes = Router();
+
+indexRoutes.use('/auth', authRoutes);
 
 
-const router = Router();
-
-
-
-
-
-export default router;
+export default indexRoutes;

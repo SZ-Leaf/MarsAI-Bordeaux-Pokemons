@@ -32,14 +32,7 @@
   @apply flex flex-col gap-6;
 }
 
-.footer-logo {
-  @apply font-sans text-3xl font-black text-white uppercase tracking-wide;
-}
-
-.footer-logo .gradient-text {
-  @apply bg-gradient-to-r from-blue-400 to-cyan-400;
-  @apply bg-clip-text text-transparent font-black;
-}
+/* Le logo utilise la classe .navbar-logo importée depuis navbar.css */
 
 .footer-tagline {
   @apply text-white/60 text-sm leading-relaxed italic;

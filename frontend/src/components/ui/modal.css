@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import "../../theme.css";
 
 /* Overlay de la modal */
 .modal-overlay {
@@ -23,7 +23,7 @@
   @apply shadow-2xl;
   @apply max-h-[90vh] overflow-hidden;
   @apply flex flex-col;
-  background-color: var(--color-surface);
+  background-color: bg-surface;
   backdrop-filter: blur(12px);
   animation: modalSlideIn 0.3s ease-out;
 }
@@ -55,7 +55,7 @@
 .modal-title {
   @apply text-xl font-bold;
   @apply pr-8;
-  color: var(--color-white);
+  color: color-white;
 }
 
 /* Bouton de fermeture */
@@ -76,7 +76,7 @@
   @apply bg-white/10;
   @apply border-white/20;
   @apply rotate-90;
-  color: var(--color-white);
+  color: color-white;
 }
 
 .modal-close-btn:active {

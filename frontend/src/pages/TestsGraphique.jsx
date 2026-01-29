@@ -2,14 +2,36 @@ import React from 'react';
 import '../App.css';
 import useModal from '../utils/useModal';
 import Modal from '../components/Modal';
+import Card from '../components/Card';
 
 export default function Homepage() {
   const loginModal = useModal();
 
   return (
-    <div>
-      <section className="flex flex-col items-center justify-center h-screen gap-10">
-        <div className="flex flex-col gap-4">
+    <div className="pb-20">
+      <section className="flex flex-col items-center justify-center min-h-screen gap-10 p-10">
+        <h1 className="text-4xl font-bold text-blue mb-4">Composants UI</h1>
+        
+        {/* Section Cards */}
+        <div className="w-full max-w-4xl">
+          <h2 className="text-2xl font-semibold mb-6">Cartes</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <Card 
+              type="text" 
+              title="1 MINUTE" 
+              description="FORMAT ULTRA-COURT POUR UN IMPACT MAXIMUM." 
+            />
+            <Card 
+              type="image" 
+              image="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=1000&auto=format&fit=crop" 
+              title="PROTOCOL ALPHA" 
+              subtitle="DIR. STARK" 
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4 w-full max-w-md">
+          <h2 className="text-2xl font-semibold mb-2">Inputs</h2>
           <input type="text" className="input-dark" placeholder="Input Dark" />
           <input type="text" className="input-light" placeholder="Input Light" />
           <select className="select-dark">
@@ -33,7 +55,6 @@ export default function Homepage() {
 
         {/* Boutons pour ouvrir les différentes modals */}
         <div className="flex flex-col gap-4">
-          <h3 className="text-lg font-bold text-center">Exemples de Modals avec Forms</h3>
           <div className="flex gap-3 flex-wrap justify-center">
             <button 
               className="btn btn-modern" 

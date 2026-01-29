@@ -4,12 +4,18 @@
 
 /**
  * Valide un email
+ * Utilise une regex plus stricte similaire à celle de Zod
  * @param {string} email - Email à valider
  * @returns {boolean} - True si valide
  */
 export const validateEmail = (email) => {
   if (!email) return false;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Regex plus stricte qui correspond mieux à la validation Zod
+  // Format: local@domain.tld où:
+  // - local: au moins un caractère alphanumérique, peut contenir . _ ' + - mais pas au début/fin
+  // - domain: au moins un caractère alphanumérique, peut contenir des tirets
+  // - tld: au moins 2 lettres
+  const emailRegex = /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\.-]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/;
   return emailRegex.test(email);
 };
 

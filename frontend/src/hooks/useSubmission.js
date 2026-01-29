@@ -404,7 +404,19 @@ export const useSubmission = () => {
       setSubmitSuccess(result);
       return result;
     } catch (error) {
-      setSubmitError(error.message || 'Erreur lors de la soumission');
+      // Construire un message d'erreur détaillé
+      let errorMessage = error.message || 'Erreur lors de la soumission';
+      
+      // Si l'erreur contient des détails de validation (erreurs Zod)
+      if (error.details && Array.isArray(error.details)) {
+        const validationErrors = error.details
+          .map(detail => `${detail.field}: ${detail.message}`)
+          .join(', ');
+        errorMessage = `Erreurs de validation: ${validationErrors}`;
+      }
+      
+      setSubmitError(errorMessage);
+      console.error('Erreur lors de la soumission:', error);
       throw error;
     } finally {
       setIsSubmitting(false);

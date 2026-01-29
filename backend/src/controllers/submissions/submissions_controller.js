@@ -104,7 +104,24 @@ export const submit = async (req, res) => {
       });
     }
     
-    const validatedData = submissionSchema.parse(submissionData);
+    // Validation avec Zod - gestion explicite des erreurs
+    let validatedData;
+    try {
+      validatedData = submissionSchema.parse(submissionData);
+    } catch (zodError) {
+      // S'assurer que c'est bien une erreur Zod
+      if (zodError.name === 'ZodError') {
+        return res.status(422).json({ 
+          error: 'Données invalides',
+          details: zodError.issues.map(err => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        });
+      }
+      // Si ce n'est pas une erreur Zod, la relancer pour être capturée par le catch général
+      throw zodError;
+    }
     
     // 7. Début transaction
     await connection.beginTransaction();
@@ -235,7 +252,7 @@ export const submit = async (req, res) => {
     if (error.name === 'ZodError') {
       return res.status(422).json({ 
         error: 'Données invalides',
-        details: error.errors.map(err => ({
+        details: error.issues.map(err => ({
           field: err.path.join('.'),
           message: err.message
         }))

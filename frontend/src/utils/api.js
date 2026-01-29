@@ -35,15 +35,40 @@ export const apiCall = async (endpoint, options = {}) => {
       }
     });
     
+    // Vérifier le Content-Type avant de parser
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.error('Réponse non-JSON reçue:', text.substring(0, 200));
+      throw new Error(`Réponse invalide du serveur (${response.status}): Le serveur a renvoyé du HTML au lieu de JSON. Vérifiez que le backend fonctionne correctement.`);
+    }
+    
     const data = await response.json();
     
     if (!response.ok) {
-      throw new Error(data.error || `Erreur ${response.status}: ${response.statusText}`);
+      // Créer une erreur avec plus de détails
+      const errorMessage = data.error || `Erreur ${response.status}: ${response.statusText}`;
+      const error = new Error(errorMessage);
+      
+      // Ajouter les détails de l'erreur si disponibles (pour les erreurs de validation Zod)
+      if (data.details) {
+        error.details = data.details;
+      }
+      
+      // Ajouter le code de statut
+      error.status = response.status;
+      
+      throw error;
     }
     
     return data;
   } catch (error) {
     console.error('Erreur API:', error);
+    // Si c'est déjà une erreur avec des détails, la relancer telle quelle
+    if (error.details || error.status) {
+      throw error;
+    }
+    // Sinon, créer une nouvelle erreur avec le message
     throw error;
   }
 };

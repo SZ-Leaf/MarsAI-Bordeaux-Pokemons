@@ -50,4 +50,50 @@
   @apply shadow-2xl;
 }
 
+/* ============================================
+   RESPONSIVE - VERSION MOBILE (Bottom bar)
+   ============================================ */
+@media (max-width: 768px) {
+  .header-pill-container {
+    @apply fixed bottom-0 top-auto left-0 translate-x-0 w-full max-w-full;
+  }
+
+  .header-pill-content {
+    @apply px-4 py-3;
+    @apply rounded-t-3xl rounded-b-none;
+    @apply border-t border-x border-b-0;
+    @apply justify-around;
+  }
+
+  /* Masquer le logo en version mobile */
+  .navbar-logo {
+    @apply hidden;
+  }
+
+  /* Navigation centrée et espacée */
+  .navbar-links {
+    @apply flex-grow justify-around gap-0 w-full;
+    @apply max-w-md mx-auto;
+  }
+
+  .navbar-item {
+    @apply h-12 w-12;
+    @apply flex-col;
+  }
+
+  .navbar-item:hover {
+    @apply translate-y-0 scale-110;
+  }
+
+  /* Point indicateur au-dessus de l'icône en mobile */
+  .navbar-dot {
+    @apply -top-1 bottom-auto;
+    @apply w-1.5 h-1.5;
+  }
+
+  .navbar-item.active {
+    @apply text-white scale-105;
+  }
+}
+
 

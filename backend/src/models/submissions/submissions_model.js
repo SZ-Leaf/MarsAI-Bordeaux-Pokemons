@@ -165,15 +165,15 @@ const getSubmissionById = async (submissionId) => {
     );
     submission.tags = tags;
     
-    // Récupérer les awards
-    const [awards] = await connection.execute(
-      `SELECT a.* FROM awards a
-       JOIN submissions_awards sa ON a.id = sa.award_id
-       WHERE sa.submission_id = ?
-       ORDER BY a.rank ASC`,
-      [submissionId]
-    );
-    submission.awards = awards;
+    // Récupérer les awards (désactivé pour le moment)
+    // const [awards] = await connection.execute(
+    //   `SELECT a.* FROM awards a
+    //    JOIN submissions_awards sa ON a.id = sa.award_id
+    //    WHERE sa.submission_id = ?
+    //    ORDER BY a.rank ASC`,
+    //   [submissionId]
+    // );
+    // submission.awards = awards;
     
     return submission;
   } catch (error) {

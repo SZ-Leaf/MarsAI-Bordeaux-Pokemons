@@ -12,6 +12,16 @@ export default function Homepage() {
         <div className="flex flex-col gap-4">
           <input type="text" className="input-dark" placeholder="Input Dark" />
           <input type="text" className="input-light" placeholder="Input Light" />
+          <select className="select-dark">
+            <option className="select-dark-option" value="1">Option 1</option>
+            <option className="select-dark-option" value="2">Option 2</option>
+            <option className="select-dark-option" value="3">Option 3</option>
+          </select>
+          <select className="select-light">
+            <option className="select-light-option" value="1">Option 1</option>
+            <option className="select-light-option" value="2">Option 2</option>
+            <option className="select-light-option" value="3">Option 3</option>
+          </select>
         </div>
 
         <div className="flex flex-col gap-4">

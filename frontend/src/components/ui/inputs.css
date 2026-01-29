@@ -21,3 +21,34 @@
   @apply placeholder:text-gray-400;
 }
 
+/* Selects */
+
+.select-dark {
+  @apply bg-white/10 backdrop-blur-md;
+  @apply w-full px-4 py-2;
+  @apply rounded-lg;
+  @apply border-2 border-gray-400;
+  @apply text-sm font-medium;
+  @apply transition-all duration-300 ease-out;
+  @apply focus:outline-none focus:ring-2;
+  @apply text-white;
+}
+
+.select-light {
+  @apply bg-white text-black backdrop-blur-md;
+  @apply w-full px-4 py-2;
+  @apply rounded-lg;
+  @apply border-2 border-gray-400;
+  @apply text-sm font-medium;
+  @apply transition-all duration-300 ease-out;
+  @apply focus:outline-none focus:ring-2;
+}
+
+/* Style pour les options pour assurer la lisibilité */
+.select-dark-option {
+  @apply bg-slate-800 text-white;
+}
+
+.select-light-option {
+  @apply bg-white text-black;
+}

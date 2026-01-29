@@ -75,7 +75,9 @@ const CollaboratorsForm = ({ formData, errors, updateField, updateCollaboratorFi
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Prénom</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Prénom <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     value={collab.firstname}
@@ -88,7 +90,9 @@ const CollaboratorsForm = ({ formData, errors, updateField, updateCollaboratorFi
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Nom</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Nom <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     value={collab.lastname}
@@ -101,7 +105,9 @@ const CollaboratorsForm = ({ formData, errors, updateField, updateCollaboratorFi
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Email</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Email <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="email"
                     value={collab.email}
@@ -114,7 +120,9 @@ const CollaboratorsForm = ({ formData, errors, updateField, updateCollaboratorFi
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Genre</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Genre <span className="text-red-500">*</span>
+                  </label>
                   <select
                     value={collab.gender}
                     onChange={(e) => updateCollaborator(index, 'gender', e.target.value)}
@@ -131,7 +139,9 @@ const CollaboratorsForm = ({ formData, errors, updateField, updateCollaboratorFi
                 </div>
                 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium mb-1">Rôle</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Rôle <span className="text-red-500">*</span>
+                  </label>
                   <textarea
                     value={collab.role}
                     onChange={(e) => updateCollaborator(index, 'role', e.target.value)}

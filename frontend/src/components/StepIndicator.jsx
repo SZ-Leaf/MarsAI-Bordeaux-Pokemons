@@ -5,9 +5,9 @@
 const StepIndicator = ({ currentStep }) => {
   const steps = [
     { number: 1, title: 'Conditions' },
-    { number: 2, title: 'Vidéo' },
-    { number: 3, title: 'Réalisateur' },
-    { number: 4, title: 'Contributeurs' }
+    { number: 2, title: 'Informations vidéo' },
+    { number: 3, title: 'Uploads' },
+    { number: 4, title: 'Réalisateur et Contributeurs' }
   ];
   
   return (

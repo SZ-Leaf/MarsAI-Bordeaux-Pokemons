@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 /**
  * Composant d'upload de vidéo (MP4/MOV)
@@ -7,20 +7,39 @@ import { useState, useRef } from 'react';
 const VideoUpload = ({ value, onChange, error }) => {
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);
+  const previewUrlRef = useRef(null);
   
-  const handleFile = (file) => {
-    if (file) {
-      // Créer preview
-      const videoUrl = URL.createObjectURL(file);
+  // Recréer le preview si le fichier existe mais le preview n'existe pas
+  useEffect(() => {
+    if (value) {
+      // Nettoyer l'ancien preview s'il existe
+      if (previewUrlRef.current) {
+        URL.revokeObjectURL(previewUrlRef.current);
+      }
+      // Créer un nouveau preview
+      const videoUrl = URL.createObjectURL(value);
+      previewUrlRef.current = videoUrl;
       setPreview(videoUrl);
-      onChange(file);
     } else {
-      if (preview) {
-        URL.revokeObjectURL(preview);
+      // Nettoyer si value est null
+      if (previewUrlRef.current) {
+        URL.revokeObjectURL(previewUrlRef.current);
+        previewUrlRef.current = null;
       }
       setPreview(null);
-      onChange(null);
     }
+    
+    // Nettoyer l'URL quand le composant est démonté
+    return () => {
+      if (previewUrlRef.current) {
+        URL.revokeObjectURL(previewUrlRef.current);
+      }
+    };
+  }, [value]); // Seulement dépendre de value
+  
+  const handleFile = (file) => {
+    // Le useEffect gérera la création/nettoyage du preview
+    onChange(file);
   };
   
   const formatFileSize = (bytes) => {
@@ -60,7 +79,7 @@ const VideoUpload = ({ value, onChange, error }) => {
             </p>
           </div>
         ) : (
-          <div>
+          <div className="text-center">
             <div className="text-sm mb-2">
               {value.name} ({formatFileSize(value.size)})
             </div>
@@ -68,7 +87,7 @@ const VideoUpload = ({ value, onChange, error }) => {
               <video
                 src={preview}
                 controls
-                className="w-full max-w-md rounded mb-2"
+                className="w-full max-w-md rounded mb-2 mx-auto block"
               />
             )}
             <button

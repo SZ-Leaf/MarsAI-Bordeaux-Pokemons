@@ -199,18 +199,22 @@ export const useSubmission = () => {
         break;
         
       case 2:
-        // Validation métadonnées vidéo
+        // Validation métadonnées vidéo (champs texte uniquement, pas d'upload)
         if (!formData.english_title) stepErrors.english_title = 'Requis';
         if (!formData.language) stepErrors.language = 'Requis';
         if (!formData.english_synopsis) stepErrors.english_synopsis = 'Requis';
         if (!formData.classification) stepErrors.classification = 'Requis';
         if (!formData.tech_stack) stepErrors.tech_stack = 'Requis';
         if (!formData.creative_method) stepErrors.creative_method = 'Requis';
+        break;
+        
+      case 3:
+        // Validation des uploads de fichiers
         if (!formData.video) stepErrors.video = 'Requis';
         if (!formData.cover) stepErrors.cover = 'Requis';
         break;
         
-      case 3:
+      case 4:
         // Validation infos créateur
         if (!formData.creator_firstname) stepErrors.creator_firstname = 'Requis';
         if (!formData.creator_lastname) stepErrors.creator_lastname = 'Requis';
@@ -246,9 +250,7 @@ export const useSubmission = () => {
             }
           });
         }
-        break;
         
-      case 4:
         // Validation des contributeurs si des contributeurs sont ajoutés
         // Si l'utilisateur a ajouté des contributeurs, ils doivent tous être complets
         if (formData.collaborators && formData.collaborators.length > 0) {
@@ -271,21 +273,6 @@ export const useSubmission = () => {
               stepErrors[`collaborator_${index}_role`] = 'Le rôle est requis';
             } else if (collab.role.trim().length > 500) {
               stepErrors[`collaborator_${index}_role`] = 'Le rôle ne peut pas dépasser 500 caractères';
-            }
-          });
-        }
-        
-        // Validation des réseaux sociaux si des liens sont ajoutés
-        // Si l'utilisateur a ajouté des réseaux sociaux, ils doivent tous être valides
-        if (formData.socials && formData.socials.length > 0) {
-          formData.socials.forEach((social, index) => {
-            if (!social.network_id || social.network_id <= 0 || social.network_id === '') {
-              stepErrors[`social_${index}_network_id`] = 'Le réseau social est requis';
-            }
-            if (!social.url || !social.url.trim()) {
-              stepErrors[`social_${index}_url`] = 'L\'URL est requise';
-            } else if (!validateURL(social.url.trim())) {
-              stepErrors[`social_${index}_url`] = 'URL invalide. L\'URL doit commencer par https://';
             }
           });
         }
@@ -325,24 +312,25 @@ export const useSubmission = () => {
       return 1;
     }
     
-    // Étape 2 : Métadonnées vidéo
+    // Étape 2 : Métadonnées vidéo (champs texte uniquement)
     if (errors.english_title || errors.original_title || errors.language || 
         errors.english_synopsis || errors.original_synopsis || errors.classification ||
-        errors.tech_stack || errors.creative_method || errors.video || 
-        errors.cover || errors.subtitles || errors.gallery) {
+        errors.tech_stack || errors.creative_method) {
       return 2;
     }
     
-    // Étape 3 : Infos créateur
-    if (errors.creator_firstname || errors.creator_lastname || errors.creator_email ||
-        errors.creator_phone || errors.creator_mobile || errors.creator_gender ||
-        errors.creator_country || errors.creator_address || errors.referral_source ||
-        Object.keys(errors).some(key => key.startsWith('social_'))) {
+    // Étape 3 : Uploads de fichiers
+    if (errors.video || errors.cover || errors.subtitles || errors.gallery ||
+        Object.keys(errors).some(key => key.startsWith('gallery_'))) {
       return 3;
     }
     
-    // Étape 4 : Contributeurs
-    if (Object.keys(errors).some(key => key.startsWith('collaborator_'))) {
+    // Étape 4 : Réalisateur et Contributeurs
+    if (errors.creator_firstname || errors.creator_lastname || errors.creator_email ||
+        errors.creator_phone || errors.creator_mobile || errors.creator_gender ||
+        errors.creator_country || errors.creator_address || errors.referral_source ||
+        Object.keys(errors).some(key => key.startsWith('social_')) ||
+        Object.keys(errors).some(key => key.startsWith('collaborator_'))) {
       return 4;
     }
     

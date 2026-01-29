@@ -27,10 +27,17 @@ const Submit = () => {
     nextStep,
     prevStep,
     submit,
-    reset
+    reset,
+    validateStep
   } = useSubmission();
   
   const handleSubmit = async () => {
+    // Valider l'étape 4 avant de soumettre
+    if (!validateStep(4)) {
+      // Les erreurs sont déjà définies par validateStep
+      return;
+    }
+    
     try {
       await submit();
     } catch {

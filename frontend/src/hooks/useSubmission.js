@@ -249,6 +249,32 @@ export const useSubmission = () => {
         break;
         
       case 4:
+        // Validation des contributeurs si des contributeurs sont ajoutés
+        // Si l'utilisateur a ajouté des contributeurs, ils doivent tous être complets
+        if (formData.collaborators && formData.collaborators.length > 0) {
+          formData.collaborators.forEach((collab, index) => {
+            if (!collab.firstname || !collab.firstname.trim()) {
+              stepErrors[`collaborator_${index}_firstname`] = 'Le prénom est requis';
+            }
+            if (!collab.lastname || !collab.lastname.trim()) {
+              stepErrors[`collaborator_${index}_lastname`] = 'Le nom est requis';
+            }
+            if (!collab.email || !collab.email.trim()) {
+              stepErrors[`collaborator_${index}_email`] = 'L\'email est requis';
+            } else if (!validateEmail(collab.email.trim())) {
+              stepErrors[`collaborator_${index}_email`] = 'Email invalide';
+            }
+            if (!collab.gender || !collab.gender.trim()) {
+              stepErrors[`collaborator_${index}_gender`] = 'Le genre est requis';
+            }
+            if (!collab.role || !collab.role.trim()) {
+              stepErrors[`collaborator_${index}_role`] = 'Le rôle est requis';
+            } else if (collab.role.trim().length > 500) {
+              stepErrors[`collaborator_${index}_role`] = 'Le rôle ne peut pas dépasser 500 caractères';
+            }
+          });
+        }
+        
         // Validation des réseaux sociaux si des liens sont ajoutés
         // Si l'utilisateur a ajouté des réseaux sociaux, ils doivent tous être valides
         if (formData.socials && formData.socials.length > 0) {
@@ -291,6 +317,40 @@ export const useSubmission = () => {
   };
   
   /**
+   * Détermine l'étape contenant les erreurs
+   */
+  const getStepWithErrors = (errors) => {
+    // Étape 1 : CGU
+    if (errors.termsAccepted || errors.ageConfirmed) {
+      return 1;
+    }
+    
+    // Étape 2 : Métadonnées vidéo
+    if (errors.english_title || errors.original_title || errors.language || 
+        errors.english_synopsis || errors.original_synopsis || errors.classification ||
+        errors.tech_stack || errors.creative_method || errors.video || 
+        errors.cover || errors.subtitles || errors.gallery) {
+      return 2;
+    }
+    
+    // Étape 3 : Infos créateur
+    if (errors.creator_firstname || errors.creator_lastname || errors.creator_email ||
+        errors.creator_phone || errors.creator_mobile || errors.creator_gender ||
+        errors.creator_country || errors.creator_address || errors.referral_source ||
+        Object.keys(errors).some(key => key.startsWith('social_'))) {
+      return 3;
+    }
+    
+    // Étape 4 : Contributeurs
+    if (Object.keys(errors).some(key => key.startsWith('collaborator_'))) {
+      return 4;
+    }
+    
+    // Par défaut, retourner à l'étape 1
+    return 1;
+  };
+  
+  /**
    * Soumet le formulaire complet
    */
   const submit = async () => {
@@ -298,7 +358,9 @@ export const useSubmission = () => {
     const validationErrors = validateSubmissionData(formData);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      setCurrentStep(1); // Retourner à la première étape avec erreurs
+      // Rediriger vers l'étape contenant les erreurs
+      const stepWithErrors = getStepWithErrors(validationErrors);
+      setCurrentStep(stepWithErrors);
       return;
     }
     

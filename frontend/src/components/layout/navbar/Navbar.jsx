@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Home, Trophy, Calendar, User } from 'lucide-react';
-import './ui/navbar.css';
+import './navbar.css';
 
 const Navbar = () => {
   const [activeItem, setActiveItem] = useState('calendar');

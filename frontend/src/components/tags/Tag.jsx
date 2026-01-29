@@ -1,5 +1,5 @@
 import React from 'react';
-import '../components/ui/tags.css';
+import './tags.css';
 
 /**
  * Tag Component - Composant visuel pour les tags

@@ -1,10 +1,10 @@
 import React from 'react';
 import '../App.css';
 import useModal from '../utils/useModal';
-import Modal from '../components/Modal';
-import Card from '../components/Card';
+import Modal from '../components/modals/Modal';
+import Card from '../components/cards/Card';
 import Form from '../components/forms/Form';
-import Tag from '../components/Tag';
+import Tag from '../components/tags/Tag';
 import '../components/ui/loading.css';
 
 export default function Homepage() {

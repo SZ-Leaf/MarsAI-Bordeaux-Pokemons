@@ -1,5 +1,5 @@
 import React from 'react';
-import './ui/cards.css';
+import './cards.css';
 
 /**
  * Card Component

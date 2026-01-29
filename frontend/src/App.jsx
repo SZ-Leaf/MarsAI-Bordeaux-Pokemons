@@ -1,6 +1,6 @@
 import './App.css';
 import TestsGraphique from './pages/TestsGraphique';
-import Header from './components/Header';
+import Header from './components/layout/header/Header';
 
 function App() {
   return (

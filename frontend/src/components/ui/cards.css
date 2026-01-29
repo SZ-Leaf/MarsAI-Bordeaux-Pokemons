@@ -1,10 +1,11 @@
+@import "tailwindcss" reference;
 @import "../../theme.css";
 
 .card {
-  @apply bg-sky rounded-2xl overflow-hidden flex flex-col;
+  @apply rounded-2xl overflow-hidden flex flex-col;
   @apply transition-transform duration-200 ease-in-out;
-  @apply border-black/5;
-  @apply shadow-sm shadow-white;
+  @apply border-blue/50 border-2;
+
 }
 
 .card:hover {

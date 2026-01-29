@@ -116,39 +116,7 @@ export default function Form({ variant = 'light', onSubmit }) {
         />
       </div>
 
-      {/* Section Boutons - Tous les types */}
-      <div className="flex flex-col gap-3 mt-4">
-        <h3 className="text-sm font-bold uppercase tracking-wider mb-2">
-          Actions disponibles
-        </h3>
-        
-        {/* Bouton Primary */}
-        <button type="submit" className="btn btn-primary">
-          Soumettre le formulaire
-        </button>
-
-        {/* Bouton Modern */}
-        <button type="button" className="btn btn-modern">
-          Action moderne
-        </button>
-
-        {/* Bouton Secondary */}
-        <button type="button" className="btn btn-secondary">
-          Action secondaire
-        </button>
-
-        {/* Bouton Info */}
-        <button type="button" className="btn btn-info">
-          Information
-        </button>
-
-        {/* Bouton Danger */}
-        <button type="button" className="btn btn-danger">
-          Supprimer
-        </button>
-      </div>
-
-      {/* Groupe de boutons horizontal (exemple) */}
+      {/* Groupe de boutons horizontal */}
       <div className="flex gap-3 mt-2">
         <button type="button" className="btn btn-secondary flex-1">
           Annuler

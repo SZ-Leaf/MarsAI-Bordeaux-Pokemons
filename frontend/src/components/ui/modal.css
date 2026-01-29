@@ -1,3 +1,4 @@
+@import "tailwindcss" reference;
 @import "../../theme.css";
 
 /* Overlay de la modal */

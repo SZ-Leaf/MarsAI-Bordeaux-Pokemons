@@ -17,7 +17,7 @@ export default function Homepage() {
 
   return (
     <div className="pb-20">
-      <section className="flex flex-col items-center justify-center min-h-screen gap-10 p-10">
+      <section className="flex flex-col items-center justify-center min-h-screen gap-10 mb-10">
         <h1 className="text-4xl font-bold text-blue mb-4">Composants UI</h1>
         
         {/* Section Cards */}
@@ -61,7 +61,7 @@ export default function Homepage() {
 
         {/* Boutons pour ouvrir les différentes modals */}
         <div className="flex flex-col gap-4">
-          <h2 className="text-2xl font-bold text-blue">Tester les Modals avec Formulaires</h2>
+          <h2 className="text-2xl font-bold text-blue mb-10">Modals</h2>
           <div className="flex gap-3 flex-wrap justify-center">
             <button 
               className="btn btn-modern" 

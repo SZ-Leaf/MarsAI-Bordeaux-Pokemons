@@ -1,152 +1,80 @@
+@import "tailwindcss" reference;
+@import "../../theme.css";
+
 .header-pill-container {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  width: 95%;
-  max-width: 1100px;
+  @apply fixed top-5 left-1/2 -translate-x-1/2 z-[1000] w-[95%] max-w-[1100px];
 }
 
 .header-pill-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 12px 8px 30px; /* Moins de padding à droite car les boutons en ont */
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 100px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  @apply flex items-center justify-between;
+  @apply px-[30px] py-2 pr-3;
+  @apply bg-white/[0.03] backdrop-blur-xl;
+  @apply border border-white/[0.08] rounded-full;
+  @apply shadow-[0_10px_40px_rgba(0,0,0,0.4)];
 }
 
 /* Logo Styles */
 .navbar-logo {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 22px;
-  font-weight: 900;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  flex-shrink: 0;
-  cursor: default;
+  @apply font-sans text-[22px] font-black text-white uppercase tracking-wide;
+  @apply flex-shrink-0 cursor-default;
 }
 
 .navbar-logo span {
-  background: linear-gradient(135deg, #a855f7, #ec4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-left: 2px;
+  @apply bg-gradient-to-r from-[#2b7fff] to-[#51a2ff];
+  @apply bg-clip-text text-transparent font-bold ml-0.5;
 }
 
 /* Navbar Links (Icons) Styles */
 .navbar-links {
-  display: flex;
-  align-items: center;
-  gap: 35px;
-  justify-content: center;
-  flex-grow: 1;
+  @apply flex items-center justify-center flex-grow gap-[35px];
 }
 
 .navbar-item {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  height: 38px;
-  width: 38px;
+  @apply relative flex items-center justify-center;
+  @apply text-white/50 cursor-pointer;
+  @apply h-[38px] w-[38px];
+  @apply transition-all duration-300 ease-out;
 }
 
 .navbar-item:hover {
-  color: #fff;
-  transform: translateY(-2px);
+  @apply text-white -translate-y-0.5;
 }
 
 .navbar-item.active {
-  color: #fff;
+  @apply text-white;
 }
 
 .navbar-dot {
-  position: absolute;
-  bottom: -4px;
-  width: 4px;
-  height: 4px;
-  background-color: #3b82f6;
-  border-radius: 50%;
-  box-shadow: 0 0 10px 2px rgba(59, 130, 246, 0.5);
+  @apply absolute -bottom-1 w-1 h-1;
+  @apply bg-blue-500 rounded-full;
+  @apply shadow-[0_0_10px_2px_rgba(59,130,246,0.5)];
 }
 
 /* Auth Buttons Styles */
 .auth-buttons {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-left: 20px;
+  @apply flex items-center gap-5 ml-5;
 }
 
 .auth-btn-login {
-  background: transparent;
-  border: none;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: color 0.3s ease;
-  padding: 8px 15px;
+  @apply bg-transparent border-none;
+  @apply text-white/70 text-[13px] font-semibold;
+  @apply cursor-pointer px-[15px] py-2;
+  @apply transition-colors duration-300;
 }
 
 .auth-btn-login:hover {
-  color: #fff;
+  @apply text-white;
 }
 
 .auth-btn-register {
-  background: linear-gradient(135deg, #3b82f6, #a855f7);
-  border: none;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 10px 25px;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+  @apply bg-gradient-to-br from-blue-500 to-purple-500;
+  @apply border-none text-white text-[13px] font-bold;
+  @apply px-6 py-2.5 rounded-full cursor-pointer;
+  @apply transition-all duration-300;
+  @apply shadow-[0_4px_15px_rgba(59,130,246,0.3)];
 }
 
 .auth-btn-register:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+  @apply scale-105 shadow-[0_6px_20px_rgba(59,130,246,0.4)];
 }
 
-/* Responsive */
-@media (max-width: 900px) {
-  .navbar-links {
-    gap: 20px;
-  }
-  
-  .auth-btn-login {
-    display: none; /* Cache connexion sur petit écran */
-  }
-  
-  .auth-btn-register {
-    padding: 8px 18px;
-    font-size: 12px;
-  }
-}
-
-@media (max-width: 640px) {
-  .navbar-logo {
-    font-size: 18px;
-  }
-  
-  .header-pill-content {
-    padding: 8px 10px 8px 20px;
-  }
-  
-  .auth-buttons {
-    gap: 10px;
-  }
-}

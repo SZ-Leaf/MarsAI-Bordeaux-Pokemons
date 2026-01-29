@@ -15,6 +15,18 @@
   }
 }
 
+/* Espacement pour le header fixe */
+.App {
+  padding-top: 100px; /* Desktop : header en haut */
+}
+
+@media (max-width: 768px) {
+  .App {
+    padding-top: 20px; /* Moins d'espace en haut sur mobile */
+    padding-bottom: 90px; /* Espace pour le header en bas */
+  }
+}
+
 @import "./theme.css";
 
 @import "./components/ui/buttons.css";

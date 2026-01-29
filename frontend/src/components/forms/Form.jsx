@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../ui/inputs.css';
 import '../ui/buttons.css';
 
-export default function Form({ variant = 'light', onSubmit }) {
+export default function Form({ variant = 'light', onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -118,7 +118,11 @@ export default function Form({ variant = 'light', onSubmit }) {
 
       {/* Groupe de boutons horizontal */}
       <div className="flex gap-3 mt-2">
-        <button type="button" className="btn btn-secondary flex-1">
+        <button 
+          type="button" 
+          className="btn btn-secondary flex-1"
+          onClick={onCancel}
+        >
           Annuler
         </button>
         <button type="submit" className="btn btn-primary flex-1">

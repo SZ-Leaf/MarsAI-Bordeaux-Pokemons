@@ -103,7 +103,11 @@ export default function Homepage() {
         title="Formulaire - Version Light"
         size="lg"
       >
-        <Form variant="light" onSubmit={handleFormSubmit} />
+        <Form 
+          variant="light" 
+          onSubmit={handleFormSubmit}
+          onCancel={formLightModal.closeModal}
+        />
       </Modal>
 
       {/* Modal avec Formulaire Dark */}
@@ -114,7 +118,11 @@ export default function Homepage() {
         size="lg"
       >
         <div className="p-6 rounded-xl">
-          <Form variant="dark" onSubmit={handleFormSubmit} />
+          <Form 
+            variant="dark" 
+            onSubmit={handleFormSubmit}
+            onCancel={formDarkModal.closeModal}
+          />
         </div>
       </Modal>
     </div>

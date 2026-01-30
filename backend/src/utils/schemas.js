@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 // Schéma pour un collaborateur
 export const collaboratorSchema = z.object({
-  firstname: z.string().min(1, 'Le prénom est requis'),
-  lastname: z.string().min(1, 'Le nom est requis'),
+  firstname: z.string().min(1, 'Le prénom est requis').regex(/^[a-zA-ZÀ-ÿ\s'-]+$/, 'Le prénom ne doit contenir que des lettres'),
+  lastname: z.string().min(1, 'Le nom est requis').regex(/^[a-zA-ZÀ-ÿ\s'-]+$/, 'Le nom ne doit contenir que des lettres'),
   email: z.string().email('Email invalide'),
   gender: z.string().min(1, 'Le genre est requis'),
   role: z.string().min(1, 'Le rôle est requis').max(500, 'Le rôle ne peut pas dépasser 500 caractères')
@@ -30,8 +30,8 @@ export const submissionSchema = z.object({
   creative_method: z.string().min(1, 'La méthode créative est requise').max(500, 'La méthode créative ne peut pas dépasser 500 caractères'),
   
   // Infos créateur
-  creator_firstname: z.string().min(1, 'Le prénom du créateur est requis'),
-  creator_lastname: z.string().min(1, 'Le nom du créateur est requis'),
+  creator_firstname: z.string().min(1, 'Le prénom du créateur est requis').regex(/^[a-zA-ZÀ-ÿ\s'-]+$/, 'Le prénom ne doit contenir que des lettres'),
+  creator_lastname: z.string().min(1, 'Le nom du créateur est requis').regex(/^[a-zA-ZÀ-ÿ\s'-]+$/, 'Le nom ne doit contenir que des lettres'),
   creator_email: z.string().email('Email du créateur invalide'),
   creator_phone: z.string().max(30, 'Le téléphone ne peut pas dépasser 30 caractères').optional(),
   creator_mobile: z.string().min(1, 'Le mobile est requis').max(30, 'Le mobile ne peut pas dépasser 30 caractères'),

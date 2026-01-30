@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { validateEmail } from '../utils/validation.js';
+import { validateEmail, validateName } from '../utils/validation.js';
 
 /**
  * Fonction pour obtenir l'URL de l'image du drapeau depuis un CDN
@@ -207,6 +207,67 @@ const countries = [
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 /**
+ * Liste des indicatifs téléphoniques par pays
+ * Format: { code: 'FR', name: 'France', dialCode: '+33', flag: '🇫🇷' }
+ */
+const phoneCountryCodes = [
+  { code: 'FR', name: 'France', dialCode: '+33' },
+  { code: 'US', name: 'États-Unis', dialCode: '+1' },
+  { code: 'CA', name: 'Canada', dialCode: '+1' },
+  { code: 'GB', name: 'Royaume-Uni', dialCode: '+44' },
+  { code: 'DE', name: 'Allemagne', dialCode: '+49' },
+  { code: 'IT', name: 'Italie', dialCode: '+39' },
+  { code: 'ES', name: 'Espagne', dialCode: '+34' },
+  { code: 'BE', name: 'Belgique', dialCode: '+32' },
+  { code: 'CH', name: 'Suisse', dialCode: '+41' },
+  { code: 'NL', name: 'Pays-Bas', dialCode: '+31' },
+  { code: 'PT', name: 'Portugal', dialCode: '+351' },
+  { code: 'AT', name: 'Autriche', dialCode: '+43' },
+  { code: 'GR', name: 'Grèce', dialCode: '+30' },
+  { code: 'SE', name: 'Suède', dialCode: '+46' },
+  { code: 'NO', name: 'Norvège', dialCode: '+47' },
+  { code: 'DK', name: 'Danemark', dialCode: '+45' },
+  { code: 'FI', name: 'Finlande', dialCode: '+358' },
+  { code: 'PL', name: 'Pologne', dialCode: '+48' },
+  { code: 'CZ', name: 'République tchèque', dialCode: '+420' },
+  { code: 'RO', name: 'Roumanie', dialCode: '+40' },
+  { code: 'HU', name: 'Hongrie', dialCode: '+36' },
+  { code: 'IE', name: 'Irlande', dialCode: '+353' },
+  { code: 'MA', name: 'Maroc', dialCode: '+212' },
+  { code: 'DZ', name: 'Algérie', dialCode: '+213' },
+  { code: 'TN', name: 'Tunisie', dialCode: '+216' },
+  { code: 'SN', name: 'Sénégal', dialCode: '+221' },
+  { code: 'CI', name: 'Côte d\'Ivoire', dialCode: '+225' },
+  { code: 'CM', name: 'Cameroun', dialCode: '+237' },
+  { code: 'CD', name: 'République démocratique du Congo', dialCode: '+243' },
+  { code: 'ZA', name: 'Afrique du Sud', dialCode: '+27' },
+  { code: 'EG', name: 'Égypte', dialCode: '+20' },
+  { code: 'CN', name: 'Chine', dialCode: '+86' },
+  { code: 'JP', name: 'Japon', dialCode: '+81' },
+  { code: 'IN', name: 'Inde', dialCode: '+91' },
+  { code: 'KR', name: 'Corée du Sud', dialCode: '+82' },
+  { code: 'AU', name: 'Australie', dialCode: '+61' },
+  { code: 'NZ', name: 'Nouvelle-Zélande', dialCode: '+64' },
+  { code: 'BR', name: 'Brésil', dialCode: '+55' },
+  { code: 'MX', name: 'Mexique', dialCode: '+52' },
+  { code: 'AR', name: 'Argentine', dialCode: '+54' },
+  { code: 'CL', name: 'Chili', dialCode: '+56' },
+  { code: 'CO', name: 'Colombie', dialCode: '+57' },
+  { code: 'PE', name: 'Pérou', dialCode: '+51' },
+  { code: 'RU', name: 'Russie', dialCode: '+7' },
+  { code: 'TR', name: 'Turquie', dialCode: '+90' },
+  { code: 'SA', name: 'Arabie saoudite', dialCode: '+966' },
+  { code: 'AE', name: 'Émirats arabes unis', dialCode: '+971' },
+  { code: 'IL', name: 'Israël', dialCode: '+972' },
+  { code: 'TH', name: 'Thaïlande', dialCode: '+66' },
+  { code: 'VN', name: 'Viêt Nam', dialCode: '+84' },
+  { code: 'ID', name: 'Indonésie', dialCode: '+62' },
+  { code: 'MY', name: 'Malaisie', dialCode: '+60' },
+  { code: 'SG', name: 'Singapour', dialCode: '+65' },
+  { code: 'PH', name: 'Philippines', dialCode: '+63' }
+].sort((a, b) => a.name.localeCompare(b.name));
+
+/**
  * Composant de sélection de pays avec drapeaux
  */
 const CountrySelect = ({ value, onChange, error, countries }) => {
@@ -314,6 +375,156 @@ const CountrySelect = ({ value, onChange, error, countries }) => {
 };
 
 /**
+ * Composant de saisie téléphone avec sélecteur d'indicatif
+ */
+const PhoneInput = ({ value, onChange, error, placeholder, fieldName }) => {
+  const [selectedDialCode, setSelectedDialCode] = useState('+33'); // Par défaut France
+  const [isDialCodeOpen, setIsDialCodeOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const dropdownRef = useRef(null);
+
+  // Extraire l'indicatif et le numéro du value si présent
+  useEffect(() => {
+    if (value && typeof value === 'string') {
+      // Chercher l'indicatif correspondant dans la valeur
+      const matchingCode = phoneCountryCodes.find(code => 
+        value.startsWith(code.dialCode) || value.startsWith(code.dialCode.replace('+', ''))
+      );
+      if (matchingCode) {
+        setSelectedDialCode(matchingCode.dialCode);
+      }
+    }
+  }, [value]);
+
+  // Fermer le dropdown si on clique en dehors
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDialCodeOpen(false);
+        setSearchTerm('');
+      }
+    };
+
+    if (isDialCodeOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDialCodeOpen]);
+
+  const selectedCountry = phoneCountryCodes.find(c => c.dialCode === selectedDialCode);
+  const filteredCodes = phoneCountryCodes.filter(code =>
+    code.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    code.dialCode.includes(searchTerm)
+  );
+
+  // Extraire le numéro sans l'indicatif pour l'affichage
+  const getDisplayNumber = () => {
+    if (!value) return '';
+    // Chercher l'indicatif dans la valeur
+    const matchingCode = phoneCountryCodes.find(code => 
+      value.startsWith(code.dialCode) || value.startsWith(code.dialCode.replace('+', ''))
+    );
+    if (matchingCode) {
+      return value.replace(matchingCode.dialCode, '').replace(/^\+/, '').trim();
+    }
+    // Si pas d'indicatif trouvé, retourner la valeur telle quelle
+    return value.replace(/^\+/, '').trim();
+  };
+
+  const displayNumber = getDisplayNumber();
+
+  const handleDialCodeSelect = (code) => {
+    const newDialCode = code.dialCode;
+    setSelectedDialCode(newDialCode);
+    setIsDialCodeOpen(false);
+    setSearchTerm('');
+    
+    // Reconstruire la valeur avec le nouvel indicatif et le numéro actuel
+    const number = displayNumber;
+    onChange(newDialCode + (number ? ' ' + number : ''));
+  };
+
+  const handleNumberChange = (e) => {
+    const number = e.target.value.replace(/\D/g, ''); // Garder uniquement les chiffres
+    // Reconstruire avec l'indicatif sélectionné
+    onChange(selectedDialCode + (number ? ' ' + number : ''));
+  };
+
+  return (
+    <div className="flex gap-2 items-stretch">
+      {/* Sélecteur d'indicatif */}
+      <div className="relative w-32 flex-shrink-0" ref={dropdownRef}>
+        <button
+          type="button"
+          onClick={() => setIsDialCodeOpen(!isDialCodeOpen)}
+          className={`w-full h-full border rounded p-2 text-left flex items-center justify-between ${
+            error ? 'border-red-500' : ''
+          }`}
+          style={{ minHeight: '2.5rem' }}
+        >
+          <span className="text-sm font-medium">{selectedDialCode}</span>
+          <span className="text-gray-500 text-sm">▼</span>
+        </button>
+
+        {isDialCodeOpen && (
+          <div className="absolute z-50 w-64 mt-1 bg-white border rounded shadow-lg max-h-60 overflow-y-auto left-0">
+            <div className="p-2 sticky top-0 bg-white border-b">
+              <input
+                type="text"
+                placeholder="Rechercher..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full border rounded p-2 text-sm"
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+            <div className="max-h-52 overflow-y-auto">
+              {filteredCodes.map((code) => (
+                <button
+                  key={code.code}
+                  type="button"
+                  onClick={() => handleDialCodeSelect(code)}
+                  className={`w-full text-left px-3 py-2 hover:bg-gray-100 flex items-center justify-between text-sm ${
+                    selectedDialCode === code.dialCode ? 'bg-blue-50' : ''
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <img
+                      src={getFlagUrl(code.code)}
+                      alt={code.name}
+                      className="w-4 h-3 object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                    <span className="text-xs">{code.name}</span>
+                  </div>
+                  <span className="text-xs font-medium">{code.dialCode}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Champ de saisie du numéro */}
+      <input
+        type="tel"
+        value={displayNumber}
+        onChange={handleNumberChange}
+        placeholder={placeholder || 'Numéro de téléphone'}
+        className={`flex-1 border rounded p-2 h-full ${error ? 'border-red-500' : ''}`}
+        style={{ minHeight: '2.5rem' }}
+        maxLength={20}
+      />
+    </div>
+  );
+};
+
+/**
  * Formulaire infos réalisateur (Partie 3)
  * Design épuré et simple
  */
@@ -324,6 +535,13 @@ const CreatorForm = ({ formData, errors, updateField }) => {
       // L'erreur sera gérée par la validation globale
       // On peut aussi ajouter une validation locale ici si nécessaire
     }
+  };
+
+  // Handler pour bloquer les caractères non autorisés dans les champs nom/prénom
+  const handleNameChange = (field, value) => {
+    // Filtrer les caractères : uniquement lettres (avec accents), espaces, tirets et apostrophes
+    const filteredValue = value.replace(/[^a-zA-ZÀ-ÿ\s'-]/g, '');
+    updateField(field, filteredValue);
   };
   return (
     <div className="space-y-6 pl-4">
@@ -337,7 +555,7 @@ const CreatorForm = ({ formData, errors, updateField }) => {
           <input
             type="text"
             value={formData.creator_firstname}
-            onChange={(e) => updateField('creator_firstname', e.target.value)}
+            onChange={(e) => handleNameChange('creator_firstname', e.target.value)}
             className={`w-full border rounded p-2 ${errors.creator_firstname ? 'border-red-500' : ''}`}
           />
           {errors.creator_firstname && (
@@ -352,7 +570,7 @@ const CreatorForm = ({ formData, errors, updateField }) => {
           <input
             type="text"
             value={formData.creator_lastname}
-            onChange={(e) => updateField('creator_lastname', e.target.value)}
+            onChange={(e) => handleNameChange('creator_lastname', e.target.value)}
             className={`w-full border rounded p-2 ${errors.creator_lastname ? 'border-red-500' : ''}`}
           />
           {errors.creator_lastname && (
@@ -387,12 +605,12 @@ const CreatorForm = ({ formData, errors, updateField }) => {
           <label className="block text-sm font-medium mb-1">
             Téléphone
           </label>
-          <input
-            type="tel"
-            value={formData.creator_phone}
-            onChange={(e) => updateField('creator_phone', e.target.value)}
-            className={`w-full border rounded p-2 ${errors.creator_phone ? 'border-red-500' : ''}`}
-            maxLength={30}
+          <PhoneInput
+            value={formData.creator_phone || ''}
+            onChange={(value) => updateField('creator_phone', value)}
+            error={errors.creator_phone}
+            placeholder="Numéro de téléphone"
+            fieldName="creator_phone"
           />
           {errors.creator_phone && (
             <p className="text-red-500 text-sm mt-1">{errors.creator_phone}</p>
@@ -403,12 +621,12 @@ const CreatorForm = ({ formData, errors, updateField }) => {
           <label className="block text-sm font-medium mb-1">
             Mobile <span className="text-red-500">*</span>
           </label>
-          <input
-            type="tel"
-            value={formData.creator_mobile}
-            onChange={(e) => updateField('creator_mobile', e.target.value)}
-            className={`w-full border rounded p-2 ${errors.creator_mobile ? 'border-red-500' : ''}`}
-            maxLength={30}
+          <PhoneInput
+            value={formData.creator_mobile || ''}
+            onChange={(value) => updateField('creator_mobile', value)}
+            error={errors.creator_mobile}
+            placeholder="Numéro de mobile"
+            fieldName="creator_mobile"
           />
           {errors.creator_mobile && (
             <p className="text-red-500 text-sm mt-1">{errors.creator_mobile}</p>

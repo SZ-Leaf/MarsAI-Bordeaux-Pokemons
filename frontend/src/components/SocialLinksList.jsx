@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import SocialModal from './SocialModal.jsx';
+import DeleteConfirmationModal from './DeleteConfirmationModal.jsx';
 
 /**
  * Liste des réseaux sociaux avec modals pour ajout/modification
@@ -7,6 +8,8 @@ import SocialModal from './SocialModal.jsx';
 const SocialLinksList = ({ formData, errors, updateField }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
+  const [deleteIndex, setDeleteIndex] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const socialNetworks = [
     { id: 1, title: 'fb', label: 'Facebook' },
@@ -45,12 +48,24 @@ const SocialLinksList = ({ formData, errors, updateField }) => {
     updateField('socials', newSocials);
   };
 
-  const handleDelete = (index) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce lien réseau social ?')) {
+  const handleDeleteClick = (index) => {
+    setDeleteIndex(index);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteIndex !== null) {
       const currentSocials = formData.socials || [];
-      const newSocials = currentSocials.filter((_, i) => i !== index);
+      const newSocials = currentSocials.filter((_, i) => i !== deleteIndex);
       updateField('socials', newSocials);
     }
+    setIsDeleteModalOpen(false);
+    setDeleteIndex(null);
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteModalOpen(false);
+    setDeleteIndex(null);
   };
 
   const currentSocials = formData.socials || [];
@@ -92,7 +107,7 @@ const SocialLinksList = ({ formData, errors, updateField }) => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleDelete(index)}
+                  onClick={() => handleDeleteClick(index)}
                   className="text-red-500 hover:text-red-700 text-sm"
                 >
                   Supprimer
@@ -110,6 +125,14 @@ const SocialLinksList = ({ formData, errors, updateField }) => {
         socialIndex={editingIndex}
         onSave={handleSave}
         errors={errors}
+      />
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        title="Supprimer le lien réseau social"
+        message="Êtes-vous sûr de vouloir supprimer ce lien réseau social ? Cette action est irréversible."
       />
     </div>
   );

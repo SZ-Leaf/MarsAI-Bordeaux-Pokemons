@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import CollaboratorModal from './CollaboratorModal.jsx';
+import DeleteConfirmationModal from './DeleteConfirmationModal.jsx';
 
 /**
  * Liste des contributeurs avec modals pour ajout/modification
@@ -7,6 +8,8 @@ import CollaboratorModal from './CollaboratorModal.jsx';
 const CollaboratorsList = ({ formData, errors, updateField }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
+  const [deleteIndex, setDeleteIndex] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleAdd = () => {
     setEditingIndex(null);
@@ -31,12 +34,24 @@ const CollaboratorsList = ({ formData, errors, updateField }) => {
     updateField('collaborators', newCollaborators);
   };
 
-  const handleDelete = (index) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce contributeur ?')) {
+  const handleDeleteClick = (index) => {
+    setDeleteIndex(index);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteIndex !== null) {
       const currentCollaborators = formData.collaborators || [];
-      const newCollaborators = currentCollaborators.filter((_, i) => i !== index);
+      const newCollaborators = currentCollaborators.filter((_, i) => i !== deleteIndex);
       updateField('collaborators', newCollaborators);
     }
+    setIsDeleteModalOpen(false);
+    setDeleteIndex(null);
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteModalOpen(false);
+    setDeleteIndex(null);
   };
 
   const currentCollaborators = formData.collaborators || [];
@@ -84,7 +99,7 @@ const CollaboratorsList = ({ formData, errors, updateField }) => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleDelete(index)}
+                    onClick={() => handleDeleteClick(index)}
                     className="text-red-500 hover:text-red-700 text-sm"
                   >
                     Supprimer
@@ -103,6 +118,14 @@ const CollaboratorsList = ({ formData, errors, updateField }) => {
         collaboratorIndex={editingIndex}
         onSave={handleSave}
         errors={errors}
+      />
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        title="Supprimer le contributeur"
+        message="Êtes-vous sûr de vouloir supprimer ce contributeur ? Cette action est irréversible."
       />
     </div>
   );

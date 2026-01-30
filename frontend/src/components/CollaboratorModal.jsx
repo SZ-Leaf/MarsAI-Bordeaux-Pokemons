@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import ModalSubmit from './ModalSubmit.jsx';
-import { validateEmail } from '../utils/validation.js';
+import { validateEmail, validateName } from '../utils/validation.js';
 
 /**
  * Modal pour ajouter/modifier un contributeur
@@ -49,28 +49,43 @@ const CollaboratorModal = ({ isOpen, onClose, collaborator, collaboratorIndex, o
   }, [collaborator, isOpen]);
 
   const handleChange = (field, value) => {
+    // Filtrer les caractères non autorisés pour les champs nom/prénom
+    let filteredValue = value;
+    if (field === 'firstname' || field === 'lastname') {
+      // Uniquement lettres (avec accents), espaces, tirets et apostrophes
+      filteredValue = value.replace(/[^a-zA-ZÀ-ÿ\s'-]/g, '');
+    }
+    
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      [field]: filteredValue
     }));
     
     // Validation en temps réel
     const newErrors = { ...localErrors };
     if (field === 'email') {
-      if (!value.trim()) {
+      if (!filteredValue.trim()) {
         newErrors.email = 'L\'email est requis';
-      } else if (!validateEmail(value.trim())) {
+      } else if (!validateEmail(filteredValue.trim())) {
         newErrors.email = 'Email invalide';
       } else {
         delete newErrors.email;
       }
+    } else if (field === 'firstname' || field === 'lastname') {
+      if (!filteredValue.trim()) {
+        newErrors[field] = 'Ce champ est requis';
+      } else if (!validateName(filteredValue.trim())) {
+        newErrors[field] = 'Ce champ ne doit contenir que des lettres';
+      } else {
+        delete newErrors[field];
+      }
     } else {
-      if (!value.trim()) {
+      if (!filteredValue.trim()) {
         newErrors[field] = 'Ce champ est requis';
       } else {
         delete newErrors[field];
       }
-      if (field === 'role' && value.trim().length > 500) {
+      if (field === 'role' && filteredValue.trim().length > 500) {
         newErrors.role = 'Le rôle ne peut pas dépasser 500 caractères';
       } else if (field === 'role') {
         delete newErrors.role;
@@ -84,9 +99,13 @@ const CollaboratorModal = ({ isOpen, onClose, collaborator, collaboratorIndex, o
     const finalErrors = {};
     if (!formData.firstname.trim()) {
       finalErrors.firstname = 'Le prénom est requis';
+    } else if (!validateName(formData.firstname.trim())) {
+      finalErrors.firstname = 'Le prénom ne doit contenir que des lettres';
     }
     if (!formData.lastname.trim()) {
       finalErrors.lastname = 'Le nom est requis';
+    } else if (!validateName(formData.lastname.trim())) {
+      finalErrors.lastname = 'Le nom ne doit contenir que des lettres';
     }
     if (!formData.email.trim()) {
       finalErrors.email = 'L\'email est requis';

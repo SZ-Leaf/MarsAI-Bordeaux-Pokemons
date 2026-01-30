@@ -20,6 +20,19 @@ export const validateEmail = (email) => {
 };
 
 /**
+ * Valide un nom ou prénom (lettres uniquement, avec espaces, tirets et apostrophes pour noms composés)
+ * @param {string} name - Nom ou prénom à valider
+ * @returns {boolean} - True si valide
+ */
+export const validateName = (name) => {
+  if (!name) return false;
+  // Accepte uniquement des lettres (avec accents), espaces, tirets et apostrophes
+  // Exemples valides: "Jean", "Marie-Claire", "O'Brien", "José", "François"
+  const nameRegex = /^[a-zA-ZÀ-ÿ\s'-]+$/;
+  return nameRegex.test(name.trim());
+};
+
+/**
  * Valide qu'un champ est requis
  * @param {*} value - Valeur à valider
  * @returns {boolean} - True si présent
@@ -213,10 +226,14 @@ export const validateSubmissionData = (data) => {
   // Partie 3 : Infos créateur
   if (!validateRequired(data.creator_firstname)) {
     errors.creator_firstname = 'Le prénom du créateur est requis';
+  } else if (!validateName(data.creator_firstname)) {
+    errors.creator_firstname = 'Le prénom ne doit contenir que des lettres';
   }
   
   if (!validateRequired(data.creator_lastname)) {
     errors.creator_lastname = 'Le nom du créateur est requis';
+  } else if (!validateName(data.creator_lastname)) {
+    errors.creator_lastname = 'Le nom ne doit contenir que des lettres';
   }
   
   if (!validateRequired(data.creator_email)) {
@@ -264,9 +281,13 @@ export const validateSubmissionData = (data) => {
     data.collaborators.forEach((collab, index) => {
       if (!validateRequired(collab.firstname)) {
         errors[`collaborator_${index}_firstname`] = 'Le prénom est requis';
+      } else if (!validateName(collab.firstname)) {
+        errors[`collaborator_${index}_firstname`] = 'Le prénom ne doit contenir que des lettres';
       }
       if (!validateRequired(collab.lastname)) {
         errors[`collaborator_${index}_lastname`] = 'Le nom est requis';
+      } else if (!validateName(collab.lastname)) {
+        errors[`collaborator_${index}_lastname`] = 'Le nom ne doit contenir que des lettres';
       }
       if (!validateRequired(collab.email)) {
         errors[`collaborator_${index}_email`] = 'L\'email est requis';
@@ -305,6 +326,7 @@ export const validateSubmissionData = (data) => {
 
 export default {
   validateEmail,
+  validateName,
   validateRequired,
   validateMaxLength,
   validateFileType,

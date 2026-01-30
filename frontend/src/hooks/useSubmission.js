@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { submitFilm } from '../utils/api.js';
-import { validateSubmissionData, validateEmail, validatePhone, validateURL } from '../utils/validation.js';
+import { validateSubmissionData, validateEmail, validateName, validatePhone, validateURL } from '../utils/validation.js';
 
 /**
  * Hook de gestion de soumission de film
@@ -216,8 +216,16 @@ export const useSubmission = () => {
         
       case 4:
         // Validation infos créateur
-        if (!formData.creator_firstname) stepErrors.creator_firstname = 'Requis';
-        if (!formData.creator_lastname) stepErrors.creator_lastname = 'Requis';
+        if (!formData.creator_firstname) {
+          stepErrors.creator_firstname = 'Requis';
+        } else if (!validateName(formData.creator_firstname.trim())) {
+          stepErrors.creator_firstname = 'Le prénom ne doit contenir que des lettres';
+        }
+        if (!formData.creator_lastname) {
+          stepErrors.creator_lastname = 'Requis';
+        } else if (!validateName(formData.creator_lastname.trim())) {
+          stepErrors.creator_lastname = 'Le nom ne doit contenir que des lettres';
+        }
         if (!formData.creator_email) {
           stepErrors.creator_email = 'Requis';
         } else if (!validateEmail(formData.creator_email.trim())) {
@@ -257,9 +265,13 @@ export const useSubmission = () => {
           formData.collaborators.forEach((collab, index) => {
             if (!collab.firstname || !collab.firstname.trim()) {
               stepErrors[`collaborator_${index}_firstname`] = 'Le prénom est requis';
+            } else if (!validateName(collab.firstname.trim())) {
+              stepErrors[`collaborator_${index}_firstname`] = 'Le prénom ne doit contenir que des lettres';
             }
             if (!collab.lastname || !collab.lastname.trim()) {
               stepErrors[`collaborator_${index}_lastname`] = 'Le nom est requis';
+            } else if (!validateName(collab.lastname.trim())) {
+              stepErrors[`collaborator_${index}_lastname`] = 'Le nom ne doit contenir que des lettres';
             }
             if (!collab.email || !collab.email.trim()) {
               stepErrors[`collaborator_${index}_email`] = 'L\'email est requis';

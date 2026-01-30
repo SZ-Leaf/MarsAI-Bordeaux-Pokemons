@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSubmission } from '../hooks/useSubmission.js';
 import StepIndicator from '../components/StepIndicator.jsx';
 import CGUForm from '../components/CGUForm.jsx';
@@ -9,6 +9,7 @@ import CreatorForm from '../components/CreatorForm.jsx';
 import CollaboratorsList from '../components/CollaboratorsList.jsx';
 import GalleryUpload from '../components/GalleryUpload.jsx';
 import SocialLinksList from '../components/SocialLinksList.jsx';
+import ConfirmationModal from '../components/ConfirmationModal.jsx';
 
 /**
  * Page de soumission de film (4 étapes)
@@ -36,6 +37,7 @@ const Submit = () => {
   
   const prevStepRef = useRef(currentStep);
   const prevErrorsRef = useRef(errors);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   
   // Défilement vers le haut lors du changement d'étape
   useEffect(() => {
@@ -98,19 +100,29 @@ const Submit = () => {
     }
   }, [errors]);
   
-  const handleSubmit = async () => {
-    // Valider l'étape 4 avant de soumettre
+  const handleSubmitClick = () => {
+    // Valider l'étape 4 avant d'afficher la modale
     if (!validateStep(4)) {
       // Les erreurs sont déjà définies par validateStep
       // Le useEffect gérera le défilement vers les erreurs
       return;
     }
     
+    // Afficher la modale de confirmation
+    setShowConfirmationModal(true);
+  };
+
+  const handleConfirmSubmit = async () => {
+    setShowConfirmationModal(false);
     try {
       await submit();
     } catch {
       // Erreur déjà gérée dans le hook 
     }
+  };
+
+  const handleCancelSubmit = () => {
+    setShowConfirmationModal(false);
   };
   
   if (submitSuccess) {
@@ -241,14 +253,15 @@ const Submit = () => {
       )}
       
       {/* Navigation */}
-      <div className="flex justify-between pl-4">
-        <button
-          onClick={prevStep}
-          disabled={currentStep === 1}
-          className={`px-6 py-2 rounded ${currentStep === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-gray-500 text-white'}`}
-        >
-          Précédent
-        </button>
+      <div className={`flex pl-4 ${currentStep === 1 ? 'justify-end' : 'justify-between'}`}>
+        {currentStep > 1 && (
+          <button
+            onClick={prevStep}
+            className="px-6 py-2 rounded bg-gray-500 text-white"
+          >
+            Précédent
+          </button>
+        )}
         
         {currentStep < 4 ? (
           <button
@@ -259,7 +272,7 @@ const Submit = () => {
           </button>
         ) : (
           <button
-            onClick={handleSubmit}
+            onClick={handleSubmitClick}
             disabled={isSubmitting}
             className={`px-6 py-2 rounded ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 text-white'}`}
           >
@@ -267,6 +280,13 @@ const Submit = () => {
           </button>
         )}
       </div>
+
+      {/* Modale de confirmation */}
+      <ConfirmationModal
+        isOpen={showConfirmationModal}
+        onConfirm={handleConfirmSubmit}
+        onCancel={handleCancelSubmit}
+      />
     </div>
   );
 };

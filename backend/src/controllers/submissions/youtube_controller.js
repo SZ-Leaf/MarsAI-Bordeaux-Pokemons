@@ -1,43 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import { findById, updateYoutubeLink } from '../../models/submissions/submissions_model.js';
-import { uploadVideo } from '../../services/youtube_services.js';
+import { uploadVideo, uploadThumbnail, uploadCaptions } from '../../services/youtube_services.js';
 
 export const uploadToYoutube = async (req, res) => {
   try {
-    const videoId = req.params.id;
+    const submissionId = req.params.id;
 
-<<<<<<< Updated upstream
-    if (!videoId) {
-      return res.status(400).json({
-        success: false,
-        error: 'ID vidéo manquant dans la requête',
-      });
-=======
-    const videoPath = path.resolve('uploads', path.basename(video.video_url));
-    const thumbnailPath = path.resolve('uploads', path.basename(video.cover));
-    const srtPath = path.resolve('uploads', path.basename(video.subtitles));
-
-    const youtubeVideo = await uploadVideo({
-      title: video.original_title,
-      description: video.original_synopsis,
-      filePath: videoPath,
-    });
-
-    await uploadThumbnail({ videoId: youtubeVideo.id, thumbnailPath });
-
-    try {
-      await uploadCaptions({
-        videoId: youtubeVideo.id,
-        srtPath,
-        language: 'fr',
-      });
-    } catch (err) {
-      console.error("Erreur Captions (souvent un problème de propagation) :", err.response?.data || err.message);
->>>>>>> Stashed changes
-    }
-
-    const video = await findById(videoId);
+    const video = await findById(submissionId);
 
     if (!video) {
       return res.status(404).json({
@@ -53,27 +23,40 @@ export const uploadToYoutube = async (req, res) => {
       });
     }
 
-    const fileName = path.basename(video.video_url);
-    const localPath = path.resolve('uploads', fileName);
+    const videoPath = path.resolve('uploads', path.basename(video.video_url));
+    const thumbnailPath = video.cover ? path.resolve('uploads', path.basename(video.cover)) : null;
+    const srtPath = video.subtitles ? path.resolve('uploads', path.basename(video.subtitles)) : null;
 
-    const youtubeResponse = await uploadVideo({
+    const youtubeVideo = await uploadVideo({
       title: video.original_title || 'Sans titre',
       description: video.original_synopsis || 'Pas de description',
-      filePath: localPath,
+      filePath: videoPath,
     });
 
-    const youtubeUrl = `https://www.youtube.com/watch?v=${youtubeResponse.id}`;
-    await updateYoutubeLink(youtubeUrl, videoId);
+    if (thumbnailPath) {
+      await uploadThumbnail({ videoId: youtubeVideo.id, thumbnailPath });
+    }
+
+    if (srtPath) {
+      try {
+        await uploadCaptions({
+          videoId: youtubeVideo.id,
+          srtPath,
+          language: 'fr',
+        });
+      } catch (err) {
+        console.error('Erreur Captions (souvent propagation YouTube) :', err.response?.data || err.message);
+      }
+    }
+
+    const youtubeUrl = `https://www.youtube.com/watch?v=${youtubeVideo.id}`;
+    await updateYoutubeLink(youtubeUrl, submissionId);
 
     return res.json({
       success: true,
-      youtube_id: youtubeResponse.id,
+      youtube_id: youtubeVideo.id,
       youtube_url: youtubeUrl,
     });
-
-
-
-
 
   } catch (err) {
     console.error('Erreur upload YouTube :', err.response?.data || err.message);

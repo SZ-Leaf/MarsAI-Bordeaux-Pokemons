@@ -3,7 +3,6 @@ import { google } from 'googleapis';
 import oauth2Client from '../config/oauth.js';
 import 'dotenv/config';
 
-// On initialise avec le refresh_token du .env
 oauth2Client.setCredentials({
   refresh_token: process.env.REFRESH_TOKEN,
 });

@@ -1,18 +1,15 @@
 import oauth2Client from '../../config/oauth.js';
 
 export const startYoutubeAuth = (req, res) => {
-<<<<<<< Updated upstream
-=======
   const scopes = [
     'https://www.googleapis.com/auth/youtube.upload',
     'https://www.googleapis.com/auth/youtube.force-ssl',
     'https://www.googleapis.com/auth/youtubepartner'
   ];
->>>>>>> Stashed changes
   const url = oauth2Client.generateAuthUrl({
     access_type: 'offline',
     prompt: 'consent',
-    scope: ['https://www.googleapis.com/auth/youtube.upload'],
+    scope: scopes,
     redirect_uri: process.env.REDIRECT_URI, // 👈 AJOUTE ÇA
   });
 

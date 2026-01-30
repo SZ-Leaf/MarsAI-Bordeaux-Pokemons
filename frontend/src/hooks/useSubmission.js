@@ -1,9 +1,17 @@
 import { useState } from 'react';
 import { submitFilm } from '../utils/api.js';
-import { validateSubmissionData, validateEmail, validateName, validatePhone, validateURL } from '../utils/validation.js';
+import { 
+  submissionSchema, 
+  step1Schema, 
+  step2Schema, 
+  step3Schema, 
+  step4Schema,
+  formatZodErrors 
+} from '../schemas/submissionSchema.js';
 
 /**
  * Hook de gestion de soumission de film
+ * Utilise Zod pour toute la validation
  */
 export const useSubmission = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -54,6 +62,7 @@ export const useSubmission = () => {
   
   /**
    * Met à jour un champ du formulaire
+   * Plus besoin de validation manuelle - Zod s'en charge !
    */
   const updateField = (field, value) => {
     setFormData(prev => ({
@@ -61,30 +70,13 @@ export const useSubmission = () => {
       [field]: value
     }));
     
-    // Validation en temps réel pour les emails
-    if (field === 'creator_email') {
-      if (value.trim() && !validateEmail(value.trim())) {
-        setErrors(prev => ({
-          ...prev,
-          [field]: 'Email invalide'
-        }));
-      } else {
-        // Effacer l'erreur si l'email est valide ou vide
-        setErrors(prev => {
-          const newErrors = { ...prev };
-          delete newErrors[field];
-          return newErrors;
-        });
-      }
-    } else {
-      // Effacer l'erreur du champ si présente
-      if (errors[field]) {
-        setErrors(prev => {
-          const newErrors = { ...prev };
-          delete newErrors[field];
-          return newErrors;
-        });
-      }
+    // Effacer l'erreur du champ si présente
+    if (errors[field]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
     }
   };
   
@@ -102,37 +94,19 @@ export const useSubmission = () => {
       collaborators: newCollaborators
     }));
     
-    // Validation en temps réel pour les emails de collaborateurs
-    if (field === 'email') {
-      const errorKey = `collaborator_${index}_email`;
-      if (value.trim() && !validateEmail(value.trim())) {
-        setErrors(prev => ({
-          ...prev,
-          [errorKey]: 'Email invalide'
-        }));
-      } else {
-        // Effacer l'erreur si l'email est valide ou vide
-        setErrors(prev => {
-          const newErrors = { ...prev };
-          delete newErrors[errorKey];
-          return newErrors;
-        });
-      }
-    } else {
-      // Effacer l'erreur du champ si présente
-      const errorKey = `collaborator_${index}_${field}`;
-      if (errors[errorKey]) {
-        setErrors(prev => {
-          const newErrors = { ...prev };
-          delete newErrors[errorKey];
-          return newErrors;
-        });
-      }
+    // Effacer l'erreur du champ si présente
+    const errorKey = `collaborators_${index}_${field}`;
+    if (errors[errorKey]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[errorKey];
+        return newErrors;
+      });
     }
   };
   
   /**
-   * Met à jour un lien social spécifique avec validation
+   * Met à jour un lien social spécifique
    */
   const updateSocialField = (index, field, value) => {
     const newSocials = [...formData.socials];
@@ -145,154 +119,39 @@ export const useSubmission = () => {
       socials: newSocials
     }));
     
-    // Validation en temps réel
-    if (field === 'network_id') {
-      const errorKey = `social_${index}_network_id`;
-      if (!value || value === '') {
-        setErrors(prev => ({
-          ...prev,
-          [errorKey]: 'Le réseau social est requis'
-        }));
-      } else {
-        setErrors(prev => {
-          const newErrors = { ...prev };
-          delete newErrors[errorKey];
-          return newErrors;
-        });
-      }
-    } else if (field === 'url') {
-      const errorKey = `social_${index}_url`;
-      if (!value.trim()) {
-        setErrors(prev => ({
-          ...prev,
-          [errorKey]: 'L\'URL est requise'
-        }));
-      } else if (!validateURL(value.trim())) {
-        setErrors(prev => ({
-          ...prev,
-          [errorKey]: 'URL invalide. L\'URL doit commencer par https://'
-        }));
-      } else {
-        setErrors(prev => {
-          const newErrors = { ...prev };
-          delete newErrors[errorKey];
-          return newErrors;
-        });
-      }
+    // Effacer l'erreur du champ si présente
+    const errorKey = `socials_${index}_${field}`;
+    if (errors[errorKey]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[errorKey];
+        return newErrors;
+      });
     }
   };
   
   /**
-   * Valide l'étape actuelle
+   * Valide l'étape actuelle avec Zod
+   * BEAUCOUP plus simple qu'avant !
    */
   const validateStep = (step) => {
-    const stepErrors = {};
+    const schemas = {
+      1: step1Schema,
+      2: step2Schema,
+      3: step3Schema,
+      4: step4Schema
+    };
     
-    switch (step) {
-      case 1:
-        if (!formData.termsAccepted) {
-          stepErrors.termsAccepted = 'Vous devez accepter les conditions d\'utilisation';
-        }
-        if (!formData.ageConfirmed) {
-          stepErrors.ageConfirmed = 'Vous devez confirmer avoir 18 ans ou plus';
-        }
-        break;
-        
-      case 2:
-        // Validation métadonnées vidéo (champs texte uniquement, pas d'upload)
-        if (!formData.english_title) stepErrors.english_title = 'Requis';
-        if (!formData.language) stepErrors.language = 'Requis';
-        if (!formData.english_synopsis) stepErrors.english_synopsis = 'Requis';
-        if (!formData.classification) stepErrors.classification = 'Requis';
-        if (!formData.tech_stack) stepErrors.tech_stack = 'Requis';
-        if (!formData.creative_method) stepErrors.creative_method = 'Requis';
-        break;
-        
-      case 3:
-        // Validation des uploads de fichiers
-        if (!formData.video) stepErrors.video = 'Requis';
-        if (!formData.cover) stepErrors.cover = 'Requis';
-        break;
-        
-      case 4:
-        // Validation infos créateur
-        if (!formData.creator_firstname) {
-          stepErrors.creator_firstname = 'Requis';
-        } else if (!validateName(formData.creator_firstname.trim())) {
-          stepErrors.creator_firstname = 'Le prénom ne doit contenir que des lettres';
-        }
-        if (!formData.creator_lastname) {
-          stepErrors.creator_lastname = 'Requis';
-        } else if (!validateName(formData.creator_lastname.trim())) {
-          stepErrors.creator_lastname = 'Le nom ne doit contenir que des lettres';
-        }
-        if (!formData.creator_email) {
-          stepErrors.creator_email = 'Requis';
-        } else if (!validateEmail(formData.creator_email.trim())) {
-          stepErrors.creator_email = 'Email invalide';
-        }
-        if (formData.creator_phone && !validatePhone(formData.creator_phone.trim())) {
-          stepErrors.creator_phone = 'Numéro de téléphone invalide';
-        }
-        if (!formData.creator_mobile) {
-          stepErrors.creator_mobile = 'Requis';
-        } else if (!validatePhone(formData.creator_mobile.trim())) {
-          stepErrors.creator_mobile = 'Numéro de téléphone invalide';
-        }
-        if (!formData.creator_gender) stepErrors.creator_gender = 'Requis';
-        if (!formData.creator_country) stepErrors.creator_country = 'Requis';
-        if (!formData.creator_address) stepErrors.creator_address = 'Requis';
-        if (!formData.referral_source) stepErrors.referral_source = 'Requis';
-        
-        // Validation des réseaux sociaux si des liens sont ajoutés
-        // Si l'utilisateur a ajouté des réseaux sociaux, ils doivent tous être valides
-        if (formData.socials && formData.socials.length > 0) {
-          formData.socials.forEach((social, index) => {
-            if (!social.network_id || social.network_id <= 0 || social.network_id === '') {
-              stepErrors[`social_${index}_network_id`] = 'Le réseau social est requis';
-            }
-            if (!social.url || !social.url.trim()) {
-              stepErrors[`social_${index}_url`] = 'L\'URL est requise';
-            } else if (!validateURL(social.url.trim())) {
-              stepErrors[`social_${index}_url`] = 'URL invalide. L\'URL doit commencer par https://';
-            }
-          });
-        }
-        
-        // Validation des contributeurs si des contributeurs sont ajoutés
-        // Si l'utilisateur a ajouté des contributeurs, ils doivent tous être complets
-        if (formData.collaborators && formData.collaborators.length > 0) {
-          formData.collaborators.forEach((collab, index) => {
-            if (!collab.firstname || !collab.firstname.trim()) {
-              stepErrors[`collaborator_${index}_firstname`] = 'Le prénom est requis';
-            } else if (!validateName(collab.firstname.trim())) {
-              stepErrors[`collaborator_${index}_firstname`] = 'Le prénom ne doit contenir que des lettres';
-            }
-            if (!collab.lastname || !collab.lastname.trim()) {
-              stepErrors[`collaborator_${index}_lastname`] = 'Le nom est requis';
-            } else if (!validateName(collab.lastname.trim())) {
-              stepErrors[`collaborator_${index}_lastname`] = 'Le nom ne doit contenir que des lettres';
-            }
-            if (!collab.email || !collab.email.trim()) {
-              stepErrors[`collaborator_${index}_email`] = 'L\'email est requis';
-            } else if (!validateEmail(collab.email.trim())) {
-              stepErrors[`collaborator_${index}_email`] = 'Email invalide';
-            }
-            if (!collab.gender || !collab.gender.trim()) {
-              stepErrors[`collaborator_${index}_gender`] = 'Le genre est requis';
-            }
-            if (!collab.role || !collab.role.trim()) {
-              stepErrors[`collaborator_${index}_role`] = 'Le rôle est requis';
-            } else if (collab.role.trim().length > 500) {
-              stepErrors[`collaborator_${index}_role`] = 'Le rôle ne peut pas dépasser 500 caractères';
-            }
-          });
-        }
-        break;
+    const result = schemas[step].safeParse(formData);
+    
+    if (!result.success) {
+      const stepErrors = formatZodErrors(result.error);
+      setErrors(stepErrors);
+      return false;
     }
     
-    setErrors(stepErrors);
-    return Object.keys(stepErrors).length === 0;
+    setErrors({});
+    return true;
   };
   
   /**
@@ -319,30 +178,30 @@ export const useSubmission = () => {
    * Détermine l'étape contenant les erreurs
    */
   const getStepWithErrors = (errors) => {
+    const errorKeys = Object.keys(errors);
+    
     // Étape 1 : CGU
-    if (errors.termsAccepted || errors.ageConfirmed) {
+    if (errorKeys.some(key => ['termsAccepted', 'ageConfirmed'].includes(key))) {
       return 1;
     }
     
-    // Étape 2 : Métadonnées vidéo (champs texte uniquement)
-    if (errors.english_title || errors.original_title || errors.language || 
-        errors.english_synopsis || errors.original_synopsis || errors.classification ||
-        errors.tech_stack || errors.creative_method) {
+    // Étape 2 : Métadonnées vidéo
+    if (errorKeys.some(key => ['english_title', 'original_title', 'language', 
+        'english_synopsis', 'original_synopsis', 'classification',
+        'tech_stack', 'creative_method'].includes(key))) {
       return 2;
     }
     
     // Étape 3 : Uploads de fichiers
-    if (errors.video || errors.cover || errors.subtitles || errors.gallery ||
-        Object.keys(errors).some(key => key.startsWith('gallery_'))) {
+    if (errorKeys.some(key => ['video', 'cover', 'subtitles', 'gallery'].includes(key) || 
+        key.startsWith('gallery_'))) {
       return 3;
     }
     
     // Étape 4 : Réalisateur et Contributeurs
-    if (errors.creator_firstname || errors.creator_lastname || errors.creator_email ||
-        errors.creator_phone || errors.creator_mobile || errors.creator_gender ||
-        errors.creator_country || errors.creator_address || errors.referral_source ||
-        Object.keys(errors).some(key => key.startsWith('social_')) ||
-        Object.keys(errors).some(key => key.startsWith('collaborator_'))) {
+    if (errorKeys.some(key => key.startsWith('creator_') || 
+        key.startsWith('socials_') || 
+        key.startsWith('collaborators_'))) {
       return 4;
     }
     
@@ -352,11 +211,14 @@ export const useSubmission = () => {
   
   /**
    * Soumet le formulaire complet
+   * Validation complète avec Zod
    */
   const submit = async () => {
-    // Validation complète
-    const validationErrors = validateSubmissionData(formData);
-    if (Object.keys(validationErrors).length > 0) {
+    // Validation complète avec Zod
+    const result = submissionSchema.safeParse(formData);
+    
+    if (!result.success) {
+      const validationErrors = formatZodErrors(result.error);
       setErrors(validationErrors);
       // Rediriger vers l'étape contenant les erreurs
       const stepWithErrors = getStepWithErrors(validationErrors);
@@ -419,7 +281,7 @@ export const useSubmission = () => {
       // Construire un message d'erreur détaillé
       let errorMessage = error.message || 'Erreur lors de la soumission';
       
-      // Si l'erreur contient des détails de validation (erreurs Zod)
+      // Si l'erreur contient des détails de validation (erreurs Zod du backend)
       if (error.details && Array.isArray(error.details)) {
         const validationErrors = error.details
           .map(detail => `${detail.field}: ${detail.message}`)

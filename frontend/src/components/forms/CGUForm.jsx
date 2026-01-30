@@ -1,7 +1,3 @@
-/**
- * Formulaire CGU + 18 ans (Partie 1)
- * Design épuré et simple
- */
 const CGUForm = ({ formData, errors, updateField }) => {
   return (
     <div className="space-y-6 pl-4">

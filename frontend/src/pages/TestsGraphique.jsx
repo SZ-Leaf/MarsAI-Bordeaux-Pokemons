@@ -1,6 +1,6 @@
 import React from 'react';
 import '../App.css';
-import useModal from '../utils/useModal';
+import useModal from '../hooks/useModal';
 import Modal from '../components/modals/Modal';
 import Card from '../components/cards/Card';
 import Form from '../components/forms/Form';

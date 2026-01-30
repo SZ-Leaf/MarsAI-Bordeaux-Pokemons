@@ -1,12 +1,13 @@
-import { useState } from 'react';
 import { useSubmission } from '../hooks/useSubmission.js';
 import { useScrollOnStepChange } from '../hooks/useScrollOnStepChange.js';
 import { useScrollToError } from '../hooks/useScrollToError.js';
+import useModal from '../hooks/useModal.js';
 import StepIndicator from '../components/StepIndicator.jsx';
 import StepContent from '../components/StepContent.jsx';
 import FormNavigation from '../components/forms/NaviguationForm.jsx';
 import SubmissionSuccess from '../components/SubmissionSuccess.jsx';
 import ActionConfirmationModal from '../components/modals/ActionConfirmationModal.jsx';
+import { totalSteps } from '../constants/submissionSteps.js';
 
 /**
  * Page de soumission de film (4 étapes)
@@ -31,7 +32,12 @@ const Submit = () => {
     validateStep
   } = useSubmission();
   
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const {
+    isOpen: showConfirmationModal,
+    openModal: openConfirmationModal,
+    handleConfirm: handleConfirmSubmit,
+    handleCancel: handleCancelSubmit
+  } = useModal(submit);
   
   // Hooks personnalisés pour la gestion du scroll
   useScrollOnStepChange(currentStep);
@@ -39,21 +45,8 @@ const Submit = () => {
   
   // Gestion de la soumission avec validation
   const handleSubmitClick = () => {
-    if (!validateStep(4)) return;
-    setShowConfirmationModal(true);
-  };
-
-  const handleConfirmSubmit = async () => {
-    setShowConfirmationModal(false);
-    try {
-      await submit();
-    } catch {
-      // Erreur déjà gérée dans le hook 
-    }
-  };
-
-  const handleCancelSubmit = () => {
-    setShowConfirmationModal(false);
+    if (!validateStep(totalSteps)) return;
+    openConfirmationModal();
   };
   
   // Affichage du message de succès
@@ -65,7 +58,7 @@ const Submit = () => {
     <div className="max-w-4xl mx-auto p-6 pl-8">
       <h1 className="text-3xl font-bold mb-8">Soumission de film</h1>
       
-      <StepIndicator currentStep={currentStep} totalSteps={4} />
+      <StepIndicator currentStep={currentStep} />
       
       <StepContent 
         currentStep={currentStep}
@@ -83,7 +76,7 @@ const Submit = () => {
       
       <FormNavigation
         currentStep={currentStep}
-        totalSteps={4}
+        totalSteps={totalSteps}
         isSubmitting={isSubmitting}
         onPrevious={prevStep}
         onNext={nextStep}

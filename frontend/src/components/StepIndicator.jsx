@@ -1,19 +1,10 @@
-/**
- * Indicateur de progression avec titres d'étapes
- * Design épuré et simple
- */
+import { submissionSteps } from '../constants/submissionSteps';
+
 const StepIndicator = ({ currentStep }) => {
-  const steps = [
-    { number: 1, title: 'Conditions' },
-    { number: 2, title: 'Informations vidéo' },
-    { number: 3, title: 'Uploads' },
-    { number: 4, title: 'Réalisateur et Contributeurs' }
-  ];
-  
   return (
     <div className="mb-8">
       <div className="flex items-center justify-center mb-2" style={{ gap: '1rem' }}>
-        {steps.map((step, index) => {
+        {submissionSteps.map((step, index) => {
           const isActive = step.number === currentStep;
           const isCompleted = step.number < currentStep;
           
@@ -35,7 +26,7 @@ const StepIndicator = ({ currentStep }) => {
                   {step.title}
                 </span>
               </div>
-              {index < steps.length - 1 && (
+              {index < submissionSteps.length - 1 && (
                 <div
                   className={`h-1 w-16 mx-2 ${
                     isCompleted ? 'bg-green-500' : 'bg-gray-200'

@@ -1,0 +1,47 @@
+@import "tailwindcss" reference;
+@import "../../theme.css";
+
+.card {
+  @apply rounded-2xl overflow-hidden flex flex-col;
+  @apply transition-transform duration-200 ease-in-out;
+  @apply border-blue/50 border-2;
+
+}
+
+.card:hover {
+  @apply -translate-y-1;
+}
+
+/* Card Text variant */
+.card-text {
+  @apply p-10 min-h-[280px] justify-center items-center text-center;
+}
+
+.card-title-accent {
+  @apply text-blue font-extrabold mb-6 uppercase tracking-wider text-[48px];
+}
+
+.card-description {
+  @apply text-black/80 text-base font-semibold leading-relaxed uppercase tracking-[1.5px] max-w-[80%];
+}
+
+/* Card Image variant */
+.card-image-container {
+  @apply w-full aspect-square overflow-hidden;
+}
+
+.card-image-container img {
+  @apply w-full h-full object-cover;
+}
+
+.card-content {
+  @apply p-6 bg-white;
+}
+
+.card-image-title {
+  @apply text-black text-2xl font-bold mb-2 uppercase tracking-tight;
+}
+
+.card-image-subtitle {
+  @apply text-black/50 text-sm font-semibold uppercase tracking-[2px];
+}

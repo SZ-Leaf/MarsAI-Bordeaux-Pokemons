@@ -40,10 +40,10 @@ const createSubmission = async (connection, data, videoPath, coverPath, duration
       data.creator_mobile,
       data.creator_firstname,
       data.creator_lastname,
-        data.creator_country,
-        data.creator_address,
-        data.referral_source,  // Requis
-        data.terms_of_use
+      data.creator_country,
+      data.creator_address,
+      data.referral_source,  // Requis
+      data.terms_of_use
     ]
   );
   
@@ -188,4 +188,23 @@ export default {
   updateFilePaths,
   getSubmissions,
   getSubmissionById
+};
+export const findById = async (id) => {
+  try {
+    const [rows] = await db.pool.execute('SELECT * FROM submissions WHERE id = ?', [id]);
+    return rows[0];
+  } catch (err) {
+    console.error('Erreur findById:', err);
+    throw err;
+  }
+};
+
+export const updateYoutubeLink = async (youtubeUrl, id) => {
+  try {
+    const [result] = await db.pool.execute('UPDATE submissions SET youtube_url = ? WHERE id = ?', [youtubeUrl, id]);
+    return result.affectedRows;
+  } catch (err) {
+    console.error('Erreur updateYoutubeLink:', err);
+    throw err;
+  }
 };

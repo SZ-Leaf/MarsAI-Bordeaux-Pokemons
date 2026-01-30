@@ -259,10 +259,10 @@ export const submit = async (req, res) => {
       });
     }
     
-    console.error('❌ Erreur soumission:', error);
-    console.error('❌ Stack trace:', error.stack);
-    console.error('❌ Error name:', error.name);
-    console.error('❌ Error message:', error.message);
+    console.error('Erreur soumission:', error);
+    console.error('Stack trace:', error.stack);
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
     
     res.status(500).json({ 
       error: 'Erreur lors de la création de la soumission',
@@ -300,7 +300,7 @@ export const getSubmissions = async (req, res) => {
       submissions
     });
   } catch (error) {
-    console.error('❌ Erreur récupération soumissions:', error);
+    console.error('Erreur récupération soumissions:', error);
     res.status(500).json({ 
       error: 'Erreur lors de la récupération des soumissions',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
@@ -339,7 +339,7 @@ export const getSubmissionById = async (req, res) => {
       submission
     });
   } catch (error) {
-    console.error('❌ Erreur récupération soumission:', error);
+    console.error('Erreur récupération soumission:', error);
     res.status(500).json({ 
       error: 'Erreur lors de la récupération de la soumission',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined

@@ -1,3 +1,4 @@
+// src/config/db_pool.js
 import mysql from 'mysql2/promise';
 import env from './db_config.js';
 
@@ -12,9 +13,8 @@ const pool = mysql.createPool({
 
 const testConnection = async () => {
    try {
-      const [rows] = await pool.execute("SELECT NOW() AS NOW");
-      console.log(rows[0].NOW);
-
+      const [rows] = await pool.query("SELECT NOW() AS NOW");
+      console.log('DB connected, time:', rows[0].NOW);
    } catch (error) {
       console.error("DB ERROR:", error);
       throw new Error(error.message);
@@ -24,4 +24,4 @@ const testConnection = async () => {
 export default {
    pool,
    testConnection
-}
+};

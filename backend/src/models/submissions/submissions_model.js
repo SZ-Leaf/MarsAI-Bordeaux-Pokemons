@@ -1,15 +1,6 @@
 import db from '../../config/db_pool.js';
 
-/**
- * Crée une nouvelle soumission dans la base de données
- * @param {Object} connection - Connexion MySQL (déjà en transaction)
- * @param {Object} data - Données de la soumission validées
- * @param {string} videoPath - Chemin du fichier vidéo
- * @param {string} coverPath - Chemin du fichier cover
- * @param {number|null} durationSeconds - Durée de la vidéo en secondes (calculée avec get-video-duration)
- * @returns {Promise<number>} - ID de la soumission créée
- */
-const createSubmission = async (connection, data, videoPath, coverPath, durationSeconds = null) => {
+export const createSubmission = async (connection, data, videoPath, coverPath, durationSeconds = null) => {
   const [result] = await connection.execute(
     `INSERT INTO submissions (
       cover, video_url, english_title, original_title, language,
@@ -50,28 +41,16 @@ const createSubmission = async (connection, data, videoPath, coverPath, duration
   return result.insertId;
 };
 
-/**
- * Met à jour les chemins des fichiers dans la soumission
- * @param {Object} connection - Connexion MySQL (déjà en transaction)
- * @param {number} submissionId - ID de la soumission
- * @param {string} videoUrl - Chemin final de la vidéo
- * @param {string} cover - Chemin final du cover
- * @param {string|null} subtitles - Chemin final des subtitles (optionnel)
- * @returns {Promise<void>}
- */
-const updateFilePaths = async (connection, submissionId, videoUrl, cover, subtitles = null) => {
+
+export const updateFilePaths = async (connection, submissionId, videoUrl, cover, subtitles = null) => {
   await connection.execute(
     'UPDATE submissions SET video_url = ?, cover = ?, subtitles = ? WHERE id = ?',
     [videoUrl, cover, subtitles, submissionId]
   );
 };
 
-/**
- * Récupère toutes les soumissions (pour admin)
- * @param {Object} filters - Filtres optionnels (status, limit, offset)
- * @returns {Promise<Array>} - Liste des soumissions
- */
-const getSubmissions = async (filters = {}) => {
+
+export const getSubmissions = async (filters = {}) => {
   const connection = await db.pool.getConnection();
   
   try {
@@ -104,12 +83,8 @@ const getSubmissions = async (filters = {}) => {
   }
 };
 
-/**
- * Récupère une soumission par son ID avec toutes ses relations
- * @param {number} submissionId - ID de la soumission
- * @returns {Promise<Object|null>} - Soumission complète ou null si non trouvée
- */
-const getSubmissionById = async (submissionId) => {
+
+export const getSubmissionById = async (submissionId) => {
   const connection = await db.pool.getConnection();
   
   try {
@@ -183,28 +158,22 @@ const getSubmissionById = async (submissionId) => {
   }
 };
 
-export default {
-  createSubmission,
-  updateFilePaths,
-  getSubmissions,
-  getSubmissionById
-};
-export const findById = async (id) => {
+export const findSubmissionById = async (id) => {
   try {
     const [rows] = await db.pool.execute('SELECT * FROM submissions WHERE id = ?', [id]);
     return rows[0];
   } catch (err) {
-    console.error('Erreur findById:', err);
+    console.error('Erreur findSubmissionById:', err);
     throw err;
   }
 };
 
-export const updateYoutubeLink = async (youtubeUrl, id) => {
+export const updateYoutubeLinkInDatabase = async (youtubeUrl, id) => {
   try {
     const [result] = await db.pool.execute('UPDATE submissions SET youtube_url = ? WHERE id = ?', [youtubeUrl, id]);
     return result.affectedRows;
   } catch (err) {
-    console.error('Erreur updateYoutubeLink:', err);
+    console.error('Erreur updateYoutubeLinkInDatabase:', err);
     throw err;
   }
 };

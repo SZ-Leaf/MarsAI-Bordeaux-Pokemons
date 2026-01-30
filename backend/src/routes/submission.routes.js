@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { submit, getSubmissions, getSubmissionById } from '../controllers/submissions/submissions_controller.js';
+import { submit, getSubmissionsController, getSubmissionByIdController } from '../controllers/submissions/submissions_controller.js';
 import { uploadSubmissionFiles, handleUploadError } from '../middlewares/upload.js';
 // import { requireRole } from '../middlewares/auth.js'; // À décommenter quand Feature 1 (Auth) sera implémentée
 // import { verifyToken } from '../middlewares/auth.js'; // À décommenter quand Feature 1 (Auth) sera implémentée
@@ -27,7 +27,7 @@ router.get(
   '/',
   // verifyToken, // À décommenter quand Feature 1 sera implémentée
   // requireRole(['admin', 'user']), // À décommenter quand Feature 1 sera implémentée
-  getSubmissions
+  getSubmissionsController
 );
 
 /**
@@ -39,7 +39,7 @@ router.get(
   '/:id',
   // verifyToken, // À décommenter quand Feature 1 sera implémentée
   // requireRole(['admin', 'user']), // À décommenter quand Feature 1 sera implémentée
-  getSubmissionById
+  getSubmissionByIdController
 );
 
 export default router;

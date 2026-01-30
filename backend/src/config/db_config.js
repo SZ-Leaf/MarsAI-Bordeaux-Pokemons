@@ -1,9 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-console.log(process.env.JWT_SECRET);
-
-
 export default {
    PORT : process.env.PORT,
    DB_HOST : process.env.DB_HOST,

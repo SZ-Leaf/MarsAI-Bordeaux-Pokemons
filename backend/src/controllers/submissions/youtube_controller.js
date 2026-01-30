@@ -1,13 +1,13 @@
 import fs from 'fs';
 import path from 'path';
-import { findById, updateYoutubeLink } from '../../models/submissions/submissions_model.js';
 import { uploadVideo, uploadThumbnail, uploadCaptions } from '../../services/youtube_services.js';
+import {findSubmissionById, updateYoutubeLinkInDatabase} from '../../models/submissions/submissions_model.js';
 
 export const uploadToYoutube = async (req, res) => {
   try {
     const submissionId = req.params.id;
 
-    const video = await findById(submissionId);
+    const video = await findSubmissionById(submissionId);
 
     if (!video) {
       return res.status(404).json({
@@ -50,7 +50,7 @@ export const uploadToYoutube = async (req, res) => {
     }
 
     const youtubeUrl = `https://www.youtube.com/watch?v=${youtubeVideo.id}`;
-    await updateYoutubeLink(youtubeUrl, submissionId);
+    await updateYoutubeLinkInDatabase(youtubeUrl, submissionId);
 
     return res.json({
       success: true,

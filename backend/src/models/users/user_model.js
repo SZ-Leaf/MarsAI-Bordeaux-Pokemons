@@ -69,31 +69,58 @@ const inviteUser = async (email, role_id) => {
 }
 
 const registerUser = async (token, user) => {
-   let connection;
+   const connection = await db.pool.getConnection();
+
    try {
-      const [invite] = await db.pool.execute("SELECT * FROM invites WHERE token = ?", [token]);
-      if (invite.length === 0 || invite[0].registered) {
+      await connection.beginTransaction();
+
+      const [invites] = await connection.execute(
+         "SELECT * FROM invites WHERE token = ? FOR UPDATE",
+         [token]
+      );
+
+      if (invites.length === 0 || invites[0].registered) {
+         await connection.rollback();
          return { success: false, error: "Invalid or already registered." };
       }
-      connection = await db.pool.getConnection();
-      await connection.beginTransaction();
-      try {
-         const [result] = await connection.execute("INSERT INTO users (firstname, lastname, email, password_hash, role_id) VALUES (?, ?, ?, ?, ?)", [user.firstname, user.lastname, invite[0].email, user.password_hash, invite[0].role_id]);
-         await connection.execute("UPDATE invites SET registered = TRUE WHERE token = ?", [token]);
-         await connection.commit();
-         return { success: true, userId: result.insertId, email: invite[0].email };
-      } catch (error) {
-         await connection.rollback();
-         console.error("Error registering user:", error);
-         return { success: false, error: error.message };
-      }
+
+      const invite = invites[0];
+
+      const [result] = await connection.execute(
+         `INSERT INTO users 
+            (firstname, lastname, email, password_hash, role_id)
+          VALUES (?, ?, ?, ?, ?)`,
+         [
+            user.firstname,
+            user.lastname,
+            invite.email,
+            user.password_hash,
+            invite.role_id
+         ]
+      );
+
+      await connection.execute(
+         "UPDATE invites SET registered = TRUE WHERE token = ?",
+         [token]
+      );
+
+      await connection.commit();
+
+      return {
+         success: true,
+         userId: result.insertId,
+         email: invite.email
+      };
+
    } catch (error) {
+      await connection.rollback();
       console.error("Error registering user:", error);
-      return { success: false, error: error.message };
+      throw error; // important
    } finally {
-      if (connection) await connection.release();
+      connection.release();
    }
-}
+};
+
 
 const deleteUser = async (id) => {
    let connection;
@@ -123,13 +150,40 @@ const deleteUser = async (id) => {
 
 const updateUser = async (id, user) => {
    try {
-      const [result] = await db.pool.execute("UPDATE users SET firstname = ?, lastname = ? WHERE id = ?", [user.firstname, user.lastname, id]);
+      // update user dynamic fields and values array
+      const fields = [];
+      const values = [];
+   
+      if (user.firstname !== undefined) {
+         fields.push("firstname = ?");
+         values.push(user.firstname);
+      }
+      if (user.lastname !== undefined) {
+         fields.push("lastname = ?");
+         values.push(user.lastname);
+      }
+      if (user.email !== undefined) {
+         fields.push("email = ?");
+         values.push(user.email);
+      }
+   
+      if (fields.length === 0) {
+         // no fields to update
+         return { affectedRows: 0 };
+      }
+   
+      const sql = `UPDATE users SET ${fields.join(", ")} WHERE id = ?`;
+      values.push(id);
+   
+      const [result] = await db.pool.execute(sql, values);
       return result;
+ 
    } catch (error) {
-      console.error("Error updating user:", error);
-      throw new Error(error.message);
+     console.error("Error updating user:", error);
+     throw new Error(error.message);
    }
-}
+};
+ 
 
 const updateUserPassword = async (email, password_hash) => {
    try {
@@ -203,4 +257,4 @@ const changeUserRole = async (id, role_id) => {
    }
 }
 
-export { getUsers, getUserById, inviteUser, registerUser, deleteUser, getUserCredentials, loginUser, updateUser, updateUserPassword, changeUserRole };
+export { getUsers, getUserById, inviteUser, registerUser, deleteUser, getUserCredentials, loginUser, updateUser, updateUserPassword, changeUserRole, resetUserPassword };

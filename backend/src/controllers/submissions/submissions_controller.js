@@ -2,11 +2,11 @@ import { getVideoDurationInSeconds } from 'get-video-duration';
 import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
-import submissionModel from '../../models/submissions/submissions_model.js';
+import {createSubmission, updateFilePaths, getSubmissions, getSubmissionById} from '../../models/submissions/submissions_model.js';
 import collaboratorModel from '../../models/submissions/collaborators_model.js';
 import galleryModel from '../../models/submissions/gallery_model.js';
 import socialModel from '../../models/socials/socials_model.js';
-import { submissionSchema } from '../../utils/schemas.js';
+import { submissionSchema } from '../../utils/schemas/submission_schemas.js';
 import db from '../../config/db_pool.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -144,7 +144,7 @@ export const submit = async (req, res) => {
     }
 
     // 10. INSERT submission (obtenir submission_id)
-    const submissionId = await submissionModel.createSubmission(
+    const submissionId = await createSubmission(
       connection,
       validatedData,
       videoFile.path, // Chemin temporaire (sera mis à jour après déplacement)
@@ -178,7 +178,7 @@ export const submit = async (req, res) => {
       ? `/uploads/submissions/${submissionId}/subtitles${path.extname(subtitlesFile.originalname)}`
       : null;
 
-    await submissionModel.updateFilePaths(connection, submissionId, videoUrl, coverUrl, subtitlesUrl);
+    await updateFilePaths(connection, submissionId, videoUrl, coverUrl, subtitlesUrl);
 
     // 15. INSERT gallery images
     const galleryUrls = [];
@@ -282,7 +282,7 @@ export const submit = async (req, res) => {
  * GET /api/admin/submissions
  * Route protégée (nécessite authentification admin)
  */
-export const getSubmissions = async (req, res) => {
+export const getSubmissionsController = async (req, res) => {
   try {
     const { status, limit = 20, offset = 0 } = req.query;
 
@@ -292,7 +292,7 @@ export const getSubmissions = async (req, res) => {
       offset: parseInt(offset)
     };
 
-    const submissions = await submissionModel.getSubmissions(filters);
+    const submissions = await getSubmissions(filters);
 
     res.status(200).json({
       success: true,
@@ -309,7 +309,7 @@ export const getSubmissions = async (req, res) => {
 };
 
 
-export const getSubmissionById = async (req, res) => {
+export const getSubmissionByIdController = async (req, res) => {
   try {
     const submissionId = parseInt(req.params.id);
 
@@ -321,7 +321,7 @@ export const getSubmissionById = async (req, res) => {
       });
     }
 
-    const submission = await submissionModel.getSubmissionById(submissionId);
+    const submission = await getSubmissionById(submissionId);
 
     if (!submission) {
       return res.status(404).json({

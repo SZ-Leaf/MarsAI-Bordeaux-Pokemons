@@ -1,18 +1,19 @@
-import { inviteUser, registerUser, deleteUser, getUserCredentials, loginUser, updateUser, updateUserPassword } from "../../models/users/user_model.js";
+import { inviteUser, registerUser, deleteUser, getUserCredentials, loginUser, updateUser, updateUserPassword, resetUserPassword } from "../../models/users/user_model.js";
 import validator from "validator";
 import { hashPassword, verifyPassword } from "../../helpers/password/password_hasher.js";
-import { checkPasswordStrength } from "../../helpers/password/password_strength.js";
 import { sendInviteMail, sendForgotPasswordMail } from "../../services/mailer/mailer_mail.js";
 import { signToken, verifyToken } from "../../services/jwt/jwt_token.js";
 import { sendError, sendSuccess } from "../../helpers/response_helper.js";
 import { generateForgotPasswordToken, verifyForgotPasswordToken } from "../../services/mailer/mailer_tokens.js";
+import { registerUserSchema, updateUserSchema, userPasswordSchema } from "../../utils/schemas/user_schemas.js";
+import { checkEmail } from "../../utils/email_validator.js";
 
 const inviteUserController = async (req, res) => {
    try {
       // input validation
-      let { email, role_id } = req.body;
+      const { role_id } = req.body;
+      let { email } = req.body;
       email = email?.trim();
-      role_id = role_id?.toString().trim();
       if (!email || !role_id) {
          return sendError(res, 400,
             "Email et rôle sont requis",
@@ -21,8 +22,19 @@ const inviteUserController = async (req, res) => {
          );
       }
 
+      // validate email is a valid email
+      try {
+         checkEmail(email);
+      } catch (error) {
+         return sendError(res, 400,
+            error.fr,
+            error.en,
+            null
+         );
+      }
+
       // validate role_id is a number and existing
-      const allowedRoles = ["1", "2"];
+      const allowedRoles = [1, 2];
       if (!allowedRoles.includes(role_id)) {
          return sendError(res, 400,
             "Rôle invalide",
@@ -30,19 +42,10 @@ const inviteUserController = async (req, res) => {
             null
          );
       }
-      role_id = Number(role_id);
 
-      // validate email is a valid email
-      if (!validator.isEmail(email)) {
-         return sendError(res, 400,
-            "Email invalide",
-            "Invalid email",
-            null
-         );
-      }
-
+      const numericRoleId = Number(role_id);
       // invite user
-      const result = await inviteUser(email, role_id);
+      const result = await inviteUser(email, numericRoleId);
       await sendInviteMail(email, result.token);
       return sendSuccess(res, 200,
          "Invitation envoyée avec succès",
@@ -70,8 +73,6 @@ const inviteUserController = async (req, res) => {
 
 const registerUserController = async (req, res) => {
    try {
-      // input validation
-      let { firstname, lastname, password } = req.body;
       const token = req.query.token;
 
       // validate token
@@ -83,29 +84,19 @@ const registerUserController = async (req, res) => {
          );
       }
 
-      // trim inputs
+      // validate input using Zod
+      let { firstname, lastname, password } = req.body;
       firstname = firstname?.trim();
       lastname = lastname?.trim();
       password = password?.trim();
 
-      // basic validation
-      if (!firstname || !lastname || !password) {
-         return sendError(res, 400,
-            "Prénom, nom et mot de passe sont requis",
-            "Firstname, lastname and password are required",
-            null
-         );
-      }
 
-      // check password strength
       try {
-         checkPasswordStrength(password);
-      } catch (error) {
-         return sendError(res, 400,
-            "Mot de passe invalide",
-            "Invalid password",
-            error.message
-         );
+         registerUserSchema.parse({ firstname, lastname, password });
+      } catch (err) {
+         // Zod throws an object with `issues`, map them to your i18n messages
+         const firstError = err.errors?.[0]?.message || 'Invalid input';
+         return sendError(res, 400, firstError, firstError, null);
       }
 
       // hash password
@@ -127,11 +118,10 @@ const registerUserController = async (req, res) => {
          );
       }
 
-      const email = result.email;
       return sendSuccess(res, 200,
          "Inscription réussie",
          "Registration successful",
-         { email: email }
+         { email: result.email }
       );
 
    } catch (error) {
@@ -182,13 +172,34 @@ const deleteUserController = async (req, res) => {
 
 const loginUserController = async (req, res) => {
    try {
-      const { email, password } = req.body;
+      let { email, password } = req.body;
+      email = email?.trim();
+      password = password?.trim();
+      
       if (!email || !password) {
          return sendError(res, 400,
             "Email et mot de passe sont requis",
             "Email and password are required",
             null
          );
+      }
+
+      // validate email is a valid email
+      try {
+         checkEmail(email);
+      } catch (error) {
+         return sendError(res, 400,
+            error.fr,
+            error.en,
+            null
+         );
+      }
+      // validate input using Zod
+      try {
+         userPasswordSchema.parse({ password });
+      } catch (err) {
+         const firstError = err.errors?.[0]?.message || 'Invalid input';
+         return sendError(res, 400, firstError, firstError, null);
       }
 
       const credentials = await getUserCredentials(email);
@@ -202,8 +213,8 @@ const loginUserController = async (req, res) => {
       const isPasswordValid = await verifyPassword(password, credentials.password_hash);
       if (!isPasswordValid) {
          return sendError(res, 400,
-            "Mot de passe incorrect",
-            "Invalid password",
+            "Identifiants de connexion incorrects",
+            "Invalid login credentials",
             null
          );
       }
@@ -211,8 +222,8 @@ const loginUserController = async (req, res) => {
       const result = await loginUser(email);
       if (!result) {
          return sendError(res, 400,
-            "Utilisateur non trouvé",
-            "User not found",
+            "Identifiants de connexion incorrects",
+            "Invalid login credentials",
             null
          );
       }
@@ -232,17 +243,72 @@ const loginUserController = async (req, res) => {
    }
 }
 
-// const updateUserController = async (req, res) => {
-//    try {
-//       const { id } = req.params;
-//       const { firstname, lastname } = req.body;
-//       const result = await updateUser(id, { firstname, lastname });
-//       return sendSuccess(res, 200,
-//          "Utilisateur mis à jour avec succès",
-//          "User updated successfully",
-//          result
-//       );
-// }
+const updateUserController = async (req, res) => {
+   try {
+      const { id } = req.params;
+      let { firstname, lastname } = req.body;
+      const token = req.headers.authorization?.split(" ")[1];
+      if (!token) {
+         return sendError(res, 400,
+            "Session invalide",
+            "Invalid login session",
+            null
+         );
+      }
+      let decoded;
+      try {
+         decoded = verifyToken(token);
+      } catch (error) {
+         return sendError(res, 400,
+            "Session invalide",
+            "Invalid login session",
+            null
+         );
+      }
+      if (decoded.sub !== id) {
+         return sendError(res, 400,
+            "Non autorisé",
+            "Unauthorized",
+            null
+         );
+      }
+      firstname = firstname?.trim();
+      lastname = lastname?.trim();
+
+      // validate input using Zod
+      try {
+         updateUserSchema.parse({ firstname, lastname });
+      } catch (err) {
+         const firstError = err.errors?.[0]?.message || 'Invalid input';
+         return sendError(res, 400, firstError, firstError, null);
+      }
+      const user = {
+         firstname: firstname,
+         lastname: lastname
+      }
+      const result = await updateUser(id, user);
+      if (result.affectedRows === 0) {
+         return sendError(res, 400,
+            "Erreur lors de la mise à jour de l'utilisateur",
+            "Error updating user",
+            null
+         );
+      }
+      return sendSuccess(res, 200,
+         "Profile mis à jour avec succès",
+         "Profile updated successfully",
+         null
+      );
+      
+   } catch (error) {
+      console.error("Error updating user:", error);
+      return sendError(res, 500,
+         "Erreur lors de la mise à jour de l'utilisateur",
+         "Error updating user",
+         error.message
+      );
+   }
+}
 
 const getAllUsersController = async (req, res) => {
    try {
@@ -264,24 +330,23 @@ const getAllUsersController = async (req, res) => {
 
 const updateUserPasswordController = async (req, res) => {
    try {
-      const { email, new_password } = req.body;
-      const trimmedPassword = new_password?.trim();
+      let { email, new_password } = req.body;
+      email = email?.trim();
+      new_password = new_password?.trim();
       const token = req.headers.authorization?.split(" ")[1];
 
       // Validate input
-      if (!trimmedPassword) return sendError(res, 400,
+      if (!new_password) return sendError(res, 400,
          "Nouveau mot de passe requis",
          "New password required",
          null
       );
-      try { 
-         checkPasswordStrength(trimmedPassword); 
-      } catch (error) {
-         return sendError(res, 400,
-            "Mot de passe invalide",
-            "Invalid password",
-            error.message
-         );
+
+      try {
+        userPasswordSchema.parse({ password: new_password });
+      } catch (err) {
+         const firstError = err.errors?.[0]?.message || 'Invalid input';
+         return sendError(res, 400, firstError, firstError, null);
       }
 
       // Validate token
@@ -303,23 +368,23 @@ const updateUserPasswordController = async (req, res) => {
 
       // Validate email matches token
       if (decoded.email !== email) return sendError(res, 400,
-         "Email non autorisé",
-         "Unauthorized email",
+         "Non autorisé",
+         "Unauthorized",
          null
       );
 
       // Hash and update password
-      const password_hash = await hashPassword(trimmedPassword);
+      const password_hash = await hashPassword(new_password);
       const result = await updateUserPassword(email, password_hash);
       if (result.affectedRows === 0) return sendError(res, 400,
-         "Mot de passe non mis à jour",
-         "Password not updated",
+         "Erreur lors de la mise à jour du mot de passe",
+         "Error updating user password",
          null
       );
 
       return sendSuccess(res, 200,
          "Mot de passe mis à jour avec succès",
-         "Password updated successfully",
+         "User password updated successfully",
          null
       );
    } catch (error) {
@@ -334,11 +399,23 @@ const updateUserPasswordController = async (req, res) => {
 
 const forgotPasswordController = async (req, res) => {
    try {
-      const {email} = req.body;
+      let {email} = req.body;
+      email = email?.trim();
       if (!email) {
          return sendError(res, 400,
             "Email requis",
             "Email required",
+            null
+         );
+      }
+
+      // validate email is a valid email
+      try {
+         checkEmail(email);
+      } catch (error) {
+         return sendError(res, 400,
+            error.fr,
+            error.en,
             null
          );
       }
@@ -375,7 +452,9 @@ const forgotPasswordController = async (req, res) => {
 
 const resetPasswordController = async (req, res) => {
    try {
-      const { token, new_password } = req.body;
+      let { token, new_password } = req.body;
+      token = token?.trim();
+      new_password = new_password?.trim();
       if (!token || !new_password) {
          return sendError(res, 400,
             "Nouveau mot de passe requis",
@@ -383,16 +462,12 @@ const resetPasswordController = async (req, res) => {
             null
          );
       }
-      const trimmedPassword = new_password?.trim();
 
       try {
-         checkPasswordStrength(trimmedPassword);
-      } catch (error) {
-         return sendError(res, 400,
-            "Mot de passe invalide",
-            "Invalid password",
-            error.message
-         );
+         userPasswordSchema.parse({ password: new_password });
+      } catch (err) {
+         const firstError = err.errors?.[0]?.message || 'Invalid input';
+         return sendError(res, 400, firstError, firstError, null);
       }
 
       // Optional verify token without calling the model for faster response
@@ -406,7 +481,7 @@ const resetPasswordController = async (req, res) => {
       //    );
       // }
 
-      const password_hash = await hashPassword(trimmedPassword);
+      const password_hash = await hashPassword(new_password);
 
       const result = await resetUserPassword(token, password_hash);
 
@@ -426,4 +501,4 @@ const resetPasswordController = async (req, res) => {
    }
 }
 
-export { inviteUserController, registerUserController, deleteUserController, loginUserController, getAllUsersController, updateUserPasswordController, forgotPasswordController, resetPasswordController };
+export { inviteUserController, registerUserController, deleteUserController, loginUserController, getAllUsersController, updateUserPasswordController, forgotPasswordController, resetPasswordController, updateUserController };

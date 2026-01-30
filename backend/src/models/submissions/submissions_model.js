@@ -1,7 +1,5 @@
 import db from '../../config/db_pool.js';
 
-<<<<<<< HEAD
-=======
 /**
  * Crée une nouvelle soumission dans la base de données
  * @param {Object} connection - Connexion MySQL (déjà en transaction)
@@ -191,7 +189,6 @@ export default {
   getSubmissions,
   getSubmissionById
 };
->>>>>>> a50efaedb528ded38bb82d4df8e3d01cb07a980e
 export const findById = async (id) => {
   try {
     const [rows] = await db.pool.execute('SELECT * FROM submissions WHERE id = ?', [id]);

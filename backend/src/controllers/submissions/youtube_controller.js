@@ -1,41 +1,49 @@
-import fs from 'fs';
 import path from 'path';
-import { findById, updateYoutubeLink } from '../../models/submissions/submissions_model.js';
+import { getSubmissionById, updateYoutubeLink } from '../../models/submissions/submissions_model.js';
 import { uploadVideo, uploadThumbnail, uploadCaptions } from '../../services/youtube_services.js';
+import { sendError, sendSuccess } from "../../helpers/response_helper.js";
 
 export const uploadToYoutube = async (req, res) => {
   try {
     const submissionId = req.params.id;
 
-    const video = await findById(submissionId);
-    if (!video) {
-      return res.status(404).json({
-        success: false,
-        error: 'Vidéo introuvable en base de données',
-      });
+    const submission = await getSubmissionById(submissionId);
+    if (!submission) {
+      return sendError(
+        res,
+        400,
+        "Soumission inexistante",
+        "Submission does not exist",
+        null
+      );
     }
 
-    if (!video.video_url) {
-      return res.status(400).json({
-        success: false,
-        error: 'Aucun fichier vidéo associé à cette entrée (video_url manquant)',
-      });
+    if (!submission.video_url) {
+      return sendError(
+        res,
+        400,
+        "Fichier vidéo manquant",
+        "No video file associated with this submission",
+        null
+      );
     }
 
     const submissionFolder = path.resolve('uploads/submissions', submissionId);
 
-
-    const videoPath = path.resolve(submissionFolder, path.basename(video.video_url));
-    const thumbnailPath = video.cover ? path.resolve(submissionFolder, path.basename(video.cover)) : null;
-    const srtPath = video.subtitles ? path.resolve(submissionFolder, path.basename(video.subtitles)) : null;
+    const videoPath = path.resolve(submissionFolder, path.basename(submission.video_url));
+    const thumbnailPath = submission.cover
+      ? path.resolve(submissionFolder, path.basename(submission.cover))
+      : null;
+    const srtPath = submission.subtitles
+      ? path.resolve(submissionFolder, path.basename(submission.subtitles))
+      : null;
 
     const youtubeVideo = await uploadVideo({
-      title: video.original_title || 'Sans titre',
-      description: video.original_synopsis || 'Pas de description',
+      title: submission.original_title || 'Sans titre',
+      description: submission.original_synopsis || 'Pas de description',
       filePath: videoPath,
     });
 
-    // Upload miniature si disponible
     if (thumbnailPath) {
       await uploadThumbnail({ videoId: youtubeVideo.id, thumbnailPath });
     }
@@ -48,25 +56,32 @@ export const uploadToYoutube = async (req, res) => {
           language: 'fr',
         });
       } catch (err) {
-        console.error('Erreur Captions (souvent propagation YouTube) :', err.response?.data || err.message);
+        console.error('Erreur upload captions :', err.response?.data || err.message);
       }
     }
 
     const youtubeUrl = `https://www.youtube.com/watch?v=${youtubeVideo.id}`;
     await updateYoutubeLink(youtubeUrl, submissionId);
 
-    return res.json({
-      success: true,
-      youtube_id: youtubeVideo.id,
-      youtube_url: youtubeUrl,
-    });
+    return sendSuccess(
+      res,
+      200,
+      "Vidéo uploadée sur YouTube avec succès",
+      "Video successfully uploaded to YouTube",   // EN
+      {
+        youtube_id: youtubeVideo.id,
+        youtube_url: youtubeUrl
+      }
+    );
 
   } catch (err) {
     console.error('Erreur upload YouTube :', err.response?.data || err.message);
-    return res.status(500).json({
-      success: false,
-      error: 'Upload YouTube échoué',
-      message: err.message,
-    });
+    return sendError(
+      res,
+      500,
+      "Upload YouTube échoué",
+      "YouTube upload failed",
+      err.message
+    );
   }
 };

@@ -109,7 +109,7 @@ const getSubmissions = async (filters = {}) => {
  * @param {number} submissionId - ID de la soumission
  * @returns {Promise<Object|null>} - Soumission complète ou null si non trouvée
  */
-const getSubmissionById = async (submissionId) => {
+export const getSubmissionById = async (submissionId) => {
   const connection = await db.pool.getConnection();
 
   try {

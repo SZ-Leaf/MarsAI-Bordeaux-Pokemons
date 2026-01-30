@@ -1,74 +1,27 @@
-import { useState } from 'react';
 import SocialModal from './modals/SocialModal.jsx';
 import ActionConfirmationModal from './modals/ActionConfirmationModal.jsx';
+import { useEditableList } from '../hooks/useEditableList.js';
+import { socialNetworks } from '../constants/formOptions.js';
 
-/**
- * Liste des réseaux sociaux avec modals pour ajout/modification
- */
 const SocialLinksList = ({ formData, errors, updateField }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [deleteIndex, setDeleteIndex] = useState(null);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-  const socialNetworks = [
-    { id: 1, title: 'fb', label: 'Facebook' },
-    { id: 2, title: 'ig', label: 'Instagram' },
-    { id: 3, title: 'linkedin', label: 'LinkedIn' },
-    { id: 4, title: 'x', label: 'X (Twitter)' },
-    { id: 5, title: 'tiktok', label: 'TikTok' },
-    { id: 6, title: 'website', label: 'Site web' }
-  ];
+  const {
+    isModalOpen,
+    setIsModalOpen,
+    editingIndex,
+    isDeleteModalOpen,
+    handleAdd,
+    handleEdit,
+    handleSave,
+    handleDeleteClick,
+    handleConfirmDelete,
+    handleCancelDelete,
+    currentItems: currentSocials
+  } = useEditableList('socials', formData, updateField);
 
   const getNetworkLabel = (networkId) => {
     const network = socialNetworks.find(n => n.id === networkId);
     return network ? network.label : 'Inconnu';
   };
-
-  const handleAdd = () => {
-    setEditingIndex(null);
-    setIsModalOpen(true);
-  };
-
-  const handleEdit = (index) => {
-    setEditingIndex(index);
-    setIsModalOpen(true);
-  };
-
-  const handleSave = (socialData, index) => {
-    const currentSocials = formData.socials || [];
-    const newSocials = [...currentSocials];
-    if (index !== null) {
-      // Modification
-      newSocials[index] = socialData;
-    } else {
-      // Ajout
-      newSocials.push(socialData);
-    }
-    updateField('socials', newSocials);
-  };
-
-  const handleDeleteClick = (index) => {
-    setDeleteIndex(index);
-    setIsDeleteModalOpen(true);
-  };
-
-  const handleConfirmDelete = () => {
-    if (deleteIndex !== null) {
-      const currentSocials = formData.socials || [];
-      const newSocials = currentSocials.filter((_, i) => i !== deleteIndex);
-      updateField('socials', newSocials);
-    }
-    setIsDeleteModalOpen(false);
-    setDeleteIndex(null);
-  };
-
-  const handleCancelDelete = () => {
-    setIsDeleteModalOpen(false);
-    setDeleteIndex(null);
-  };
-
-  const currentSocials = formData.socials || [];
 
   return (
     <div className="space-y-4 pl-4">

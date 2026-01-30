@@ -1,60 +1,21 @@
-import { useState } from 'react';
 import CollaboratorModal from './modals/CollaboratorModal.jsx';
 import ActionConfirmationModal from './modals/ActionConfirmationModal.jsx';
+import { useEditableList } from '../hooks/useEditableList.js';
 
-/**
- * Liste des contributeurs avec modals pour ajout/modification
- */
 const CollaboratorsList = ({ formData, errors, updateField }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [deleteIndex, setDeleteIndex] = useState(null);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-  const handleAdd = () => {
-    setEditingIndex(null);
-    setIsModalOpen(true);
-  };
-
-  const handleEdit = (index) => {
-    setEditingIndex(index);
-    setIsModalOpen(true);
-  };
-
-  const handleSave = (collaboratorData, index) => {
-    const currentCollaborators = formData.collaborators || [];
-    const newCollaborators = [...currentCollaborators];
-    if (index !== null) {
-      // Modification
-      newCollaborators[index] = collaboratorData;
-    } else {
-      // Ajout
-      newCollaborators.push(collaboratorData);
-    }
-    updateField('collaborators', newCollaborators);
-  };
-
-  const handleDeleteClick = (index) => {
-    setDeleteIndex(index);
-    setIsDeleteModalOpen(true);
-  };
-
-  const handleConfirmDelete = () => {
-    if (deleteIndex !== null) {
-      const currentCollaborators = formData.collaborators || [];
-      const newCollaborators = currentCollaborators.filter((_, i) => i !== deleteIndex);
-      updateField('collaborators', newCollaborators);
-    }
-    setIsDeleteModalOpen(false);
-    setDeleteIndex(null);
-  };
-
-  const handleCancelDelete = () => {
-    setIsDeleteModalOpen(false);
-    setDeleteIndex(null);
-  };
-
-  const currentCollaborators = formData.collaborators || [];
+  const {
+    isModalOpen,
+    setIsModalOpen,
+    editingIndex,
+    isDeleteModalOpen,
+    handleAdd,
+    handleEdit,
+    handleSave,
+    handleDeleteClick,
+    handleConfirmDelete,
+    handleCancelDelete,
+    currentItems: currentCollaborators
+  } = useEditableList('collaborators', formData, updateField);
 
   return (
     <div className="space-y-4 pl-4">

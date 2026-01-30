@@ -1,26 +1,19 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
+import { formatFileSize, resetFileInput } from '../utils/fileUtils';
 
-/**
- * Composant upload galerie (3 images max)
- * Design épuré et simple
- * Permet de supprimer les images une par une et d'en ajouter jusqu'à 3
- */
 const GalleryUpload = ({ formData, errors, updateField }) => {
   const [previews, setPreviews] = useState([]);
   const fileInputRef = useRef(null);
   const previewUrlsRef = useRef([]);
   
-  // Mémoriser gallery pour éviter les changements de référence à chaque rendu
   const gallery = useMemo(() => formData.gallery || [], [formData.gallery]);
   const maxImages = 3;
   const canAddMore = gallery.length < maxImages;
   
-  // Générer les previews pour les images
   useEffect(() => {
     let isMounted = true;
     const newPreviewUrls = [];
     
-    // Nettoyer les anciens previews
     previewUrlsRef.current.forEach(preview => URL.revokeObjectURL(preview));
     previewUrlsRef.current = [];
     
@@ -32,7 +25,6 @@ const GalleryUpload = ({ formData, errors, updateField }) => {
       
       previewUrlsRef.current = newPreviewUrls;
       
-      // Utiliser setTimeout pour éviter l'appel synchrone
       setTimeout(() => {
         if (isMounted) {
           setPreviews(newPreviewUrls);
@@ -46,7 +38,6 @@ const GalleryUpload = ({ formData, errors, updateField }) => {
       }, 0);
     }
     
-    // Cleanup des previews précédents
     return () => {
       isMounted = false;
       previewUrlsRef.current.forEach(preview => URL.revokeObjectURL(preview));
@@ -66,23 +57,12 @@ const GalleryUpload = ({ formData, errors, updateField }) => {
       updateField('gallery', [...gallery, ...filesToAdd]);
     }
     
-    // Réinitialiser l'input pour permettre de ré-uploader le même fichier
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    resetFileInput(fileInputRef);
   };
   
   const handleRemoveImage = (index) => {
     const newGallery = gallery.filter((_, i) => i !== index);
     updateField('gallery', newGallery);
-  };
-  
-  const formatFileSize = (bytes) => {
-    if (!bytes) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
   };
   
   return (
@@ -93,7 +73,6 @@ const GalleryUpload = ({ formData, errors, updateField }) => {
         {gallery.length > 0 && ` (${gallery.length}/${maxImages})`}
       </p>
       
-      {/* Zone d'upload si on peut encore ajouter des images */}
       {canAddMore && (
         <div className="border-2 border-dashed border-gray-300 rounded p-6 text-center mb-4">
           <input
@@ -117,7 +96,6 @@ const GalleryUpload = ({ formData, errors, updateField }) => {
         </div>
       )}
       
-      {/* Affichage des images avec boutons de suppression */}
       {gallery.length > 0 && (
         <div className="grid grid-cols-3 gap-4 mt-4">
           {gallery.map((file, index) => (

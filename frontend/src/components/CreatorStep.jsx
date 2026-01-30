@@ -2,9 +2,6 @@ import CreatorForm from './CreatorForm.jsx';
 import SocialLinksList from './SocialLinksList.jsx';
 import CollaboratorsList from './CollaboratorsList.jsx';
 
-/**
- * Étape 4 : Informations du réalisateur, liens sociaux et collaborateurs
- */
 const CreatorStep = ({ formData, errors, updateField }) => {
   return (
     <div className="space-y-6">

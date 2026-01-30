@@ -7,11 +7,34 @@ export const uploadToYoutube = async (req, res) => {
   try {
     const videoId = req.params.id;
 
+<<<<<<< Updated upstream
     if (!videoId) {
       return res.status(400).json({
         success: false,
         error: 'ID vidéo manquant dans la requête',
       });
+=======
+    const videoPath = path.resolve('uploads', path.basename(video.video_url));
+    const thumbnailPath = path.resolve('uploads', path.basename(video.cover));
+    const srtPath = path.resolve('uploads', path.basename(video.subtitles));
+
+    const youtubeVideo = await uploadVideo({
+      title: video.original_title,
+      description: video.original_synopsis,
+      filePath: videoPath,
+    });
+
+    await uploadThumbnail({ videoId: youtubeVideo.id, thumbnailPath });
+
+    try {
+      await uploadCaptions({
+        videoId: youtubeVideo.id,
+        srtPath,
+        language: 'fr',
+      });
+    } catch (err) {
+      console.error("Erreur Captions (souvent un problème de propagation) :", err.response?.data || err.message);
+>>>>>>> Stashed changes
     }
 
     const video = await findById(videoId);

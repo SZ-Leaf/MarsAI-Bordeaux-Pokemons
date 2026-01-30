@@ -8,7 +8,6 @@ export const uploadToYoutube = async (req, res) => {
     const submissionId = req.params.id;
 
     const video = await findById(submissionId);
-
     if (!video) {
       return res.status(404).json({
         success: false,
@@ -23,9 +22,12 @@ export const uploadToYoutube = async (req, res) => {
       });
     }
 
-    const videoPath = path.resolve('uploads', path.basename(video.video_url));
-    const thumbnailPath = video.cover ? path.resolve('uploads', path.basename(video.cover)) : null;
-    const srtPath = video.subtitles ? path.resolve('uploads', path.basename(video.subtitles)) : null;
+    const submissionFolder = path.resolve('uploads/submissions', submissionId);
+
+
+    const videoPath = path.resolve(submissionFolder, path.basename(video.video_url));
+    const thumbnailPath = video.cover ? path.resolve(submissionFolder, path.basename(video.cover)) : null;
+    const srtPath = video.subtitles ? path.resolve(submissionFolder, path.basename(video.subtitles)) : null;
 
     const youtubeVideo = await uploadVideo({
       title: video.original_title || 'Sans titre',
@@ -33,6 +35,7 @@ export const uploadToYoutube = async (req, res) => {
       filePath: videoPath,
     });
 
+    // Upload miniature si disponible
     if (thumbnailPath) {
       await uploadThumbnail({ videoId: youtubeVideo.id, thumbnailPath });
     }
@@ -60,7 +63,6 @@ export const uploadToYoutube = async (req, res) => {
 
   } catch (err) {
     console.error('Erreur upload YouTube :', err.response?.data || err.message);
-
     return res.status(500).json({
       success: false,
       error: 'Upload YouTube échoué',

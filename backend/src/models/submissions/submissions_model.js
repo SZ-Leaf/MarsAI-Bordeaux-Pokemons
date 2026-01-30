@@ -1,7 +1,5 @@
 import db from '../../config/db_pool.js';
 
-<<<<<<< HEAD
-=======
 /**
  * Crée une nouvelle soumission dans la base de données
  * @param {Object} connection - Connexion MySQL (déjà en transaction)
@@ -48,7 +46,7 @@ const createSubmission = async (connection, data, videoPath, coverPath, duration
       data.terms_of_use
     ]
   );
-  
+
   return result.insertId;
 };
 
@@ -75,28 +73,28 @@ const updateFilePaths = async (connection, submissionId, videoUrl, cover, subtit
  */
 const getSubmissions = async (filters = {}) => {
   const connection = await db.pool.getConnection();
-  
+
   try {
     let query = 'SELECT * FROM submissions';
     const params = [];
-    
+
     if (filters.status) {
       query += ' WHERE moderation_id IN (SELECT id FROM submission_moderation WHERE status = ?)';
       params.push(filters.status);
     }
-    
+
     query += ' ORDER BY created_at DESC';
-    
+
     if (filters.limit) {
       query += ' LIMIT ?';
       params.push(filters.limit);
-      
+
       if (filters.offset) {
         query += ' OFFSET ?';
         params.push(filters.offset);
       }
     }
-    
+
     const [rows] = await connection.execute(query, params);
     return rows;
   } catch (error) {
@@ -113,11 +111,11 @@ const getSubmissions = async (filters = {}) => {
  */
 const getSubmissionById = async (submissionId) => {
   const connection = await db.pool.getConnection();
-  
+
   try {
     // Récupérer la soumission de base
     const [submissions] = await connection.execute(
-      `SELECT s.*, 
+      `SELECT s.*,
               sm.status as moderation_status,
               sm.details as moderation_details,
               sm.created_at as moderation_created_at,
@@ -127,27 +125,27 @@ const getSubmissionById = async (submissionId) => {
        WHERE s.id = ?`,
       [submissionId]
     );
-    
+
     if (submissions.length === 0) {
       return null;
     }
-    
+
     const submission = submissions[0];
-    
+
     // Récupérer les collaborateurs
     const [collaborators] = await connection.execute(
       'SELECT * FROM collaborators WHERE submission_id = ? ORDER BY created_at ASC',
       [submissionId]
     );
     submission.collaborators = collaborators;
-    
+
     // Récupérer les images de galerie
     const [gallery] = await connection.execute(
       'SELECT * FROM gallery WHERE submission_id = ? ORDER BY created_at ASC',
       [submissionId]
     );
     submission.gallery = gallery;
-    
+
     // Récupérer les liens sociaux avec infos réseau
     const [socials] = await connection.execute(
       `SELECT s.*, sn.title as network_title, sn.logo as network_logo
@@ -157,7 +155,7 @@ const getSubmissionById = async (submissionId) => {
       [submissionId]
     );
     submission.socials = socials;
-    
+
     // Récupérer les tags
     const [tags] = await connection.execute(
       `SELECT t.* FROM tags t
@@ -166,7 +164,7 @@ const getSubmissionById = async (submissionId) => {
       [submissionId]
     );
     submission.tags = tags;
-    
+
     // Récupérer les awards (désactivé pour le moment)
     // const [awards] = await connection.execute(
     //   `SELECT a.* FROM awards a
@@ -176,7 +174,7 @@ const getSubmissionById = async (submissionId) => {
     //   [submissionId]
     // );
     // submission.awards = awards;
-    
+
     return submission;
   } catch (error) {
     throw error;
@@ -191,7 +189,6 @@ export default {
   getSubmissions,
   getSubmissionById
 };
->>>>>>> a50efaedb528ded38bb82d4df8e3d01cb07a980e
 export const findById = async (id) => {
   try {
     const [rows] = await db.pool.execute('SELECT * FROM submissions WHERE id = ?', [id]);

@@ -22,10 +22,11 @@ export async function createTag({title}) {
     );
     return result.insertId;
 }
+//récupération des tags les plus populaires avec une limite fixée à 10
 export async function getPopularTags(limit = 10) {
-    const safeLimit = Math.max(1,parseInt(limit, 10) || 10)
+
     const [rows] = await db.pool.execute(
-        `SELECT t.id, t.title, COUNT(*) AS usage_count FROM submissions_tags st JOIN tags t ON t.id = st.tag_id GROUP BY t.id, t.title ORDER BY usage_count DESC LIMIT ${safeLimit}`
+        `SELECT t.id, t.title, COUNT(*) AS usage_count FROM submissions_tags st JOIN tags t ON t.id = st.tag_id GROUP BY t.id, t.title ORDER BY usage_count DESC `,
     );
     return rows;
     

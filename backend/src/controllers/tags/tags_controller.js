@@ -1,6 +1,5 @@
 import { success } from "zod";
 import tags_model from "../../models/tags/tags_model.js";
-import { en } from "zod/locales";
 
 export const listTags = async(req,res) => {
     try {
@@ -94,13 +93,17 @@ export const createTag = async (req,res) => {
 
 export const getPopularTags = async (req,res) => {
     try {
-        const limit = Number(req.query.limit) || 5;
+        const limit = Number.isInteger(Number(req.query.limit)) && Number(req.query.limit) > 0
+        ? Number(req.query.limit)
+        : 5;
 
-        const result = await tags_model.getPopularTags(limit);
+        const result = await tags_model.getPopularTags();
+
+        const limitedTags = result.slice(0, limit);
 
         return res.status(200).json({
             success: true,
-            data: result
+            data: limitedTags
         })
 
     } catch (error) {

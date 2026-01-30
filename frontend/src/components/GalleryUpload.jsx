@@ -1,49 +1,15 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useRef, useMemo } from 'react';
+import { useFilePreviews } from '../hooks/useFilePreviews';
 import { formatFileSize, resetFileInput } from '../utils/fileUtils';
 
 const GalleryUpload = ({ formData, errors, updateField }) => {
-  const [previews, setPreviews] = useState([]);
   const fileInputRef = useRef(null);
-  const previewUrlsRef = useRef([]);
   
   const gallery = useMemo(() => formData.gallery || [], [formData.gallery]);
+  const previews = useFilePreviews(gallery);
+  
   const maxImages = 3;
   const canAddMore = gallery.length < maxImages;
-  
-  useEffect(() => {
-    let isMounted = true;
-    const newPreviewUrls = [];
-    
-    previewUrlsRef.current.forEach(preview => URL.revokeObjectURL(preview));
-    previewUrlsRef.current = [];
-    
-    if (gallery.length > 0) {
-      gallery.forEach(file => {
-        const previewUrl = URL.createObjectURL(file);
-        newPreviewUrls.push(previewUrl);
-      });
-      
-      previewUrlsRef.current = newPreviewUrls;
-      
-      setTimeout(() => {
-        if (isMounted) {
-          setPreviews(newPreviewUrls);
-        }
-      }, 0);
-    } else {
-      setTimeout(() => {
-        if (isMounted) {
-          setPreviews([]);
-        }
-      }, 0);
-    }
-    
-    return () => {
-      isMounted = false;
-      previewUrlsRef.current.forEach(preview => URL.revokeObjectURL(preview));
-      previewUrlsRef.current = [];
-    };
-  }, [gallery]);
   
   const handleAddImages = (e) => {
     const files = Array.from(e.target.files || []);

@@ -26,7 +26,7 @@ export const uploadVideo = async ({ title, description, filePath }) => {
       media: { body: fs.createReadStream(filePath) },
     });
 
-    return response.data; // Retourne data pour avoir l'ID
+    return response.data;
   } catch (error) {
     console.error("Erreur détaillée Google API :", error.response?.data || error.message);
     throw error;

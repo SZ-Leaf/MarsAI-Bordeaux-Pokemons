@@ -1,16 +1,14 @@
 import './App.css'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router'
+import Submit from './pages/Submit.jsx'
 
 function App() {
-  
-
   return (
-    <>
-      <h1>Hello les Pokemons</h1>
+    
       <Routes>
-          
+        <Route path="/submit" element={<Submit />} />
       </Routes>
-    </>
+    
   )
 }
 

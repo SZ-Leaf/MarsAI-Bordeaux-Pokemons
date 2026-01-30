@@ -1,0 +1,35 @@
+@import "tailwindcss" reference;
+@import "../../../theme.css";
+
+/* ============================================
+   HEADER CONTAINER & CONTENT
+   ============================================ */
+.header-pill-container {
+  @apply fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl;
+}
+
+.header-pill-content {
+  @apply grid items-center;
+  grid-template-columns: 1fr auto 1fr;
+  @apply px-10 py-2;
+  @apply bg-white/10 backdrop-blur-xl;
+  @apply border border-white/10 rounded-full;
+  @apply shadow-2xl;
+}
+
+/* ============================================
+   RESPONSIVE - VERSION MOBILE (Bottom bar)
+   ============================================ */
+@media (max-width: 768px) {
+  .header-pill-container {
+    @apply fixed bottom-0 top-auto left-0 translate-x-0 w-full max-w-full;
+  }
+
+  .header-pill-content {
+    @apply flex justify-around;
+    grid-template-columns: none;
+    @apply px-4 py-3;
+    @apply rounded-t-3xl rounded-b-none;
+    @apply border-t border-x border-b-0;
+  }
+}

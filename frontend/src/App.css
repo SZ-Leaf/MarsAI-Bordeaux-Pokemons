@@ -1,7 +1,47 @@
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@import "tailwindcss";
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-white);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
 }
 
-@import "tailwindcss";
+/* Espacement pour le header fixe */
+.App {
+  padding-top: 100px; /* Desktop : header en haut */
+}
+
+@media (max-width: 768px) {
+  .App {
+    padding-top: 20px; /* Moins d'espace en haut sur mobile */
+    padding-bottom: 90px; /* Espace pour le header en bas */
+  }
+}
+
+@import "./theme.css";
+
+@import "./components/ui/buttons.css";
+@import "./components/ui/inputs.css";
+@import "./components/ui/modal.css";
+@import "./components/ui/cards.css";
+
+:root {
+  --color-black: #000000;
+  --color-bg: #050505;
+  --color-surface: #080808;
+  --color-blue: #2b7fff;
+  --color-cyan: #00b8da;
+  --color-sky: #51a2ff;
+  --color-green: #00d491;
+  --color-red: #ef4444;
+  --color-white: #fffefe;
+}

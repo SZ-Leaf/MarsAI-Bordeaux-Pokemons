@@ -135,4 +135,7 @@ export const formatZodErrors = (zodError) => {
   return errors;
 };
 
+// Exporter les schémas individuels pour réutilisation
+export { collaboratorSchema, socialSchema, nameSchema, emailSchema, urlSchema };
+
 export default submissionSchema;

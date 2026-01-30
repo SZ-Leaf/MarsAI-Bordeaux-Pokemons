@@ -4,9 +4,9 @@ import { useScrollOnStepChange } from '../hooks/useScrollOnStepChange.js';
 import { useScrollToError } from '../hooks/useScrollToError.js';
 import StepIndicator from '../components/StepIndicator.jsx';
 import StepContent from '../components/StepContent.jsx';
-import FormNavigation from '../components/FormNavigation.jsx';
+import FormNavigation from '../components/forms/NaviguationForm.jsx';
 import SubmissionSuccess from '../components/SubmissionSuccess.jsx';
-import ConfirmationModal from '../components/ConfirmationModal.jsx';
+import ActionConfirmationModal from '../components/modals/ActionConfirmationModal.jsx';
 
 /**
  * Page de soumission de film (4 étapes)
@@ -91,10 +91,14 @@ const Submit = () => {
       />
 
       {/* Modale de confirmation */}
-      <ConfirmationModal
+      <ActionConfirmationModal
         isOpen={showConfirmationModal}
         onConfirm={handleConfirmSubmit}
         onCancel={handleCancelSubmit}
+        title="Confirmer la soumission"
+        message="Êtes-vous sûr de vouloir soumettre votre film ? Cette action est définitive."
+        confirmText="Confirmer"
+        variant="success"
       />
     </div>
   );

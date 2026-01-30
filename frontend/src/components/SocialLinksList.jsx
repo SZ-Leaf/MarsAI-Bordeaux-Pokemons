@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import SocialModal from './SocialModal.jsx';
-import DeleteConfirmationModal from './DeleteConfirmationModal.jsx';
+import SocialModal from './modals/SocialModal.jsx';
+import ActionConfirmationModal from './modals/ActionConfirmationModal.jsx';
 
 /**
  * Liste des réseaux sociaux avec modals pour ajout/modification
@@ -127,12 +127,14 @@ const SocialLinksList = ({ formData, errors, updateField }) => {
         errors={errors}
       />
 
-      <DeleteConfirmationModal
+      <ActionConfirmationModal
         isOpen={isDeleteModalOpen}
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
         title="Supprimer le lien réseau social"
         message="Êtes-vous sûr de vouloir supprimer ce lien réseau social ? Cette action est irréversible."
+        confirmText="Supprimer"
+        variant="danger"
       />
     </div>
   );

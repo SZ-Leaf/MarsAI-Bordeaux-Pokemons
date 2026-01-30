@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import CollaboratorModal from './CollaboratorModal.jsx';
-import DeleteConfirmationModal from './DeleteConfirmationModal.jsx';
+import CollaboratorModal from './modals/CollaboratorModal.jsx';
+import ActionConfirmationModal from './modals/ActionConfirmationModal.jsx';
 
 /**
  * Liste des contributeurs avec modals pour ajout/modification
@@ -120,12 +120,14 @@ const CollaboratorsList = ({ formData, errors, updateField }) => {
         errors={errors}
       />
 
-      <DeleteConfirmationModal
+      <ActionConfirmationModal
         isOpen={isDeleteModalOpen}
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
         title="Supprimer le contributeur"
         message="Êtes-vous sûr de vouloir supprimer ce contributeur ? Cette action est irréversible."
+        confirmText="Supprimer"
+        variant="danger"
       />
     </div>
   );

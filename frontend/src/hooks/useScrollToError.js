@@ -1,9 +1,5 @@
 import { useEffect, useRef } from 'react';
 
-/**
- * Hook pour scroller automatiquement vers le premier champ en erreur
- * @param {Object} errors - Objet contenant les erreurs du formulaire
- */
 export const useScrollToError = (errors) => {
   const prevErrorsRef = useRef(errors);
 

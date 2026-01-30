@@ -14,7 +14,7 @@ import { totalSteps } from '../constants/submissionSteps.js';
  * Étape 3 : Uploads de fichiers (vidéo, cover, srt, gallery)
  * Étape 4 : Réalisateur et Contributeurs
  */
-const Submit = () => {
+const Submit = ({ inModal = false }) => {
   const {
     currentStep,
     formData,
@@ -53,8 +53,8 @@ const Submit = () => {
   }
   
   return (
-    <div className="max-w-4xl mx-auto p-6 pl-8">
-      <h1 className="text-3xl font-bold mb-8">Soumission de film</h1>
+    <div className={inModal ? "max-w-full p-4" : "max-w-4xl mx-auto p-6 pl-8"}>
+      {!inModal && <h1 className="text-3xl font-bold mb-8">Soumission de film</h1>}
       
       <StepIndicator currentStep={currentStep} />
       

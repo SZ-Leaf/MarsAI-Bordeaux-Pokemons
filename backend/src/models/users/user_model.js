@@ -141,50 +141,57 @@ const updateUserPassword = async (email, password_hash) => {
    }
 }
 
-// const resetUserPassword = async (token, password_hash) => {
-//    let connection;
-//    try {
-//       connection = await db.pool.getConnection();
-//       await connection.beginTransaction();
+const resetUserPassword = async (token, password_hash) => {
+   let connection;
+   try {
+      connection = await db.pool.getConnection();
+      await connection.beginTransaction();
 
-//       const [tokens] = await connection.execute(
-//          `SELECT user_id 
-//           FROM reset_password_tokens 
-//           WHERE token = ? AND used_at IS NULL AND expires_at > NOW()`,
-//          [token]
-//       );
+      const [rows] = await connection.execute(
+         `SELECT user_id
+          FROM reset_password_tokens
+          WHERE token = ?
+            AND used_at IS NULL
+            AND expires_at > NOW()
+          FOR UPDATE`,
+         [token]
+      );
 
-//       if (tokens.length === 0) {
-//          throw new Error("Invalid or expired token");
-//       }
+      if (rows.length === 0) {
+         throw new Error("Invalid or expired token");
+      }
 
-//       const user_id = tokens[0].user_id;
+      const user_id = rows[0].user_id;
 
-//       const [userResult] = await connection.execute(
-//          "UPDATE users SET password_hash = ? WHERE id = ?",
-//          [password_hash, user_id]
-//       );
+      const [userResult] = await connection.execute(
+         "UPDATE users SET password_hash = ? WHERE id = ?",
+         [password_hash, user_id]
+      );
 
-//       if (userResult.affectedRows === 0) {
-//          throw new Error("User not found");
-//       }
+      if (userResult.affectedRows === 0) {
+         throw new Error("User not found");
+      }
 
-//       await connection.execute(
-//          "UPDATE reset_password_tokens SET used_at = NOW() WHERE token = ? AND used_at IS NULL",
-//          [token]
-//       );
+      const [tokenResult] = await connection.execute(
+         "UPDATE reset_password_tokens SET used_at = NOW() WHERE token = ? AND used_at IS NULL",
+         [token]
+      );
 
-//       await connection.commit();
-//       return { success: true };
+      if (tokenResult.affectedRows === 0) {
+         throw new Error("Token already used");
+      }
+      const [user] = await connection.execute("SELECT email FROM users WHERE id = ?", [user_id]);
+      await connection.commit();
+      return { user_email: user[0].email };
 
-//    } catch (error) {
-//       if (connection) await connection.rollback();
-//       console.error("Error resetting user password:", error);
-//       return { success: false, error: error.message };
-//    } finally {
-//       if (connection) await connection.release();
-//    }
-// };
+   } catch (error) {
+      if (connection) await connection.rollback();
+      console.error("Error resetting user password:", error);
+      throw error;
+   } finally {
+      if (connection) await connection.release();
+   }
+};
 
 const changeUserRole = async (id, role_id) => {
    try {

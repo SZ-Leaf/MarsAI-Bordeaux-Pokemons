@@ -24,7 +24,7 @@ const sendForgotPasswordMail = async (email, token) => {
       to: email,
       subject: "Forgot your password?",
       html: `
-         <p>Click the link below to reset your password. This link will expire in 24 hours.</p>
+         <p>Click the link below to reset your password. This link will expire in 2 hours.</p>
          <p>If you did not request a password reset, please ignore this email.</p>
          <a href="${resetPasswordLink}">${resetPasswordLink}</a>
       `

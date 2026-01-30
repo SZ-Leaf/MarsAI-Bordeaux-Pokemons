@@ -373,4 +373,57 @@ const forgotPasswordController = async (req, res) => {
    }
 }
 
-export { inviteUserController, registerUserController, deleteUserController, loginUserController, getAllUsersController, updateUserPasswordController, forgotPasswordController };
+const resetPasswordController = async (req, res) => {
+   try {
+      const { token, new_password } = req.body;
+      if (!token || !new_password) {
+         return sendError(res, 400,
+            "Nouveau mot de passe requis",
+            "New password is required",
+            null
+         );
+      }
+      const trimmedPassword = new_password?.trim();
+
+      try {
+         checkPasswordStrength(trimmedPassword);
+      } catch (error) {
+         return sendError(res, 400,
+            "Mot de passe invalide",
+            "Invalid password",
+            error.message
+         );
+      }
+
+      // Optional verify token without calling the model for faster response
+      // try {
+      //    await verifyForgotPasswordToken(token);
+      // } catch (error) {
+      //    return sendError(res, 400,
+      //       "Lien invalide",
+      //       "Invalid link",
+      //       null
+      //    );
+      // }
+
+      const password_hash = await hashPassword(trimmedPassword);
+
+      const result = await resetUserPassword(token, password_hash);
+
+      return sendSuccess(res, 200,
+         "Mot de passe réinitialisé avec succès",
+         "Password reset successfully",
+         { email: result.user_email }
+      );
+
+   } catch (error) {
+      console.error("Error resetting user password:", error);
+      return sendError(res, 500,
+         "Erreur lors de la réinitialisation du mot de passe",
+         "Error resetting user password",
+         null
+      );
+   }
+}
+
+export { inviteUserController, registerUserController, deleteUserController, loginUserController, getAllUsersController, updateUserPasswordController, forgotPasswordController, resetPasswordController };

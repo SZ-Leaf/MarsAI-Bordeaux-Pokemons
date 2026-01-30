@@ -29,7 +29,7 @@ const generateForgotPasswordToken = async (user_id, length = 32) => {
 
       // generate new token
       const token = crypto.randomBytes(length).toString("hex");
-      const expires_at = new Date(Date.now() + 1000 * 60 * 60 * 24); // 1 day
+      const expires_at = new Date(Date.now() + 1000 * 60 * 60 * 2); // 2 hours
 
       const [result] = await connection.execute("INSERT INTO reset_password_tokens (user_id, token, expires_at) VALUES (?, ?, ?)", [user_id, token, expires_at]);
       
@@ -46,7 +46,23 @@ const generateForgotPasswordToken = async (user_id, length = 32) => {
 }
 
 const verifyForgotPasswordToken = async (token) => {
-   
-}
+   try {
+      const [rows] = await db.pool.execute(
+         `SELECT user_id FROM reset_password_tokens WHERE token = ? AND used_at IS NULL AND expires_at > NOW()`,
+         [token]
+      );
+
+      if (rows.length === 0) {
+         throw new Error("Invalid or expired token");
+      }
+
+      return rows[0]; // contains user_id
+
+   } catch (error) {
+      console.error("Error verifying reset password token:", error);
+      throw error;
+   }
+};
+
 
 export { generateInviteToken, verifyInviteToken, generateForgotPasswordToken, verifyForgotPasswordToken };

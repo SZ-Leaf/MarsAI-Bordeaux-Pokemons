@@ -1,12 +1,8 @@
-import CGUForm from './CGUForm.jsx';
-import SubmissionForm from './SubmissionForm.jsx';
+import CGUForm from './forms/CGUForm.jsx';
+import SubmissionForm from './forms/SubmissionForm.jsx';
 import FileUploadStep from './FileUploadStep.jsx';
 import CreatorStep from './CreatorStep.jsx';
 
-/**
- * Composant qui affiche le contenu de l'étape courante
- * Utilise un mapping pour éviter les multiples conditions
- */
 const StepContent = ({ currentStep, formData, errors, updateField }) => {
   // Mapping des étapes vers leurs composants
   const steps = {

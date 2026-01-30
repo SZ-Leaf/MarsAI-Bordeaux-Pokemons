@@ -1,6 +1,12 @@
+import FormField from '../shared/FormField';
+import TextInput from '../shared/TextInput';
+import TextArea from '../shared/TextArea';
+import Select from '../shared/Select';
+import { classificationOptions } from '../../constants/formOptions';
+
 /**
  * Formulaire principal (Partie 2) - Métadonnées vidéo + upload
- * Design épuré et simple
+ * Design épuré et simple - VERSION REFACTORISÉE
  */
 const SubmissionForm = ({ formData, errors, updateField }) => {
   return (
@@ -9,152 +15,90 @@ const SubmissionForm = ({ formData, errors, updateField }) => {
       
       {/* Métadonnées */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Titre anglais <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
+        <FormField label="Titre anglais" required error={errors.english_title}>
+          <TextInput
             value={formData.english_title}
             onChange={(e) => updateField('english_title', e.target.value)}
-            className={`w-full border rounded p-2 ${errors.english_title ? 'border-red-500' : ''}`}
+            error={errors.english_title}
             maxLength={255}
           />
-          {errors.english_title && (
-            <p className="text-red-500 text-sm mt-1">{errors.english_title}</p>
-          )}
-        </div>
+        </FormField>
         
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Titre original
-          </label>
-          <input
-            type="text"
+        <FormField label="Titre original" error={errors.original_title}>
+          <TextInput
             value={formData.original_title}
             onChange={(e) => updateField('original_title', e.target.value)}
-            className={`w-full border rounded p-2 ${errors.original_title ? 'border-red-500' : ''}`}
+            error={errors.original_title}
             maxLength={255}
           />
-          {errors.original_title && (
-            <p className="text-red-500 text-sm mt-1">{errors.original_title}</p>
-          )}
-        </div>
+        </FormField>
         
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Langue <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
+        <FormField label="Langue" required error={errors.language}>
+          <TextInput
             value={formData.language}
             onChange={(e) => updateField('language', e.target.value)}
-            className={`w-full border rounded p-2 ${errors.language ? 'border-red-500' : ''}`}
+            error={errors.language}
             placeholder="ex: French, English"
           />
-          {errors.language && (
-            <p className="text-red-500 text-sm mt-1">{errors.language}</p>
-          )}
-        </div>
+        </FormField>
         
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Classification <span className="text-red-500">*</span>
-          </label>
-          <select
+        <FormField label="Classification" required error={errors.classification}>
+          <Select
             value={formData.classification}
             onChange={(e) => updateField('classification', e.target.value)}
-            className={`w-full border rounded p-2 ${errors.classification ? 'border-red-500' : ''}`}
-          >
-            <option value="">Sélectionner</option>
-            <option value="IA">100% IA</option>
-            <option value="hybrid">Hybrid</option>
-          </select>
-          {errors.classification && (
-            <p className="text-red-500 text-sm mt-1">{errors.classification}</p>
-          )}
-        </div>
+            error={errors.classification}
+            options={classificationOptions}
+          />
+        </FormField>
       </div>
       
-      <div>
-        <label className="block text-sm font-medium mb-1">
-          Synopsis anglais <span className="text-red-500">*</span>
-        </label>
-        <textarea
+      <FormField label="Synopsis anglais" required error={errors.english_synopsis}>
+        <TextArea
           value={formData.english_synopsis}
           onChange={(e) => updateField('english_synopsis', e.target.value)}
-          className={`w-full border rounded p-2 ${errors.english_synopsis ? 'border-red-500' : ''}`}
+          error={errors.english_synopsis}
           rows={4}
           maxLength={300}
+          showCounter={true}
           placeholder="Résumé de votre vidéo (max 300 caractères)"
         />
-        <div className="text-xs text-gray-500 mt-1">
-          {formData.english_synopsis.length}/300 caractères
-        </div>
-        {errors.english_synopsis && (
-          <p className="text-red-500 text-sm mt-1">{errors.english_synopsis}</p>
-        )}
-      </div>
+      </FormField>
       
-      <div>
-        <label className="block text-sm font-medium mb-1">
-          Synopsis original
-        </label>
-        <textarea
+      <FormField label="Synopsis original" error={errors.original_synopsis}>
+        <TextArea
           value={formData.original_synopsis}
           onChange={(e) => updateField('original_synopsis', e.target.value)}
-          className={`w-full border rounded p-2 ${errors.original_synopsis ? 'border-red-500' : ''}`}
+          error={errors.original_synopsis}
           rows={4}
           maxLength={300}
+          showCounter={true}
           placeholder="Résumé dans la langue originale (max 300 caractères)"
         />
-        <div className="text-xs text-gray-500 mt-1">
-          {formData.original_synopsis.length}/300 caractères
-        </div>
-        {errors.original_synopsis && (
-          <p className="text-red-500 text-sm mt-1">{errors.original_synopsis}</p>
-        )}
-      </div>
+      </FormField>
       
-      <div>
-        <label className="block text-sm font-medium mb-1">
-          Stack technique <span className="text-red-500">*</span>
-        </label>
-        <textarea
+      <FormField label="Stack technique" required error={errors.tech_stack}>
+        <TextArea
           value={formData.tech_stack}
           onChange={(e) => updateField('tech_stack', e.target.value)}
-          className={`w-full border rounded p-2 ${errors.tech_stack ? 'border-red-500' : ''}`}
+          error={errors.tech_stack}
           rows={3}
           maxLength={500}
+          showCounter={true}
           placeholder="Technologies utilisées (max 500 caractères)"
         />
-        <div className="text-xs text-gray-500 mt-1">
-          {formData.tech_stack.length}/500 caractères
-        </div>
-        {errors.tech_stack && (
-          <p className="text-red-500 text-sm mt-1">{errors.tech_stack}</p>
-        )}
-      </div>
+      </FormField>
       
-      <div>
-        <label className="block text-sm font-medium mb-1">
-          Méthode créative <span className="text-red-500">*</span>
-        </label>
-        <textarea
+      <FormField label="Méthode créative" required error={errors.creative_method}>
+        <TextArea
           value={formData.creative_method}
           onChange={(e) => updateField('creative_method', e.target.value)}
-          className={`w-full border rounded p-2 ${errors.creative_method ? 'border-red-500' : ''}`}
+          error={errors.creative_method}
           rows={3}
           maxLength={500}
+          showCounter={true}
           placeholder="Décrivez votre méthode créative (max 500 caractères)"
         />
-        <div className="text-xs text-gray-500 mt-1">
-          {formData.creative_method.length}/500 caractères
-        </div>
-        {errors.creative_method && (
-          <p className="text-red-500 text-sm mt-1">{errors.creative_method}</p>
-        )}
-      </div>
+      </FormField>
     </div>
   );
 };

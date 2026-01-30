@@ -9,10 +9,6 @@ import {
   formatZodErrors 
 } from '../schemas/submissionSchema.js';
 
-/**
- * Hook de gestion de soumission de film
- * Utilise Zod pour toute la validation
- */
 export const useSubmission = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -60,10 +56,6 @@ export const useSubmission = () => {
   // Erreurs de validation
   const [errors, setErrors] = useState({});
   
-  /**
-   * Met à jour un champ du formulaire
-   * Plus besoin de validation manuelle - Zod s'en charge !
-   */
   const updateField = (field, value) => {
     setFormData(prev => ({
       ...prev,
@@ -80,9 +72,6 @@ export const useSubmission = () => {
     }
   };
   
-  /**
-   * Met à jour un collaborateur spécifique
-   */
   const updateCollaboratorField = (index, field, value) => {
     const newCollaborators = [...formData.collaborators];
     newCollaborators[index] = {
@@ -105,9 +94,6 @@ export const useSubmission = () => {
     }
   };
   
-  /**
-   * Met à jour un lien social spécifique
-   */
   const updateSocialField = (index, field, value) => {
     const newSocials = [...formData.socials];
     newSocials[index] = {
@@ -130,10 +116,6 @@ export const useSubmission = () => {
     }
   };
   
-  /**
-   * Valide l'étape actuelle avec Zod
-   * BEAUCOUP plus simple qu'avant !
-   */
   const validateStep = (step) => {
     const schemas = {
       1: step1Schema,
@@ -154,9 +136,6 @@ export const useSubmission = () => {
     return true;
   };
   
-  /**
-   * Passe à l'étape suivante
-   */
   const nextStep = () => {
     if (validateStep(currentStep)) {
       if (currentStep < 4) {
@@ -165,18 +144,12 @@ export const useSubmission = () => {
     }
   };
   
-  /**
-   * Retourne à l'étape précédente
-   */
   const prevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
   };
   
-  /**
-   * Détermine l'étape contenant les erreurs
-   */
   const getStepWithErrors = (errors) => {
     const errorKeys = Object.keys(errors);
     
@@ -209,10 +182,6 @@ export const useSubmission = () => {
     return 1;
   };
   
-  /**
-   * Soumet le formulaire complet
-   * Validation complète avec Zod
-   */
   const submit = async () => {
     // Validation complète avec Zod
     const result = submissionSchema.safeParse(formData);
@@ -297,9 +266,6 @@ export const useSubmission = () => {
     }
   };
   
-  /**
-   * Réinitialise le formulaire
-   */
   const reset = () => {
     setCurrentStep(1);
     setFormData({

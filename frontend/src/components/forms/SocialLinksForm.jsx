@@ -1,56 +1,48 @@
+import useDynamicList from '../../hooks/useDynamicList';
+import FormField from '../shared/FormField';
+import TextInput from '../shared/TextInput';
+import Select from '../shared/Select';
+import { socialNetworks } from '../../constants/formOptions';
+
 /**
- * Formulaire liens sociaux (Partie 4)
+ * Formulaire liens sociaux (Partie 4) - VERSION REFACTORISÉE
  * Design épuré et simple
  */
 const SocialLinksForm = ({ formData, errors, updateField, updateSocialField }) => {
-  // Réseaux sociaux disponibles (devrait venir de l'API mais hardcodé pour l'instant)
-  const socialNetworks = [
-    { id: 1, title: 'fb', label: 'Facebook' },
-    { id: 2, title: 'ig', label: 'Instagram' },
-    { id: 3, title: 'linkedin', label: 'LinkedIn' },
-    { id: 4, title: 'x', label: 'X (Twitter)' },
-    { id: 5, title: 'tiktok', label: 'TikTok' },
-    { id: 6, title: 'website', label: 'Site web' }
+  const initialSocial = {
+    network_id: '',
+    url: ''
+  };
+
+  const { add, remove, update } = useDynamicList(
+    'socials',
+    updateField,
+    initialSocial,
+    updateSocialField
+  );
+
+  // Convertir socialNetworks en format compatible avec Select
+  const socialNetworkOptions = [
+    { value: '', label: 'Sélectionner un réseau' },
+    ...socialNetworks.map(network => ({
+      value: network.id,
+      label: network.label
+    }))
   ];
-  
-  const addSocial = () => {
-    const newSocials = [
-      ...formData.socials,
-      {
-        network_id: '',
-        url: ''
-      }
-    ];
-    updateField('socials', newSocials);
+
+  const handleNetworkChange = (index, value) => {
+    // Convertir la valeur en nombre si ce n'est pas vide
+    const networkId = value === '' ? '' : parseInt(value);
+    update(formData.socials, index, 'network_id', networkId);
   };
-  
-  const removeSocial = (index) => {
-    const newSocials = formData.socials.filter((_, i) => i !== index);
-    updateField('socials', newSocials);
-  };
-  
-  const updateSocial = (index, field, value) => {
-    // Utiliser updateSocialField si disponible pour la validation en temps réel
-    if (updateSocialField) {
-      updateSocialField(index, field, value);
-    } else {
-      // Fallback vers l'ancienne méthode
-      const newSocials = [...formData.socials];
-      newSocials[index] = {
-        ...newSocials[index],
-        [field]: field === 'network_id' ? (value === '' ? '' : parseInt(value)) : value
-      };
-      updateField('socials', newSocials);
-    }
-  };
-  
+
   return (
     <div className="space-y-6 pl-4">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-medium">Liens réseaux sociaux</h3>
         <button
           type="button"
-          onClick={addSocial}
+          onClick={() => add(formData.socials)}
           className="bg-blue-500 text-white px-4 py-2 rounded"
         >
           + Ajouter un lien
@@ -71,7 +63,7 @@ const SocialLinksForm = ({ formData, errors, updateField, updateSocialField }) =
                 <h4 className="font-medium">Lien {index + 1}</h4>
                 <button
                   type="button"
-                  onClick={() => removeSocial(index)}
+                  onClick={() => remove(formData.socials, index)}
                   className="text-red-500 text-sm"
                 >
                   Supprimer
@@ -79,47 +71,38 @@ const SocialLinksForm = ({ formData, errors, updateField, updateSocialField }) =
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Réseau social <span className="text-red-500">*</span>
-                  </label>
-                  <select
+                <FormField 
+                  label="Réseau social" 
+                  required 
+                  error={errors[`social_${index}_network_id`]}
+                >
+                  <Select
                     value={social.network_id || ''}
-                    onChange={(e) => updateSocial(index, 'network_id', e.target.value)}
-                    className={`w-full border rounded p-2 ${errors[`social_${index}_network_id`] ? 'border-red-500' : ''}`}
-                  >
-                    <option value="">Sélectionner un réseau</option>
-                    {socialNetworks.map(network => (
-                      <option key={network.id} value={network.id}>
-                        {network.label}
-                      </option>
-                    ))}
-                  </select>
-                  {errors[`social_${index}_network_id`] && (
-                    <p className="text-red-500 text-sm mt-1">{errors[`social_${index}_network_id`]}</p>
-                  )}
-                </div>
+                    onChange={(e) => handleNetworkChange(index, e.target.value)}
+                    error={errors[`social_${index}_network_id`]}
+                    options={socialNetworkOptions}
+                    placeholder=""
+                  />
+                </FormField>
                 
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    URL <span className="text-red-500">*</span>
-                  </label>
-                  <input
+                <FormField 
+                  label="URL" 
+                  required 
+                  error={errors[`social_${index}_url`]}
+                >
+                  <TextInput
                     type="url"
                     value={social.url}
-                    onChange={(e) => updateSocial(index, 'url', e.target.value)}
-                    className={`w-full border rounded p-2 ${errors[`social_${index}_url`] ? 'border-red-500' : ''}`}
+                    onChange={(e) => update(formData.socials, index, 'url', e.target.value)}
+                    error={errors[`social_${index}_url`]}
                     placeholder="https://exemple.com"
                   />
-                  {errors[`social_${index}_url`] && (
-                    <p className="text-red-500 text-sm mt-1">{errors[`social_${index}_url`]}</p>
-                  )}
                   {!errors[`social_${index}_url`] && social.url && (
                     <p className="text-xs text-gray-500 mt-1">
                       L'URL doit commencer par https://
                     </p>
                   )}
-                </div>
+                </FormField>
               </div>
             </div>
           ))}

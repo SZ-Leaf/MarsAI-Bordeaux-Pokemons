@@ -1,49 +1,37 @@
+import useDynamicList from '../../hooks/useDynamicList';
+import FormField from '../shared/FormField';
+import TextInput from '../shared/TextInput';
+import TextArea from '../shared/TextArea';
+import Select from '../shared/Select';
+import { genderOptions } from '../../constants/formOptions';
+
 /**
- * Formulaire collaborateurs (Partie 4)
+ * Formulaire collaborateurs (Partie 4) - VERSION REFACTORISÉE
  * Design épuré et simple
  */
 const CollaboratorsForm = ({ formData, errors, updateField, updateCollaboratorField }) => {
-  const addCollaborator = () => {
-    const newCollaborators = [
-      ...formData.collaborators,
-      {
-        firstname: '',
-        lastname: '',
-        email: '',
-        gender: '',
-        role: ''
-      }
-    ];
-    updateField('collaborators', newCollaborators);
+  const initialCollaborator = {
+    firstname: '',
+    lastname: '',
+    email: '',
+    gender: '',
+    role: ''
   };
-  
-  const removeCollaborator = (index) => {
-    const newCollaborators = formData.collaborators.filter((_, i) => i !== index);
-    updateField('collaborators', newCollaborators);
-  };
-  
-  const updateCollaborator = (index, field, value) => {
-    // Utiliser updateCollaboratorField si disponible pour la validation en temps réel
-    if (updateCollaboratorField) {
-      updateCollaboratorField(index, field, value);
-    } else {
-      // Fallback vers l'ancienne méthode
-      const newCollaborators = [...formData.collaborators];
-      newCollaborators[index] = {
-        ...newCollaborators[index],
-        [field]: value
-      };
-      updateField('collaborators', newCollaborators);
-    }
-  };
-  
+
+  const { add, remove, update } = useDynamicList(
+    'collaborators',
+    updateField,
+    initialCollaborator,
+    updateCollaboratorField
+  );
+
   return (
     <div className="space-y-6 pl-4">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Contributeurs</h2>
         <button
           type="button"
-          onClick={addCollaborator}
+          onClick={() => add(formData.collaborators)}
           className="bg-blue-500 text-white px-4 py-2 rounded"
         >
           + Ajouter un contributeur
@@ -64,7 +52,7 @@ const CollaboratorsForm = ({ formData, errors, updateField, updateCollaboratorFi
                 <h3 className="font-medium">Contributeur {index + 1}</h3>
                 <button
                   type="button"
-                  onClick={() => removeCollaborator(index)}
+                  onClick={() => remove(formData.collaborators, index)}
                   className="text-red-500 text-sm"
                 >
                   Supprimer
@@ -72,86 +60,71 @@ const CollaboratorsForm = ({ formData, errors, updateField, updateCollaboratorFi
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Prénom <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
+                <FormField 
+                  label="Prénom" 
+                  required 
+                  error={errors[`collaborator_${index}_firstname`]}
+                >
+                  <TextInput
                     value={collab.firstname}
-                    onChange={(e) => updateCollaborator(index, 'firstname', e.target.value)}
-                    className={`w-full border rounded p-2 ${errors[`collaborator_${index}_firstname`] ? 'border-red-500' : ''}`}
+                    onChange={(e) => update(formData.collaborators, index, 'firstname', e.target.value)}
+                    error={errors[`collaborator_${index}_firstname`]}
                   />
-                  {errors[`collaborator_${index}_firstname`] && (
-                    <p className="text-red-500 text-sm mt-1">{errors[`collaborator_${index}_firstname`]}</p>
-                  )}
-                </div>
+                </FormField>
                 
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Nom <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
+                <FormField 
+                  label="Nom" 
+                  required 
+                  error={errors[`collaborator_${index}_lastname`]}
+                >
+                  <TextInput
                     value={collab.lastname}
-                    onChange={(e) => updateCollaborator(index, 'lastname', e.target.value)}
-                    className={`w-full border rounded p-2 ${errors[`collaborator_${index}_lastname`] ? 'border-red-500' : ''}`}
+                    onChange={(e) => update(formData.collaborators, index, 'lastname', e.target.value)}
+                    error={errors[`collaborator_${index}_lastname`]}
                   />
-                  {errors[`collaborator_${index}_lastname`] && (
-                    <p className="text-red-500 text-sm mt-1">{errors[`collaborator_${index}_lastname`]}</p>
-                  )}
-                </div>
+                </FormField>
                 
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Email <span className="text-red-500">*</span>
-                  </label>
-                  <input
+                <FormField 
+                  label="Email" 
+                  required 
+                  error={errors[`collaborator_${index}_email`]}
+                >
+                  <TextInput
                     type="email"
                     value={collab.email}
-                    onChange={(e) => updateCollaborator(index, 'email', e.target.value)}
-                    className={`w-full border rounded p-2 ${errors[`collaborator_${index}_email`] ? 'border-red-500' : ''}`}
+                    onChange={(e) => update(formData.collaborators, index, 'email', e.target.value)}
+                    error={errors[`collaborator_${index}_email`]}
                   />
-                  {errors[`collaborator_${index}_email`] && (
-                    <p className="text-red-500 text-sm mt-1">{errors[`collaborator_${index}_email`]}</p>
-                  )}
-                </div>
+                </FormField>
                 
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Genre <span className="text-red-500">*</span>
-                  </label>
-                  <select
+                <FormField 
+                  label="Genre" 
+                  required 
+                  error={errors[`collaborator_${index}_gender`]}
+                >
+                  <Select
                     value={collab.gender}
-                    onChange={(e) => updateCollaborator(index, 'gender', e.target.value)}
-                    className={`w-full border rounded p-2 ${errors[`collaborator_${index}_gender`] ? 'border-red-500' : ''}`}
-                  >
-                    <option value="">Sélectionner</option>
-                    <option value="Male">Homme</option>
-                    <option value="Female">Femme</option>
-                    <option value="Other">Autre</option>
-                  </select>
-                  {errors[`collaborator_${index}_gender`] && (
-                    <p className="text-red-500 text-sm mt-1">{errors[`collaborator_${index}_gender`]}</p>
-                  )}
-                </div>
+                    onChange={(e) => update(formData.collaborators, index, 'gender', e.target.value)}
+                    error={errors[`collaborator_${index}_gender`]}
+                    options={genderOptions}
+                  />
+                </FormField>
                 
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium mb-1">
-                    Rôle <span className="text-red-500">*</span>
-                  </label>
-                  <textarea
+                <FormField 
+                  label="Rôle" 
+                  required 
+                  error={errors[`collaborator_${index}_role`]}
+                  className="md:col-span-2"
+                >
+                  <TextArea
                     value={collab.role}
-                    onChange={(e) => updateCollaborator(index, 'role', e.target.value)}
-                    className={`w-full border rounded p-2 ${errors[`collaborator_${index}_role`] ? 'border-red-500' : ''}`}
+                    onChange={(e) => update(formData.collaborators, index, 'role', e.target.value)}
+                    error={errors[`collaborator_${index}_role`]}
                     rows={2}
                     maxLength={500}
                     placeholder="Rôle dans la production (ex: Director, Producer, Editor)"
                   />
-                  {errors[`collaborator_${index}_role`] && (
-                    <p className="text-red-500 text-sm mt-1">{errors[`collaborator_${index}_role`]}</p>
-                  )}
-                </div>
+                </FormField>
               </div>
             </div>
           ))}

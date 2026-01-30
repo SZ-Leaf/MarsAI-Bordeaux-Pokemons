@@ -17,7 +17,7 @@ const FormNavigation = ({
       {!isFirstStep && (
         <button
           onClick={onPrevious}
-          className="px-6 py-2 rounded bg-gray-500 text-white"
+          className="btn btn-secondary"
         >
           Précédent
         </button>
@@ -26,7 +26,7 @@ const FormNavigation = ({
       {!isLastStep ? (
         <button
           onClick={onNext}
-          className="bg-blue-500 text-white px-6 py-2 rounded"
+          className="btn btn-primary"
         >
           Suivant
         </button>
@@ -34,11 +34,7 @@ const FormNavigation = ({
         <button
           onClick={onSubmit}
           disabled={isSubmitting}
-          className={`px-6 py-2 rounded ${
-            isSubmitting 
-              ? 'bg-gray-400 cursor-not-allowed' 
-              : 'bg-green-500 text-white'
-          }`}
+          className={`btn ${isSubmitting ? 'btn-secondary' : 'btn-modern'}`}
         >
           {isSubmitting ? 'Soumission en cours...' : 'Soumettre le film'}
         </button>

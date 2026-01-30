@@ -24,7 +24,7 @@ const FormField = ({
       return children;
     }
 
-    const baseClassName = `w-full border rounded p-2 ${hasError ? 'border-red-500' : ''}`;
+    const baseClassName = `${type === 'select' ? 'select-light' : 'input-light'} ${hasError ? 'border-red-500' : ''}`;
 
     switch (type) {
       case 'textarea':
@@ -49,7 +49,7 @@ const FormField = ({
             className={baseClassName}
           >
             {options.map((option, index) => (
-              <option key={index} value={option.value}>
+              <option key={index} value={option.value} className="select-light-option">
                 {option.label}
               </option>
             ))}

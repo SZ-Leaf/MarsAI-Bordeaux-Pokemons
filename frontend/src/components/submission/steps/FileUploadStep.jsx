@@ -1,6 +1,6 @@
-import VideoUpload from './VideoUpload.jsx';
-import FileUploader from './FileUploader.jsx';
-import GalleryUpload from './GalleryUpload.jsx';
+import VideoUpload from '../uploads/VideoUpload.jsx';
+import FileUploader from '../uploads/FileUploader.jsx';
+import GalleryUpload from '../uploads/GalleryUpload.jsx';
 
 /**
  * Étape 3 : Upload des fichiers (vidéo, cover, sous-titres, galerie)

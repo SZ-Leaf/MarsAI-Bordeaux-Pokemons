@@ -1,6 +1,6 @@
-import CollaboratorModal from './modals/CollaboratorModal.jsx';
-import ActionConfirmationModal from './modals/ActionConfirmationModal.jsx';
-import { useEditableList } from '../hooks/useEditableList.js';
+import CollaboratorModal from '../../modals/CollaboratorModal.jsx';
+import ActionConfirmationModal from '../../modals/ActionConfirmationModal.jsx';
+import { useEditableList } from '../../../hooks/useEditableList.js';
 
 const CollaboratorsList = ({ formData, errors, updateField }) => {
   const {
@@ -24,7 +24,7 @@ const CollaboratorsList = ({ formData, errors, updateField }) => {
         <button
           type="button"
           onClick={handleAdd}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="btn btn-primary"
         >
           + Ajouter un contributeur
         </button>

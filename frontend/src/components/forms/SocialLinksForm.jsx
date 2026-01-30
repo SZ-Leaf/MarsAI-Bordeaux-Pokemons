@@ -43,7 +43,7 @@ const SocialLinksForm = ({ formData, errors, updateField, updateSocialField }) =
         <button
           type="button"
           onClick={() => add(formData.socials)}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="btn btn-primary"
         >
           + Ajouter un lien
         </button>

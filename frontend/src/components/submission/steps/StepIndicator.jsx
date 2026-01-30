@@ -1,4 +1,4 @@
-import { submissionSteps } from '../constants/submissionSteps';
+import { submissionSteps } from '../../../constants/submissionSteps';
 
 const StepIndicator = ({ currentStep }) => {
   return (

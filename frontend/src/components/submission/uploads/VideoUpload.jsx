@@ -1,4 +1,4 @@
-import { useFileUpload } from '../hooks/useFileUpload';
+import { useFileUpload } from '../../../hooks/useFileUpload';
 
 const VideoUpload = ({ value, onChange, error }) => {
   const {

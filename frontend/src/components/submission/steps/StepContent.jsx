@@ -1,4 +1,4 @@
-import { submissionSteps } from '../constants/submissionSteps';
+import { submissionSteps } from '../../../constants/submissionSteps';
 
 const StepContent = ({ currentStep, formData, errors, updateField }) => {
   const stepConfig = submissionSteps.find(step => step.number === currentStep);

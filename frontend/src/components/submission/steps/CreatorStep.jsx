@@ -1,6 +1,6 @@
-import CreatorForm from './CreatorForm.jsx';
-import SocialLinksList from './SocialLinksList.jsx';
-import CollaboratorsList from './CollaboratorsList.jsx';
+import CreatorForm from '../../forms/CreatorForm.jsx';
+import SocialLinksList from '../lists/SocialLinksList.jsx';
+import CollaboratorsList from '../lists/CollaboratorsList.jsx';
 
 const CreatorStep = ({ formData, errors, updateField }) => {
   return (

@@ -1,7 +1,7 @@
-import SocialModal from './modals/SocialModal.jsx';
-import ActionConfirmationModal from './modals/ActionConfirmationModal.jsx';
-import { useEditableList } from '../hooks/useEditableList.js';
-import { socialNetworks } from '../constants/formOptions.js';
+import SocialModal from '../../modals/SocialModal.jsx';
+import ActionConfirmationModal from '../../modals/ActionConfirmationModal.jsx';
+import { useEditableList } from '../../../hooks/useEditableList.js';
+import { socialNetworks } from '../../../constants/formOptions.js';
 
 const SocialLinksList = ({ formData, errors, updateField }) => {
   const {
@@ -30,7 +30,7 @@ const SocialLinksList = ({ formData, errors, updateField }) => {
         <button
           type="button"
           onClick={handleAdd}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="btn btn-primary"
         >
           + Ajouter un lien
         </button>

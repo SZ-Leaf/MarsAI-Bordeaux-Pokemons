@@ -1,7 +1,6 @@
 import CGUForm from '../components/forms/CGUForm.jsx';
 import SubmissionForm from '../components/forms/SubmissionForm.jsx';
-import FileUploadStep from '../components/FileUploadStep.jsx';
-import CreatorStep from '../components/CreatorStep.jsx';
+import { FileUploadStep, CreatorStep } from '../components/submission/steps';
 
 export const submissionSteps = [
   {

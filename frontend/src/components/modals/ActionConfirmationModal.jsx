@@ -11,11 +11,11 @@ const ActionConfirmationModal = ({
   variant = 'primary'
 }) => {
   
-  // Définir les couleurs selon le variant
-  const variantStyles = {
-    primary: 'bg-blue-500 hover:bg-blue-600',
-    success: 'bg-green-500 hover:bg-green-600',
-    danger: 'bg-red-500 hover:bg-red-600'
+  // Définir les classes CSS selon le variant
+  const getVariantClass = () => {
+    if (variant === 'danger') return 'btn-danger';
+    if (variant === 'success') return 'btn-info';
+    return 'btn-primary';
   };
 
   return (
@@ -33,13 +33,13 @@ const ActionConfirmationModal = ({
         <div className="flex justify-end gap-3">
           <button
             onClick={onCancel}
-            className="px-4 py-2 rounded bg-gray-300 text-gray-700 hover:bg-gray-400 transition-colors"
+            className="btn btn-secondary"
           >
             {cancelText}
           </button>
           <button
             onClick={onConfirm}
-            className={`px-4 py-2 rounded text-white transition-colors ${variantStyles[variant] || variantStyles.primary}`}
+            className={`btn ${getVariantClass()}`}
           >
             {confirmText}
           </button>

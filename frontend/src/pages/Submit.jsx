@@ -2,10 +2,8 @@ import { useSubmission } from '../hooks/useSubmission.js';
 import { useScrollOnStepChange } from '../hooks/useScrollOnStepChange.js';
 import { useScrollToError } from '../hooks/useScrollToError.js';
 import useModal from '../hooks/useModal.js';
-import StepIndicator from '../components/StepIndicator.jsx';
-import StepContent from '../components/StepContent.jsx';
+import { StepIndicator, StepContent, SubmissionSuccess } from '../components/submission';
 import FormNavigation from '../components/forms/NaviguationForm.jsx';
-import SubmissionSuccess from '../components/SubmissionSuccess.jsx';
 import ActionConfirmationModal from '../components/modals/ActionConfirmationModal.jsx';
 import { totalSteps } from '../constants/submissionSteps.js';
 
@@ -69,8 +67,8 @@ const Submit = () => {
       
       {/* Messages d'erreur globaux */}
       {submitError && (
-        <div className="bg-red-50 border border-red-500 rounded p-4 mb-6">
-          <p className="text-red-700">{submitError}</p>
+        <div className="alert alert-error">
+          <p className="alert-error-text">{submitError}</p>
         </div>
       )}
       

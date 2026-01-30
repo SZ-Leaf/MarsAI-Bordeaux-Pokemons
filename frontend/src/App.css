@@ -31,8 +31,9 @@
 
 @import "./components/ui/buttons.css";
 @import "./components/ui/inputs.css";
-@import "./components/ui/modal.css";
-@import "./components/ui/cards.css";
+@import "./components/modals/modal.css";
+@import "./components/cards/cards.css";
+@import "./components/ui/alerts.css";
 
 :root {
   --color-black: #000000;

@@ -32,7 +32,7 @@ const CollaboratorsForm = ({ formData, errors, updateField, updateCollaboratorFi
         <button
           type="button"
           onClick={() => add(formData.collaborators)}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="btn btn-primary"
         >
           + Ajouter un contributeur
         </button>

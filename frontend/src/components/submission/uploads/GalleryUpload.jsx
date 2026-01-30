@@ -1,6 +1,6 @@
 import { useRef, useMemo } from 'react';
-import { useFilePreviews } from '../hooks/useFilePreviews';
-import { formatFileSize, resetFileInput } from '../utils/fileUtils';
+import { useFilePreviews } from '../../../hooks/useFilePreviews';
+import { formatFileSize, resetFileInput } from '../../../utils/fileUtils';
 
 const GalleryUpload = ({ formData, errors, updateField }) => {
   const fileInputRef = useRef(null);

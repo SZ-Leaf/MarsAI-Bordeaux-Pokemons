@@ -7,11 +7,11 @@ const ModalActions = ({
   isLoading = false,
   disabled = false
 }) => {
-  // Définir les couleurs selon le variant
-  const variantStyles = {
-    primary: 'bg-blue-500 text-white hover:bg-blue-600',
-    success: 'bg-green-500 text-white hover:bg-green-600',
-    danger: 'bg-red-500 text-white hover:bg-red-600'
+  // Définir les classes CSS selon le variant
+  const getVariantClass = () => {
+    if (confirmVariant === 'danger') return 'btn-danger';
+    if (confirmVariant === 'success') return 'btn-info';
+    return 'btn-primary';
   };
 
   return (
@@ -20,7 +20,7 @@ const ModalActions = ({
         type="button"
         onClick={onCancel}
         disabled={isLoading}
-        className="px-4 py-2 border rounded text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="btn btn-secondary"
       >
         {cancelText}
       </button>
@@ -28,7 +28,7 @@ const ModalActions = ({
         type="button"
         onClick={onConfirm}
         disabled={disabled || isLoading}
-        className={`px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${variantStyles[confirmVariant] || variantStyles.primary}`}
+        className={`btn ${getVariantClass()}`}
       >
         {isLoading ? 'Chargement...' : confirmText}
       </button>

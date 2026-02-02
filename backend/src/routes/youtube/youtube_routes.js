@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { uploadToYoutube } from '../controllers/submissions/youtube_controller.js';
+import { uploadToYoutube } from '../../controllers/submissions/youtube_controller.js';
 
 const router = Router();
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import { startYoutubeAuth, youtubeCallback } from '../controllers/oauth/oauth_controller.js';
+import { startYoutubeAuth, youtubeCallback } from '../../controllers/oauth/oauth_controller.js';
 
 const router = express.Router();
 

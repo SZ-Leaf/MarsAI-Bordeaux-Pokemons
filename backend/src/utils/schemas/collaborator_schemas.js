@@ -29,12 +29,13 @@ export const collaboratorSchema = z.object({
   gender: z.string({
     required_error: 'zod_errors.collaborator.gender.required',
     invalid_type_error: 'zod_errors.collaborator.gender.invalid',
-  }),
+  })
+  .optional(),
 
   role: z
     .string({
       required_error: 'zod_errors.collaborator.role.required',
       invalid_type_error: 'zod_errors.collaborator.role.invalid',
     })
-    .max(500, { message: 'zod_errors.collaborator.role.max' }),
+    .max(500, { message: 'zod_errors.collaborator.role.max' })
 });

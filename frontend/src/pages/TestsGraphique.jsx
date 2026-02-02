@@ -1,16 +1,18 @@
 import React from 'react';
 import '../App.css';
-import useModal from '../utils/useModal';
+import useModal from '../hooks/useModal';
 import Modal from '../components/modals/Modal';
 import Card from '../components/cards/Card';
 import Form from '../components/forms/Form';
 import Tag from '../components/tags/Tag';
+import SubmitModal from '../components/modals/SubmitModal.jsx';
 import '../components/ui/loading.css';
 
 export default function Homepage() {
   const loginModal = useModal();
   const formLightModal = useModal();
   const formDarkModal = useModal();
+  const submitModal = useModal();
 
   const handleFormSubmit = (data) => {
     console.log('Données du formulaire:', data);
@@ -108,6 +110,12 @@ export default function Homepage() {
             >
               Formulaire Dark
             </button>
+            <button
+              className="btn btn-primary"
+              onClick={submitModal.openModal}
+            >
+              Soumettre un film
+            </button>
           </div>
         </div>
         <div>
@@ -158,6 +166,12 @@ export default function Homepage() {
           />
         </div>
       </Modal>
+
+      {/* Modal de soumission de film */}
+      <SubmitModal
+        isOpen={submitModal.isOpen}
+        onClose={submitModal.closeModal}
+      />
     </div>
   );
 }

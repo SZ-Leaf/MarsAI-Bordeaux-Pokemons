@@ -15,6 +15,14 @@ export async function getTagById(id) {
     );
     return rows[0] ?? null;
 }
+// récupération d'un tag grâce à son titre
+export async function getTagByTitle(title) {
+  const [rows] = await db.pool.execute(
+    "SELECT id, title FROM tags WHERE LOWER(title) = LOWER(?) LIMIT 1",
+    [title]
+  );
+  return rows[0] ?? null;
+}
 //création d'un tag
 export async function createTag({title}) {
     const [result] = await db.pool.execute(
@@ -26,10 +34,22 @@ export async function createTag({title}) {
 export async function getPopularTags(limit = 10) {
 
     const [rows] = await db.pool.execute(
-        `SELECT t.id, t.title, COUNT(*) AS usage_count FROM submissions_tags st JOIN tags t ON t.id = st.tag_id GROUP BY t.id, t.title ORDER BY usage_count DESC `,
+        `SELECT t.id, t.title, COUNT(*) AS usage_count FROM submissions_tags st JOIN tags t ON t.id = st.tag_id GROUP BY t.id, t.title ORDER BY usage_count DESC `
     );
     return rows;
     
 }
+export async function searchTags(search, limit = 10) {
+    const query = `%${search.toLowerCase()}%`;
 
-export default { getAllTags, getTagById, createTag, getPopularTags};
+    const [rows] = await db.pool.execute(
+        "SELECT id, title FROM tags WHERE LOWER(title) LIKE ? ORDER BY title ASC",
+        [query]
+    );
+
+    return rows;
+}
+
+
+
+export default { getAllTags, getTagById, createTag, getPopularTags, getTagByTitle, searchTags};

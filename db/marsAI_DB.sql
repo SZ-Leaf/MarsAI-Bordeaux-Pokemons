@@ -2,6 +2,7 @@
 CREATE TABLE `submissions` (
   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `cover` VARCHAR(255) NOT NULL,
+  `video_url` VARCHAR(255) NOT NULL,
   `english_title` VARCHAR(255) NOT NULL,
   `original_title` VARCHAR(255) NULL,
   `language` VARCHAR(255) NOT NULL,
@@ -10,9 +11,9 @@ CREATE TABLE `submissions` (
   `classification` VARCHAR(255) NOT NULL,
   `tech_stack` VARCHAR(500) NOT NULL,
   `creative_method` VARCHAR(500) NOT NULL,
-  `subtitles` VARCHAR(255) NOT NULL,
-  `duration_seconds` INT NOT NULL,
-  `youtube_URL` VARCHAR(255) NOT NULL,
+  `subtitles` VARCHAR(255) NULL,
+  `duration_seconds` INT NULL,
+  `youtube_URL` VARCHAR(255) NULL,
   `creator_gender` VARCHAR(255) NOT NULL,
   `creator_email` VARCHAR(255) NOT NULL,
   `creator_phone` VARCHAR(30) NULL,
@@ -21,8 +22,9 @@ CREATE TABLE `submissions` (
   `creator_lastname` VARCHAR(255) NOT NULL,
   `creator_country` VARCHAR(255) NOT NULL,
   `creator_address` VARCHAR(255) NOT NULL,
+  `referral_source` VARCHAR(255) NULL,
   `terms_of_use` BOOLEAN NOT NULL,
-  `status_id` INT UNIQUE NULL,
+  `moderation_id` INT UNIQUE NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE `submission_moderation` (
@@ -94,6 +96,14 @@ CREATE TABLE `users` (
 CREATE TABLE `roles` (
   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(255) UNIQUE NOT NULL
+);
+CREATE TABLE `invites` (
+  `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(255) NOT NULL UNIQUE,
+  `role_id` INT NOT NULL,
+  `token` VARCHAR(255) NOT NULL UNIQUE,
+  `registered` BOOLEAN DEFAULT FALSE,
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- EVENTS
@@ -202,7 +212,7 @@ CREATE TABLE `submissions_awards` (
 -- FOREIGN KEY CONSTRAINTS
 
 -- SUBMISSIONS TABLE
-ALTER TABLE `submissions` ADD CONSTRAINT fk_submissions_status_id FOREIGN KEY (`status_id`) REFERENCES `submission_moderation` (`id`);
+ALTER TABLE `submissions` ADD CONSTRAINT fk_submissions_moderation_id FOREIGN KEY (`moderation_id`) REFERENCES `submission_moderation` (`id`);
 -- SUBMISSION_MODERATION TABLE
 ALTER TABLE `submission_moderation` ADD CONSTRAINT fk_submission_moderation_user_id FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 -- SELECTOR_MEMO TABLE
@@ -214,6 +224,8 @@ ALTER TABLE `gallery` ADD CONSTRAINT fk_gallery_submission_id FOREIGN KEY (`subm
 ALTER TABLE `collaborators` ADD CONSTRAINT fk_collaborators_submission_id FOREIGN KEY (`submission_id`) REFERENCES `submissions` (`id`);
 -- USERS TABLE
 ALTER TABLE `users` ADD CONSTRAINT fk_user_role_id FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`);
+-- INVITES TABLE
+ALTER TABLE `invites` ADD CONSTRAINT fk_invites_role_id FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`);
 -- EVENTS TABLE
 ALTER TABLE `events` ADD CONSTRAINT fk_events_user_id FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 -- RESERVATIONS TABLE
@@ -227,6 +239,9 @@ ALTER TABLE `socials` ADD CONSTRAINT fk_socials_network_id FOREIGN KEY (`network
 ALTER TABLE `general_cms` ADD CONSTRAINT fk_general_cms_theme_id FOREIGN KEY (`theme_id`) REFERENCES `theme_cms` (`id`);
 -- UNIQUE INDEXE FOR RESERVATIONS TABLE
 CREATE UNIQUE INDEX unique_reservation_email_event ON reservations (email, event_id);
+-- UNIQUE INDEXES FOR INVITES TABLE
+CREATE UNIQUE INDEX unique_invite_email ON invites (email);
+CREATE UNIQUE INDEX unique_invite_token ON invites (token);
 
 -- ASSOCIATIVE TABLES
 
@@ -242,7 +257,7 @@ ALTER TABLE `submissions_awards` ADD CONSTRAINT fk_submissions_awards_award_id F
 CREATE UNIQUE INDEX `unique_selector_memo_rating` ON `selector_memo` (`submission_id`, `user_id`);
 
 -- FK INDEXES
-CREATE INDEX idx_submissions_status_id ON submissions(status_id);
+CREATE INDEX idx_submissions_moderation_id ON submissions(moderation_id);
 CREATE INDEX idx_submission_moderation_user_id ON submission_moderation(user_id);
 CREATE INDEX idx_selector_memo_user_id ON selector_memo(user_id);
 CREATE INDEX idx_selector_memo_submission_id ON selector_memo(submission_id);
@@ -261,3 +276,7 @@ CREATE INDEX idx_submissions_tags_submission_id ON submissions_tags(submission_i
 CREATE INDEX idx_submissions_tags_tag_id ON submissions_tags(tag_id);
 CREATE INDEX idx_submissions_awards_submission_id ON submissions_awards(submission_id);
 CREATE INDEX idx_submissions_awards_award_id ON submissions_awards(award_id);
+
+
+INSERT INTO roles (`title`) VALUES ('user'), ('admin');
+INSERT INTO social_networks (`title`, `logo`) VALUES ('fb', 'fb-logl'), ('ig', 'ig-logo'), ('linkedin', 'lkin-logo'), ('x', 'x-logo'), ('tiktok', 'tiktok-logo'), ('website', 'website-logo');

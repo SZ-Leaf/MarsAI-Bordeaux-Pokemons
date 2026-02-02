@@ -3,11 +3,19 @@ import tags_model from "../../models/tags/tags_model.js";
 
 export const listTags = async(req,res) => {
     try {
-        const result = await tags_model.getAllTags();
+        const search = (req.query.search || "").trim();
+
+        const limit =
+            Number.isInteger(Number(req.query.limit)) && Number(req.query.limit) > 0
+                ? Number(req.query.limit)
+                : 10;
+
+        const result = search ? await tags_model.searchTags(search, limit) : await tags_model.getAllTags();
+
         res.status(200).json({
             success:true,
-            data: result
-        })
+            data: result.slice(0, limit),
+        });
     }catch(error){
         res.status(500).json({
             success:false,
@@ -61,7 +69,21 @@ export const findTagById = async(req, res) => {
 
 export const createTag = async (req,res) => {
     try {
-        const { title } = req.body;
+        const title = (req.body.title || "").trim().replace(/^./, c => c.toUpperCase());
+
+        const existing = await tags_model.getTagByTitle(title);
+
+        if (existing) {
+            return res.status(409).json({
+                success: false, 
+                message: {
+                    fr: "Tag déjà existant",
+                    en:" Already existing tag"
+                },
+                data:existing, 
+            });
+        }
+
 
         const id = await tags_model.createTag({title});
         
@@ -70,15 +92,6 @@ export const createTag = async (req,res) => {
             data: {id, title}
         })
     } catch (error) {
-        if (error.code === "ER_DUP_ENTRY") {
-            return res.status(409).json({
-                success: false, 
-                message: {
-                    fr: "Tag déjà existant",
-                    en:" Already existing tag"
-                } 
-            });
-        }
         console.error(error);
             return res.status(500).json({ 
                 success: false, 
@@ -95,15 +108,14 @@ export const getPopularTags = async (req,res) => {
     try {
         const limit = Number.isInteger(Number(req.query.limit)) && Number(req.query.limit) > 0
         ? Number(req.query.limit)
-        : 5;
+        : 6;
 
         const result = await tags_model.getPopularTags();
-
         const limitedTags = result.slice(0, limit);
 
         return res.status(200).json({
             success: true,
-            data: limitedTags
+            data: limitedTags,
         })
 
     } catch (error) {

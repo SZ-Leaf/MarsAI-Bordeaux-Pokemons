@@ -2,7 +2,7 @@ import { getVideoDurationInSeconds } from 'get-video-duration';
 import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
-import {createSubmission, updateFilePaths, getSubmissions, getSubmissionById} from '../../models/submissions/submissions_model.js';
+import { createSubmission, updateFilePaths, getSubmissions, getSubmissionById } from '../../models/submissions/submissions_model.js';
 import collaboratorModel from '../../models/submissions/collaborators_model.js';
 import galleryModel from '../../models/submissions/gallery_model.js';
 import socialModel from '../../models/socials/socials_model.js';
@@ -18,11 +18,6 @@ const getUploadsBasePath = () => {
   return path.join(__dirname, '../../uploads');
 };
 
-/**
- * Crée une nouvelle soumission de film
- * POST /api/submissions
- * Route publique (pas d'authentification requise)
- */
 // export const submit = async (req, res) => {
 //   const connection = await db.pool.getConnection();
 
@@ -284,7 +279,7 @@ const getUploadsBasePath = () => {
 //   }
 // };
 
-export const submit = async (req, res) => {
+export const submitController = async (req, res) => {
 
   // 
   // Validate before database connection
@@ -294,10 +289,10 @@ export const submit = async (req, res) => {
     return sendError(res, 400, 'Fichiers manquants', 'Missing files', null);
   }
 
-  const videoFile     = req.files.video[0];
-  const coverFile     = req.files.cover[0];
+  const videoFile = req.files.video[0];
+  const coverFile = req.files.cover[0];
   const subtitlesFile = req.files.subtitles ? req.files.subtitles[0] : null;
-  const galleryFiles  = req.files.gallery || [];
+  const galleryFiles = req.files.gallery || [];
 
   const maxVideoSize = 300 * 1024 * 1024; // 300MB
   const maxImageSize = 5 * 1024 * 1024;   // 5MB
@@ -477,7 +472,7 @@ export const submit = async (req, res) => {
     // 
 
     const finalVideoPath = path.join(finalDir, `video${videoExt}`);
-    const finalCoverExt  = path.extname(coverFile.originalname).toLowerCase();
+    const finalCoverExt = path.extname(coverFile.originalname).toLowerCase();
     const finalCoverPath = path.join(finalDir, `cover${finalCoverExt}`);
 
     await fs.rename(videoFile.path, finalVideoPath);
@@ -518,7 +513,7 @@ export const submit = async (req, res) => {
 
     for (let i = 0; i < galleryFiles.length; i++) {
       const file = galleryFiles[i];
-      const ext  = path.extname(file.originalname).toLowerCase();
+      const ext = path.extname(file.originalname).toLowerCase();
 
       const finalPath = path.join(
         finalDir,
@@ -599,7 +594,7 @@ export const submit = async (req, res) => {
       for (const p of filesToClean) {
         try {
           await fs.unlink(p);
-        } catch (_) {}
+        } catch (_) { }
       }
     }
 
@@ -615,34 +610,35 @@ export const submit = async (req, res) => {
 };
 
 
-/**
- * Récupère toutes les soumissions (admin uniquement)
- * GET /api/admin/submissions
- * Route protégée (nécessite authentification admin)
- */
 export const getSubmissionsController = async (req, res) => {
   try {
     const { status, limit = 20, offset = 0 } = req.query;
 
+    const parsedLimit = parseInt(limit);
+    const parsedOffset = parseInt(offset);
+    
     const filters = {
       status: status || null,
-      limit: parseInt(limit),
-      offset: parseInt(offset)
+      limit: Number.isNaN(parsedLimit) ? 20 : parsedLimit,
+      offset: Number.isNaN(parsedOffset) ? 0 : parsedOffset
     };
 
     const submissions = await getSubmissions(filters);
 
-    res.status(200).json({
-      success: true,
-      count: submissions.length,
-      submissions
-    });
+    return sendSuccess(res, 200,
+      'Soumissions récupérées avec succès',
+      'Submissions retrieved successfully',
+      { count: submissions.length, submissions }
+    );
+
   } catch (error) {
+
     console.error('Erreur récupération soumissions:', error);
-    res.status(500).json({
-      error: 'Erreur lors de la récupération des soumissions',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    return sendError(res, 500,
+      'Erreur lors de la récupération des soumissions',
+      'Error retrieving submissions',
+      error.message
+    );
   }
 };
 

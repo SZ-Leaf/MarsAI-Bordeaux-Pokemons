@@ -82,7 +82,12 @@ export default function TagSelectCreatable({ allTags, value, onChange, onTagCrea
       <AsyncCreatableSelect
         isMulti
         cacheOptions
-        defaultOptions={defaultOptions}
+        defaultOptions={[
+          {
+            label: "Suggestions",
+            options: defaultOptions,
+          },
+        ]}
         loadOptions={loadOptions}
         value={value}
         onChange={(newValue) => {

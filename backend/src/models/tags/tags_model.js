@@ -39,6 +39,7 @@ export async function getPopularTags(limit = 10) {
     return rows;
     
 }
+//requête qui recherche les titres des tags (utilisée pour l'autocompletion)  
 export async function searchTags(search, limit = 10) {
     const query = `%${search.toLowerCase()}%`;
 
@@ -46,9 +47,9 @@ export async function searchTags(search, limit = 10) {
         "SELECT id, title FROM tags WHERE LOWER(title) LIKE ? ORDER BY title ASC",
         [query]
     );
-
     return rows;
 }
+
 
 
 

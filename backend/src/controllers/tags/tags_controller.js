@@ -9,7 +9,7 @@ export const listTags = async(req,res) => {
             Number.isInteger(Number(req.query.limit)) && Number(req.query.limit) > 0
                 ? Number(req.query.limit)
                 : 10;
-
+        //si on fait une recherche, alors on récupère les résultats de la recherche sinon on récupère les résultats
         const result = search ? await tags_model.searchTags(search, limit) : await tags_model.getAllTags();
 
         res.status(200).json({

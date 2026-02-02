@@ -22,7 +22,7 @@ CREATE TABLE `submissions` (
   `creator_lastname` VARCHAR(255) NOT NULL,
   `creator_country` VARCHAR(255) NOT NULL,
   `creator_address` VARCHAR(255) NOT NULL,
-  `referral_source` VARCHAR(255) NULL,
+  `referral_source` VARCHAR(255) NOT NULL,
   `terms_of_use` BOOLEAN NOT NULL,
   `moderation_id` INT UNIQUE NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -105,6 +105,16 @@ CREATE TABLE `invites` (
   `registered` BOOLEAN DEFAULT FALSE,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE `reset_password_tokens` (
+  `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `token` VARCHAR(255) NOT NULL UNIQUE,
+  `used_at` DATETIME NULL,
+  `expires_at` DATETIME NOT NULL,
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 
 -- EVENTS
 CREATE TABLE `events` (
@@ -170,20 +180,20 @@ CREATE TABLE `sections_cms` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-CREATE TABLE `theme_cms` (
-  `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `primary_color` VARCHAR(255) NOT NULL,
-  `secondary_color` VARCHAR(255) NOT NULL,
-  `accent_color` VARCHAR(255) NOT NULL,
-  `primary_font_color` VARCHAR(255) NOT NULL,
-  `secondary_font_color` VARCHAR(255) NOT NULL,
-  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+-- CREATE TABLE `theme_cms` (
+--   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+--   `primary_color` VARCHAR(255) NOT NULL,
+--   `secondary_color` VARCHAR(255) NOT NULL,
+--   `accent_color` VARCHAR(255) NOT NULL,
+--   `primary_font_color` VARCHAR(255) NOT NULL,
+--   `secondary_font_color` VARCHAR(255) NOT NULL,
+--   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--   `updated_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- );
 CREATE TABLE `general_cms` (
   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `submissions_end_date` DATE NOT NULL,
-  `theme_id` INT NOT NULL,
+  -- `theme_id` INT NOT NULL,
   `city` VARCHAR(255) NOT NULL,
   `address` VARCHAR(255) NULL
 );
@@ -236,7 +246,7 @@ ALTER TABLE `newsletter` ADD CONSTRAINT fk_newsletter_user_id FOREIGN KEY (`user
 ALTER TABLE `socials` ADD CONSTRAINT fk_socials_submission_id FOREIGN KEY (`submission_id`) REFERENCES `submissions` (`id`);
 ALTER TABLE `socials` ADD CONSTRAINT fk_socials_network_id FOREIGN KEY (`network_id`) REFERENCES `social_networks` (`id`);
 -- GENERAL CMS TABLE
-ALTER TABLE `general_cms` ADD CONSTRAINT fk_general_cms_theme_id FOREIGN KEY (`theme_id`) REFERENCES `theme_cms` (`id`);
+-- ALTER TABLE `general_cms` ADD CONSTRAINT fk_general_cms_theme_id FOREIGN KEY (`theme_id`) REFERENCES `theme_cms` (`id`);
 -- UNIQUE INDEXE FOR RESERVATIONS TABLE
 CREATE UNIQUE INDEX unique_reservation_email_event ON reservations (email, event_id);
 -- UNIQUE INDEXES FOR INVITES TABLE
@@ -269,7 +279,7 @@ CREATE INDEX idx_reservations_event_id ON reservations(event_id);
 CREATE INDEX idx_newsletter_user_id ON newsletter(user_id);
 CREATE INDEX idx_socials_submission_id ON socials(submission_id);
 CREATE INDEX idx_socials_network_id ON socials(network_id);
-CREATE INDEX idx_general_cms_theme_id ON general_cms(theme_id);
+-- CREATE INDEX idx_general_cms_theme_id ON general_cms(theme_id);
 
 -- ASSOCIATIVE KEY INDEXES
 CREATE INDEX idx_submissions_tags_submission_id ON submissions_tags(submission_id);

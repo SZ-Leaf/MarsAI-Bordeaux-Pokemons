@@ -120,10 +120,12 @@ Total : 42 jours (40 jours sprints + 2 jours buffer)
 - `hooks/useSubmission.js` : Hook gestion soumission complète
 
 **Note importante** :
-Le formulaire d'upload de vidéo doit se faire en 3 parties distinctes :
+Le formulaire d'upload de vidéo doit se faire en 4 parties distinctes :
 - `Première partie : règlement + validation des CGU + 18 ans`
 - `Deuxième partie : infos de la vidéo + upload`
 - `Troisième partie : infos du réalisateur`
+- `Quatrième partie : infos sur les contributeurs`
+
 
 **Tests :**
 - Upload cover JPEG/JPG/PNG (max 5MB)
@@ -176,7 +178,7 @@ Le formulaire d'upload de vidéo doit se faire en 3 parties distinctes :
 - `utils/schemas.js` : tagSchema (Zod)
 
 **Frontend (3 pts) :**
-- `components/TagInput.jsx` : Input tags avec suggestions (autocomplete)
+- `components/Tag.jsx` : Affichage des tags (variant light/dark + status)
 - `components/TagList.jsx` : Liste tags sélectionnés (suppression possible)
 - `components/ClassificationSelect.jsx` : Select classification (IA/hybrid/manual)
 - `hooks/useTags.js` : Hook gestion tags (fetch, create, suggestions)

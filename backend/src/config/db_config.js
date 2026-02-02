@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-
 export default {
    PORT : process.env.PORT,
    DB_HOST : process.env.DB_HOST,

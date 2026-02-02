@@ -63,8 +63,9 @@ export default function TagSelectCreatable({ allTags, value, onChange, onTagCrea
       }
       if (!res.ok) throw new Error(json?.message?.fr || "Erreur création tag");
 
+      onTagCreated(created); 
+      // pour mettre à jour allTags dans le parent
       const created = json.data;
-      onTagCreated(created); // pour mettre à jour allTags dans le parent
 
       // on l’ajoute directement à la sélection
       onChange([...(value || []), { value: created.id, label: created.title }]);
@@ -95,7 +96,7 @@ export default function TagSelectCreatable({ allTags, value, onChange, onTagCrea
           onChange(newValue || []);
         }}
         onCreateOption={createTag}
-        placeholder="Sélectionne des tags…"
+        placeholder="Sélectionner ou créer un tag..."
         formatCreateLabel={(input) => `Ajouter "${input}"`}
         closeMenuOnSelect={true}
         isClearable

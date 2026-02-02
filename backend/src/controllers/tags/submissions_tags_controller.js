@@ -41,8 +41,6 @@ export const addTags = async (req,res) => {
                 } 
             });
         }
-
-
         console.error(error);
         return res.status(500).json({
             success: false,
@@ -53,6 +51,8 @@ export const addTags = async (req,res) => {
         });
     }
 }
+
+
 export const listTagsForSubmission = async (req,res) => {
     try {
         const submissionId = Number(req.params.id);

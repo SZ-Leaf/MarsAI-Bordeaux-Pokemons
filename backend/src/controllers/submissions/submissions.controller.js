@@ -285,8 +285,11 @@ export const submitController = async (req, res) => {
   // Validate before database connection
   // 
 
-  if (!req.files || !req.files.video || !req.files.cover) {
-    return sendError(res, 400, 'Fichiers manquants', 'Missing files', null);
+  if (!req.files || !req.files.video) {
+    return sendError(res, 400, 'Fichier vidéo manquant', 'Video file missing', null);
+  }
+  if(!req.files.cover) {
+    return sendError(res, 400, 'Image de couverture manquante', 'Cover image missing', null);
   }
 
   const videoFile = req.files.video[0];

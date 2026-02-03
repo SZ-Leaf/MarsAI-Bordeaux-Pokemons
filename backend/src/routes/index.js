@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import tagsRoutes from './tags.routes.js'
-import authRoutes from './auth/auth_routes.js';
-import submissionRoutes from './submission/submission_routes.js';
-import youtubeRoutes from './youtube/youtube_routes.js';
-import oauthRoutes from './youtube/oauth_routes.js';
+import authRoutes from './auth/auth.routes.js';
+import submissionRoutes from './submission/submission.routes.js';
+import youtubeRoutes from './youtube/youtube.routes.js';
+import oauthRoutes from './youtube/oauth.routes.js';
 
 const router = Router();
 

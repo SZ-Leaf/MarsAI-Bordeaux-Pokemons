@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { inviteUserController, registerUserController, deleteUserController } from '../../controllers/auth/user_controller.js';
-import { loginUserController, updateUserPasswordController, forgotPasswordController, resetPasswordController } from '../../controllers/auth/user_controller.js';
+import { inviteUserController, registerUserController, deleteUserController } from '../../controllers/auth/user.controller.js';
+import { loginUserController, updateUserPasswordController, forgotPasswordController, resetPasswordController } from '../../controllers/auth/user.controller.js';
 
 const authRoutes = Router();
 

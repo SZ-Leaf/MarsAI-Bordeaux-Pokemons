@@ -2,12 +2,12 @@ import { getVideoDurationInSeconds } from 'get-video-duration';
 import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
-import { createSubmission, updateFilePaths, getSubmissions, getSubmissionById } from '../../models/submissions/submissions_model.js';
-import collaboratorModel from '../../models/submissions/collaborators_model.js';
-import galleryModel from '../../models/submissions/gallery_model.js';
-import socialModel from '../../models/socials/socials_model.js';
-import { sendError, sendSuccess } from '../../helpers/response_helper.js';
-import { submissionSchema } from '../../utils/schemas/submission_schemas.js';
+import { createSubmission, updateFilePaths, getSubmissions, getSubmissionById } from '../../models/submissions/submissions.model.js';
+import collaboratorModel from '../../models/submissions/collaborators.model.js';
+import galleryModel from '../../models/submissions/gallery.model.js';
+import socialModel from '../../models/socials/socials.model.js';
+import { sendError, sendSuccess } from '../../helpers/response.helper.js';
+import { submissionSchema } from '../../utils/schemas/submission.schemas.js';
 import db from '../../config/db_pool.js';
 
 const __filename = fileURLToPath(import.meta.url);

@@ -1,12 +1,12 @@
-import { inviteUser, registerUser, deleteUser, getUserCredentials, loginUser, updateUser, updateUserPassword, resetUserPassword } from "../../models/users/user_model.js";
+import { inviteUser, registerUser, deleteUser, getUserCredentials, loginUser, updateUser, updateUserPassword, resetUserPassword } from "../../models/users/user.model.js";
 import validator from "validator";
 import { hashPassword, verifyPassword } from "../../helpers/password/password_hasher.js";
-import { sendInviteMail, sendForgotPasswordMail } from "../../services/mailer/mailer_mail.js";
-import { signToken, verifyToken } from "../../services/jwt/jwt_token.js";
-import { sendError, sendSuccess } from "../../helpers/response_helper.js";
-import { generateForgotPasswordToken, verifyForgotPasswordToken } from "../../services/mailer/mailer_tokens.js";
-import { registerUserSchema, updateUserSchema, userPasswordSchema } from "../../utils/schemas/user_schemas.js";
-import { checkEmail } from "../../utils/email_validator.js";
+import { sendInviteMail, sendForgotPasswordMail } from "../../services/mailer/mailer.mail.js";
+import { signToken, verifyToken } from "../../services/jwt/jwt.token.js";
+import { sendError, sendSuccess } from "../../helpers/response.helper.js";
+import { generateForgotPasswordToken, verifyForgotPasswordToken } from "../../services/mailer/mailer.tokens.js";
+import { registerUserSchema, updateUserSchema, userPasswordSchema } from "../../utils/schemas/user.schemas.js";
+import { checkEmail } from "../../utils/email.validator.js";
 
 const inviteUserController = async (req, res) => {
    try {

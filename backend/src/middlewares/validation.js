@@ -9,12 +9,12 @@ export const validate = (schema) => (req, res, next) => {
     next();
   } catch (err) {
     if (err instanceof ZodError) {
-      const flat = err.flatten();
-      return res.status(400).json({
-        success: false,
-        message: "Erreur de validation",
-        errors: flat.fieldErrors,
-      });
+      // const flat = err.flatten();
+      console.log(err.errors);
+      return sendError(res, 400,
+        "Erreur de validation",
+        "Validation error",
+        err.errors);
     }
     next(err);
   }

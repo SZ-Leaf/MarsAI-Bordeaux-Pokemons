@@ -1,5 +1,5 @@
 import { success } from "zod";
-import tags_model from "../../models/tags/tags_model.js";
+import tags_model from "../../models/tags/tags.model.js";
 
 export const listTags = async(req,res) => {
     try {

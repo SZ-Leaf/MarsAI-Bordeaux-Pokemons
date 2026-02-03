@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { uploadVideo, uploadThumbnail, uploadCaptions } from '../../services/youtube_services.js';
-import {findSubmissionById, updateYoutubeLinkInDatabase} from '../../models/submissions/submissions_model.js';
+import { uploadVideo, uploadThumbnail, uploadCaptions } from '../../services/youtube.services.js';
+import {findSubmissionById, updateYoutubeLinkInDatabase} from '../../models/submissions/submissions.model.js';
 
 export const uploadToYoutube = async (req, res) => {
   try {

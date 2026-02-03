@@ -5,7 +5,7 @@ export async function addTagsToSubmission(submissionId, tagIds) {
 
     const [result] = await db.pool.execute(
         "INSERT INTO submissions_tags (submission_id,tag_id) VALUES ?", [values]
-    ); 
+    );
 
     return result.affectedRows
 }

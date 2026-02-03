@@ -8,6 +8,7 @@ import galleryModel from '../../models/submissions/gallery.model.js';
 import socialModel from '../../models/socials/socials.model.js';
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
 import { submissionSchema } from '../../utils/schemas/submission.schemas.js';
+import { getTagsBySubmissionId } from '../../models/tags/submissions_tags.model.js';
 import db from '../../config/db_pool.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -677,5 +678,52 @@ export const getSubmissionByIdController = async (req, res) => {
       error: 'Erreur lors de la récupération de la soumission',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
+  }
+};
+
+export const getSubmissionTagsByIdController = async (req, res) => {
+  try {
+    const submissionId = Number(req.params.id);
+
+    if (!submissionId || Number.isNaN(submissionId)) {
+      return sendError(
+        res,
+        400,
+        "Identifiant de soumission invalide",
+        "Invalid submission id",
+        null
+      );
+    }
+
+    const tags = await getTagsBySubmissionId(submissionId);
+
+    if (!tags || tags.length === 0) {
+      return sendSuccess(
+        res,
+        200,
+        "Aucun tag associé à cette soumission",
+        "No tags found for this submission",
+        []
+      );
+    }
+
+    return sendSuccess(
+      res,
+      200,
+      "Tags récupérés avec succès",
+      "Tags successfully retrieved",
+      tags
+    );
+
+  } catch (error) {
+    console.error('Erreur getSubmissionTagsByIdController:', error);
+
+    return sendError(
+      res,
+      500,
+      "Erreur lors de la récupération des tags",
+      "Error while fetching submission tags",
+      error.message
+    );
   }
 };

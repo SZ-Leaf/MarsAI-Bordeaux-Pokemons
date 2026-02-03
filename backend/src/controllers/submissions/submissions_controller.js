@@ -15,7 +15,7 @@ const __dirname = path.dirname(__filename);
 
 // Chemin de base pour les uploads (depuis backend/src/controllers/submissions/)
 const getUploadsBasePath = () => {
-  return path.join(__dirname, '../../uploads');
+  return path.join(__dirname, '../../../uploads');
 };
 
 // export const submit = async (req, res) => {
@@ -281,9 +281,9 @@ const getUploadsBasePath = () => {
 
 export const submitController = async (req, res) => {
 
-  // 
+  //
   // Validate before database connection
-  // 
+  //
 
   if (!req.files || !req.files.video || !req.files.cover) {
     return sendError(res, 400, 'Fichiers manquants', 'Missing files', null);
@@ -299,7 +299,7 @@ export const submitController = async (req, res) => {
 
   const videoExt = path.extname(videoFile.originalname).toLowerCase();
 
-  // 
+  //
   // validate extension and mimtype to prevent fake .mp4 uploads
   //
 
@@ -328,9 +328,9 @@ export const submitController = async (req, res) => {
   }
 
 
-  // 
+  //
   // validate cover size and mimetype
-  // 
+  //
 
   if (coverFile.size > maxImageSize) {
     return sendError(res, 400, 'Image de couverture trop volumineuse', 'Cover image too large', null);
@@ -340,9 +340,9 @@ export const submitController = async (req, res) => {
     return sendError(res, 400, 'Format image invalide', 'Invalid image format', null);
   }
 
-  // 
+  //
   // validate gallery size and mimetype for each image (max 3)
-  // 
+  //
 
   if (galleryFiles.length > 3) {
     return sendError(res, 400, 'Trop d\'images dans la galerie', 'Too many images in the gallery', null);
@@ -365,9 +365,9 @@ export const submitController = async (req, res) => {
     }
   }
 
-  // 
+  //
   // validate subtitles (optional) extension and size
-  // 
+  //
 
   if (subtitlesFile) {
     const ext = path.extname(subtitlesFile.originalname).toLowerCase();
@@ -394,9 +394,9 @@ export const submitController = async (req, res) => {
     }
   }
 
-  // 
+  //
   // validate data (JSON + Zod)
-  // 
+  //
 
   if (!req.body.data) {
     return sendError(res, 400, 'Information manquante', 'Missing information', null);
@@ -416,9 +416,9 @@ export const submitController = async (req, res) => {
     return sendError(res, 422, 'Données invalides', 'Invalid data', err.message);
   }
 
-  // 
+  //
   // calculate duration
-  // 
+  //
 
   let durationSeconds = null;
   try {
@@ -430,9 +430,9 @@ export const submitController = async (req, res) => {
     // submission not blocked
   }
 
-  // 
+  //
   // connect to the database and start a transaction
-  // 
+  //
 
   let connection;
   let transactionStarted = false;
@@ -443,9 +443,9 @@ export const submitController = async (req, res) => {
     await connection.beginTransaction();
     transactionStarted = true;
 
-    // 
+    //
     // create submission row first
-    // 
+    //
 
     const submissionId = await createSubmission(
       connection,
@@ -455,9 +455,9 @@ export const submitController = async (req, res) => {
       durationSeconds
     );
 
-    // 
+    //
     // create final folders directories for video, cover, subtitles and gallery
-    // 
+    //
 
     const finalDir = path.join(
       getUploadsBasePath(),
@@ -467,9 +467,9 @@ export const submitController = async (req, res) => {
 
     await fs.mkdir(path.join(finalDir, 'gallery'), { recursive: true });
 
-    // 
+    //
     // move files to final location
-    // 
+    //
 
     const finalVideoPath = path.join(finalDir, `video${videoExt}`);
     const finalCoverExt = path.extname(coverFile.originalname).toLowerCase();
@@ -487,9 +487,9 @@ export const submitController = async (req, res) => {
       await fs.rename(subtitlesFile.path, finalSubtitlesPath);
     }
 
-    // 
+    //
     // build public URLs
-    // 
+    //
 
     const videoUrl = `/uploads/submissions/${submissionId}/video${videoExt}`;
     const coverUrl = `/uploads/submissions/${submissionId}/cover${finalCoverExt}`;
@@ -505,9 +505,9 @@ export const submitController = async (req, res) => {
       subtitlesUrl
     );
 
-    // 
+    //
     // create gallery images
-    // 
+    //
 
     const galleryUrls = [];
 
@@ -536,9 +536,9 @@ export const submitController = async (req, res) => {
       );
     }
 
-    // 
+    //
     // create collaborators and socials
-    // 
+    //
 
     if (validatedData.collaborators?.length) {
       await collaboratorModel.createCollaborators(
@@ -567,9 +567,9 @@ export const submitController = async (req, res) => {
 
   } catch (error) {
 
-    // 
+    //
     // rollback only if a transaction was started
-    // 
+    //
 
     if (connection && transactionStarted) {
       try {
@@ -579,9 +579,9 @@ export const submitController = async (req, res) => {
       }
     }
 
-    // 
+    //
     // cleanup remaining temporary files
-    // 
+    //
 
     if (req.files) {
       const filesToClean = [
@@ -616,7 +616,7 @@ export const getSubmissionsController = async (req, res) => {
 
     const parsedLimit = parseInt(limit);
     const parsedOffset = parseInt(offset);
-    
+
     const filters = {
       status: status || null,
       limit: Number.isNaN(parsedLimit) ? 20 : parsedLimit,

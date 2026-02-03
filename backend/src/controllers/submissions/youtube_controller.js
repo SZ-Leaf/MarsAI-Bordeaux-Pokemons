@@ -23,8 +23,8 @@ export const uploadToYoutube = async (req, res) => {
     const srtPath = submission.subtitles ? path.resolve('uploads/submissions', String(submission.id), path.basename(submission.subtitles)) : null;
 
     const youtubeVideo = await uploadVideo({
-      title: submission.original_title || 'Sans titre',
-      description: submission.original_synopsis || 'Pas de description',
+      title: submission.original_title,
+      description: submission.original_synopsis,
       filePath: videoPath,
     });
 

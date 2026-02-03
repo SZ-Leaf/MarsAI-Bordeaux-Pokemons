@@ -4,7 +4,7 @@ import useModal from '../hooks/useModal';
 import Modal from '../components/modals/Modal';
 import Card from '../components/cards/Card';
 import Form from '../components/forms/Form';
-import Tag from '../components/tags/Tag';
+import Tag from '../components/tags/Tags.jsx';
 import SubmitModal from '../components/modals/SubmitModal.jsx';
 import '../components/ui/loading.css';
 

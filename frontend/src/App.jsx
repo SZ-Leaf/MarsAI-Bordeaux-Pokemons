@@ -5,7 +5,7 @@ import Header from './components/layout/header/Header';
 import Footer from './components/layout/footer/Footer';
 import { Routes, Route } from 'react-router';
 import Submit from './pages/Submit.jsx';
-import Tags from './components/Tags'
+import Tags from './components/tags/Tags'
 
 function App() {
   return (

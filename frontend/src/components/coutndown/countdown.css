@@ -1,0 +1,110 @@
+/* frontend/src/components/coutndown/coutndown.css */
+@import "tailwindcss" reference;
+@import "../../theme.css";
+
+.countdown-container {
+  @apply flex justify-center items-center p-8 w-full;
+}
+
+.countdown-grid {
+  @apply grid gap-6 w-full;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 800px;
+}
+
+.countdown-item {
+  @apply relative flex flex-col items-center justify-center overflow-hidden;
+  @apply px-4 py-6 rounded-2xl;
+  @apply transition-all duration-300 ease-out;
+  background: linear-gradient(135deg, rgba(43, 127, 255, 0.1) 0%, rgba(0, 184, 218, 0.05) 100%);
+  border: 1px solid rgba(43, 127, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.countdown-value-wrapper {
+  @apply relative mb-2;
+}
+
+.countdown-value {
+  @apply text-[6rem] font-bold leading-none;
+  @apply transition-transform duration-200 ease-in-out;
+  background: linear-gradient(135deg, var(--color-blue) 0%, var(--color-cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  animation: pulse 1s ease-in-out;
+}
+
+.countdown-label {
+  @apply text-sm text-white/70 uppercase tracking-wider font-medium mt-1;
+}
+
+.countdown-expired {
+  @apply text-center py-12 px-8;
+}
+
+.countdown-expired-title {
+  @apply text-2xl font-semibold;
+  color: rgba(255, 254, 254, 0.9);
+  background: linear-gradient(135deg, #2b7fff 0%, #00b8da 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animation pour les changements de valeurs */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .countdown-grid {
+    grid-template-columns: repeat(4, 1fr);
+    @apply gap-2;
+  }
+
+  .countdown-item {
+    @apply py-4 px-2;
+  }
+
+  .countdown-value {
+    @apply text-2xl;
+  }
+
+  .countdown-label {
+    @apply text-[0.65rem];
+  }
+}
+
+@media (max-width: 480px) {
+  .countdown-grid {
+    grid-template-columns: repeat(4, 1fr);
+    @apply gap-1;
+  }
+
+  .countdown-item {
+    @apply py-3 px-1;
+  }
+
+  .countdown-value {
+    @apply text-xl;
+  }
+
+  .countdown-label {
+    @apply text-[0.6rem];
+  }
+
+  .countdown-unit {
+    @apply text-[0.55rem];
+    top: 0.4rem;
+    right: 0.4rem;
+  }
+}

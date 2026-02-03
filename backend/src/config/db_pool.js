@@ -21,6 +21,7 @@ const testConnection = async () => {
    }
 };
 
+
 export default {
    pool,
    testConnection

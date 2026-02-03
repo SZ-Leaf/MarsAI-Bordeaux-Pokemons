@@ -23,9 +23,9 @@ export const uploadToYoutube = async (req, res) => {
       });
     }
 
-    const videoPath = path.resolve('uploads', path.basename(video.video_url));
-    const thumbnailPath = video.cover ? path.resolve('uploads', path.basename(video.cover)) : null;
-    const srtPath = video.subtitles ? path.resolve('uploads', path.basename(video.subtitles)) : null;
+    const videoPath = path.resolve('uploads/submissions', req.params.id, path.basename(video.video_url));
+    const thumbnailPath = video.cover ? path.resolve('uploads/submissions', req.params.id, path.basename(video.cover)) : null;
+    const srtPath = video.subtitles ? path.resolve('uploads/submissions', req.params.id, path.basename(video.subtitles)) : null;
 
     const youtubeVideo = await uploadVideo({
       title: video.original_title || 'Sans titre',

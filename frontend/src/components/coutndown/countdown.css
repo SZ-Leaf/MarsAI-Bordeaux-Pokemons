@@ -41,13 +41,6 @@
   @apply text-sm text-white/70 uppercase tracking-wider font-medium mt-1;
 }
 
-.countdown-unit {
-  @apply absolute text-xs font-semibold opacity-70;
-  top: 0.75rem;
-  right: 0.75rem;
-  color: rgba(43, 127, 255, 0.6);
-}
-
 .countdown-expired {
   @apply text-center py-12 px-8;
 }
@@ -88,12 +81,6 @@
 
   .countdown-label {
     @apply text-[0.65rem];
-  }
-
-  .countdown-unit {
-    @apply text-[0.6rem];
-    top: 0.5rem;
-    right: 0.5rem;
   }
 }
 

@@ -17,22 +17,21 @@ const Countdown = ({ targetDate, className = '' }) => {
   }
 
   const timeUnits = [
-    { label: 'Jours', value: days, unit: 'd' },
-    { label: 'Heures', value: hours, unit: 'h' },
-    { label: 'Minutes', value: minutes, unit: 'm' },
-    { label: 'Secondes', value: seconds, unit: 's' }
+    { label: 'Jours', value: days },
+    { label: 'Heures', value: hours },
+    { label: 'Minutes', value: minutes },
+    { label: 'Secondes', value: seconds }
   ];
 
   return (
     <div className={`countdown-container ${className}`}>
       <div className="countdown-grid">
-        {timeUnits.map(({ label, value, unit }, index) => (
+        {timeUnits.map(({ label, value }, index) => (
           <div key={index} className="countdown-item">
             <div className="countdown-value-wrapper">
               <span className="countdown-value">{String(value).padStart(2, '0')}</span>
             </div>
             <span className="countdown-label">{label}</span>
-            <span className="countdown-unit">{unit}</span>
           </div>
         ))}
       </div>

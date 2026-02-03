@@ -138,6 +138,11 @@ export const submissionSchema = z.object({
          message: 'zod_errors.submission.terms_of_use.must_accept',
       }),
 
+   tagIds: z
+   //rappel: tagIds doit être un array 
+      .array(z.coerce.number().int().positive())
+      .default([]),
+
    // optional collaborators and socials data
    collaborators: z.array(collaboratorSchema).optional(),
    socials: z.array(socialSchema).optional()

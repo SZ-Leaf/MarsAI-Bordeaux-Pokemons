@@ -6,6 +6,7 @@ import { createSubmission, updateFilePaths, getSubmissions, getSubmissionById } 
 import collaboratorModel from '../../models/submissions/collaborators.model.js';
 import galleryModel from '../../models/submissions/gallery.model.js';
 import socialModel from '../../models/socials/socials.model.js';
+import submissions_tagsModel from '../../models/tags/submissions_tags.model.js';
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
 import { submissionSchema } from '../../utils/schemas/submission.schemas.js';
 import db from '../../config/db_pool.js';
@@ -457,6 +458,8 @@ export const submitController = async (req, res) => {
       coverFile.path,
       durationSeconds
     );
+
+    await submissions_tagsModel.addTagsToSubmission(connection, submissionId, validatedData.tagIds);
 
     // 
     // create final folders directories for video, cover, subtitles and gallery

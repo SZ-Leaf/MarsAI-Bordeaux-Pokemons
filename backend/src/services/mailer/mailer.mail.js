@@ -1,4 +1,4 @@
-import { transporter } from "./mailer_config.js";
+import { transporter } from "./mailer.config.js";
 
 const sendInviteMail = async (email, token) => {
    const inviteLink = `http://localhost:3000/api/auth/register?token=${token}`;

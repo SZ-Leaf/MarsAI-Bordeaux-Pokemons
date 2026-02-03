@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { collaboratorSchema } from './collaborator_schemas.js';
-import { socialSchema } from './socials_schemas.js';
+import { collaboratorSchema } from './collaborator.schemas.js';
+import { socialSchema } from './socials.schemas.js';
 
 export const submissionSchema = z.object({
    // video info

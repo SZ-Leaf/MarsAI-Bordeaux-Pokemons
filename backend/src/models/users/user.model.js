@@ -1,5 +1,5 @@
 import db from "../../config/db_pool.js";
-import { generateInviteToken, verifyInviteToken } from "../../services/mailer/mailer_tokens.js";
+import { generateInviteToken, verifyInviteToken } from "../../services/mailer/mailer.tokens.js";
 
 const getUsers = async () => {
    try {

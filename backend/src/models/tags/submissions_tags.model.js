@@ -1,18 +1,24 @@
-import db from "../../config/db_pool.js"
 
-export async function addTagsToSubmission(submissionId, tagIds) {
-    const values = tagIds.map((tagId) => [submissionId, tagId]);
+//ajout des tags lors de la soumission d'une vidéo
+export async function addTagsToSubmission(connection, submissionId, tagIds = []) {
+    const ids = [...new Set((tagIds || []).map(Number))].filter((n) => n > 0);
 
-    const [result] = await db.pool.execute(
-        "INSERT INTO submissions_tags (submission_id,tag_id) VALUES ?", [values]
+    if (!ids.length) return 0;
+
+    const placeholders = ids.map(() => "(?, ?)").join(", ");
+    const params = ids.flatMap((tagId) => [submissionId, tagId]);
+
+    const [result] = await connection.execute(
+        `INSERT IGNORE INTO submissions_tags (submission_id, tag_id) VALUES ${placeholders}`,
+        params
     ); 
 
-    return result.affectedRows
+    return result.affectedRows;
 }
 
-export async function getTagsBySubmissionId(submissionId) {
+export async function getTagsBySubmissionId(connection, submissionId) {
 
-    const [rows] = await db.pool.execute(
+    const [rows] = await connection.execute(
         "SELECT t.id, t.title FROM submissions_tags st JOIN tags t ON t.id = st.tag_id WHERE st.submission_id = ? ORDER BY t.title ASC",[submissionId]
     );
 

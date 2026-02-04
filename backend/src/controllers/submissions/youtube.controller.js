@@ -1,6 +1,7 @@
 import path from 'path';
 import { uploadVideo, uploadThumbnail, uploadCaptions } from '../../services/youtube.services.js';
 import { findSubmissionById, updateYoutubeLinkInDatabase } from '../../models/submissions/submissions.model.js';
+import { getTagsBySubmissionId } from '../../models/tags/submissions_tags.model.js';
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
 
 export const uploadToYoutube = async (req, res) => {
@@ -8,6 +9,13 @@ export const uploadToYoutube = async (req, res) => {
     const submissionId = req.params.id;
 
     const submission = await findSubmissionById(submissionId);
+
+    const submissionTags = await getTagsBySubmissionId(submission.id);
+
+    const youtubeTags = (submissionTags || []).map(tag => tag.title);
+
+    console.log('TAGS ENVOYÉS À YOUTUBE:', youtubeTags, youtubeTags.length);
+
 
     if (!submission) {
       return sendError(res, 404, 'Vidéo introuvable en base de données', 'Video not found in database', null);
@@ -24,6 +32,7 @@ export const uploadToYoutube = async (req, res) => {
     const youtubeVideo = await uploadVideo({
       title: submission.original_title,
       description: submission.original_synopsis,
+      tags: youtubeTags,
       filePath: videoPath,
     });
 

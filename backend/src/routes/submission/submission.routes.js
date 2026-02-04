@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { submitController, getSubmissionsController, getSubmissionByIdController, getSubmissionTagsByIdController } from '../../controllers/submissions/submissions.controller.js';
+import { submitController, getSubmissionsController, getSubmissionByIdController } from '../../controllers/submissions/submissions.controller.js';
 import { uploadSubmissionFiles, handleUploadError } from '../../middlewares/upload.js';
 
 const router = Router();
@@ -20,7 +20,5 @@ router.get(
   '/:id',
   getSubmissionByIdController
 );
-
-router.get('/:id/tags', getSubmissionTagsByIdController)
 
 export default router;

@@ -8,22 +8,18 @@ const __dirname = path.dirname(__filename);
 
 const getUploadsBasePath = () => path.join(__dirname, '../../uploads');
 
-/* ===========================
-   STORAGE
-=========================== */
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     let folder;
 
-    // ✅ COVER SPONSOR → DIRECT FINAL
     if (
       file.fieldname === 'cover' &&
       req.originalUrl.includes('/sponsors')
     ) {
       folder = 'sponsors';
     }
-    // ✅ TOUT LE RESTE → TEMP
-    else {
+      else {
       folder = 'submissions/temp';
     }
 

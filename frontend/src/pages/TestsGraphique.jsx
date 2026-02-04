@@ -7,6 +7,7 @@ import Form from '../components/forms/Form';
 import Tag from '../components/tags/Tags.jsx';
 import SubmitModal from '../components/modals/SubmitModal.jsx';
 import '../components/ui/loading.css';
+import Countdown from '../components/coutndown/Countdown.jsx';
 
 export default function Homepage() {
   const loginModal = useModal();
@@ -172,6 +173,7 @@ export default function Homepage() {
         isOpen={submitModal.isOpen}
         onClose={submitModal.closeModal}
       />
+      <Countdown targetDate="2026-03-01T00:00:00" />
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { uploadSubmissionFiles, handleUploadError } from '../../middlewares/uplo
 const router = Router();
 
 router.post(
-  '/submit',
+  '/',
   uploadSubmissionFiles,
   handleUploadError,
   submitController

@@ -14,6 +14,7 @@ export const submissionSchema = z.object({
 
    original_title: z
       .string()
+      .min(1, { message: 'zod_errors.submission.original_title.min' })
       .max(255, { message: 'zod_errors.submission.original_title.max' })
       .optional(),
 
@@ -34,10 +35,11 @@ export const submissionSchema = z.object({
 
    original_synopsis: z
       .string()
+      .min(1, { message: 'zod_errors.submission.original_synopsis.min' })
       .max(300, { message: 'zod_errors.submission.original_synopsis.max' })
       .optional(),
 
-   classification: z.enum(['IA', 'hybrid'], {
+   classification: z.enum(['Full AI', 'Semi-AI'], {
       errorMap: () => ({
          message: 'zod_errors.submission.classification.invalid',
       }),
@@ -65,7 +67,8 @@ export const submissionSchema = z.object({
          required_error: 'zod_errors.submission.creator_firstname.required',
          invalid_type_error: 'zod_errors.submission.creator_firstname.invalid',
       })
-      .min(1, { message: 'zod_errors.submission.creator_firstname.required' })
+      .min(2, { message: 'zod_errors.submission.creator_firstname.required' })
+      .max(25, { message: 'zod_errors.submission.creator_firstname.max' })
       .regex(/^[a-zA-ZÀ-ÿ\s'-]+$/, {
          message: 'zod_errors.submission.creator_firstname.format',
       }),
@@ -75,7 +78,8 @@ export const submissionSchema = z.object({
          required_error: 'zod_errors.submission.creator_lastname.required',
          invalid_type_error: 'zod_errors.submission.creator_lastname.invalid',
       })
-      .min(1, { message: 'zod_errors.submission.creator_lastname.required' })
+      .min(2, { message: 'zod_errors.submission.creator_lastname.required' })
+      .max(25, { message: 'zod_errors.submission.creator_lastname.max' })
       .regex(/^[a-zA-ZÀ-ÿ\s'-]+$/, {
          message: 'zod_errors.submission.creator_lastname.format',
       }),
@@ -97,7 +101,7 @@ export const submissionSchema = z.object({
          required_error: 'zod_errors.submission.creator_mobile.required',
          invalid_type_error: 'zod_errors.submission.creator_mobile.invalid',
       })
-      .min(1, { message: 'zod_errors.submission.creator_mobile.required' })
+      .min(8, { message: 'zod_errors.submission.creator_mobile.min' })
       .max(30, { message: 'zod_errors.submission.creator_mobile.max' }),
 
    creator_gender: z
@@ -105,29 +109,41 @@ export const submissionSchema = z.object({
          required_error: 'zod_errors.submission.creator_gender.required',
          invalid_type_error: 'zod_errors.submission.creator_gender.invalid',
       })
-      .min(1, { message: 'zod_errors.submission.creator_gender.required' }),
+      .min(1, { message: 'zod_errors.submission.creator_gender.min' })
+      .max(25, { message: 'zod_errors.submission.creator_gender.max' }),
 
    creator_country: z
       .string({
          required_error: 'zod_errors.submission.creator_country.required',
          invalid_type_error: 'zod_errors.submission.creator_country.invalid',
       })
-      .min(1, { message: 'zod_errors.submission.creator_country.required' }),
+      .min(1, { message: 'zod_errors.submission.creator_country.min' })
+      .max(50, { message: 'zod_errors.submission.creator_country.max' })
+      .regex(/^[a-zA-ZÀ-ÿ\s'-]+$/, {
+         message: 'zod_errors.submission.creator_country.format',
+      }),
 
    creator_address: z
       .string({
          required_error: 'zod_errors.submission.creator_address.required',
          invalid_type_error: 'zod_errors.submission.creator_address.invalid',
       })
-      .min(1, { message: 'zod_errors.submission.creator_address.required' }),
+      .min(1, { message: 'zod_errors.submission.creator_address.min' })
+      .max(255, { message: 'zod_errors.submission.creator_address.max' }),
 
    referral_source: z
-      .string({
-         required_error: 'zod_errors.submission.referral_source.required',
-         invalid_type_error: 'zod_errors.submission.referral_source.invalid',
-      })
-      .min(1, { message: 'zod_errors.submission.referral_source.required' })
-      .max(255, { message: 'zod_errors.submission.referral_source.max' }),
+      .enum(['Friend',
+         'Social Media',
+         'Advertisement',
+         'Newsletter',
+         'Recommendation',
+         'Event',
+         'Other',
+      ], {
+         errorMap: () => ({
+            message: 'zod_errors.submission.referral_source.invalid',
+         }),
+      }),
 
    terms_of_use: z
       .boolean({

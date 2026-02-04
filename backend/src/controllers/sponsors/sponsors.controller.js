@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
-import { createSponsor, updateSponsorCover } from '../../models/sponsors/sponsors.model.js';
+import { createSponsor, updateSponsorCover, deleteSponsor, getSponsors } from '../../models/sponsors/sponsors.model.js';
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -49,6 +49,36 @@ export const createSponsorController = async (req, res) => {
     return sendError(res, 500, 'Erreur lors de la création du sponsor', 'Error while creating sponsor', error.message);
   }
 };
-export const deleteSponsorController = async (req,res) => {
 
-}
+export const deleteSponsorController = async (req, res) => {
+  try {
+    const sponsorId = parseInt(req.params.id);
+    if (isNaN(sponsorId) || sponsorId <= 0) {
+      return sendError(res, 400, 'ID invalide', 'Invalid sponsor ID', null);
+    }
+
+    await deleteSponsor(sponsorId);
+
+    const sponsorDir = path.join(getUploadsBasePath(), 'sponsors', sponsorId.toString());
+    try {
+      await fs.rm(sponsorDir, { recursive: true, force: true });
+    } catch (err) {
+      console.warn(`Impossible de supprimer le dossier du sponsor ${sponsorId}:`, err.message);
+    }
+
+    return sendSuccess(res, 200, 'Sponsor supprimé avec succès', 'Sponsor deleted successfully', null);
+  } catch (error) {
+    console.error('Erreur suppression sponsor:', error);
+    return sendError(res, 500, 'Erreur lors de la suppression du sponsor', 'Error deleting sponsor', error.message);
+  }
+};
+
+export const getSponsorsController = async (req, res) => {
+  try {
+    const sponsors = await getSponsors();
+    return sendSuccess(res, 200, 'Sponsors récupérés avec succès', 'Sponsors retrieved successfully', { count: sponsors.length, sponsors });
+  } catch (error) {
+    console.error('Erreur récupération sponsors:', error);
+    return sendError(res, 500, 'Erreur lors de la récupération des sponsors', 'Error retrieving sponsors', error.message);
+  }
+};

@@ -16,12 +16,12 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // Les fichiers seront stockés temporairement avant déplacement final
     const tempDir = path.join(getUploadsBasePath(), 'submissions/temp');
-    
+
     // Créer le répertoire s'il n'existe pas
     if (!fs.existsSync(tempDir)) {
       fs.mkdirSync(tempDir, { recursive: true });
     }
-    
+
     cb(null, tempDir);
   },
   filename: (req, file, cb) => {
@@ -89,35 +89,36 @@ export const uploadSubmissionFiles = upload.fields([
 export const handleUploadError = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Fichier trop volumineux',
-        details: err.message 
+        details: err.message
       });
     }
     if (err.code === 'LIMIT_FILE_COUNT') {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Trop de fichiers',
-        details: err.message 
+        details: err.message
       });
     }
     if (err.code === 'LIMIT_UNEXPECTED_FILE') {
-      return res.status(400).json({ 
+      console.log(err);
+      return res.status(400).json({
         error: 'Champ de fichier inattendu',
-        details: err.message 
+        details: err.message
       });
     }
-    return res.status(400).json({ 
+    return res.status(400).json({
       error: 'Erreur upload',
-      details: err.message 
+      details: err.message
     });
   }
-  
+
   if (err) {
-    return res.status(400).json({ 
+    return res.status(400).json({
       error: err.message || 'Erreur lors de l\'upload'
     });
   }
-  
+
   next();
 };
 

@@ -2,7 +2,7 @@
 node_modules/
 
 # Uploads
-src/uploads/*
+uploads/*
 
 # Fichiers d'environnement
 .env

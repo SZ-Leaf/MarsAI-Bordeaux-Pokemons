@@ -1,5 +1,4 @@
 import { inviteUser, registerUser, deleteUser, getUserCredentials, loginUser, updateUser, updateUserPassword, resetUserPassword } from "../../models/users/user.model.js";
-import validator from "validator";
 import { hashPassword, verifyPassword } from "../../helpers/password/password_hasher.js";
 import { sendInviteMail, sendForgotPasswordMail } from "../../services/mailer/mailer.mail.js";
 import { signToken, verifyToken } from "../../services/jwt/jwt.token.js";

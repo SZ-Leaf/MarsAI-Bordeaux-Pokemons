@@ -1,7 +1,7 @@
 
 //ajout des tags lors de la soumission d'une vidéo
 export async function addTagsToSubmission(connection, submissionId, tagIds = []) {
-    const ids = [...new Set(tagIds.map(Number))].filter((n) => n > 0);
+    const ids = [...new Set((tagIds || []).map(Number))].filter((n) => n > 0);
 
     if (!ids.length) return 0;
 

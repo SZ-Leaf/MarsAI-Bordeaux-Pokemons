@@ -416,6 +416,8 @@ export const submitController = async (req, res) => {
   let validatedData;
   try {
     validatedData = submissionSchema.parse(submissionData);
+    console.log("BACK tagIds reçus :", validatedData.tagIds);
+
   } catch (err) {
     return sendError(res, 422, 'Données invalides', 'Invalid data', err.message);
   }

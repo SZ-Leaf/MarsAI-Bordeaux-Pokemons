@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { createSponsors } from '../../controllers/sponsors/sponsors.controller.js';
+import {createSponsorController} from '../../controllers/sponsors/sponsors.controller.js';
 import { uploadSubmissionFiles, handleUploadError } from '../../middlewares/upload.js';
 
 const router = Router();
 
-router.post('/', createSponsors);
+router.post('/', uploadSubmissionFiles, handleUploadError, createSponsorController);
+
 
 export default router;

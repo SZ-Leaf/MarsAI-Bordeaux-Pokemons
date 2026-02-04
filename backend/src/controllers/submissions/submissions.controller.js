@@ -8,6 +8,7 @@ import galleryModel from '../../models/submissions/gallery.model.js';
 import socialModel from '../../models/socials/socials.model.js';
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
 import { submissionSchema } from '../../utils/schemas/submission.schemas.js';
+import { getTagsBySubmissionId } from '../../models/tags/submissions_tags.model.js';
 import db from '../../config/db_pool.js';
 
 const __filename = fileURLToPath(import.meta.url);

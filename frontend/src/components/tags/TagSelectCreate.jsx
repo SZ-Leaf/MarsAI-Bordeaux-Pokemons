@@ -3,7 +3,7 @@ import AsyncCreatableSelect from "react-select/async-creatable";
 
 const API = import.meta.env.VITE_API_URL;
 
-export default function TagSelectCreatable({ allTags, value, onChange, onTagCreated }) {
+export default function TagSelectCreatable({ allTags, value = [], onChange, onTagCreated }) {
   const [msg, setMsg] = useState("");
 
   const defaultOptions = useMemo(
@@ -52,7 +52,7 @@ export default function TagSelectCreatable({ allTags, value, onChange, onTagCrea
           onTagCreated(existing);
 
           // le sélectionner sans doublon
-          const next = [...(value || [])];
+          const next = [...value];
           if (!next.some((v) => v.value === existing.id)) {
             next.push({ value: existing.id, label: existing.title });
           }
@@ -68,7 +68,7 @@ export default function TagSelectCreatable({ allTags, value, onChange, onTagCrea
       onTagCreated(created); 
 
       // on l’ajoute directement à la sélection
-      onChange([...(value || []), { value: created.id, label: created.title }]);
+      onChange([...value, { value: created.id, label: created.title }]);
 
       setMsg("Tag créé !");
     } catch (e) {
@@ -83,12 +83,7 @@ export default function TagSelectCreatable({ allTags, value, onChange, onTagCrea
       <AsyncCreatableSelect
         isMulti
         cacheOptions
-        defaultOptions={[
-          {
-            label: "Suggestions",
-            options: defaultOptions,
-          },
-        ]}
+        defaultOptions={defaultOptions}
         loadOptions={loadOptions}
         value={value}
         onChange={(newValue) => {

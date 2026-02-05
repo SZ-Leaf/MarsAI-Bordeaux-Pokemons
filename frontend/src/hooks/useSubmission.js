@@ -30,6 +30,7 @@ export const useSubmission = () => {
     classification: '',
     tech_stack: '',
     creative_method: '',
+    tags: [],
     
     // Fichiers
     video: null,
@@ -214,6 +215,9 @@ export const useSubmission = () => {
           formDataToSend.append('gallery', file);
         });
       }
+      const tagIds = (formData.tags || [])
+        .map(t => Number(t.value))
+        .filter(n => Number.isInteger(n) && n > 0);
       
       // Préparer données JSON
       const data = {
@@ -236,7 +240,8 @@ export const useSubmission = () => {
         referral_source: formData.referral_source || undefined,
         terms_of_use: formData.termsAccepted,
         collaborators: (formData.collaborators && formData.collaborators.length > 0) ? formData.collaborators : undefined,
-        socials: (formData.socials && formData.socials.length > 0) ? formData.socials : undefined
+        socials: (formData.socials && formData.socials.length > 0) ? formData.socials : undefined,
+        tagIds,
       };
       
       formDataToSend.append('data', JSON.stringify(data));
@@ -279,6 +284,7 @@ export const useSubmission = () => {
       classification: '',
       tech_stack: '',
       creative_method: '',
+      tags: [],
       video: null,
       cover: null,
       subtitles: null,

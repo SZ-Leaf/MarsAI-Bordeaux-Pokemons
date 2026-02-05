@@ -37,9 +37,9 @@ CREATE TABLE `submission_moderation` (
 );
 CREATE TABLE `selector_memo` (
   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `rating` INT NOT NULL,
-  `comment` VARCHAR(255) NOT NULL,
-  `selection_list` VARCHAR(255) NOT NULL,
+  `rating` INT NULL,
+  `comment` VARCHAR(255) NULL,
+  `selection_list` VARCHAR(255) NULL,
   `user_id` INT NOT NULL,
   `submission_id` INT NOT NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

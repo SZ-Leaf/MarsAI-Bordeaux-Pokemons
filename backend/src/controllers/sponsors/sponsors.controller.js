@@ -11,7 +11,6 @@ const __dirname = path.dirname(__filename);
 const getUploadsBasePath = () => path.join(__dirname, '../../../uploads');
 
 export const createSponsorController = async (req, res) => {
-  // 1. Validation des fichiers (identique à submissions)
   const coverFile = req.files?.cover?.[0];
   if (!coverFile) {
     return sendError(res, 400, 'Image de couverture manquante', 'Cover image is missing', null);

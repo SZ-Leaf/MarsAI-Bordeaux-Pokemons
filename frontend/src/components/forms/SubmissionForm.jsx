@@ -2,6 +2,7 @@ import FormField from '../shared/FormField';
 import TextInput from '../shared/TextInput';
 import TextArea from '../shared/TextArea';
 import Select from '../shared/Select';
+import Tag from '../tags/Tags';
 import { classificationOptions } from '../../constants/formOptions';
 
 /**
@@ -99,6 +100,15 @@ const SubmissionForm = ({ formData, errors, updateField }) => {
           placeholder="Décrivez votre méthode créative (max 500 caractères)"
         />
       </FormField>
+
+      <FormField>
+        <Tag
+          value={formData.tags}
+          onChange={(tags) => updateField("tags", tags)}
+          />
+      </FormField>
+
+      
     </div>
   );
 };

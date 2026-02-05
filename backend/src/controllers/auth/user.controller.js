@@ -1,7 +1,7 @@
-import { inviteUser, registerUser, deleteUser, getUserCredentials, loginUser, updateUser, updateUserPassword, resetUserPassword } from "../../models/users/user.model.js";
+import { inviteUser, registerUser, deleteUser, getUserCredentials, loginUser, updateUser, updateUserPassword, resetUserPassword, getUsers, changeUserRole, getWaitingInvites } from "../../models/users/user.model.js";
 import { hashPassword, verifyPassword } from "../../helpers/password/password_hasher.js";
 import { sendInviteMail, sendForgotPasswordMail } from "../../services/mailer/mailer.mail.js";
-import { signToken, verifyToken } from "../../services/jwt/jwt.token.js";
+import { signToken } from "../../services/jwt/jwt.token.js";
 import { sendError, sendSuccess } from "../../helpers/response.helper.js";
 import { generateForgotPasswordToken, verifyForgotPasswordToken } from "../../services/mailer/mailer.tokens.js";
 import { registerUserSchema, updateUserSchema, userPasswordSchema } from "../../utils/schemas/user.schemas.js";
@@ -32,9 +32,9 @@ const inviteUserController = async (req, res) => {
          );
       }
 
-      // validate role_id is a number and existing
-      const allowedRoles = [1, 2];
-      if (!allowedRoles.includes(role_id)) {
+      let numericRoleId = Number(role_id);
+      // verify role_id is either 1 (user) or 2 (admin)
+      if (numericRoleId !== 1 && numericRoleId !== 2) {
          return sendError(res, 400,
             "Rôle invalide",
             "Invalid role",
@@ -42,19 +42,45 @@ const inviteUserController = async (req, res) => {
          );
       }
 
-      const numericRoleId = Number(role_id);
-      // invite user
+      // role based permission check
+      const inviterRoleId = req.user.role_id;
+      if (inviterRoleId === 2) {
+         numericRoleId = 1;
+      }
+
       const result = await inviteUser(email, numericRoleId);
       await sendInviteMail(email, result.token);
+      const messageFr = result.updated 
+         ? "Invitation renouvelée avec succès" 
+         : "Invitation envoyée avec succès";
+      const messageEn = result.updated 
+         ? "Invitation renewed successfully" 
+         : "Invitation sent successfully";
       return sendSuccess(res, 200,
-         "Invitation envoyée avec succès",
-         "Invitation sent successfully",
+         messageFr,
+         messageEn,
          { token: result.token, email: email }
       );
    } catch (error) {
       console.error("Error inviting user:", error);
 
-      if (error.message.includes("Duplicate entry") || error.message.includes("already invited")) {
+      if (error.message.includes("User with this email already exists")) {
+         return sendError(res, 400,
+            "Un utilisateur avec cet email existe déjà",
+            "User with this email already exists",
+            error.message
+         );
+      }
+
+      if (error.message.includes("already registered")) {
+         return sendError(res, 400,
+            "L'utilisateur a déjà enregistré avec cette invitation",
+            "User has already registered with this invitation",
+            error.message
+         );
+      }
+
+      if (error.message.includes("Duplicate entry")) {
          return sendError(res, 400,
             "Invitation échouée",
             "Invitation failed",
@@ -135,8 +161,8 @@ const registerUserController = async (req, res) => {
 
 const deleteUserController = async (req, res) => {
    try {
-      const { id } = req.params;
-
+      let { id } = req.params;
+      
       if (!id || isNaN(id)) {
          return sendError(res, 400,
             "ID utilisateur invalide",
@@ -227,10 +253,26 @@ const loginUserController = async (req, res) => {
          );
       }
       const token = signToken({sub: result.id, email: result.email, role_id: result.role_id});
+
+
+      // set httpOnly cookie
+      res.cookie(
+         'authToken',
+         token,
+         {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 24 * 60 * 60 * 1000, // 24 hours
+            path: '/',
+         }
+      );
+
+
       return sendSuccess(res, 200,
-         "Utilisateur trouvé avec succès",
-         "User found successfully",
-         { token: token, user: { firstname: result.firstname, lastname: result.lastname, last_login: result.last_login, created_at: result.created_at } }
+         "Utilisateur connecté avec succès",
+         "User logged in successfully",
+         { user: { firstname: result.firstname, lastname: result.lastname, last_login: result.last_login, created_at: result.created_at } }
       );
    } catch (error) {
       console.error("Error logging in user:", error);
@@ -246,31 +288,16 @@ const updateUserController = async (req, res) => {
    try {
       const { id } = req.params;
       let { firstname, lastname } = req.body;
-      const token = req.headers.authorization?.split(" ")[1];
-      if (!token) {
-         return sendError(res, 400,
-            "Session invalide",
-            "Invalid login session",
-            null
-         );
-      }
-      let decoded;
-      try {
-         decoded = verifyToken(token);
-      } catch (error) {
-         return sendError(res, 400,
-            "Session invalide",
-            "Invalid login session",
-            null
-         );
-      }
-      if (decoded.sub !== id) {
-         return sendError(res, 400,
+      
+      // Check if user is updating their own profile
+      if (req.user.id.toString() !== id) {
+         return sendError(res, 403,
             "Non autorisé",
             "Unauthorized",
             null
          );
       }
+
       firstname = firstname?.trim();
       lastname = lastname?.trim();
 
@@ -332,7 +359,15 @@ const updateUserPasswordController = async (req, res) => {
       let { email, new_password } = req.body;
       email = email?.trim();
       new_password = new_password?.trim();
-      const token = req.headers.authorization?.split(" ")[1];
+
+      // check if user is updating their own password
+      if (req.user.email !== email) {
+         return sendError(res, 403,
+            "Non autorisé",
+            "Unauthorized",
+            null
+         );
+      }
 
       // Validate input
       if (!new_password) return sendError(res, 400,
@@ -347,30 +382,6 @@ const updateUserPasswordController = async (req, res) => {
          const firstError = err.errors?.[0]?.message || 'Invalid input';
          return sendError(res, 400, firstError, firstError, null);
       }
-
-      // Validate token
-      if (!token) return sendError(res, 400,
-         "Session invalide",
-         "Invalid login session",
-         null
-      );
-      let decoded;
-      try {
-         decoded = verifyToken(token); 
-      } catch (error) { 
-         return sendError(res, 400,
-            "Session invalide",
-            "Invalid login session",
-            null
-         );
-      }
-
-      // Validate email matches token
-      if (decoded.email !== email) return sendError(res, 400,
-         "Non autorisé",
-         "Unauthorized",
-         null
-      );
 
       // Hash and update password
       const password_hash = await hashPassword(new_password);
@@ -469,16 +480,16 @@ const resetPasswordController = async (req, res) => {
          return sendError(res, 400, firstError, firstError, null);
       }
 
-      // Optional verify token without calling the model for faster response
-      // try {
-      //    await verifyForgotPasswordToken(token);
-      // } catch (error) {
-      //    return sendError(res, 400,
-      //       "Lien invalide",
-      //       "Invalid link",
-      //       null
-      //    );
-      // }
+      // verify token without calling the model for faster response
+      try {
+         await verifyForgotPasswordToken(token);
+      } catch (error) {
+         return sendError(res, 400,
+            "Lien invalide",
+            "Invalid link",
+            null
+         );
+      }
 
       const password_hash = await hashPassword(new_password);
 
@@ -500,4 +511,107 @@ const resetPasswordController = async (req, res) => {
    }
 }
 
-export { inviteUserController, registerUserController, deleteUserController, loginUserController, getAllUsersController, updateUserPasswordController, forgotPasswordController, resetPasswordController, updateUserController };
+const changeUserRoleController = async (req, res) => {
+   try {
+      let {new_role_id} = req.body;
+      let { id } = req.params;
+      id = Number(id);
+      new_role_id = Number(new_role_id);
+      if (!id || isNaN(id) || !new_role_id || isNaN(new_role_id)) {
+         return sendError(res, 400,
+            "Utilisateur et nouveau rôle sont requis",
+            "User and new role are required",
+            null
+         );
+      }
+
+      const allowedRoles = [1, 2];
+      if (!allowedRoles.includes(new_role_id)) {
+         return sendError(res, 400,
+            "Rôle invalide",
+            "Invalid role",
+            null
+         );
+      }
+
+      const result = await changeUserRole(id, new_role_id);
+      if (result.affectedRows === 0) {
+         return sendError(res, 400,
+            "Erreur lors du changement de rôle de l'utilisateur",
+            "Error changing user role",
+            null
+         );
+      }
+      return sendSuccess(res, 200,
+         "Rôle de l'utilisateur changé avec succès",
+         "User role changed successfully",
+         null
+      );
+   } catch (error) {
+      console.error("Error changing user role:", error);
+      return sendError(res, 500,
+         "Erreur lors du changement de rôle de l'utilisateur",
+         "Error changing user role",
+         error.message
+      );
+   }
+}
+
+const logoutUserController = async (req, res) => {
+   try {
+      // clear the httpOnly cookie
+      res.clearCookie('authToken', {
+         httpOnly: true,
+         secure: process.env.NODE_ENV === 'production',
+         sameSite: 'strict',
+         path: '/'
+      });
+
+      return sendSuccess(res, 200,
+         "Déconnexion réussie",
+         "Logout successful",
+         null
+      );
+   } catch (error) {
+      console.error("Error logging out user:", error);
+      return sendError(res, 500,
+         "Erreur lors de la déconnexion",
+         "Error logging out",
+         error.message
+      );
+   }
+}
+
+const getWaitingInvitesController = async (req, res) => {
+   try {
+      const result = await getWaitingInvites();
+      return sendSuccess(res, 200,
+         "Invitations en attente récupérées avec succès",
+         "Waiting invites retrieved successfully",
+         result
+      );
+   }
+   catch (error) {
+      console.error("Error getting waiting invites:", error);
+      return sendError(res, 500,
+         "Erreur lors de la récupération des invitations en attente",
+         "Error getting waiting invites",
+         error.message
+      );
+   }
+}
+
+export {
+   inviteUserController,
+   registerUserController,
+   deleteUserController,
+   updateUserController,
+   updateUserPasswordController,
+   forgotPasswordController,
+   resetPasswordController,
+   getAllUsersController,
+   changeUserRoleController,
+   loginUserController,
+   logoutUserController,
+   getWaitingInvitesController
+};

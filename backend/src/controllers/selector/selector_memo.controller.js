@@ -1,5 +1,4 @@
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
-import { rateSubmissionSchema } from '../../utils/schemas/selector.schemas.js';
 import { findSubmissionById } from '../../models/submissions/submissions.model.js';
 import {
   createSelectorMemo as createSelectorMemoModel,
@@ -9,49 +8,33 @@ import {
 } from '../../models/selector/selector_memo.model.js';
 
 export const createSelectorMemo = async (req, res) => {
-
   try {
     const userId = req.user.id;
     const submissionId = Number(req.params.id);
-    const ratingRaw = req.body.rating;
-    const commentRaw = req.body.comment;
+    if (!Number.isInteger(submissionId) || submissionId <= 0) {
+      return sendError(
+        res,
+        400,
+        "ID soumission invalide",
+        "Invalid submission id",
+        null
+      );
+    }
 
+    // Vérifier que la soumission existe
     const submission = await findSubmissionById(submissionId);
     if (!submission) {
       return sendError(res, 404, "Soumission introuvable", "Submission not found", null);
     }
 
-    let ratingNumber;
-    if (ratingRaw !== undefined && ratingRaw !== null && ratingRaw !== '') {
-      ratingNumber = Number(ratingRaw);
-      if (Number.isNaN(ratingNumber)) {
-        return sendError(
-          res,
-          400,
-          "Note invalide",
-          "Invalid rating",
-          null
-        );
-      }
-    }
-
-    // On distingue 2 cas pour le commentaire :
-    // - si la clé "comment" n'est pas présente dans le body, on ne met PAS à jour le commentaire existant (undefined par défault)
-    // - si la clé "comment" est présente (même vide ""), on met à jour le commentaire en base (y compris pour l'effacer si vide)
-    const hasComment = Object.prototype.hasOwnProperty.call(req.body, 'comment');
-
-    // Validation Zod
-    const parsed = rateSubmissionSchema.parse({
-      rating: ratingNumber,
-      comment: hasComment ? commentRaw : undefined,
-    });
+    const { rating, comment } = req.body;
 
     // Appel au modèle
     await createSelectorMemoModel({
       userId,
       submissionId,
-      rating: parsed.rating,
-      comment: parsed.comment,
+      rating,
+      comment,
     });
 
     return sendSuccess(res, 200, "Note enregistrée", "Rating saved", null);

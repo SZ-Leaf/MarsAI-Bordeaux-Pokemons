@@ -1,4 +1,5 @@
-import {ZodError} from "zod";
+import { ZodError } from "zod";
+import { sendError } from "../helpers/response.helper.js";
 
 export const validate = (schema) => (req, res, next) => {
   try {
@@ -9,12 +10,14 @@ export const validate = (schema) => (req, res, next) => {
     next();
   } catch (err) {
     if (err instanceof ZodError) {
-      // const flat = err.flatten();
       console.log(err.errors);
-      return sendError(res, 400,
+      return sendError(
+        res,
+        400,
         "Erreur de validation",
         "Validation error",
-        err.errors);
+        err.errors
+      );
     }
     next(err);
   }

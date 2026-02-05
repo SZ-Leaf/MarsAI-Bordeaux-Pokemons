@@ -2,6 +2,7 @@ import { sendError, sendSuccess } from '../../helpers/response.helper.js';
 import { rateSubmissionSchema } from '../../utils/schemas/selector.schemas.js';
 import { upsertSelectorMemo } from '../../models/selector/selector_memo.model.js';
 import { findSubmissionById } from '../../models/submissions/submissions.model.js';
+import { getPlaylist as getPlaylistModel, addSubmissionToPlaylist as addToPlaylistModel, removeSubmissionFromPlaylist as removeFromPlaylistModel } from '../../models/selector/selector_memo.model.js';
 
 export const rateSubmission = async (req, res) => {
   try {
@@ -56,7 +57,7 @@ export const getPlaylist = async(req,res) => {
 
         if(!list) return sendError(res, 400, "Playlist invalide", "Invalid playlist", null);
 
-        const rows = await selectorMemo.getPlaylist(userId, list);
+        const rows = await getPlaylistModel(userId, list);
         return sendSuccess(res, 200, "Playlist", "Playlist", rows)
     } catch (error) {
         console.error(error);
@@ -81,7 +82,7 @@ export const addSubmissionToPlaylist = async(req,res) => {
             if (!Number.isInteger(submissionId) || submissionId <= 0)
             return sendError(res, 400, "Soumission invalide", "Invalid submission", null);
         
-        const affected = await selectorMemo.addSubmissionToPlaylist(userId, submissionId, list);
+        const affected = await addToPlaylistModel(userId, submissionId, list);
         return sendSuccess(res, 200, "Ajouté à la playlist", "Added to the playlist",{ affected })
 
     } catch (error) {
@@ -106,7 +107,7 @@ export const removeSubmissionFromPlaylist = async(req,res) => {
             if (!Number.isInteger(submissionId) || submissionId <= 0)
             return sendError(res, 400, "Soumission invalide", "Invalid submission", null);
         
-        const affected = await selectorMemo.removeSubmissionFromPlaylist(userId, submissionId, list);
+        const affected = await removeFromPlaylistModel(userId, submissionId, list);
         return sendSuccess(res, 200, "Retiré de la playlist", "Removed from the playlist",{ affected })
 
     } catch (error) {

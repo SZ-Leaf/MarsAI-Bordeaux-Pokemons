@@ -1,12 +1,16 @@
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
 import { rateSubmissionSchema } from '../../utils/schemas/selector.schemas.js';
-import { upsertSelectorMemo } from '../../models/selector/selector_memo.model.js';
 import { findSubmissionById } from '../../models/submissions/submissions.model.js';
-import { getPlaylist as getPlaylistModel, addSubmissionToPlaylist as addToPlaylistModel, removeSubmissionFromPlaylist as removeFromPlaylistModel } from '../../models/selector/selector_memo.model.js';
+import { 
+  rateSubmission as rateSubmissionModel,
+  getPlaylist as getPlaylistModel,
+  addSubmissionToPlaylist as addSubmissionToPlaylistModel,
+  removeSubmissionFromPlaylist as removeSubmissionFromPlaylistModel
+} from '../../models/selector/selector_memo.model.js';
 
 export const rateSubmission = async (req, res) => {
   try {
-    const userId = 1; // TODO: changer pour req.user.id quand on aura implémenter le système d'auth de Sary
+    const userId = req.user.id;
     const submissionId = Number(req.params.id);
 
     if (!submissionId || Number.isNaN(submissionId)) {
@@ -24,7 +28,7 @@ export const rateSubmission = async (req, res) => {
       comment: req.body.comment,
     });
 
-    await upsertSelectorMemo({
+    await rateSubmissionModel({
       userId,
       submissionId,
       rating: parsed.rating,
@@ -47,12 +51,12 @@ const MAP = {
 function getList(req) {
   const key = (req.params.list || "").toLowerCase();
   return MAP[key] || null;
-}
+};
 
 export const getPlaylist = async(req,res) => {
 
     try {
-        // à remettre une fois l'auth branché: const userId = req.user.id;
+        const userId = req.user.id;
         const list = getList(req);
 
         if(!list) return sendError(res, 400, "Playlist invalide", "Invalid playlist", null);
@@ -63,17 +67,12 @@ export const getPlaylist = async(req,res) => {
         console.error(error);
         return sendError(res, 500, "Erreur lors de la récupération de playlist", "Error while retrieving playlist",null);
     }
-}
+};
 
 export const addSubmissionToPlaylist = async(req,res) => {
 
     try {
-        // à remettre une fois l'auth branché:const userId = req.user.id;
-        const userId = Number(req.headers["x-user-id"]);
-        if (!Number.isInteger(userId) || userId <= 0) {
-        return sendError(res, 401, "Non authentifié", "Not authenticated", null);
-        }//à supprimer une fois l'auth branché
-
+        const userId = req.user.id;
         const list = getList(req);
 
         if(!list) return sendError(res, 400, "Playlist invalide", "Invalid playlist", null);
@@ -82,7 +81,7 @@ export const addSubmissionToPlaylist = async(req,res) => {
             if (!Number.isInteger(submissionId) || submissionId <= 0)
             return sendError(res, 400, "Soumission invalide", "Invalid submission", null);
         
-        const affected = await addToPlaylistModel(userId, submissionId, list);
+        const affected = await addSubmissionToPlaylistModel(userId, submissionId, list);
         return sendSuccess(res, 200, "Ajouté à la playlist", "Added to the playlist",{ affected })
 
     } catch (error) {
@@ -94,11 +93,7 @@ export const addSubmissionToPlaylist = async(req,res) => {
 export const removeSubmissionFromPlaylist = async(req,res) => {
 
     try {
-        // à remettre une fois l'auth branché:const userId = req.user.id;
-        const userId = Number(req.headers["x-user-id"]);
-        if (!Number.isInteger(userId) || userId <= 0) {
-        return sendError(res, 401, "Non authentifié", "Not authenticated", null);
-        }//à supprimer une fois l'auth branché
+        const userId = req.user.id;
         const list = getList(req);
 
         if(!list) return sendError(res, 400, "Playlist invalide", "Invalid playlist", null);
@@ -107,7 +102,7 @@ export const removeSubmissionFromPlaylist = async(req,res) => {
             if (!Number.isInteger(submissionId) || submissionId <= 0)
             return sendError(res, 400, "Soumission invalide", "Invalid submission", null);
         
-        const affected = await removeFromPlaylistModel(userId, submissionId, list);
+        const affected = await removeSubmissionFromPlaylistModel(userId, submissionId, list);
         return sendSuccess(res, 200, "Retiré de la playlist", "Removed from the playlist",{ affected })
 
     } catch (error) {

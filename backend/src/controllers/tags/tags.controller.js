@@ -1,4 +1,5 @@
 import { success } from "zod";
+import { sendSuccess, sendError } from "../../helpers/response.helper.js";
 import tags_model from "../../models/tags/tags.model.js";
 
 export const listTags = async(req,res) => {
@@ -12,18 +13,9 @@ export const listTags = async(req,res) => {
         //si on fait une recherche, alors on récupère les résultats de la recherche sinon on récupère les résultats
         const result = search ? await tags_model.searchTags(search, limit) : await tags_model.getAllTags();
 
-        res.status(200).json({
-            success:true,
-            data: result.slice(0, limit),
-        });
+        return sendSuccess(res, 200, "Tags récupérés", "Tags retrieved", result.slice(0, limit));
     }catch(error){
-        res.status(500).json({
-            success:false,
-            message: {
-                fr:"Erreur lors de la récupération des tags",
-                en:"Error when trying to retrieve tags"
-            }
-        })
+        return sendError(res, 500, "Erreur lors de la récupération des tags", "Error when trying to retrieve tags",null);
     }
 };
 
@@ -32,38 +24,20 @@ export const findTagById = async(req, res) => {
         const id = Number(req.params.id);
 
         if (isNaN(id)) {
-            return res.status(400).json({
-                success: false,
-                message: {
-                    fr:'ID invalide',
-                    en:'Invalid ID'
-                }
-            });
+            return sendError(res, 400, "ID invalide", "Invalid Error", null);
         }
+
         const result = await tags_model.getTagById(id);
 
         if(!result) {
-            return res.status(404).json({
-                success: false,
-                message: {
-                    fr:"Tag introuvable !", 
-                    en:"Tag not found!"
-                }
-            })
+            return sendError(res, 404, "Tag introuvable", "Tag not found", null);
         }
-        res.status(200).json({
-            success: true,
-            data: result
-        })
+
+        return sendSuccess(res, 200, "Tag récupéré", "Tag retrieved", result );
+        
     } catch (error) {
         console.error(error);
-        res.status(500).json({
-            success:false,
-            message: {
-                fr:"Erreur lors de la récupération du tag",
-                en:"Error while retrieving tag"
-            }
-        })
+        return sendError(res, 500, "Erreur lors de la récupération du tag", "Error while retrieving tag", null);
     }
 };
 
@@ -74,33 +48,17 @@ export const createTag = async (req,res) => {
         const existing = await tags_model.getTagByTitle(title);
 
         if (existing) {
-            return res.status(409).json({
-                success: false, 
-                message: {
-                    fr: "Tag déjà existant",
-                    en:" Already existing tag"
-                },
-                data:existing, 
-            });
+            return sendError(res, 409, "Tag déjà existant", "Already existing tag", existing);
         }
 
 
         const id = await tags_model.createTag({title});
         
-        return res.status(201).json({
-            success:true,
-            data: {id, title}
-        })
+        return sendSuccess(res, 201, "Tag crée avec succès", "Tag created successfully", {id, title});
+    
     } catch (error) {
         console.error(error);
-            return res.status(500).json({ 
-                success: false, 
-                message: {
-                    fr: "Erreur lors de la création du tag", 
-                    en:"Error while creating tag"
-                } 
-            });
-        
+        return sendError(res, 500, "Erreur lors de la création du tag", "Error while creating tag", null);        
     }
 };
 
@@ -113,19 +71,10 @@ export const getPopularTags = async (req,res) => {
         const result = await tags_model.getPopularTags();
         const limitedTags = result.slice(0, limit);
 
-        return res.status(200).json({
-            success: true,
-            data: limitedTags,
-        })
+        return sendSuccess(res, 200, "Tags les plus populaires récupérés", "Most popular tags retrieved", limitedTags);
 
     } catch (error) {
         console.error(error);
-        return res.status(500).json({
-            success: false,
-            message: {
-                fr: "Erreur lors de la récupération des tags populaires",
-                en: "Error while retrieving popular tags",
-            },
-        });
+        return sendError(res, 500, "Erreur lors de la récupération des tags populaires", "Error while retrieving popular tags", null);
     }
 };

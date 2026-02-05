@@ -6,6 +6,7 @@ import { createSubmission, updateFilePaths, getSubmissions, getSubmissionById } 
 import collaboratorModel from '../../models/submissions/collaborators.model.js';
 import galleryModel from '../../models/submissions/gallery.model.js';
 import socialModel from '../../models/socials/socials.model.js';
+import submissions_tagsModel from '../../models/tags/submissions_tags.model.js';
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
 import { submissionSchema } from '../../utils/schemas/submission.schemas.js';
 import { getTagsBySubmissionId } from '../../models/tags/submissions_tags.model.js';
@@ -416,6 +417,8 @@ export const submitController = async (req, res) => {
   let validatedData;
   try {
     validatedData = submissionSchema.parse(submissionData);
+    console.log("BACK tagIds reçus :", validatedData.tagIds);
+
   } catch (err) {
     return sendError(res, 422, 'Données invalides', 'Invalid data', err.message);
   }
@@ -459,7 +462,9 @@ export const submitController = async (req, res) => {
       durationSeconds
     );
 
-    //
+    await submissions_tagsModel.addTagsToSubmission(connection, submissionId, validatedData.tagIds);
+
+    // 
     // create final folders directories for video, cover, subtitles and gallery
     //
 

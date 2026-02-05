@@ -337,4 +337,14 @@ const deleteInvite = async (email) => {
    }
 };
 
-export { getUsers, getUserById, inviteUser, registerUser, deleteUser, getUserCredentials, loginUser, updateUser, updateUserPassword, changeUserRole, resetUserPassword, deleteInvite };
+const getWaitingInvites = async () => {
+   try {
+      const [rows] = await db.pool.execute("SELECT * FROM invites WHERE registered IS NULL ORDER BY created_at DESC");
+      return rows;
+   } catch (error) {
+      console.error("Error getting waiting invites:", error);
+      throw new Error(error.message);
+   }
+};
+
+export { getUsers, getUserById, inviteUser, registerUser, deleteUser, getUserCredentials, loginUser, updateUser, updateUserPassword, changeUserRole, resetUserPassword, deleteInvite, getWaitingInvites };

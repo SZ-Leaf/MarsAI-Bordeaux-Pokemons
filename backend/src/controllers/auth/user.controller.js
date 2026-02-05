@@ -1,4 +1,4 @@
-import { inviteUser, registerUser, deleteUser, getUserCredentials, loginUser, updateUser, updateUserPassword, resetUserPassword, getUsers, changeUserRole } from "../../models/users/user.model.js";
+import { inviteUser, registerUser, deleteUser, getUserCredentials, loginUser, updateUser, updateUserPassword, resetUserPassword, getUsers, changeUserRole, getWaitingInvites } from "../../models/users/user.model.js";
 import { hashPassword, verifyPassword } from "../../helpers/password/password_hasher.js";
 import { sendInviteMail, sendForgotPasswordMail } from "../../services/mailer/mailer.mail.js";
 import { signToken } from "../../services/jwt/jwt.token.js";
@@ -582,6 +582,25 @@ const logoutUserController = async (req, res) => {
    }
 }
 
+const getWaitingInvitesController = async (req, res) => {
+   try {
+      const result = await getWaitingInvites();
+      return sendSuccess(res, 200,
+         "Invitations en attente récupérées avec succès",
+         "Waiting invites retrieved successfully",
+         result
+      );
+   }
+   catch (error) {
+      console.error("Error getting waiting invites:", error);
+      return sendError(res, 500,
+         "Erreur lors de la récupération des invitations en attente",
+         "Error getting waiting invites",
+         error.message
+      );
+   }
+}
+
 export {
    inviteUserController,
    registerUserController,
@@ -593,5 +612,6 @@ export {
    getAllUsersController,
    changeUserRoleController,
    loginUserController,
-   logoutUserController
+   logoutUserController,
+   getWaitingInvitesController
 };

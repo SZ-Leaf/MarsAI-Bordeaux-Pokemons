@@ -18,7 +18,6 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // Servir les fichiers statiques depuis le dossier uploads
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use('/api', routes);
 

@@ -12,7 +12,7 @@ const youtube = google.youtube({
   auth: oauth2Client,
 });
 
-export const uploadVideo = async ({ title, description, filePath }) => {
+export const uploadVideo = async ({ title, description, tags = [], filePath }) => {
   try {
     const { token } = await oauth2Client.getAccessToken();
     oauth2Client.setCredentials({ access_token: token });
@@ -20,18 +20,27 @@ export const uploadVideo = async ({ title, description, filePath }) => {
     const response = await youtube.videos.insert({
       part: 'snippet,status',
       requestBody: {
-        snippet: { title, description },
-        status: { privacyStatus: 'private' }
+        snippet: {
+          title,
+          description,
+          tags
+        },
+        status: {
+          privacyStatus: 'private',
+        },
       },
-      media: { body: fs.createReadStream(filePath) },
+      media: {
+        body: fs.createReadStream(filePath),
+      },
     });
 
     return response.data;
   } catch (error) {
-    console.error("Erreur détaillée Google API :", error.response?.data || error.message);
+    console.error('Erreur détaillée Google API :', error.response?.data || error.message);
     throw error;
   }
 };
+
 
 export const uploadThumbnail = async ({ videoId, thumbnailPath }) => {
   const response = await youtube.thumbnails.set({

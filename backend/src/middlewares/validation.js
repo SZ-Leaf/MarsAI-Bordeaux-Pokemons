@@ -1,8 +1,13 @@
+<<<<<<< feature-06-admin-moderation
 import { ZodError } from "zod";
+=======
+import {ZodError} from "zod";
+>>>>>>> main
 import { sendError } from "../helpers/response.helper.js";
 
 export const validate = (schema) => (req, res, next) => {
   try {
+    console.log(req.body)
     const data = schema.parse(req.body);
 
     req.body = data;

@@ -1,27 +1,56 @@
 import db from '../../config/db_pool.js';
 
 // Création / mise à jour de la note + commentaires
-export const upsertSelectorMemo = async ({ userId, submissionId, rating, comment }) => {
+export const rateSubmission = async ({ userId, submissionId, rating, comment, playlist }) => {
   try {
-    const fields = [];
-    const values = [];
-
+    // insert columns and values
+    const insertColumns = ['user_id', 'submission_id'];
+    const insertValues = [userId, submissionId];
+    
     if (rating !== undefined) {
-      fields.push("rating = ?");
-      values.push(rating);
+      insertColumns.push('rating');
+      insertValues.push(rating);
     }
     if (comment !== undefined) {
-      fields.push("comment = ?");
-      values.push(comment);
+      insertColumns.push('comment');
+      insertValues.push(comment);
+    }
+    if (playlist !== undefined) {
+      insertColumns.push('selection_list');
+      insertValues.push(playlist);
     }
     
-    const sql = `UPDATE selector_memo SET ${fields.join(", ")} WHERE user_id = ? AND submission_id = ?`;
-    values.push(userId, submissionId);
-
-    const [result] = await db.pool.execute(sql, values);
-    return result;
+    // update fields only if they are provided
+    const updateFields = [];
+    const updateValues = [];
+    
+    if (rating !== undefined) {
+      updateFields.push("rating = ?");
+      updateValues.push(rating);
+    }
+    if (comment !== undefined) {
+      updateFields.push("comment = ?");
+      updateValues.push(comment);
+    }
+    if (playlist !== undefined) {
+      updateFields.push("selection_list = ?");
+      updateValues.push(playlist);
+    }
+    
+    // always update updated_at
+    updateFields.push("updated_at = NOW()");
+    
+    // combine all values: insert values first, then update values
+    const allValues = [...insertValues, ...updateValues];
+    
+    const sql = `INSERT INTO selector_memo (${insertColumns.join(', ')}) 
+                 VALUES (${insertColumns.map(() => '?').join(', ')}) 
+                 ON DUPLICATE KEY UPDATE ${updateFields.join(", ")}`;
+    
+    const [result] = await db.pool.execute(sql, allValues);
+    return result.affectedRows;
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error.message);
   }
 };
 

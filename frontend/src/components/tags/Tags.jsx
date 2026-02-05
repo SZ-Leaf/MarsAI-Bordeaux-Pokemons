@@ -8,9 +8,11 @@ const API = import.meta.env.VITE_API_URL;
 export default function Tag({
   variant = 'dark',
   status = null,
+  value = [],
+  onChange = () => {},
 }) {
   const [allTags, setAllTags] = useState([]);
-  const [selected, setSelected] = useState([]);
+  // const [selected, setSelected] = useState([]);
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
 
@@ -48,8 +50,8 @@ export default function Tag({
     <div className="tag-input-container flex flex-col gap-4">
       <TagSelectCreatable
       allTags={allTags}
-      value={selected}
-      onChange={setSelected}
+      value={value}
+      onChange={onChange}
       onTagCreated={onTagCreated}
     />
       <div className="tag-input-container">

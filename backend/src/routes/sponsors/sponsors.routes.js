@@ -4,7 +4,7 @@ import { uploadSubmissionFiles, handleUploadError } from '../../middlewares/uplo
 
 const router = Router();
 
-router.post('/', uploadSubmissionFiles, handleUploadError, createSponsorController);
+router.post('/',uploadSubmissionFiles, handleUploadError, createSponsorController);
 router.delete('/:id', deleteSponsorController);
 router.get('/', getSponsorsController);
 

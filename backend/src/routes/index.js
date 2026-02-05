@@ -16,7 +16,4 @@ router.use('/auth', authRoutes);
 router.use('/tags',tagsRoutes);
 router.use('/selectors', selectorRoutes);
 
-// Routes de l'interface sélecteur (notation/commentaires privés)
-router.use('/selector', selectorRoutes);
-
 export default router;

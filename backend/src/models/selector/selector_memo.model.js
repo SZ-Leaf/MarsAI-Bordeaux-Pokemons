@@ -1,11 +1,7 @@
 import db from '../../config/db_pool.js';
 
 // Création / mise à jour de la note + commentaires
-<<<<<<< HEAD
-export const rateSubmission = async ({ userId, submissionId, rating, comment, playlist }) => {
-=======
 export const createSelectorMemo = async ({ userId, submissionId, rating, comment, playlist }) => {
->>>>>>> main
   try {
     // insert columns and values
     const insertColumns = ['user_id', 'submission_id'];

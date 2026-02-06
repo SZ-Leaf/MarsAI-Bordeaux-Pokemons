@@ -16,10 +16,7 @@ router.use('/oauth', oauthRoutes);
 router.use('/auth', authRoutes);
 router.use('/tags',tagsRoutes);
 router.use('/selectors', selectorRoutes);
-<<<<<<< HEAD
-=======
 router.use('/sponsors', sponsorsRoutes);
 
->>>>>>> main
 
 export default router;

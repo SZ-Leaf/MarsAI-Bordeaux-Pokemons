@@ -6,120 +6,92 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Chemin de base pour les uploads (depuis backend/src/)
-const getUploadsBasePath = () => {
-  return path.join(__dirname, '../uploads');
+const getUploadsBasePath = () => path.join(__dirname, '../../uploads');
+
+const MAX_SIZES = {
+  video: 300 * 1024 * 1024,
+  cover: 5 * 1024 * 1024,
+  gallery: 5 * 1024 * 1024,
+  subtitles: 2 * 1024 * 1024
 };
 
-// Configuration du stockage temporaire
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Les fichiers seront stockés temporairement avant déplacement final
-    const tempDir = path.join(getUploadsBasePath(), 'submissions/temp');
+    let folder;
 
-    // Créer le répertoire s'il n'existe pas
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true });
+    if (file.fieldname === 'cover' && req.originalUrl.includes('/sponsors')) {
+      folder = 'sponsors/tmp';
+    } else {
+      folder = 'submissions/tmp';
     }
 
-    cb(null, tempDir);
+    const dir = path.join(getUploadsBasePath(), folder);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
+    cb(null, dir);
   },
+
   filename: (req, file, cb) => {
-    // Générer un nom unique pour éviter les collisions
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
     const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+    cb(null, `${file.fieldname}-${unique}${ext}`);
   }
 });
 
-// Filtre de validation des fichiers
 const fileFilter = (req, file, cb) => {
-  // Types MIME acceptés
-  const allowedVideoTypes = ['video/mp4', 'video/quicktime']; // MP4 et MOV
+  const allowedVideoTypes = ['video/mp4', 'video/quicktime'];
   const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-  const allowedSubtitleTypes = ['text/plain', 'application/x-subrip', 'application/octet-stream']; // .srt
+  const allowedSubtitleTypes = [
+    'text/plain',
+    'application/x-subrip',
+    'application/octet-stream'
+  ];
+
+  const maxSize = MAX_SIZES[file.fieldname];
+  if (maxSize && file.size > maxSize) {
+    return cb(new Error(`Fichier trop volumineux (${file.fieldname})`));
+  }
 
   if (file.fieldname === 'video') {
-    // Validation vidéo : MP4 ou MOV uniquement
     const ext = path.extname(file.originalname).toLowerCase();
     if (['.mp4', '.mov'].includes(ext) && allowedVideoTypes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Format vidéo invalide. Formats acceptés : MP4, MOV'), false);
+      return cb(null, true);
     }
-  } else if (file.fieldname === 'cover' || file.fieldname === 'gallery') {
-    // Validation images : JPEG, JPG, PNG
+    return cb(new Error('Format vidéo invalide'));
+  }
+
+  if (file.fieldname === 'cover' || file.fieldname === 'gallery') {
     if (allowedImageTypes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Format image invalide. Formats acceptés : JPEG, JPG, PNG'), false);
+      return cb(null, true);
     }
-  } else if (file.fieldname === 'subtitles') {
-    // Validation sous-titres : .srt uniquement
+    return cb(new Error('Format image invalide'));
+  }
+
+  if (file.fieldname === 'subtitles') {
     const ext = path.extname(file.originalname).toLowerCase();
     if (ext === '.srt' || allowedSubtitleTypes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Format sous-titres invalide. Format accepté : .srt'), false);
+      return cb(null, true);
     }
-  } else {
-    cb(new Error('Type de fichier non autorisé'), false);
+    return cb(new Error('Format sous-titres invalide'));
   }
+
+  return cb(new Error('Type de fichier non autorisé'));
 };
 
-// Configuration Multer avec limites
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-  limits: {
-    fileSize: 314572800, // 300MB en bytes (pour vidéo)
-    fieldSize: 314572800, // Limite pour chaque champ
-  }
-});
+const upload = multer({ storage, fileFilter });
 
-// Middleware pour gérer plusieurs fichiers de soumission
 export const uploadSubmissionFiles = upload.fields([
-  { name: 'video', maxCount: 1 },      // 1 fichier vidéo (MP4/MOV, max 300MB)
-  { name: 'cover', maxCount: 1 },      // 1 image cover (JPEG/JPG/PNG, max 5MB)
-  { name: 'gallery', maxCount: 3 },   // 3 images max (JPEG/JPG/PNG, max 5MB chacune)
-  { name: 'subtitles', maxCount: 1 }   // 1 fichier .srt (optionnel)
+  { name: 'video', maxCount: 1 },
+  { name: 'cover', maxCount: 1 },
+  { name: 'gallery', maxCount: 3 },
+  { name: 'subtitles', maxCount: 1 }
 ]);
 
-// Middleware de gestion d'erreurs Multer
 export const handleUploadError = (err, req, res, next) => {
-  if (err instanceof multer.MulterError) {
-    if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({
-        error: 'Fichier trop volumineux',
-        details: err.message
-      });
-    }
-    if (err.code === 'LIMIT_FILE_COUNT') {
-      return res.status(400).json({
-        error: 'Trop de fichiers',
-        details: err.message
-      });
-    }
-    if (err.code === 'LIMIT_UNEXPECTED_FILE') {
-      console.log(err);
-      return res.status(400).json({
-        error: 'Champ de fichier inattendu',
-        details: err.message
-      });
-    }
-    return res.status(400).json({
-      error: 'Erreur upload',
-      details: err.message
-    });
-  }
-
   if (err) {
-    return res.status(400).json({
-      error: err.message || 'Erreur lors de l\'upload'
-    });
+    return res.status(400).json({ error: err.message });
   }
-
   next();
 };
 
-export default upload;
+export default uploadSubmissionFiles;

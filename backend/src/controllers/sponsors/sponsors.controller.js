@@ -1,12 +1,7 @@
 import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
-import {
-  createSponsor,
-  updateSponsorCover,
-  deleteSponsor,
-  getSponsors
-} from '../../models/sponsors/sponsors.model.js';
+import {createSponsor, updateSponsorCover, deleteSponsor, getSponsors} from '../../models/sponsors/sponsors.model.js';
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
 import { sponsorSchema } from '../../utils/schemas/sponsor.schemas.js';
 
@@ -52,16 +47,13 @@ export const createSponsorController = async (req, res) => {
   const { name, url } = validatedData;
 
   try {
-    // 🔹 INSERT avec cover temporaire (colonne NOT NULL)
     const tempCoverUrl = `/uploads/tmp/${coverFile.filename}`;
-
     const sponsorId = await createSponsor({
       name,
       url,
       cover: tempCoverUrl
     });
 
-    // 🔹 Création du dossier sponsor
     const sponsorDir = path.join(
       getUploadsBasePath(),
       'sponsors',
@@ -70,7 +62,6 @@ export const createSponsorController = async (req, res) => {
 
     await fs.mkdir(sponsorDir, { recursive: true });
 
-    // 🔹 Déplacement du fichier vers son emplacement final
     const coverExt = path.extname(coverFile.originalname).toLowerCase();
     const finalCoverPath = path.join(sponsorDir, `cover${coverExt}`);
 
@@ -80,7 +71,6 @@ export const createSponsorController = async (req, res) => {
       await fs.writeFile(finalCoverPath, coverFile.buffer);
     }
 
-    // 🔹 Update de l’URL définitive
     const finalCoverUrl = `/uploads/sponsors/${sponsorId}/cover${coverExt}`;
     await updateSponsorCover(sponsorId, finalCoverUrl);
 

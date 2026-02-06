@@ -22,6 +22,12 @@ import {
 // Inscription à la newsletter (envoie email de confirmation)
 export const subscribe = async (req, res) => {
    const { email, consent } = req.body;
+
+   // Consentement obligatoire (RGPD / anti-spam)
+   if (consent !== true) {
+      return sendError(res, 400, "Vous devez accepter de recevoir la newsletter", "You must accept to receive the newsletter", null);
+   }
+
    const connection = await db.pool.getConnection();
 
    try {

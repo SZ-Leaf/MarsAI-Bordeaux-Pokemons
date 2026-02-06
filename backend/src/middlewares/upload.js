@@ -39,7 +39,7 @@ const storage = multer.diskStorage({
 /* ===========================
    FILE FILTER
 =========================== */
-const fileFilter = (file, cb) => {
+const fileFilter = (req, file, cb) => {
   const allowedVideoTypes = ['video/mp4', 'video/quicktime'];
   const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
   const allowedSubtitleTypes = [
@@ -103,7 +103,7 @@ export const uploadSubmissionFiles = upload.fields([
 /* ===========================
    ERROR HANDLER
 =========================== */
-export const handleUploadError = (err, res, next) => {
+export const handleUploadError = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
       return res.status(400).json({ error: 'Fichier trop volumineux' });

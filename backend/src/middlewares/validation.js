@@ -1,4 +1,4 @@
-import { ZodError } from "zod";
+import {ZodError} from "zod";
 import { sendError } from "../helpers/response.helper.js";
 
 export const validate = (schema) => (req, res, next) => {

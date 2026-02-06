@@ -15,7 +15,6 @@ router.use('/youtube', youtubeRoutes);
 router.use('/oauth', oauthRoutes);
 router.use('/auth', authRoutes);
 router.use('/tags',tagsRoutes);
-router.use('/selectors', selectorRoutes);
 router.use('/sponsors', sponsorsRoutes);
 
 

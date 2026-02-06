@@ -1,5 +1,6 @@
 # Tester les routes Newsletter avec Postman
 
+
 ### 1. Route publique : inscription
 
 - **POST** `{{baseUrl}}/newsletter/subscribe`

@@ -17,7 +17,10 @@ router.use('/oauth', oauthRoutes);
 router.use('/auth', authRoutes);
 router.use('/tags',tagsRoutes);
 router.use('/sponsors', sponsorsRoutes);
+<<<<<<< HEAD
 router.use('/selector', selectorRoutes);
+=======
+>>>>>>> ed4ee0cc8f934e6cf9bb91d43ca3b6ba223ccd42
 router.use('/newsletter', newsletterRoutes);
 
 

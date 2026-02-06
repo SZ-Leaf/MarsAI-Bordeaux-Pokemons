@@ -61,12 +61,12 @@ export const userPasswordSchema = z.object({
 export const updateUserSchema = z.object({
    firstname: z
       .string({})
-      .min(1, { message: 'zod_errors.user.firstname.min' })
+      .min(2, { message: 'zod_errors.user.firstname.min' })
       .max(25, { message: 'zod_errors.user.firstname.max' })
       .optional(),
    lastname: z
       .string()
-      .min(1, { message: 'zod_errors.user.lastname.min' })
+      .min(2, { message: 'zod_errors.user.lastname.min' })
       .max(25, { message: 'zod_errors.user.lastname.max' })
       .optional(),
 });

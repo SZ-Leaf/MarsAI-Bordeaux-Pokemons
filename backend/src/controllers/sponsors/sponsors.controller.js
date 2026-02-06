@@ -1,7 +1,12 @@
 import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
-import {createSponsor, updateSponsorCover, deleteSponsor, getSponsors} from '../../models/sponsors/sponsors.model.js';
+import {
+  createSponsor,
+  updateSponsorCover,
+  deleteSponsor,
+  getSponsors
+} from '../../models/sponsors/sponsors.model.js';
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
 import { sponsorSchema } from '../../utils/schemas/sponsor.schemas.js';
 
@@ -11,47 +16,27 @@ const __dirname = path.dirname(__filename);
 const getUploadsBasePath = () => path.join(__dirname, '../../../uploads');
 
 export const createSponsorController = async (req, res) => {
-  const coverFile =
-    req.files?.cover?.[0] ||
-    req.file ||
-    null;
+  const coverFile = req.files?.cover?.[0] || req.file || null;
 
   if (!coverFile) {
-    return sendError(res, 400, 'Image de couverture manquante', 'Cover image is missing', null);
+    return sendError(res, 400, 'Image manquante', 'Cover missing', null);
   }
-
-  if (!coverFile.mimetype.startsWith('image/')) {
-    if (coverFile.path) await fs.unlink(coverFile.path).catch(() => {});
-    return sendError(res, 400, 'Format image invalide', 'Invalid image format', null);
-  }
-
-  const maxCoverSize = 5 * 1024 * 1024; // 5MB
-  if (coverFile.size > maxCoverSize) {
-    if (coverFile.path) await fs.unlink(coverFile.path).catch(() => {});
-    return sendError(res, 400, 'Image de couverture trop volumineuse', 'Cover image too large', null);
-  }
-
-  const sponsorData = {
-    name: req.body.name,
-    url: req.body.url
-  };
 
   let validatedData;
   try {
-    validatedData = sponsorSchema.parse(sponsorData);
+    validatedData = sponsorSchema.parse({
+      name: req.body.name,
+      url: req.body.url
+    });
   } catch (err) {
-    if (coverFile.path) await fs.unlink(coverFile.path).catch(() => {});
+    await fs.unlink(coverFile.path).catch(() => {});
     return sendError(res, 422, 'Données invalides', 'Invalid data', err.message);
   }
 
-  const { name, url } = validatedData;
-
   try {
-    const tempCoverUrl = `/uploads/tmp/${coverFile.filename}`;
     const sponsorId = await createSponsor({
-      name,
-      url,
-      cover: tempCoverUrl
+      ...validatedData,
+      cover: `/uploads/sponsors/tmp/${coverFile.filename}`
     });
 
     const sponsorDir = path.join(
@@ -62,34 +47,28 @@ export const createSponsorController = async (req, res) => {
 
     await fs.mkdir(sponsorDir, { recursive: true });
 
-    const coverExt = path.extname(coverFile.originalname).toLowerCase();
-    const finalCoverPath = path.join(sponsorDir, `cover${coverExt}`);
+    const ext = path.extname(coverFile.originalname).toLowerCase();
+    const finalPath = path.join(sponsorDir, `cover${ext}`);
 
-    if (coverFile.path) {
-      await fs.rename(coverFile.path, finalCoverPath);
-    } else if (coverFile.buffer) {
-      await fs.writeFile(finalCoverPath, coverFile.buffer);
-    }
+    await fs.rename(coverFile.path, finalPath);
 
-    const finalCoverUrl = `/uploads/sponsors/${sponsorId}/cover${coverExt}`;
-    await updateSponsorCover(sponsorId, finalCoverUrl);
+    const finalUrl = `/uploads/sponsors/${sponsorId}/cover${ext}`;
+    await updateSponsorCover(sponsorId, finalUrl);
 
     return sendSuccess(
       res,
       201,
-      'Sponsor créé avec succès',
-      'Sponsor created successfully',
-      { sponsorId, cover: finalCoverUrl }
+      'Sponsor créé',
+      'Sponsor created',
+      { sponsorId, cover: finalUrl }
     );
-
   } catch (error) {
-    if (coverFile.path) await fs.unlink(coverFile.path).catch(() => {});
-    console.error('Erreur création sponsor:', error);
+    await fs.unlink(coverFile.path).catch(() => {});
     return sendError(
       res,
       500,
-      'Erreur lors de la création du sponsor',
-      'Error while creating sponsor',
+      'Erreur création sponsor',
+      'Sponsor creation error',
       error.message
     );
   }
@@ -99,7 +78,7 @@ export const deleteSponsorController = async (req, res) => {
   try {
     const sponsorId = Number(req.params.id);
     if (!Number.isInteger(sponsorId) || sponsorId <= 0) {
-      return sendError(res, 400, 'ID invalide', 'Invalid sponsor ID', null);
+      return sendError(res, 400, 'ID invalide', 'Invalid ID', null);
     }
 
     await deleteSponsor(sponsorId);
@@ -112,20 +91,13 @@ export const deleteSponsorController = async (req, res) => {
 
     await fs.rm(sponsorDir, { recursive: true, force: true });
 
-    return sendSuccess(
-      res,
-      200,
-      'Sponsor supprimé avec succès',
-      'Sponsor deleted successfully',
-      null
-    );
+    return sendSuccess(res, 200, 'Sponsor supprimé', 'Sponsor deleted', null);
   } catch (error) {
-    console.error('Erreur suppression sponsor:', error);
     return sendError(
       res,
       500,
-      'Erreur lors de la suppression du sponsor',
-      'Error deleting sponsor',
+      'Erreur suppression sponsor',
+      'Sponsor deletion error',
       error.message
     );
   }
@@ -137,17 +109,16 @@ export const getSponsorsController = async (req, res) => {
     return sendSuccess(
       res,
       200,
-      'Sponsors récupérés avec succès',
-      'Sponsors retrieved successfully',
+      'Sponsors récupérés',
+      'Sponsors retrieved',
       { count: sponsors.length, sponsors }
     );
   } catch (error) {
-    console.error('Erreur récupération sponsors:', error);
     return sendError(
       res,
       500,
-      'Erreur lors de la récupération des sponsors',
-      'Error retrieving sponsors',
+      'Erreur récupération sponsors',
+      'Sponsors retrieval error',
       error.message
     );
   }

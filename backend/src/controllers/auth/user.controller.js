@@ -1,4 +1,4 @@
-import { inviteUser, registerUser, deleteUser, getUserCredentials, loginUser, updateUser, updateUserPassword, resetUserPassword, getUsers, changeUserRole, getWaitingInvites } from "../../models/users/user.model.js";
+import { inviteUser, registerUser, deleteUser, getUserCredentials, loginUser, updateUser, updateUserPassword, resetUserPassword, getUsers, changeUserRole, getWaitingInvites, getUserById } from "../../models/users/user.model.js";
 import { hashPassword, verifyPassword } from "../../helpers/password/password_hasher.js";
 import { sendInviteMail, sendForgotPasswordMail } from "../../services/mailer/mailer.mail.js";
 import { signToken } from "../../services/jwt/jwt.token.js";
@@ -195,6 +195,34 @@ const deleteUserController = async (req, res) => {
    }
 }
 
+const getCurrentUserController = async (req, res) => {
+   try {
+      const userId = req.user.id;
+      const user = await getUserById(userId);
+
+      if (!user) {
+         return sendError(res, 404,
+            "Utilisateur non trouvé",
+            "User not found",
+            null
+         );
+      }
+
+      return sendSuccess(res, 200,
+         "Utilisateur récupéré avec succès",
+         "User retrieved successfully",
+         user
+      );
+   } catch (error) {
+      console.error("Error getting current user:", error);
+      return sendError(res, 500,
+         "Erreur lors de la récupération de l'utilisateur",
+         "Error getting current user",
+         error.message
+      );
+   }
+}
+
 const loginUserController = async (req, res) => {
    try {
       let { email, password } = req.body;
@@ -356,12 +384,11 @@ const getAllUsersController = async (req, res) => {
 
 const updateUserPasswordController = async (req, res) => {
    try {
-      let { email, new_password } = req.body;
-      email = email?.trim();
+      let { new_password } = req.body;
       new_password = new_password?.trim();
 
       // check if user is updating their own password
-      if (req.user.email !== email) {
+      if (!req.user.email) {
          return sendError(res, 403,
             "Non autorisé",
             "Unauthorized",
@@ -370,11 +397,13 @@ const updateUserPasswordController = async (req, res) => {
       }
 
       // Validate input
-      if (!new_password) return sendError(res, 400,
-         "Nouveau mot de passe requis",
-         "New password required",
-         null
-      );
+      if (!new_password) {
+         return sendError(res, 400,
+            "Nouveau mot de passe requis",
+            "New password required",
+            null
+         );
+      }
 
       try {
         userPasswordSchema.parse({ password: new_password });
@@ -385,12 +414,14 @@ const updateUserPasswordController = async (req, res) => {
 
       // Hash and update password
       const password_hash = await hashPassword(new_password);
-      const result = await updateUserPassword(email, password_hash);
-      if (result.affectedRows === 0) return sendError(res, 400,
-         "Erreur lors de la mise à jour du mot de passe",
-         "Error updating user password",
-         null
-      );
+      const result = await updateUserPassword(req.user.email, password_hash);
+      if (result.affectedRows === 0) {
+         return sendError(res, 400,
+            "Erreur lors de la mise à jour du mot de passe",
+            "Error updating user password",
+            null
+         );
+      }
 
       return sendSuccess(res, 200,
          "Mot de passe mis à jour avec succès",
@@ -613,5 +644,6 @@ export {
    changeUserRoleController,
    loginUserController,
    logoutUserController,
-   getWaitingInvitesController
+   getWaitingInvitesController,
+   getCurrentUserController
 };

@@ -4,6 +4,7 @@ export const apiCall = async (endpoint, options = {}) => {
   const url = `${API_URL}${endpoint}`;
   
   const defaultOptions = {
+    credentials: 'include',
     headers: {
       'Accept': 'application/json',
       ...options.headers

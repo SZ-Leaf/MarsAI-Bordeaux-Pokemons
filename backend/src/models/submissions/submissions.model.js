@@ -37,7 +37,7 @@ export const createSubmission = async (connection, data, videoPath, coverPath, d
       data.terms_of_use
     ]
   );
-  
+
   return result.insertId;
 };
 
@@ -52,29 +52,29 @@ export const updateFilePaths = async (connection, submissionId, videoUrl, cover,
 
 // export const getSubmissions = async (filters = {}) => {
 //   const connection = await db.pool.getConnection();
-  
+
 //   try {
 //     let query = 'SELECT * FROM submissions';
 //     const params = [];
 //     let conditions = [];
-    
+
 //     if (filters.status) {
 //       conditions.push('moderation_id IN (SELECT id FROM submission_moderation WHERE status = ?)');
 //       params.push(filters.status);
 //     }
-    
+
 //     conditions.push('ORDER BY created_at DESC');
-    
+
 //     if (filters.limit !== undefined) {
 //       conditions.push('LIMIT ?');
 //       params.push(filters.limit);
-      
+
 //       if (filters.offset !== undefined) {
 //         conditions.push('OFFSET ?');
 //         params.push(filters.offset);
 //       }
 //     }
-    
+
 //     const [rows] = await connection.execute(`${query} ${conditions.join(' ')}`, params);
 //     return rows;
 //   } catch (error) {
@@ -129,11 +129,11 @@ export const getSubmissions = async (filters = {}) => {
 
 export const getSubmissionById = async (submissionId) => {
   const connection = await db.pool.getConnection();
-  
+
   try {
     // Récupérer la soumission de base
     const [submissions] = await connection.execute(
-      `SELECT s.*, 
+      `SELECT s.*,
               sm.status as moderation_status,
               sm.details as moderation_details,
               sm.created_at as moderation_created_at,
@@ -143,27 +143,27 @@ export const getSubmissionById = async (submissionId) => {
        WHERE s.id = ?`,
       [submissionId]
     );
-    
+
     if (submissions.length === 0) {
       return null;
     }
-    
+
     const submission = submissions[0];
-    
+
     // Récupérer les collaborateurs
     const [collaborators] = await connection.execute(
       'SELECT * FROM collaborators WHERE submission_id = ? ORDER BY created_at ASC',
       [submissionId]
     );
     submission.collaborators = collaborators;
-    
+
     // Récupérer les images de galerie
     const [gallery] = await connection.execute(
       'SELECT * FROM gallery WHERE submission_id = ? ORDER BY created_at ASC',
       [submissionId]
     );
     submission.gallery = gallery;
-    
+
     // Récupérer les liens sociaux avec infos réseau
     const [socials] = await connection.execute(
       `SELECT s.*, sn.title as network_title, sn.logo as network_logo
@@ -173,7 +173,7 @@ export const getSubmissionById = async (submissionId) => {
       [submissionId]
     );
     submission.socials = socials;
-    
+
     // Récupérer les tags
     const [tags] = await connection.execute(
       `SELECT t.* FROM tags t
@@ -182,7 +182,7 @@ export const getSubmissionById = async (submissionId) => {
       [submissionId]
     );
     submission.tags = tags;
-    
+
     // Récupérer les awards (désactivé pour le moment)
     // const [awards] = await connection.execute(
     //   `SELECT a.* FROM awards a
@@ -192,7 +192,7 @@ export const getSubmissionById = async (submissionId) => {
     //   [submissionId]
     // );
     // submission.awards = awards;
-    
+
     return submission;
   } catch (error) {
     throw error;
@@ -202,16 +202,17 @@ export const getSubmissionById = async (submissionId) => {
 };
 
 export const findSubmissionById = async (id) => {
+  const connection = await db.pool.getConnection();
   try {
-    const [rows] = await db.pool.execute('SELECT * FROM submissions WHERE id = ?', [id]);
-    return rows[0];
-  } catch (err) {
-    console.error('Erreur findSubmissionById:', err);
-    throw err;
+    const [rows] = await connection.execute('SELECT * FROM submissions WHERE id = ?', [id]);
+    return rows[0] || null;
+  } finally {
+    connection.release();
   }
 };
 
 export const updateYoutubeLinkInDatabase = async (youtubeUrl, id) => {
+  const connection = await db.pool.getConnection();
   try {
     const [result] = await db.pool.execute('UPDATE submissions SET youtube_url = ? WHERE id = ?', [youtubeUrl, id]);
     return result.affectedRows;

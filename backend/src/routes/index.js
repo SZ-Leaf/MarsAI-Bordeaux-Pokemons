@@ -2,6 +2,7 @@ import { Router } from 'express';
 import tagsRoutes from './tags.routes.js';
 import authRoutes from './auth/auth.routes.js';
 import submissionRoutes from './submission/submission.routes.js';
+import sponsorsRoutes from './sponsors/sponsors.routes.js';
 import youtubeRoutes from './youtube/youtube.routes.js';
 import oauthRoutes from './youtube/oauth.routes.js';
 import selectorRoutes from './selector/selector.routes.js'
@@ -15,5 +16,7 @@ router.use('/oauth', oauthRoutes);
 router.use('/auth', authRoutes);
 router.use('/tags',tagsRoutes);
 router.use('/selectors', selectorRoutes);
+router.use('/sponsors', sponsorsRoutes);
+
 
 export default router;

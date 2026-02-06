@@ -6,120 +6,122 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Chemin de base pour les uploads (depuis backend/src/)
-const getUploadsBasePath = () => {
-  return path.join(__dirname, '../uploads');
-};
+const getUploadsBasePath = () => path.join(__dirname, '../../uploads');
 
-// Configuration du stockage temporaire
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Les fichiers seront stockés temporairement avant déplacement final
-    const tempDir = path.join(getUploadsBasePath(), 'submissions/temp');
+    let folder;
 
-    // Créer le répertoire s'il n'existe pas
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true });
+    if (
+      file.fieldname === 'cover' &&
+      req.originalUrl.includes('/sponsors')
+    ) {
+      folder = 'sponsors';
+    }
+      else {
+      folder = 'submissions/temp';
     }
 
-    cb(null, tempDir);
+    const dir = path.join(getUploadsBasePath(), folder);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
+    cb(null, dir);
   },
+
   filename: (req, file, cb) => {
-    // Générer un nom unique pour éviter les collisions
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+    cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
   }
 });
 
-// Filtre de validation des fichiers
+/* ===========================
+   FILE FILTER
+=========================== */
 const fileFilter = (req, file, cb) => {
-  // Types MIME acceptés
-  const allowedVideoTypes = ['video/mp4', 'video/quicktime']; // MP4 et MOV
+  const allowedVideoTypes = ['video/mp4', 'video/quicktime'];
   const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-  const allowedSubtitleTypes = ['text/plain', 'application/x-subrip', 'application/octet-stream']; // .srt
+  const allowedSubtitleTypes = [
+    'text/plain',
+    'application/x-subrip',
+    'application/octet-stream'
+  ];
 
   if (file.fieldname === 'video') {
-    // Validation vidéo : MP4 ou MOV uniquement
     const ext = path.extname(file.originalname).toLowerCase();
-    if (['.mp4', '.mov'].includes(ext) && allowedVideoTypes.includes(file.mimetype)) {
+    if (
+      ['.mp4', '.mov'].includes(ext) &&
+      allowedVideoTypes.includes(file.mimetype)
+    ) {
       cb(null, true);
     } else {
-      cb(new Error('Format vidéo invalide. Formats acceptés : MP4, MOV'), false);
+      cb(new Error('Format vidéo invalide. Formats acceptés : MP4, MOV'));
     }
+
   } else if (file.fieldname === 'cover' || file.fieldname === 'gallery') {
-    // Validation images : JPEG, JPG, PNG
     if (allowedImageTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Format image invalide. Formats acceptés : JPEG, JPG, PNG'), false);
+      cb(new Error('Format image invalide. Formats acceptés : JPEG, JPG, PNG'));
     }
+
   } else if (file.fieldname === 'subtitles') {
-    // Validation sous-titres : .srt uniquement
     const ext = path.extname(file.originalname).toLowerCase();
     if (ext === '.srt' || allowedSubtitleTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Format sous-titres invalide. Format accepté : .srt'), false);
+      cb(new Error('Format sous-titres invalide. Format accepté : .srt'));
     }
+
   } else {
-    cb(new Error('Type de fichier non autorisé'), false);
+    cb(new Error('Type de fichier non autorisé'));
   }
 };
 
-// Configuration Multer avec limites
+/* ===========================
+   MULTER INSTANCE
+=========================== */
 const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
+  storage,
+  fileFilter,
   limits: {
-    fileSize: 314572800, // 300MB en bytes (pour vidéo)
-    fieldSize: 314572800, // Limite pour chaque champ
+    fileSize: 314572800 // 300MB
   }
 });
 
-// Middleware pour gérer plusieurs fichiers de soumission
+/* ===========================
+   MIDDLEWARE PRINCIPAL
+=========================== */
 export const uploadSubmissionFiles = upload.fields([
-  { name: 'video', maxCount: 1 },      // 1 fichier vidéo (MP4/MOV, max 300MB)
-  { name: 'cover', maxCount: 1 },      // 1 image cover (JPEG/JPG/PNG, max 5MB)
-  { name: 'gallery', maxCount: 3 },   // 3 images max (JPEG/JPG/PNG, max 5MB chacune)
-  { name: 'subtitles', maxCount: 1 }   // 1 fichier .srt (optionnel)
+  { name: 'video', maxCount: 1 },
+  { name: 'cover', maxCount: 1 },
+  { name: 'gallery', maxCount: 3 },
+  { name: 'subtitles', maxCount: 1 }
 ]);
 
-// Middleware de gestion d'erreurs Multer
+/* ===========================
+   ERROR HANDLER
+=========================== */
 export const handleUploadError = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({
-        error: 'Fichier trop volumineux',
-        details: err.message
-      });
+      return res.status(400).json({ error: 'Fichier trop volumineux' });
     }
     if (err.code === 'LIMIT_FILE_COUNT') {
-      return res.status(400).json({
-        error: 'Trop de fichiers',
-        details: err.message
-      });
+      return res.status(400).json({ error: 'Trop de fichiers' });
     }
     if (err.code === 'LIMIT_UNEXPECTED_FILE') {
-      console.log(err);
-      return res.status(400).json({
-        error: 'Champ de fichier inattendu',
-        details: err.message
-      });
+      return res.status(400).json({ error: 'Champ de fichier inattendu' });
     }
-    return res.status(400).json({
-      error: 'Erreur upload',
-      details: err.message
-    });
+    return res.status(400).json({ error: err.message });
   }
 
   if (err) {
-    return res.status(400).json({
-      error: err.message || 'Erreur lors de l\'upload'
-    });
+    return res.status(400).json({ error: err.message });
   }
 
   next();
 };
 
-export default upload;
+export default uploadSubmissionFiles;

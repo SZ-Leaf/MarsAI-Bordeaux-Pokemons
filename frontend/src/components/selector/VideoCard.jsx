@@ -6,6 +6,11 @@ const VideoCard = ({ submission, isActive }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
 
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  const video_url = submission.video_url?.startsWith('http') 
+    ? submission.video_url 
+    : `${API_URL}${submission.video_url}`;
+
   useEffect(() => {
     if (isActive && videoRef.current) {
       videoRef.current.play();
@@ -39,7 +44,7 @@ const VideoCard = ({ submission, isActive }) => {
       {/* Vidéo */}
       <video
         ref={videoRef}
-        src={submission.video_url}
+        src={video_url}
         className="h-full w-full object-contain"
         loop
         muted={isMuted}

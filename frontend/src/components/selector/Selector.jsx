@@ -35,7 +35,7 @@ const Selector = () => {
     );
   }
 
-  return (
+  return (    
     <VideoSwiper
       submissions={submissions}
       currentIndex={currentIndex}

@@ -4,6 +4,8 @@ import VideoCard from './VideoCard';
 import RatingOverlay from './RatingOverlay';
 
 const VideoSwiper = ({ submissions, currentIndex, onSwipeUp, onSwipeDown }) => {
+
+    
   const containerRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [translateY, setTranslateY] = useState(0);

@@ -76,12 +76,24 @@ export async function addSubmissionToPlaylist(user_id, submission_id, selection_
     return result.affectedRows;
 };
 
-export async function removeSubmissionFromPlaylist(user_id, submission_id, selection_list) {
+export async function removeSubmissionFromPlaylist(user_id, submission_id) {
     const [result] = await db.pool.execute(`UPDATE selector_memo
-    SET selection_list = NULL, updated_at = NOW()
-    WHERE user_id = ?
-    AND submission_id = ?
-    AND selection_list = ?`, [user_id, submission_id, selection_list]);
+      SET selection_list = NULL, updated_at = NOW()
+      WHERE user_id = ?
+      AND submission_id = ?`,
+      [user_id, submission_id]
+    );
 
     return result.affectedRows;
 };
+
+export async function getSelectionForSubmission(user_id, submission_id) {
+  const [rows] = await db.pool.execute(
+    `SELECT selection_list
+     FROM selector_memo
+     WHERE user_id = ? AND submission_id = ?
+     LIMIT 1`,
+    [user_id, submission_id]
+  );
+  return rows[0]?.selection_list ?? null; // "FAVORITES" | "WATCH_LATER" | "REPORT" | null
+}

@@ -3,6 +3,7 @@ import { findSubmissionById } from '../../models/submissions/submissions.model.j
 import {
   createSelectorMemo as createSelectorMemoModel,
   getPlaylist as getPlaylistModel,
+  getSelectionForSubmission as getSelectionForSubmissionModel,
   addSubmissionToPlaylist as addSubmissionToPlaylistModel,
   removeSubmissionFromPlaylist as removeSubmissionFromPlaylistModel
 } from '../../models/selector/selector_memo.model.js';
@@ -71,44 +72,60 @@ export const getPlaylist = async (req, res) => {
   }
 };
 
-export const addSubmissionToPlaylist = async (req, res) => {
+export const setPlaylistStatus = async (req, res) => {
 
   try {
     const userId = req.user.id;
-    const list = getList(req);
+    const submissionId = Number(req.params.submissionId);
 
-    if (!list) return sendError(res, 400, "Playlist invalide", "Invalid playlist", null);
+    if (!Number.isInteger(submissionId) || submissionId <= 0)
+      return sendError(res, 400, "Soumission invalide", "Invalid submission", null);
+
+    const { selection_list } = req.body; // "FAVORITES" | "WATCH_LATER" | "REPORT"
+    if (!["FAVORITES", "WATCH_LATER", "REPORT"].includes(selection_list)) {
+      return sendError(res, 400, "selection_list invalide", "Invalid selection_list", null);
+    }
+
+    await addSubmissionToPlaylistModel(userId, submissionId, selection_list);
+    return sendSuccess(res, 200, "Statut mis à jour", "Status updated", { selection_list });
+  } catch (error) {
+    console.error(error);
+    return sendError(res, 500, "Erreur mise à jour", "Update error", null);
+  }
+};
+
+export const clearPlaylistStatus = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const submissionId = Number(req.params.submissionId);
+
+    if (!Number.isInteger(submissionId) || submissionId <= 0)
+      return sendError(res, 400, "Soumission invalide", "Invalid submission", null);
+
+    await removeSubmissionFromPlaylistModel(userId, submissionId); // ton model fait clear maintenant
+    return sendSuccess(res, 200, "Statut supprimé", "Status cleared", { selection_list: null });
+  } catch (error) {
+    console.error(error);
+    return sendError(res, 500, "Erreur suppression", "Clear error", null);
+  }
+};
+
+
+export const getPlaylistStatus = async (req, res) => {
+  try {
+    const userId = req.user.id;
 
     const submissionId = Number(req.params.submissionId);
     if (!Number.isInteger(submissionId) || submissionId <= 0)
       return sendError(res, 400, "Soumission invalide", "Invalid submission", null);
 
-    const affected = await addSubmissionToPlaylistModel(userId, submissionId, list);
-    return sendSuccess(res, 200, "Ajouté à la playlist", "Added to the playlist", { affected })
+    const selection_list = await getSelectionForSubmissionModel(userId, submissionId);
 
+    return sendSuccess(res, 200, "Statut", "Status", { selection_list });
   } catch (error) {
     console.error(error);
-    return sendError(res, 500, "Erreur lors de l'ajout d'une soumission à une playlist ", "Error while adding a submission to a playlist", null);
+    return sendError(res, 500, "Erreur statut", "Status error", null);
   }
 };
 
-export const removeSubmissionFromPlaylist = async (req, res) => {
 
-  try {
-    const userId = req.user.id;
-    const list = getList(req);
-
-    if (!list) return sendError(res, 400, "Playlist invalide", "Invalid playlist", null);
-
-    const submissionId = Number(req.params.submissionId);
-    if (!Number.isInteger(submissionId) || submissionId <= 0)
-      return sendError(res, 400, "Soumission invalide", "Invalid submission", null);
-
-    const affected = await removeSubmissionFromPlaylistModel(userId, submissionId, list);
-    return sendSuccess(res, 200, "Retiré de la playlist", "Removed from the playlist", { affected })
-
-  } catch (error) {
-    console.error(error);
-    return sendError(res, 500, "Erreur lors du retrait d'une soumission à une playlist ", "Error while removing a submission from a playlist", null);
-  }
-};

@@ -23,7 +23,7 @@ const router = Router();
 // ========== ROUTES PUBLIQUES ==========
 router.post('/subscribe', validate(subscribeSchema), subscribe);  // Inscription (email + consent validés)
 router.get('/confirm', confirm);                // Confirmation (double opt-in) ?token=xxx
-router.get('/unsubscribe', unsubscribe);        // Désinscription ?token=xxx
+router.get('/unsubscribe', unsubscribe);        // Désinscription ?token=xxx 
 
 // ========== ROUTES ADMIN ==========
 router.post('/admin', validate(newsletterSchema), create);

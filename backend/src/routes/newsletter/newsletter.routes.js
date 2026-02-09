@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { validate } from '../../middlewares/validation.js';
+import { subscribeSchema, newsletterSchema } from '../../utils/schemas/newsletter.schemas.js';
 import {
    create,
    list,
@@ -19,15 +21,15 @@ import {
 const router = Router();
 
 // ========== ROUTES PUBLIQUES ==========
-router.post('/subscribe', subscribe);           // Inscription
+router.post('/subscribe', validate(subscribeSchema), subscribe);  // Inscription (email + consent validés)
 router.get('/confirm', confirm);                // Confirmation (double opt-in) ?token=xxx
 router.get('/unsubscribe', unsubscribe);        // Désinscription ?token=xxx
 
 // ========== ROUTES ADMIN ==========
-router.post('/admin', create);
+router.post('/admin', validate(newsletterSchema), create);
 router.get('/admin', list);
 router.get('/admin/:id', getById);
-router.patch('/admin/:id', update);
+router.patch('/admin/:id', validate(newsletterSchema), update);
 router.delete('/admin/:id', deleteNewsletterController);
 
 // Envoi

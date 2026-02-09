@@ -1,83 +1,70 @@
 import { useState } from 'react';
 import { Heart, Clock, Flag, Star } from 'lucide-react';
-import { useSelector } from '../../hooks/useSelector';
 
-const RatingOverlay = ({ submission }) => {
-  const { addToPlaylist, rateSubmission } = useSelector();
+const VideoActions = ({ submission, addToPlaylist, rateSubmission }) => {
   const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
   const [showRatingPanel, setShowRatingPanel] = useState(false);
 
-  // ajouter à la playlist (mobilefirst)
   const handlePlaylistAction = async (playlistType) => {
     try {
       await addToPlaylist(submission.id, playlistType);
-      // Afficher un toast de succès
+      // TODO: Ajouter un toast de succès
+    } catch (err) {
+      console.error(err);
+      // TODO: Ajouter un toast d'erreur
+    }
+  };
+
+  const handleRating = async (value) => {
+    setRating(value);
+    try {
+      await rateSubmission(submission.id, value, '');
     } catch (err) {
       console.error(err);
     }
   };
 
-  // noter la vidéo (mobilefirst)
-  const handleRating = async (value) => {
-    setRating(value);
-    setComment('');
-    
-    await rateSubmission(submission.id, value, comment);
-  };
-
   return (
     <>
-      {/* Boutons d'action latéraux */}
-      <div className="absolute right-4 bottom-32 flex flex-col gap-6">
-        {/* Favoris */}
+      {/* Boutons d'action horizontaux */}
+      <div className="flex gap-2 pointer-events-auto">
         <button
           onClick={() => handlePlaylistAction('favorites')}
-          className="flex flex-col items-center gap-1 text-white"
+          className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition"
+          title="Favoris"
         >
-          <div className="p-3 bg-black/50 rounded-full hover:bg-black/70 transition">
-            <Heart size={28} />
-          </div>
-          <span className="text-xs">Favoris</span>
+          <Heart size={20} className="text-white" />
         </button>
-
-        {/* À voir plus tard */}
         <button
           onClick={() => handlePlaylistAction('watch_later')}
-          className="flex flex-col items-center gap-1 text-white"
+          className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition"
+          title="À voir plus tard"
         >
-          <div className="p-3 bg-black/50 rounded-full hover:bg-black/70 transition">
-            <Clock size={28} />
-          </div>
-          <span className="text-xs">Plus tard</span>
+          <Clock size={20} className="text-white" />
         </button>
-
-        {/* Signaler */}
-        <button
-          onClick={() => handlePlaylistAction('report')}
-          className="flex flex-col items-center gap-1 text-white"
-        >
-          <div className="p-3 bg-black/50 rounded-full hover:bg-black/70 transition">
-            <Flag size={28} />
-          </div>
-          <span className="text-xs">Signaler</span>
-        </button>
-
-        {/* Noter */}
         <button
           onClick={() => setShowRatingPanel(true)}
-          className="flex flex-col items-center gap-1 text-white"
+          className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition"
+          title="Noter"
         >
-          <div className="p-3 bg-black/50 rounded-full hover:bg-black/70 transition">
-            <Star size={28} fill={rating > 0 ? 'currentColor' : 'none'} />
-          </div>
-          <span className="text-xs">Noter</span>
+          <Star 
+            size={20} 
+            className="text-white" 
+            fill={rating > 0 ? 'currentColor' : 'none'} 
+          />
+        </button>
+        <button
+          onClick={() => handlePlaylistAction('report')}
+          className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition"
+          title="Signaler"
+        >
+          <Flag size={20} className="text-white" />
         </button>
       </div>
 
       {/* Panel de notation */}
       {showRatingPanel && (
-        <div className="absolute inset-0 bg-black/80 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50 pointer-events-auto">
           <div className="bg-white rounded-lg p-6 max-w-md">
             <h3 className="text-xl font-bold mb-4">Noter cette vidéo</h3>
             <div className="flex gap-2 justify-center">
@@ -111,4 +98,4 @@ const RatingOverlay = ({ submission }) => {
   );
 };
 
-export default RatingOverlay;
+export default VideoActions;

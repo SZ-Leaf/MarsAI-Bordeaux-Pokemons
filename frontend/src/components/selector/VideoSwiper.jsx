@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSwipe } from '../../hooks/useSwipe';
 import VideoCard from './VideoCard';
-import RatingOverlay from './RatingOverlay';
 
-const VideoSwiper = ({ submissions, currentIndex, onSwipeUp, onSwipeDown }) => {
+const VideoSwiper = ({ submissions, currentIndex, onSwipeUp, onSwipeDown, addToPlaylist, rateSubmission }) => {
 
     
   const containerRef = useRef(null);
@@ -37,7 +36,12 @@ const VideoSwiper = ({ submissions, currentIndex, onSwipeUp, onSwipeDown }) => {
           className="absolute inset-0 transform -translate-y-full"
           style={{ transform: `translateY(calc(-100% + ${translateY}px))` }}
         >
-          <VideoCard submission={prevSubmission} isActive={false} />
+          <VideoCard 
+            submission={prevSubmission} 
+            isActive={false}
+            addToPlaylist={addToPlaylist}
+            rateSubmission={rateSubmission}
+          />
         </div>
       )}
 
@@ -47,8 +51,12 @@ const VideoSwiper = ({ submissions, currentIndex, onSwipeUp, onSwipeDown }) => {
           className="absolute inset-0"
           style={{ transform: `translateY(${translateY}px)` }}
         >
-          <VideoCard submission={currentSubmission} isActive={true} />
-          <RatingOverlay submission={currentSubmission} />
+          <VideoCard 
+            submission={currentSubmission} 
+            isActive={true}
+            addToPlaylist={addToPlaylist}
+            rateSubmission={rateSubmission}
+          />
         </div>
       )}
 
@@ -58,7 +66,12 @@ const VideoSwiper = ({ submissions, currentIndex, onSwipeUp, onSwipeDown }) => {
           className="absolute inset-0 transform translate-y-full"
           style={{ transform: `translateY(calc(100% + ${translateY}px))` }}
         >
-          <VideoCard submission={nextSubmission} isActive={false} />
+          <VideoCard 
+            submission={nextSubmission} 
+            isActive={false}
+            addToPlaylist={addToPlaylist}
+            rateSubmission={rateSubmission}
+          />
         </div>
       )}
     </div>

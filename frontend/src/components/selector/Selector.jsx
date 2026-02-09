@@ -8,7 +8,9 @@ const Selector = () => {
     loading,
     error,
     goToNext,
-    goToPrevious
+    goToPrevious,
+    addToPlaylist,
+    rateSubmission
   } = useSelector();
 
   if (loading) {
@@ -41,6 +43,8 @@ const Selector = () => {
       currentIndex={currentIndex}
       onSwipeUp={goToNext}
       onSwipeDown={goToPrevious}
+      addToPlaylist={addToPlaylist}
+      rateSubmission={rateSubmission}
     />
   );
 };

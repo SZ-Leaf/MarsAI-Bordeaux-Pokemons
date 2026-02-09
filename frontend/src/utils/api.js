@@ -1,5 +1,8 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
+// Exporter API_URL pour qu'il soit réutilisable dans toute l'application
+export { API_URL };
+
 export const apiCall = async (endpoint, options = {}) => {
   const url = `${API_URL}${endpoint}`;
   
@@ -63,19 +66,8 @@ export const apiCall = async (endpoint, options = {}) => {
   }
 };
 
-export const submitFilm = async (formData) => {
-  return apiCall('/api/submissions', {
-    method: 'POST',
-    body: formData
-  });
-};
-
-export const getSubmissionById = async (submissionId) => {
-  return apiCall(`/api/submissions/${submissionId}`);
-};
-
+// Export par défaut
 export default {
-  apiCall,
-  submitFilm,
-  getSubmissionById
+  API_URL,
+  apiCall
 };

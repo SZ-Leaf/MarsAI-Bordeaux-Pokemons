@@ -31,16 +31,32 @@ export const useSelector = () => {
     // Noter une soumission
     const rateSubmission = async (submissionId, rating, comment) => {
         try {
+            // Préparer le body : ne pas envoyer rating s'il est à 0
+            const body = {};
+            
+            if (rating > 0) {
+                body.rating = rating;
+            }
+            
+            if (comment && comment.trim()) {
+                body.comment = comment.trim();
+            }
+            
             const response = await fetch(`${API_URL}/api/selector/rate/${submissionId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify({ rating, comment })
+                body: JSON.stringify(body)
             });
 
-            if (!response.ok) throw new Error('Erreur lors de la notation');
+            if (!response.ok) {
+                // Améliorer le message d'erreur
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || 'Erreur lors de la notation');
+            }
+            
             return await response.json();
         } catch (err) {
             throw err;

@@ -5,6 +5,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import routes from './routes/index.js';
 import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
+dotenv.config();
 
 
 const __filename = fileURLToPath(import.meta.url);

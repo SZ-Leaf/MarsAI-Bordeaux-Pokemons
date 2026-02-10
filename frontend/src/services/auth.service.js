@@ -2,9 +2,10 @@ import { apiCall } from '../utils/api';
 import { I18nError } from './error.service';
 
 export const getCurrentUserService = async () => {
-   return apiCall('/api/auth/me', {
+   const res = apiCall('/api/auth/me', {
     method: 'GET'
    });
+   return res.data?.user ?? res.date ?? res;
 };
 
 export const loginService = async (email, password) => {
@@ -16,26 +17,28 @@ export const loginService = async (email, password) => {
          en: 'Email and password are required'
       });
    }
-   return apiCall('/api/auth/login', {
+   const res = await apiCall('/api/auth/login', {
     method: 'POST',
     body: JSON.stringify({ email, password })
    });
+   return res;
 };
 
-export const registerService = async (firstname, lastname, password) => {
+export const registerService = async (firstname, lastname, password, token) => {
    firstname = firstname?.trim();
    lastname = lastname?.trim();
    password = password?.trim();
-   if(!firstname || !lastname || !password) {
+   if(!firstname || !lastname || !password || !token) {
       throw new I18nError({
          fr: 'Tous les champs sont requis',
          en: 'All fields are required'
       });
    }
-   return apiCall('/api/auth/register', {
+   const res = await apiCall(`/api/auth/register?token=${token}`, {
     method: 'POST',
     body: JSON.stringify({ firstname, lastname, password })
    });
+   return res;
 };
 
 export const logoutService = async () => {
@@ -45,7 +48,6 @@ export const logoutService = async () => {
 };
 
 export const updateUserService = async (id, {firstname, lastname}) => {
-   id = id?.trim();
    if (!id) {
       throw new I18nError({
         fr: "Non autorisé",

@@ -8,12 +8,16 @@ export const alertHelper = () => {
 
    const passwordsMismatch = () => alert(language === 'fr' ? 'Les mots de passe ne correspondent pas' : 'Passwords do not match');
 
-   const customMessage = (messageObj) => {
-      if (!messageObj) return alert('No message provided');
-      alert(messageObj[language] || messageObj.en || 'No message provided');
+   // const customMessage = (messageObj) => {
+   //    if (!messageObj) return alert('No message provided');
+   //    alert(messageObj[language] || messageObj.en || 'No message provided');
+   // };
+
+   const showMessage = (message) => {
+      alert(message || "No message provided");
    };
    
    const generic = (message) => alert(message);
 
-   return { requiredFields, passwordsMismatch, customMessage, generic };
+   return { requiredFields, passwordsMismatch, showMessage, generic };
 };

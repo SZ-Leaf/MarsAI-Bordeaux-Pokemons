@@ -6,13 +6,17 @@ import { Routes, Route, useLocation } from 'react-router';
 import Submit from './pages/Submit.jsx';
 import Selector from './components/selector/Selector';
 import Register from './pages/Register';
+import Login from './pages/Login';
+import { AuthProvider } from './context/AuthContext';
+import { LanguageProvider } from './context/LanguageContext';
 
 function App() {
   const location = useLocation();
   const isSelectorPage = location.pathname === '/selector';
 
   return (
-    <div className="App">
+    <LanguageProvider>
+      <AuthProvider>
       <Header />
       <div className={isSelectorPage ? '' : 'pt-24'}>
         <Routes>
@@ -20,11 +24,13 @@ function App() {
           <Route path="/submit" element={<Submit />} />
           <Route path="/selector" element={<Selector />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </div>
       
       {!isSelectorPage && <Footer />}
-    </div>
+    </AuthProvider>
+    </LanguageProvider>
   );
 }
 

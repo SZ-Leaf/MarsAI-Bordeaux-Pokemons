@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useNavigate } from "react";
-import { loginService, userLoginService } from "../../services/auth.service";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
+import { loginService } from "../../services/auth.service";
 import { useLanguage } from "../../context/LanguageContext";
 import { responseHelper } from "../../helpers/responseHelper";
-import {useAlertHelper} from "../../helpers/alertHelper";
+import {alertHelper as useAlertHelper} from "../../helpers/alertHelper";
 import { useAuth } from "../../hooks/useAuth";
 
 const LoginForm = () => {
    const { user } = useAuth();
-   const alertHelper = useAlertHelper();
    const { language } = useLanguage();
    const navigate = useNavigate();
    const { getMessageFromResponse, isSuccessResponse } = responseHelper();
    const [isSubmitting, setIsSubmitting] = useState(false);
+   const alertHelper = useAlertHelper();
 
    useEffect(() => {
       if (user) {

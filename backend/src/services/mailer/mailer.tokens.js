@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import db from "../../config/db_pool.js";
+import { signToken, verifyToken } from "../jwt/jwt.token.js";
 
 
 const generateInviteToken = (length = 32) => {
@@ -64,5 +65,58 @@ const verifyForgotPasswordToken = async (token) => {
    }
 };
 
+// Token de confirmation newsletter (JWT avec email, expire 24h)
+const generateNewsletterConfirmToken = (email) => {
+   return signToken({ email, type: "newsletter_confirm" });
+};
 
-export { generateInviteToken, verifyInviteToken, generateForgotPasswordToken, verifyForgotPasswordToken };
+// Vérifie le JWT et retourne l'email
+const verifyNewsletterConfirmToken = (token) => {
+   try {
+      const decoded = verifyToken(token);
+      
+      if (decoded.type !== "newsletter_confirm") {
+         throw new Error("Invalid token type");
+      }
+      
+      return decoded.email;
+   } catch (error) {
+      throw new Error("Token invalide ou expiré");
+   }
+};
+
+// Token de désinscription (crypto permanent, stocké en BDD)
+const generateNewsletterUnsubscribeToken = () => {
+   return crypto.randomBytes(32).toString("hex");
+};
+
+// Vérifie le token en BDD et retourne l'email
+const verifyNewsletterUnsubscribeToken = async (token) => {
+   try {
+      const [rows] = await db.pool.execute(
+         "SELECT email FROM newsletter_listings WHERE unsubscribe_token = ?",
+         [token]
+      );
+      
+      if (rows.length === 0) {
+         throw new Error("Invalid token");
+      }
+      
+      return rows[0].email;
+   } catch (error) {
+      console.error("Error verifying newsletter unsubscribe token:", error);
+      throw error;
+   }
+};
+
+
+export { 
+   generateInviteToken, 
+   verifyInviteToken, 
+   generateForgotPasswordToken, 
+   verifyForgotPasswordToken,
+   generateNewsletterConfirmToken,
+   verifyNewsletterConfirmToken,
+   generateNewsletterUnsubscribeToken,
+   verifyNewsletterUnsubscribeToken
+};

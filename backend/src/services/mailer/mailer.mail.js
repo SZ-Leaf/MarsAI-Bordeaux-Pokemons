@@ -33,5 +33,74 @@ const sendForgotPasswordMail = async (email, token) => {
    return true;
 };
 
+// Email de confirmation inscription newsletter (double opt-in)
+const sendNewsletterConfirmation = async (email, token) => {
+   const baseUrl = process.env.NEWSLETTER_CONFIRM_BASE_URL || process.env.FRONTEND_URL || 'http://localhost:5173';
+   const confirmUrl = `${baseUrl}/newsletter/confirm?token=${encodeURIComponent(token)}`;
 
-export { sendInviteMail, sendForgotPasswordMail };
+   await transporter.sendMail({
+      from: '"Mars AI" <no-reply@marsai.com>',
+      to: email,
+      subject: "Confirmez votre inscription à la newsletter",
+      html: `
+         <h1>Bienvenue !</h1>
+         <p>Merci de votre inscription à notre newsletter.</p>
+         <p>Cliquez sur le lien ci-dessous pour confirmer votre inscription :</p>
+         <a href="${confirmUrl}" style="display:inline-block;padding:10px 20px;background:#007bff;color:#fff;text-decoration:none;border-radius:5px;">
+            Confirmer mon inscription
+         </a>
+         <p style="color:#666;font-size:12px;margin-top:20px;">
+            Si vous n'avez pas demandé cette inscription, ignorez cet email.
+         </p>
+      `
+   });
+
+   return true;
+};
+
+// Envoi massif newsletter par batch (100 emails par lot)
+const sendNewsletterBulk = async (newsletter, subscribers) => {
+   const BATCH_SIZE = 100;
+   const results = { success: 0, failed: 0, errors: [] };
+
+   for (let i = 0; i < subscribers.length; i += BATCH_SIZE) {
+      const batch = subscribers.slice(i, i + BATCH_SIZE);
+
+      const promises = batch.map(async (subscriber) => {
+         try {
+            const unsubscribeUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/newsletter/unsubscribe?token=${encodeURIComponent(subscriber.unsubscribe_token)}`;
+
+            await transporter.sendMail({
+               from: '"Mars AI" <no-reply@marsai.com>',
+               to: subscriber.email,
+               subject: newsletter.subject,
+               html: `
+                  ${newsletter.content}
+                  <hr style="margin:30px 0;border:none;border-top:1px solid #ddd;">
+                  <p style="font-size:12px;color:#666;text-align:center;">
+                     <a href="${unsubscribeUrl}" style="color:#666;">Se désinscrire</a>
+                  </p>
+               `
+            });
+
+            results.success++;
+         } catch (error) {
+            console.error(`Error sending to ${subscriber.email}:`, error.message);
+            results.failed++;
+            results.errors.push({ email: subscriber.email, error: error.message });
+         }
+      });
+
+      await Promise.all(promises);
+
+      // Pause entre les lots pour éviter le rate limiting
+      if (i + BATCH_SIZE < subscribers.length) {
+         await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+   }
+
+   return results;
+};
+
+
+export { sendInviteMail, sendForgotPasswordMail, sendNewsletterConfirmation, sendNewsletterBulk };

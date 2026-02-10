@@ -1,9 +1,13 @@
 import { useMemo, useState } from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
 
-const API = import.meta.env.VITE_API_URL;
-
-export default function TagSelectCreatable({ allTags, value = [], onChange, onTagCreated }) {
+export default function TagSelectCreatable({ 
+  allTags, 
+  value = [], 
+  onChange, 
+  onSearchTags,    // Fonction de recherche passée en prop
+  onCreateTag      // Fonction de création passée en prop
+}) {
   const [msg, setMsg] = useState("");
 
   const defaultOptions = useMemo(
@@ -12,70 +16,35 @@ export default function TagSelectCreatable({ allTags, value = [], onChange, onTa
   );
 
   const loadOptions = async (inputValue) => {
-    const search = inputValue.trim();
-
-    if (!search) return defaultOptions;
-
-    try {
-      const res = await fetch(`${API}/api/tags?search=${encodeURIComponent(search)}&limit=10`);
-      const json = await res.json();
-      if (!res.ok) return [];
-
-      return (json.data || []).map((t) => ({ value: t.id, label: t.title }));
-    } catch {
-      return [];
-    }
+    if (!inputValue.trim()) return defaultOptions;
+    return await onSearchTags(inputValue.trim());
   };
 
-
-  const createTag = async (inputValue) => {
+  const handleCreateTag = async (inputValue) => {
     const title = inputValue.trim();
     if (!title) return;
 
     setMsg("");
-    try {
+    const result = await onCreateTag(title);
 
-      const res = await fetch(`${API}/api/tags`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title }),
-      });
+    if (!result.success) {
+      setMsg(result.message);
 
-      const json = await res.json();
-
-      if (res.status === 409) {
-        setMsg(json?.message?.fr || "Tag déjà existant");
-
-        const existing = json.data; // on récupère la valeur déjà existante
-        if (existing) {
-          //si elle existe déjà en db, on l'affiche
-          onTagCreated(existing);
-
-          // le sélectionner sans doublon
-          const next = [...value];
-          if (!next.some((v) => v.value === existing.id)) {
-            next.push({ value: existing.id, label: existing.title });
-          }
-          onChange(next);
+      // Si c'est un doublon, sélectionner le tag existant
+      if (result.duplicate && result.data) {
+        const next = [...value];
+        if (!next.some((v) => v.value === result.data.id)) {
+          next.push({ value: result.data.id, label: result.data.title });
         }
-
-        return;
+        onChange(next);
       }
-      if (!res.ok) throw new Error(json?.message?.fr || "Erreur création tag");
-
-      // pour mettre à jour allTags dans le parent
-      const created = json.data;
-      onTagCreated(created); 
-
-      // on l’ajoute directement à la sélection
-      onChange([...value, { value: created.id, label: created.title }]);
-
-      setMsg("Tag créé !");
-    } catch (e) {
-      setMsg(e.message);
+      return;
     }
 
-
+    // Succès - ajouter à la sélection
+    const created = result.data;
+    onChange([...value, { value: created.id, label: created.title }]);
+    setMsg(result.message);
   };
 
   return (
@@ -90,7 +59,7 @@ export default function TagSelectCreatable({ allTags, value = [], onChange, onTa
           setMsg("");
           onChange(newValue || []);
         }}
-        onCreateOption={createTag}
+        onCreateOption={handleCreateTag}
         placeholder="Sélectionner ou créer un tag..."
         formatCreateLabel={(input) => `Ajouter "${input}"`}
         closeMenuOnSelect={true}

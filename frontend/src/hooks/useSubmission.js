@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { submitFilm } from '../utils/api.js';
+import { submitFilm } from '../services/submissionService';
 import { 
   submissionSchema, 
   step1Schema, 

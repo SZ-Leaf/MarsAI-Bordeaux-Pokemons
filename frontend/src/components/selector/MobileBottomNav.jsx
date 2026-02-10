@@ -1,7 +1,7 @@
-import { Heart, Clock, Flag, Star, Home } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import RatingModal from '../modals/RatingModal';
 import { useRatingModal } from '../../hooks/useRatingModal';
+
 
 const MobileBottomNav = ({ 
   onFavoriteClick, 
@@ -28,7 +28,7 @@ const MobileBottomNav = ({
           onClick={() => navigate('/')}
           className="flex flex-col items-center gap-1 text-white/70 active:text-white"
         >
-          <Home size={22} />
+          <i className="pi pi-home" style={{ fontSize: '22px' }}></i>
           <span className="text-xs">Accueil</span>
         </button>
         
@@ -36,7 +36,7 @@ const MobileBottomNav = ({
           onClick={onFavoriteClick}
           className="flex flex-col items-center gap-1 text-white/70 active:text-yellow-400"
         >
-          <Heart size={22} />
+          <i className="pi pi-heart" style={{ fontSize: '22px' }}></i>
           <span className="text-xs">J'aime</span>
         </button>
         
@@ -44,7 +44,7 @@ const MobileBottomNav = ({
           onClick={openModal}
           className="flex flex-col items-center gap-1 text-white/70 active:text-yellow-500"
         >
-          <Star size={22} />
+          <i className="pi pi-star" style={{ fontSize: '22px' }}></i>
           <span className="text-xs">Noter</span>
         </button>
         
@@ -52,7 +52,7 @@ const MobileBottomNav = ({
           onClick={onWatchLaterClick}
           className="flex flex-col items-center gap-1 text-white/70 active:text-blue-400"
         >
-          <Clock size={22} />
+          <i className="pi pi-history" style={{ fontSize: '22px' }}></i>
           <span className="text-xs">Plus tard</span>
         </button>
         
@@ -60,7 +60,7 @@ const MobileBottomNav = ({
           onClick={onReportClick}
           className="flex flex-col items-center gap-1 text-white/70 active:text-red-400"
         >
-          <Flag size={22} />
+          <i className="pi pi-times" style={{ fontSize: '22px' }}></i>
           <span className="text-xs">Signaler</span>
         </button>
       </nav>

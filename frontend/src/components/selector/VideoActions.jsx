@@ -6,8 +6,7 @@ import ReportButton from '../playlists/AddToReport';
 import RatingButton from '../playlists/AddToRatingBtn';
 
 
-const VideoActions = ({ submission, addToPlaylist, rateSubmission, selection, toggle }) => {
-  const [rating, setRating] = useState(0);
+const VideoActions = ({ submission, addToPlaylist, rateSubmission, selection, toggle, hasRating, markAsRated }) => {
   const [showRatingModal, setShowRatingModal] = useState(false);
 
   const onFav = useCallback(() => toggle("FAVORITES"), [toggle]);
@@ -27,7 +26,7 @@ const VideoActions = ({ submission, addToPlaylist, rateSubmission, selection, to
   const handleRatingSubmit = async (submissionId, ratingValue, comment) => {
     try {
       await rateSubmission(submissionId, ratingValue, comment);
-      setRating(ratingValue);
+      markAsRated();
     } catch (err) {
       console.error(err);
       throw err;
@@ -50,7 +49,7 @@ const VideoActions = ({ submission, addToPlaylist, rateSubmission, selection, to
         />
         <RatingButton
           submissionId={submission.id}
-          active={rating > 0}
+          active={hasRating}
           onToggle={() => setShowRatingModal(true)}
         />
         <ReportButton

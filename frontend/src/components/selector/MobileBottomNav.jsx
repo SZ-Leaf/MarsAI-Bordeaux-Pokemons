@@ -10,10 +10,22 @@ const MobileBottomNav = ({
   onReportClick,
   currentSubmission,
   rateSubmission,
-  selection
+  selection,
+  hasRating,
+  markAsRated
 }) => {
   const navigate = useNavigate();
   const { showRatingModal, handleRatingSubmit, openModal, closeModal } = useRatingModal(rateSubmission);
+
+  // Wrapper pour openModal qui marque comme noté après soumission
+  const handleOpenModal = () => {
+    openModal();
+  };
+
+  const handleRatingSubmitWithMark = async (submissionId, ratingValue, comment) => {
+    await handleRatingSubmit(submissionId, ratingValue, comment);
+    markAsRated(); // Marquer comme noté
+  };
   
   return (
     <>
@@ -45,8 +57,8 @@ const MobileBottomNav = ({
         </button>
         
         <button 
-          onClick={openModal}
-          className="btn-mobile-nav btn-mobile-nav-rating"
+          onClick={handleOpenModal}
+          className={`btn-mobile-nav ${hasRating ? 'btn-mobile-nav-rating-active' : 'btn-mobile-nav-rating'}`}
           aria-label="Noter"
         >
           <i className="pi pi-star btn-mobile-nav-icon"></i>
@@ -78,7 +90,7 @@ const MobileBottomNav = ({
           isOpen={showRatingModal}
           onClose={closeModal}
           submission={currentSubmission}
-          onSubmit={handleRatingSubmit}
+          onSubmit={handleRatingSubmitWithMark}
         />
       )}
     </>

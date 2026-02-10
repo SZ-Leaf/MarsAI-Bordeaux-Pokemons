@@ -1,6 +1,6 @@
 import VideoActions from './VideoActions';
 
-const VideoInfosDesktop = ({ submission, addToPlaylist, rateSubmission, selection, toggle }) => {
+const VideoInfosDesktop = ({ submission, addToPlaylist, rateSubmission, selection, toggle, hasRating, markAsRated }) => {
   return (
     <div className="mt-6 mb-8 text-white">
       <div className="flex items-start justify-between gap-4 mb-4">
@@ -19,6 +19,8 @@ const VideoInfosDesktop = ({ submission, addToPlaylist, rateSubmission, selectio
           rateSubmission={rateSubmission}
           selection={selection}
           toggle={toggle}
+          hasRating={hasRating}
+          markAsRated={markAsRated}
         />
       </div>
 

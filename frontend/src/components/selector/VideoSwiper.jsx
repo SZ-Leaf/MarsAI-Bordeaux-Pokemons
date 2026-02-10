@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSwipe } from '../../hooks/useSwipe';
 import { useSubmissionPlaylistStatus } from '../../hooks/useSubmissionPlaylistStatus';
+import { useSubmissionRatingStatus } from '../../hooks/useSubmissionRatingStatus';
 import VideoCard from './VideoCard';
 import MobileBottomNav from './MobileBottomNav';
 
@@ -24,6 +25,7 @@ const VideoSwiper = ({ submissions, currentIndex, onSwipeUp, onSwipeDown, addToP
   const prevSubmission = submissions[currentIndex - 1];
 
   const { toggle, selection } = useSubmissionPlaylistStatus(currentSubmission?.id);
+  const { hasRating, markAsRated } = useSubmissionRatingStatus(currentSubmission?.id);
 
   return (
     <>
@@ -45,6 +47,8 @@ const VideoSwiper = ({ submissions, currentIndex, onSwipeUp, onSwipeDown, addToP
               rateSubmission={rateSubmission}
               selection={selection}
               toggle={toggle}
+              hasRating={hasRating}
+              markAsRated={markAsRated}
             />
           </div>
         )}
@@ -62,6 +66,8 @@ const VideoSwiper = ({ submissions, currentIndex, onSwipeUp, onSwipeDown, addToP
               rateSubmission={rateSubmission}
               selection={selection}
               toggle={toggle}
+              hasRating={hasRating}
+              markAsRated={markAsRated}
             />
           </div>
         )}
@@ -79,6 +85,8 @@ const VideoSwiper = ({ submissions, currentIndex, onSwipeUp, onSwipeDown, addToP
               rateSubmission={rateSubmission}
               selection={selection}
               toggle={toggle}
+              hasRating={hasRating}
+              markAsRated={markAsRated}
             />
           </div>
         )}
@@ -92,6 +100,8 @@ const VideoSwiper = ({ submissions, currentIndex, onSwipeUp, onSwipeDown, addToP
         currentSubmission={currentSubmission}
         rateSubmission={rateSubmission}
         selection={selection}
+        hasRating={hasRating}
+        markAsRated={markAsRated}
       />
     </>
   );

@@ -60,7 +60,7 @@ const MobileBottomNav = ({
           onClick={onReportClick}
           className="flex flex-col items-center gap-1 text-white/70 active:text-red-400"
         >
-          <i className="pi pi-times" style={{ fontSize: '22px' }}></i>
+          <i className="pi pi-flag" style={{ fontSize: '22px' }}></i>
           <span className="text-xs">Signaler</span>
         </button>
       </nav>

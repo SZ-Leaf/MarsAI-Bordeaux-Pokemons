@@ -9,7 +9,7 @@ export default function ReportButton({ submissionId, active, onToggle }) {
       <Tooltip target={`#${btnId}`} position="bottom" />
       <Button
         id={btnId}
-        icon="pi pi-times"
+        icon="pi pi-flag"
         rounded
         outlined
         focusRing={false}

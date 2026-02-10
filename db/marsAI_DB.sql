@@ -142,18 +142,35 @@ CREATE TABLE `reservations` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- NEWSLETTER
+-- NEWSLETTER (Version V1 Simplifiée - Double Opt-In + Logs)
 CREATE TABLE `newsletter` (
   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `title` VARCHAR(255),
+  `title` VARCHAR(255) NOT NULL,
+  `subject` VARCHAR(255) NOT NULL,
   `content` TEXT NOT NULL,
-  `user_id` INT NOT NULL,
-  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `status` ENUM('draft', 'sent') DEFAULT 'draft',
+  `sent_at` DATETIME NULL,
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 CREATE TABLE `newsletter_listings` (
   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(255) UNIQUE NOT NULL,
+  `unsubscribe_token` VARCHAR(64) UNIQUE NOT NULL,
+  `confirmed` BOOLEAN DEFAULT 0,
+  `confirmed_at` DATETIME NULL,
+  `consent_date` DATETIME NOT NULL,
+  `unsubscribed` BOOLEAN DEFAULT 0,
+  `unsubscribed_at` DATETIME NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE `newsletter_logs` (
+  `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `newsletter_id` INT NOT NULL,
+  `subscriber_email` VARCHAR(255) NOT NULL,
+  `status` ENUM('sent', 'failed') DEFAULT 'sent',
+  `error_message` TEXT,
+  `sent_at` DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- SOCIALS
@@ -241,8 +258,8 @@ ALTER TABLE `invites` ADD CONSTRAINT fk_invites_role_id FOREIGN KEY (`role_id`) 
 ALTER TABLE `events` ADD CONSTRAINT fk_events_user_id FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 -- RESERVATIONS TABLE
 ALTER TABLE `reservations` ADD CONSTRAINT fk_reservations_event_id FOREIGN KEY (`event_id`) REFERENCES `events` (`id`);
--- NEWSLETTER TABLE
-ALTER TABLE `newsletter` ADD CONSTRAINT fk_newsletter_user_id FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+-- NEWSLETTER_LOGS TABLE
+ALTER TABLE `newsletter_logs` ADD CONSTRAINT fk_newsletter_logs_newsletter_id FOREIGN KEY (`newsletter_id`) REFERENCES `newsletter` (`id`) ON DELETE CASCADE;
 -- SOCIALS TABLE
 ALTER TABLE `socials` ADD CONSTRAINT fk_socials_submission_id FOREIGN KEY (`submission_id`) REFERENCES `submissions` (`id`);
 ALTER TABLE `socials` ADD CONSTRAINT fk_socials_network_id FOREIGN KEY (`network_id`) REFERENCES `social_networks` (`id`);
@@ -277,7 +294,15 @@ CREATE INDEX idx_collaborators_submission_id ON collaborators(submission_id);
 CREATE INDEX idx_users_role_id ON users(role_id);
 CREATE INDEX idx_events_user_id ON events(user_id);
 CREATE INDEX idx_reservations_event_id ON reservations(event_id);
-CREATE INDEX idx_newsletter_user_id ON newsletter(user_id);
+-- NEWSLETTER INDEXES
+CREATE INDEX idx_newsletter_status ON newsletter(status);
+CREATE INDEX idx_newsletter_listings_email ON newsletter_listings(email);
+CREATE INDEX idx_newsletter_listings_unsubscribe_token ON newsletter_listings(unsubscribe_token);
+CREATE INDEX idx_newsletter_listings_confirmed ON newsletter_listings(confirmed, unsubscribed);
+CREATE INDEX idx_newsletter_logs_newsletter_id ON newsletter_logs(newsletter_id);
+CREATE INDEX idx_newsletter_logs_status ON newsletter_logs(status);
+CREATE INDEX idx_newsletter_logs_email ON newsletter_logs(subscriber_email);
+-- SOCIALS INDEXES
 CREATE INDEX idx_socials_submission_id ON socials(submission_id);
 CREATE INDEX idx_socials_network_id ON socials(network_id);
 -- CREATE INDEX idx_general_cms_theme_id ON general_cms(theme_id);

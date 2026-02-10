@@ -3,7 +3,6 @@ import VideoActions from './VideoActions';
 const VideoInfosDesktop = ({ submission, addToPlaylist, rateSubmission }) => {
   return (
     <div className="mt-6 mb-8 text-white">
-      {/* Titre et actions */}
       <div className="flex items-start justify-between gap-4 mb-4">
         <div className="flex-1">
           <h1 className="text-3xl font-bold mb-2">
@@ -14,7 +13,6 @@ const VideoInfosDesktop = ({ submission, addToPlaylist, rateSubmission }) => {
           </p>
         </div>
         
-        {/* Actions desktop (verticales ou horizontales) */}
         <VideoActions 
           submission={submission}
           addToPlaylist={addToPlaylist}
@@ -22,7 +20,6 @@ const VideoInfosDesktop = ({ submission, addToPlaylist, rateSubmission }) => {
         />
       </div>
 
-      {/* Tags */}
       {submission.tags && submission.tags.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-4">
           {submission.tags.map(tag => (
@@ -36,7 +33,6 @@ const VideoInfosDesktop = ({ submission, addToPlaylist, rateSubmission }) => {
         </div>
       )}
 
-      {/* Informations supplémentaires */}
       <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
         <div className="bg-white/5 rounded-lg p-4">
           <span className="text-white/50 block mb-1">Durée</span>

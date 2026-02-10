@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { API_URL } from '../utils/api';
+import { rateSubmissionService } from '../services/submissionService';
 
 export const useSelector = () => {
     const [submissions, setSubmissions] = useState([]);
@@ -40,21 +41,19 @@ export const useSelector = () => {
             
             if (comment && comment.trim()) {
                 body.comment = comment.trim();
-            }
-            
-            const response = await fetch(`${API_URL}/api/selector/rate/${submissionId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify(body)
-            });
+            }            
+
+            const response = await rateSubmissionService(submissionId, rating, comment);
 
             if (!response.ok) {
                 // Améliorer le message d'erreur
                 const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || 'Erreur lors de la notation');
+                console.log('Erreur du backend:', errorData); // Pour débogger
+                // Gérer le cas où message est un objet ou une chaîne
+                const errorMessage = typeof errorData.message === 'string' 
+                    ? errorData.message 
+                    : (errorData.error || JSON.stringify(errorData.message) || 'Erreur lors de la notation');
+                throw new Error(errorMessage);
             }
             
             return await response.json();

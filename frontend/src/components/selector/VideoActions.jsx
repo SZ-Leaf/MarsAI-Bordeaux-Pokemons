@@ -1,6 +1,7 @@
-import { useState } from 'react';
 import { Heart, Clock, Flag, Star } from 'lucide-react';
 import RatingModal from '../modals/RatingModal';
+import { useRatingModal } from '../../hooks/useRatingModal';
+import { usePlaylistActions } from '../../hooks/usePlaylistActions';
 
 // Composant de bouton d'action réutilisable
 const ActionButton = ({ onClick, icon: Icon, title, isActive = false }) => (
@@ -18,28 +19,8 @@ const ActionButton = ({ onClick, icon: Icon, title, isActive = false }) => (
 );
 
 const VideoActions = ({ submission, addToPlaylist, rateSubmission }) => {
-  const [rating, setRating] = useState(0);
-  const [showRatingModal, setShowRatingModal] = useState(false);
-
-  const handlePlaylistAction = async (playlistType) => {
-    try {
-      await addToPlaylist(submission.id, playlistType);
-      // TODO: Ajouter un toast de succès
-    } catch (err) {
-      console.error(err);
-      // TODO: Ajouter un toast d'erreur
-    }
-  };
-
-  const handleRatingSubmit = async (submissionId, ratingValue, comment) => {
-    try {
-      await rateSubmission(submissionId, ratingValue, comment);
-      setRating(ratingValue);
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  };
+  const { showRatingModal, rating, handleRatingSubmit, openModal, closeModal } = useRatingModal(rateSubmission);
+  const { handlePlaylistAction } = usePlaylistActions(addToPlaylist, submission.id);
 
   return (
     <>
@@ -56,7 +37,7 @@ const VideoActions = ({ submission, addToPlaylist, rateSubmission }) => {
           title="À voir plus tard"
         />
         <ActionButton
-          onClick={() => setShowRatingModal(true)}
+          onClick={openModal}
           icon={Star}
           title="Noter"
           isActive={rating > 0}
@@ -71,7 +52,7 @@ const VideoActions = ({ submission, addToPlaylist, rateSubmission }) => {
       {/* Modal de notation */}
       <RatingModal
         isOpen={showRatingModal}
-        onClose={() => setShowRatingModal(false)}
+        onClose={closeModal}
         submission={submission}
         onSubmit={handleRatingSubmit}
       />

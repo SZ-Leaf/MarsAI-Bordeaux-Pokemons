@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
-import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { Play, Volume2, VolumeX } from 'lucide-react';
 import { API_URL } from '../../utils/api';
-import VideoActions from './VideoActions';
+import VideoInfosDesktop from './VideoInfosDesktop';
 
 const VideoCard = ({ submission, isActive, addToPlaylist, rateSubmission }) => {
     const videoRef = useRef(null);
@@ -21,7 +21,7 @@ const VideoCard = ({ submission, isActive, addToPlaylist, rateSubmission }) => {
             setIsPlaying(false);
         }
     }, [isActive]);
-    // toggle du play/pause (mobilefirst)
+    // toggle du play/pause
     const togglePlay = () => {
         if (videoRef.current.paused) {
             videoRef.current.play();
@@ -32,7 +32,7 @@ const VideoCard = ({ submission, isActive, addToPlaylist, rateSubmission }) => {
         }
     };
 
-    // toggle du mute/unmute (mobilefirst)
+    // toggle du mute/unmute
     const toggleMute = () => {
         if (videoRef.current) {
             videoRef.current.muted = !videoRef.current.muted;
@@ -41,71 +41,88 @@ const VideoCard = ({ submission, isActive, addToPlaylist, rateSubmission }) => {
     };
 
     return (
-        <div className="relative h-full w-full flex items-center justify-center">
-            {/* Vidéo */}
-            <video
-                ref={videoRef}
-                src={video_url}
-                className="h-full w-full object-contain"
-                loop
-                muted={isMuted}
-                playsInline
-                onClick={togglePlay}
-            />
+        <>
+            <div className="relative h-full w-full flex items-center justify-center md:hidden">
+                <div className="w-full aspect-video bg-black">
+                    <video
+                        ref={videoRef}
+                        src={video_url}
+                        className="h-full w-full object-cover"
+                        loop
+                        muted={isMuted}
+                        playsInline
+                        onClick={togglePlay}
+                    />
+                </div>
 
-            {/* Informations de la vidéo avec boutons d'action */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent pointer-events-none">
-                {/* Titre et boutons d'action */}
-                <div className="flex items-start justify-between gap-4 mb-2">
-                    <h2 className="text-white text-2xl font-bold flex-1">
+                <div className="absolute bottom-24 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/50 to-transparent pointer-events-none">
+                    <h2 className="text-white text-xl font-bold mb-1">
                         {submission.english_title}
                     </h2>
-                    
-                    {/* Boutons d'action intégrés */}
-                    {addToPlaylist && rateSubmission && (
-                        <VideoActions 
-                            submission={submission}
-                            addToPlaylist={addToPlaylist}
-                            rateSubmission={rateSubmission}
-                        />
-                    )}
+                    <p className="text-white/80 text-sm line-clamp-2">
+                        {submission.english_synopsis}
+                    </p>
                 </div>
 
-                <p className="text-white/90 text-sm line-clamp-2">
-                    {submission.english_synopsis}
-                </p>
-                <div className="flex gap-2 mt-3">
-                    {submission.tags?.map(tag => (
-                        <span
-                            key={tag.id}
-                            className="px-2 py-1 bg-white/20 rounded text-white text-xs"
-                        >
-                            #{tag.title}
-                        </span>
-                    ))}
-                </div>
+                <button
+                    onClick={toggleMute}
+                    className="absolute top-4 right-4 p-3 bg-black/50 rounded-full text-white z-10"
+                >
+                    {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                </button>
+
+                {!isPlaying && isActive && (
+                    <div
+                        className="absolute inset-0 flex items-center justify-center"
+                        onClick={togglePlay}
+                    >
+                        <div className="bg-black/50 rounded-full p-6">
+                            <Play size={40} className="text-white" />
+                        </div>
+                    </div>
+                )}
             </div>
 
-            {/* Contrôles */}
-            <button
-                onClick={toggleMute}
-                className="absolute top-6 right-6 p-3 bg-black/50 rounded-full text-white z-10 pointer-events-auto"
-            >
-                {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
-            </button>
+            <div className="hidden md:flex md:flex-col md:items-center md:justify-start md:h-full md:w-full md:overflow-y-auto md:bg-black md:pt-20">
+                <div className="w-full max-w-5xl mx-auto mt-8 px-4">
+                    <div className="relative w-full aspect-video bg-black rounded-xl overflow-hidden shadow-2xl">
+                        <video
+                            ref={videoRef}
+                            src={video_url}
+                            className="h-full w-full object-contain"
+                            loop
+                            muted={isMuted}
+                            playsInline
+                            onClick={togglePlay}
+                        />
 
-            {/* Indicateur pause - CLIQUABLE pour relancer */}
-            {!isPlaying && isActive && (
-                <div
-                    className="absolute inset-0 flex items-center justify-center cursor-pointer"
-                    onClick={togglePlay}
-                >
-                    <div className="bg-black/50 rounded-full p-6">
-                        <Play size={48} className="text-white" />
+                        <button
+                            onClick={toggleMute}
+                            className="absolute top-6 right-6 p-3 bg-black/50 rounded-full text-white z-10"
+                        >
+                            {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
+                        </button>
+
+                        {!isPlaying && isActive && (
+                            <div
+                                className="absolute inset-0 flex items-center justify-center cursor-pointer"
+                                onClick={togglePlay}
+                            >
+                                <div className="bg-black/50 rounded-full p-6">
+                                    <Play size={48} className="text-white" />
+                                </div>
+                            </div>
+                        )}
                     </div>
+
+                    <VideoInfosDesktop 
+                        submission={submission}
+                        addToPlaylist={addToPlaylist}
+                        rateSubmission={rateSubmission}
+                    />
                 </div>
-            )}
-        </div>
+            </div>
+        </>
     );
 };
 

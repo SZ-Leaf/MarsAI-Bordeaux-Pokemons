@@ -8,15 +8,6 @@ export const createLog = async (connection, newsletterId, email, status, errorMe
    );
 };
 
-// Vérifie si l'email a déjà reçu cette newsletter (évite doublons)
-export const checkIfAlreadySent = async (connection, newsletterId, email) => {
-   const [rows] = await connection.execute(
-      "SELECT id FROM newsletter_logs WHERE newsletter_id = ? AND subscriber_email = ? AND status = 'sent'",
-      [newsletterId, email]
-   );
-   return rows.length > 0;
-};
-
 // Calcule les stats d'envoi (total, succès, échecs, taux)
 export const getNewsletterStats = async (connection, newsletterId) => {
    const [stats] = await connection.execute(

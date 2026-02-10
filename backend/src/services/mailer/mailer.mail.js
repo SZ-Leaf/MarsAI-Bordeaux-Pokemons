@@ -1,7 +1,7 @@
 import { transporter } from "./mailer.config.js";
 
 const sendInviteMail = async (email, token) => {
-   const inviteLink = `http://localhost:3000/api/auth/register?token=${token}`;
+   const inviteLink = `${process.env.FRONTEND_URL}/register?token=${token}&email=${email}`;
 
    await transporter.sendMail({
       from: '"Mars AI" <no-reply@marsai.com>',
@@ -17,7 +17,7 @@ const sendInviteMail = async (email, token) => {
 };
 
 const sendForgotPasswordMail = async (email, token) => {
-   const resetPasswordLink = `http://localhost:3000/api/auth/reset-password?token=${token}`;
+   const resetPasswordLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
 
    await transporter.sendMail({
       from: '"Mars AI" <no-reply@marsai.com>',

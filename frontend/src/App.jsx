@@ -20,13 +20,6 @@ function App() {
     <LanguageProvider>
       <AuthProvider>
       <Header />
-      <Tags />
-      <Sponsors />
-      <Routes>
-        <Route path="/" element={<TestsGraphique />} />
-        <Route path="/submit" element={<Submit />} />
-      </Routes>
-      <Footer />
       <div className={isSelectorPage ? '' : 'pt-24'}>
         <Routes>
           <Route path="/" element={<TestsGraphique />} />

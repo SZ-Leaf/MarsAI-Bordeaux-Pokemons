@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSwipe } from '../../hooks/useSwipe';
-import { usePlaylistActions } from '../../hooks/usePlaylistActions';
+import { useSubmissionPlaylistStatus } from '../../hooks/useSubmissionPlaylistStatus';
 import VideoCard from './VideoCard';
 import MobileBottomNav from './MobileBottomNav';
 
@@ -23,8 +23,7 @@ const VideoSwiper = ({ submissions, currentIndex, onSwipeUp, onSwipeDown, addToP
   const nextSubmission = submissions[currentIndex + 1];
   const prevSubmission = submissions[currentIndex - 1];
 
-  // Utilisation du hook pour les actions de playlist mobile
-  const { handlePlaylistAction } = usePlaylistActions(addToPlaylist, currentSubmission?.id);
+  const { toggle, selection } = useSubmissionPlaylistStatus(currentSubmission?.id);
 
   return (
     <>
@@ -44,6 +43,8 @@ const VideoSwiper = ({ submissions, currentIndex, onSwipeUp, onSwipeDown, addToP
               isActive={false}
               addToPlaylist={addToPlaylist}
               rateSubmission={rateSubmission}
+              selection={selection}
+              toggle={toggle}
             />
           </div>
         )}
@@ -59,6 +60,8 @@ const VideoSwiper = ({ submissions, currentIndex, onSwipeUp, onSwipeDown, addToP
               isActive={true}
               addToPlaylist={addToPlaylist}
               rateSubmission={rateSubmission}
+              selection={selection}
+              toggle={toggle}
             />
           </div>
         )}
@@ -74,6 +77,8 @@ const VideoSwiper = ({ submissions, currentIndex, onSwipeUp, onSwipeDown, addToP
               isActive={false}
               addToPlaylist={addToPlaylist}
               rateSubmission={rateSubmission}
+              selection={selection}
+              toggle={toggle}
             />
           </div>
         )}
@@ -81,11 +86,12 @@ const VideoSwiper = ({ submissions, currentIndex, onSwipeUp, onSwipeDown, addToP
 
       {/* Navigation mobile en bas (visible uniquement mobile) */}
       <MobileBottomNav 
-        onFavoriteClick={() => handlePlaylistAction('favorites')}
-        onWatchLaterClick={() => handlePlaylistAction('watch_later')}
-        onReportClick={() => handlePlaylistAction('report')}
+        onFavoriteClick={() => toggle('FAVORITES')}
+        onWatchLaterClick={() => toggle('WATCH_LATER')}
+        onReportClick={() => toggle('REPORT')}
         currentSubmission={currentSubmission}
         rateSubmission={rateSubmission}
+        selection={selection}
       />
     </>
   );

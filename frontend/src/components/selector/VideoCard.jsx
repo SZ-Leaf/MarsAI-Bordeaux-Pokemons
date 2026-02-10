@@ -3,7 +3,7 @@ import { Play, Volume2, VolumeX } from 'lucide-react';
 import { API_URL } from '../../utils/api';
 import VideoInfosDesktop from './VideoInfosDesktop';
 
-const VideoCard = ({ submission, isActive, addToPlaylist, rateSubmission }) => {
+const VideoCard = ({ submission, isActive, addToPlaylist, rateSubmission, selection, toggle }) => {
     const videoRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isMuted, setIsMuted] = useState(true);
@@ -119,6 +119,8 @@ const VideoCard = ({ submission, isActive, addToPlaylist, rateSubmission }) => {
                         submission={submission}
                         addToPlaylist={addToPlaylist}
                         rateSubmission={rateSubmission}
+                        selection={selection}
+                        toggle={toggle}
                     />
                 </div>
             </div>

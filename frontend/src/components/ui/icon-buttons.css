@@ -68,3 +68,73 @@
 .icon-lg {
   @apply text-2xl;
 }
+
+/* ========================================
+   BOUTONS DE NAVIGATION MOBILE
+   ======================================== */
+
+/* Bouton de navigation mobile (icône + texte vertical) */
+.btn-mobile-nav {
+  @apply flex flex-col items-center gap-1;
+  @apply cursor-pointer;
+  @apply transition-all duration-300 ease-out;
+  @apply active:scale-95;
+}
+
+/* Icône du bouton mobile */
+.btn-mobile-nav-icon {
+  @apply text-[22px];
+  @apply transition-colors duration-300;
+}
+
+/* Texte du bouton mobile */
+.btn-mobile-nav-text {
+  @apply text-xs;
+  @apply transition-colors duration-300;
+}
+
+/* États pour les différents types de boutons mobile */
+.btn-mobile-nav-home {
+  @apply text-white/70;
+  @apply hover:text-white active:text-white;
+}
+
+.btn-mobile-nav-favorite {
+  @apply text-white/70;
+  @apply hover:text-yellow-400 active:text-yellow-400;
+}
+
+.btn-mobile-nav-favorite-active {
+  @apply text-yellow-400;
+  @apply hover:text-yellow-500;
+}
+
+.btn-mobile-nav-rating {
+  @apply text-white/70;
+  @apply hover:text-yellow-500 active:text-yellow-500;
+}
+
+.btn-mobile-nav-rating-active {
+  @apply text-yellow-500;
+  @apply hover:text-yellow-600;
+}
+
+.btn-mobile-nav-watch-later {
+  @apply text-white/70;
+  @apply hover:text-blue-400 active:text-blue-400;
+}
+
+.btn-mobile-nav-watch-later-active {
+  @apply text-blue-400;
+  @apply hover:text-blue-500;
+}
+
+.btn-mobile-nav-report {
+  @apply text-white/70;
+  @apply hover:text-red-400 active:text-red-400;
+}
+
+.btn-mobile-nav-report-active {
+  @apply text-red-400;
+  @apply hover:text-red-500;
+}

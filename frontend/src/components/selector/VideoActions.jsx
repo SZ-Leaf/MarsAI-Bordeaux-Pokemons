@@ -6,12 +6,9 @@ import ReportButton from '../playlists/AddToReport';
 import RatingButton from '../playlists/AddToRatingBtn';
 
 
-import {useSubmissionPlaylistStatus} from "../../hooks/useSubmissionPlaylistStatus";
-
-const VideoActions = ({ submission, addToPlaylist, rateSubmission }) => {
+const VideoActions = ({ submission, addToPlaylist, rateSubmission, selection, toggle }) => {
   const [rating, setRating] = useState(0);
   const [showRatingModal, setShowRatingModal] = useState(false);
-  const { selection, loading, toggle } = useSubmissionPlaylistStatus(submission.id);
 
   const onFav = useCallback(() => toggle("FAVORITES"), [toggle]);
   const onWatch = useCallback(() => toggle("WATCH_LATER"), [toggle]);

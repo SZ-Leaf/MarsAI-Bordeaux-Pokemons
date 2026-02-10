@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router';
 import RatingModal from '../modals/RatingModal';
 import { useRatingModal } from '../../hooks/useRatingModal';
+import '../ui/icon-buttons.css';
 
 
 const MobileBottomNav = ({ 
@@ -8,7 +9,8 @@ const MobileBottomNav = ({
   onWatchLaterClick, 
   onReportClick,
   currentSubmission,
-  rateSubmission 
+  rateSubmission,
+  selection
 }) => {
   const navigate = useNavigate();
   const { showRatingModal, handleRatingSubmit, openModal, closeModal } = useRatingModal(rateSubmission);
@@ -26,42 +28,47 @@ const MobileBottomNav = ({
       ">
         <button 
           onClick={() => navigate('/')}
-          className="flex flex-col items-center gap-1 text-white/70 active:text-white"
+          className="btn-mobile-nav btn-mobile-nav-home"
+          aria-label="Accueil"
         >
-          <i className="pi pi-home" style={{ fontSize: '22px' }}></i>
-          <span className="text-xs">Accueil</span>
+          <i className="pi pi-home btn-mobile-nav-icon"></i>
+          <span className="btn-mobile-nav-text">Accueil</span>
         </button>
         
         <button 
           onClick={onFavoriteClick}
-          className="flex flex-col items-center gap-1 text-white/70 active:text-yellow-400"
+          className={`btn-mobile-nav ${selection === 'FAVORITES' ? 'btn-mobile-nav-favorite-active' : 'btn-mobile-nav-favorite'}`}
+          aria-label="J'aime"
         >
-          <i className="pi pi-heart" style={{ fontSize: '22px' }}></i>
-          <span className="text-xs">J'aime</span>
+          <i className={`pi pi-heart${selection === 'FAVORITES' ? '-fill' : ''} btn-mobile-nav-icon`}></i>
+          <span className="btn-mobile-nav-text">J'aime</span>
         </button>
         
         <button 
           onClick={openModal}
-          className="flex flex-col items-center gap-1 text-white/70 active:text-yellow-500"
+          className="btn-mobile-nav btn-mobile-nav-rating"
+          aria-label="Noter"
         >
-          <i className="pi pi-star" style={{ fontSize: '22px' }}></i>
-          <span className="text-xs">Noter</span>
+          <i className="pi pi-star btn-mobile-nav-icon"></i>
+          <span className="btn-mobile-nav-text">Noter</span>
         </button>
         
         <button 
           onClick={onWatchLaterClick}
-          className="flex flex-col items-center gap-1 text-white/70 active:text-blue-400"
+          className={`btn-mobile-nav ${selection === 'WATCH_LATER' ? 'btn-mobile-nav-watch-later-active' : 'btn-mobile-nav-watch-later'}`}
+          aria-label="Plus tard"
         >
-          <i className="pi pi-history" style={{ fontSize: '22px' }}></i>
-          <span className="text-xs">Plus tard</span>
+          <i className="pi pi-history btn-mobile-nav-icon"></i>
+          <span className="btn-mobile-nav-text">Plus tard</span>
         </button>
         
         <button 
           onClick={onReportClick}
-          className="flex flex-col items-center gap-1 text-white/70 active:text-red-400"
+          className={`btn-mobile-nav ${selection === 'REPORT' ? 'btn-mobile-nav-report-active' : 'btn-mobile-nav-report'}`}
+          aria-label="Signaler"
         >
-          <i className="pi pi-flag" style={{ fontSize: '22px' }}></i>
-          <span className="text-xs">Signaler</span>
+          <i className="pi pi-flag btn-mobile-nav-icon"></i>
+          <span className="btn-mobile-nav-text">Signaler</span>
         </button>
       </nav>
 

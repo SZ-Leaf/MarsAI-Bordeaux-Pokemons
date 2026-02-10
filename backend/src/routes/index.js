@@ -16,10 +16,9 @@ router.use('/youtube', youtubeRoutes);
 router.use('/oauth', oauthRoutes);
 router.use('/auth', authRoutes);
 router.use('/tags',tagsRoutes);
-router.use('/selectors', selectorRoutes);
 router.use('/sponsors', sponsorsRoutes);
-router.use('/selector', selectorRoutes);
 router.use('/newsletter', newsletterRoutes);
+router.use('/selector', selectorRoutes);
 
 
 export default router;

@@ -4,6 +4,8 @@ import Header from './components/layout/header/Header';
 import Footer from './components/layout/footer/Footer';
 import { Routes, Route, useLocation } from 'react-router';
 import Submit from './pages/Submit.jsx';
+import Tags from './components/tags/Tags'
+import Sponsors from './components/sponsors/Sponsors.jsx';
 import Selector from './components/selector/Selector';
 import Register from './pages/Register';
 import Login from './pages/Login';

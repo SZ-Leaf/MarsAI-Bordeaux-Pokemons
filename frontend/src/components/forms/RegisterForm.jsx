@@ -6,7 +6,7 @@ import {useAuth} from "../../hooks/useAuth";
 import { useNavigate } from "react-router";
 import { useLanguage } from "../../context/LanguageContext";
 import { responseHelper } from "../../helpers/responseHelper";
-import {useAlertHelper} from "../../helpers/alertHelper";
+import {alertHelper as useAlertHelper} from "../../helpers/alertHelper";
 
 const RegisterForm = ({ token, email }) => {
    const { user } = useAuth();

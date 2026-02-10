@@ -120,7 +120,7 @@ export default function Homepage() {
           </div>
         </div>
         <div>
-          <div class="flex items-center justify-center">
+          <div className="flex items-center justify-center">
             <div className="loading"></div>
           </div>
 

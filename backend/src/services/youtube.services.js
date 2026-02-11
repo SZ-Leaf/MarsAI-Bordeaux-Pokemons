@@ -72,3 +72,19 @@ export const uploadCaptions = async ({ videoId, srtPath, language = 'fr' }) => {
 
   return response.data;
 };
+export const deleteVideo = async (videoId) => {
+  try {
+    const { token } = await oauth2Client.getAccessToken();
+    oauth2Client.setCredentials({ access_token: token });
+
+    const response = await youtube.videos.delete({
+      id: videoId
+    });
+
+    console.log(`Vidéo ${videoId} supprimée avec succès !`);
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de la suppression de la vidéo :', error.response?.data || error.message);
+    throw error;
+  }
+};

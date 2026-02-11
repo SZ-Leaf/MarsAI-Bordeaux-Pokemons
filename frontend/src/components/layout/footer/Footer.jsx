@@ -2,21 +2,37 @@ import React, { useState } from 'react';
 import './footer.css';
 import '../navbar/navbar.css';
 import '../../ui/buttons.css';
+import { subscribeNewsletter } from '../../../services/newsletter.service';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
+  const [consent, setConsent] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (email) {
-      // TODO: Implémenter l'envoi vers votre API newsletter
-      console.log('Email inscrit:', email);
+    const trimmedEmail = email?.trim();
+    if (!trimmedEmail) {
+      alert('Veuillez saisir votre email.');
+      return;
+    }
+    if (!consent) {
+      alert("Veuillez accepter de recevoir la newsletter.");
+      return;
+    }
+    setIsSubmitting(true);
+    setIsSubscribed(false);
+    try {
+      await subscribeNewsletter(trimmedEmail, true);
+      alert('Vérifiez votre email pour confirmer votre inscription.');
+      setEmail('');
+      setConsent(false);
       setIsSubscribed(true);
-      setTimeout(() => {
-        setIsSubscribed(false);
-        setEmail('');
-      }, 3000);
+    } catch (err) {
+      alert(err?.message || 'Une erreur est survenue.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -86,17 +102,33 @@ const Footer = () => {
               RESTEZ CONNECTÉ
             </h3>
             <form className="newsletter-form" onSubmit={handleSubmit}>
-              <input
-                type="email"
-                placeholder="Email Signal"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="newsletter-input"
-                required
-              />
-              <button type="submit" className="btn btn-primary newsletter-btn">
-                {isSubscribed ? '✓ Inscrit' : "S'inscrire"}
-              </button>
+              <div className="newsletter-row">
+                <input
+                  type="email"
+                  placeholder="Votre email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="newsletter-input"
+                  required
+                  disabled={isSubmitting}
+                />
+                <button
+                  type="submit"
+                  className="btn btn-primary newsletter-btn"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Envoi...' : isSubscribed ? '✓ Inscrit' : "S'inscrire"}
+                </button>
+              </div>
+              <label className="newsletter-consent">
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  disabled={isSubmitting}
+                />
+                <span>J'accepte de recevoir la newsletter.</span>
+              </label>
             </form>
           </div>
         </div>

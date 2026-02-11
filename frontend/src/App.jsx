@@ -9,6 +9,8 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
+import PlaylistDetail from './pages/PlaylistDetail.jsx';
+import SelectorDashboard from './pages/SelectorDashboard.jsx';
 
 function App() {
   const location = useLocation();
@@ -25,6 +27,8 @@ function App() {
           <Route path="/selector" element={<Selector />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path='/selector/dashboard' element={<SelectorDashboard/>}/>
+          <Route path='/playlist/:list' element={<PlaylistDetail/>}/>
         </Routes>
       </div>
       

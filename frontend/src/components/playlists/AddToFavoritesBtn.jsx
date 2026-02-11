@@ -12,7 +12,6 @@ export default function FavoriteButton({ submissionId, active, onToggle }) {
         icon={active ? "pi pi-heart-fill" : "pi pi-heart"}
         rounded
         outlined
-        focusRing={false}
         data-pr-tooltip={active ? "Retirer des favoris" : "Ajouter aux favoris"}
         style={
           active

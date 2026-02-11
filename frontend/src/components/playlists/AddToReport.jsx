@@ -12,7 +12,6 @@ export default function ReportButton({ submissionId, active, onToggle }) {
         icon="pi pi-times"
         rounded
         outlined
-        focusRing={false}
         data-pr-tooltip={active ? "Retirer des signalements" : "Ajouter aux signalements"}
         style={
           active

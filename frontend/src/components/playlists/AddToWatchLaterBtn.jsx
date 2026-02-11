@@ -12,7 +12,6 @@ export default function WatchLaterButton({ submissionId, active, onToggle }) {
         icon="pi pi-history"
         rounded
         outlined
-        focusRing={false}
         data-pr-tooltip={active ? "Retirer de la liste" : "A voir plus tard"}
         style={
           active

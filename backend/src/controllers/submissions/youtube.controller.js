@@ -91,7 +91,6 @@ export const deleteToYoutube = async (req, res) => {
     }
 
     const videoId = submission.youtube_URL.split('v=')[1];
-    console.log(videoId);
 
     await deleteVideo(videoId);
 

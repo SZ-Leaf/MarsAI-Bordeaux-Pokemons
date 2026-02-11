@@ -138,17 +138,20 @@ export const step4Schema = submissionSchema.pick({
 export const formatZodErrors = (zodError) => {
   const errors = {};
   
-  // Vérification défensive : s'assurer que zodError et zodError.errors existent
-  if (!zodError || !zodError.errors || !Array.isArray(zodError.errors)) {
-    console.error('Format d\'erreur Zod invalide:', zodError);
+  // Zod utilise .issues pour lister les erreurs
+  const issues = zodError.issues || zodError.errors || [];
+  
+  if (issues.length === 0) {
+    console.warn('Zod signale un échec mais aucune issue trouvée:', zodError);
     return errors;
   }
-  
-  zodError.errors.forEach(err => {
-    // Gérer les paths imbriqués (ex: collaborators.0.firstname -> collaborator_0_firstname)
+  // Gère et formatte les erreurs
+  issues.forEach(err => {
     const path = err.path.join('_');
     errors[path] = err.message;
   });
+  
+  console.log('Erreurs formatées:', errors);
   return errors;
 };
 

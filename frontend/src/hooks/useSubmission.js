@@ -125,14 +125,18 @@ export const useSubmission = () => {
       4: step4Schema
     };
     
+    console.log(`Données envoyées à Zod (Step ${step}):`, formData);
     const result = schemas[step].safeParse(formData);
     
     if (!result.success) {
+      console.log('Issues Zod brutes:', result.error.issues);
       const stepErrors = formatZodErrors(result.error);
+      console.log('Erreurs de validation détectées:', stepErrors);
       setErrors(stepErrors);
       return false;
     }
     
+    console.log('Validation réussie');
     setErrors({});
     return true;
   };

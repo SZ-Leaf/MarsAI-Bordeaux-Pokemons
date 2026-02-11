@@ -50,7 +50,7 @@ export default function TagSelectCreatable({
   const customStyles = {
     control: (base, state) => ({
       ...base,
-      backgroundColor: "rgba(255, 255, 255, 0.05)",
+      backgroundColor: "transparent",
       borderColor: state.isFocused ? "rgba(255, 255, 255, 0.2)" : "rgba(255, 255, 255, 0.1)",
       borderWidth: "2px",
       borderRadius: "0.5rem",
@@ -62,7 +62,7 @@ export default function TagSelectCreatable({
     }),
     menu: (base) => ({
       ...base,
-      backgroundColor: "#111827", // gray-900
+      backgroundColor: "#080808", // Correspond à bg-surface
       border: "1px solid rgba(255, 255, 255, 0.1)",
       borderRadius: "0.5rem",
       padding: "4px"
@@ -70,19 +70,19 @@ export default function TagSelectCreatable({
     option: (base, state) => ({
       ...base,
       backgroundColor: state.isSelected 
-        ? "rgba(59, 130, 246, 0.5)" 
+        ? "rgba(59, 130, 246, 0.3)" 
         : state.isFocused 
-          ? "rgba(255, 255, 255, 0.1)" 
+          ? "rgba(255, 255, 255, 0.05)" 
           : "transparent",
       color: "white",
       cursor: "pointer",
       "&:active": {
-        backgroundColor: "rgba(59, 130, 246, 0.7)"
+        backgroundColor: "rgba(59, 130, 246, 0.5)"
       }
     }),
     multiValue: (base) => ({
       ...base,
-      backgroundColor: "rgba(59, 130, 246, 0.2)",
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
       borderRadius: "9999px",
       padding: "2px 8px"
     }),

@@ -3,7 +3,7 @@
 
 /* Classe de base commune à tous les inputs */
 .input-dark {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: transparent !important;
   @apply w-full px-4 py-2;
   @apply rounded-lg;
   @apply border-2 border-white/10;
@@ -28,7 +28,7 @@
 /* Selects */
 
 .select-dark {
-  background-color: rgba(255, 255, 255, 0.05) !important;
+  background-color: transparent !important;
   color: white !important;
   color-scheme: dark;
   appearance: none;

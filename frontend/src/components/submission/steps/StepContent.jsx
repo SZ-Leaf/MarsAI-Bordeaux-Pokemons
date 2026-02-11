@@ -8,7 +8,7 @@ const StepContent = ({ currentStep, formData, errors, updateField }) => {
   const StepComponent = stepConfig.component;
   
   return (
-    <div className="bg-gray-900/50 border border-gray-700 rounded p-6 pl-8 mb-6">
+    <div className="p-2 mb-6">
       <StepComponent 
         formData={formData} 
         errors={errors} 

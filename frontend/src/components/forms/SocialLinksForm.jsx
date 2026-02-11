@@ -82,6 +82,7 @@ const SocialLinksForm = ({ formData, errors, updateField, updateSocialField }) =
                     error={errors[`social_${index}_network_id`]}
                     options={socialNetworkOptions}
                     placeholder=""
+                    variant="dark"
                   />
                 </FormField>
                 
@@ -96,9 +97,10 @@ const SocialLinksForm = ({ formData, errors, updateField, updateSocialField }) =
                     onChange={(e) => update(formData.socials, index, 'url', e.target.value)}
                     error={errors[`social_${index}_url`]}
                     placeholder="https://exemple.com"
+                    variant="dark"
                   />
                   {!errors[`social_${index}_url`] && social.url && (
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-400 mt-1">
                       L'URL doit commencer par https://
                     </p>
                   )}

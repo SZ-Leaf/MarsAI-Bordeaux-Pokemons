@@ -52,6 +52,7 @@ const SubmissionForm = ({ formData, errors, updateField }) => {
             onChange={(e) => updateField('classification', e.target.value)}
             error={errors.classification}
             options={classificationOptions}
+            variant="dark"
           />
         </FormField>
       </div>

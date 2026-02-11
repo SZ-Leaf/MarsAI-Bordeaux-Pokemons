@@ -34,13 +34,13 @@ const GalleryUpload = ({ formData, errors, updateField }) => {
   return (
     <div className="mb-6 pl-4">
       <h3 className="text-lg font-medium mb-4">Galerie d'images</h3>
-      <p className="text-sm text-gray-600 mb-4">
+      <p className="text-sm text-gray-300 mb-4">
         Ajoutez jusqu'à 3 images pour illustrer votre vidéo (optionnel).
         {gallery.length > 0 && ` (${gallery.length}/${maxImages})`}
       </p>
       
       {canAddMore && (
-        <div className="border-2 border-dashed border-gray-300 rounded p-6 text-center mb-4">
+        <div className="border-2 border-dashed border-white/10 rounded p-6 text-center mb-4">
           <input
             ref={fileInputRef}
             type="file"
@@ -56,7 +56,7 @@ const GalleryUpload = ({ formData, errors, updateField }) => {
           >
             Cliquez pour ajouter {gallery.length === 0 ? 'des images' : 'une image supplémentaire'}
           </label>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-gray-400 mt-2">
             Formats acceptés: JPEG, JPG, PNG • Taille max: 5MB par image
           </p>
         </div>
@@ -69,7 +69,7 @@ const GalleryUpload = ({ formData, errors, updateField }) => {
               <img
                 src={previews[index]}
                 alt={`Preview ${index + 1}`}
-                className="w-full h-32 object-cover rounded border"
+                className="w-full h-32 object-cover rounded border border-white/10"
               />
               <button
                 type="button"
@@ -79,10 +79,10 @@ const GalleryUpload = ({ formData, errors, updateField }) => {
               >
                 ×
               </button>
-              <div className="text-xs text-gray-600 mt-1 truncate">
+              <div className="text-xs text-gray-300 mt-1 truncate">
                 {file.name}
               </div>
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-gray-400">
                 {formatFileSize(file.size)}
               </div>
               {errors[`gallery_${index}`] && (

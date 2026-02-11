@@ -45,7 +45,7 @@ const SocialLinksList = ({ formData, errors, updateField }) => {
       ) : (
         <div className="space-y-3">
           {currentSocials.map((social, index) => (
-            <div key={index} className="border border-gray-700 rounded p-4 flex justify-between items-center bg-gray-800/30">
+            <div key={index} className="border border-white/10 rounded p-4 flex justify-between items-center bg-white/5">
               <div>
                 <p className="font-medium text-white">{getNetworkLabel(social.network_id)}</p>
                 <p className="text-sm text-gray-300 break-all">{social.url}</p>

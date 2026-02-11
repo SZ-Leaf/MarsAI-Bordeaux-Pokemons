@@ -69,6 +69,7 @@ const CollaboratorsForm = ({ formData, errors, updateField, updateCollaboratorFi
                     value={collab.firstname}
                     onChange={(e) => update(formData.collaborators, index, 'firstname', e.target.value)}
                     error={errors[`collaborator_${index}_firstname`]}
+                    variant="dark"
                   />
                 </FormField>
                 
@@ -81,6 +82,7 @@ const CollaboratorsForm = ({ formData, errors, updateField, updateCollaboratorFi
                     value={collab.lastname}
                     onChange={(e) => update(formData.collaborators, index, 'lastname', e.target.value)}
                     error={errors[`collaborator_${index}_lastname`]}
+                    variant="dark"
                   />
                 </FormField>
                 
@@ -94,6 +96,7 @@ const CollaboratorsForm = ({ formData, errors, updateField, updateCollaboratorFi
                     value={collab.email}
                     onChange={(e) => update(formData.collaborators, index, 'email', e.target.value)}
                     error={errors[`collaborator_${index}_email`]}
+                    variant="dark"
                   />
                 </FormField>
                 
@@ -107,6 +110,7 @@ const CollaboratorsForm = ({ formData, errors, updateField, updateCollaboratorFi
                     onChange={(e) => update(formData.collaborators, index, 'gender', e.target.value)}
                     error={errors[`collaborator_${index}_gender`]}
                     options={genderOptions}
+                    variant="dark"
                   />
                 </FormField>
                 
@@ -123,6 +127,7 @@ const CollaboratorsForm = ({ formData, errors, updateField, updateCollaboratorFi
                     rows={2}
                     maxLength={500}
                     placeholder="Rôle dans la production (ex: Director, Producer, Editor)"
+                    variant="dark"
                   />
                 </FormField>
               </div>

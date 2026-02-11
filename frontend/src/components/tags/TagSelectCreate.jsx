@@ -47,6 +47,72 @@ export default function TagSelectCreatable({
     setMsg(result.message);
   };
 
+  const customStyles = {
+    control: (base, state) => ({
+      ...base,
+      backgroundColor: "rgba(255, 255, 255, 0.05)",
+      borderColor: state.isFocused ? "rgba(255, 255, 255, 0.2)" : "rgba(255, 255, 255, 0.1)",
+      borderWidth: "2px",
+      borderRadius: "0.5rem",
+      padding: "2px",
+      boxShadow: state.isFocused ? "0 0 0 2px rgba(59, 130, 246, 0.5)" : "none",
+      "&:hover": {
+        borderColor: "rgba(255, 255, 255, 0.2)"
+      }
+    }),
+    menu: (base) => ({
+      ...base,
+      backgroundColor: "#111827", // gray-900
+      border: "1px solid rgba(255, 255, 255, 0.1)",
+      borderRadius: "0.5rem",
+      padding: "4px"
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isSelected 
+        ? "rgba(59, 130, 246, 0.5)" 
+        : state.isFocused 
+          ? "rgba(255, 255, 255, 0.1)" 
+          : "transparent",
+      color: "white",
+      cursor: "pointer",
+      "&:active": {
+        backgroundColor: "rgba(59, 130, 246, 0.7)"
+      }
+    }),
+    multiValue: (base) => ({
+      ...base,
+      backgroundColor: "rgba(59, 130, 246, 0.2)",
+      borderRadius: "9999px",
+      padding: "2px 8px"
+    }),
+    multiValueLabel: (base) => ({
+      ...base,
+      color: "#00b8da", // cyan
+      fontWeight: "500"
+    }),
+    multiValueRemove: (base) => ({
+      ...base,
+      color: "#00b8da",
+      "&:hover": {
+        backgroundColor: "transparent",
+        color: "white"
+      }
+    }),
+    input: (base) => ({
+      ...base,
+      color: "white"
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: "rgba(255, 255, 255, 0.4)"
+    }),
+    singleValue: (base) => ({
+      ...base,
+      color: "white"
+    })
+  };
+
   return (
     <div>
       <AsyncCreatableSelect
@@ -54,6 +120,7 @@ export default function TagSelectCreatable({
         cacheOptions
         defaultOptions={defaultOptions}
         loadOptions={loadOptions}
+        styles={customStyles}
         value={value}
         onChange={(newValue) => {
           setMsg("");
@@ -69,7 +136,7 @@ export default function TagSelectCreatable({
         openMenuOnClick
       />
 
-      {msg && <p style={{ marginTop: 8 }}>{msg}</p>}
+      {msg && <p className="text-white text-xs mt-2">{msg}</p>}
     </div>
   );
 }

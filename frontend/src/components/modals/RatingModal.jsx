@@ -8,23 +8,23 @@ const RatingModal = ({ isOpen, onClose, submission, onSubmit }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
 
   const resetForm = () => {
     setRating(0);
     setComment('');
-    setError('');
+    setMessage('');
   };
 
   const handleSubmit = async () => {
     // Vérifier qu'au moins une valeur est fournie
     if (rating === 0 && comment.trim() === '') {
-      setError('Veuillez fournir au moins une note ou un commentaire');
+      setMessage('Veuillez fournir au moins une note ou un commentaire');
       return;
     }
 
     setIsSubmitting(true);
-    setError('');
+    setMessage('');
 
     try {
       await onSubmit(submission.id, rating, comment);
@@ -32,7 +32,7 @@ const RatingModal = ({ isOpen, onClose, submission, onSubmit }) => {
       onClose();
     } catch (error) {
       console.error('Erreur lors de la soumission:', error);
-      setError(error.message || 'Erreur lors de la soumission. Veuillez réessayer.');
+      setMessage(error.message || 'Erreur lors de la soumission. Veuillez réessayer.');
     } finally {
       setIsSubmitting(false);
     }
@@ -91,9 +91,9 @@ const RatingModal = ({ isOpen, onClose, submission, onSubmit }) => {
         </div>
 
         {/* Message d'erreur */}
-        {error && (
+        {message && (
           <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-            <p className="text-sm text-red-400">{error}</p>
+            <p className="text-sm text-red-400">{message}</p>
           </div>
         )}
 

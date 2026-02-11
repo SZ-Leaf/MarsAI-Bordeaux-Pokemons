@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { API_URL } from '../utils/api';
+import { rateSubmissionService } from '../services/submission.service';
 
 export const useSelector = () => {
     const [submissions, setSubmissions] = useState([]);
@@ -40,24 +41,10 @@ export const useSelector = () => {
             
             if (comment && comment.trim()) {
                 body.comment = comment.trim();
-            }
-            
-            const response = await fetch(`${API_URL}/api/selector/rate/${submissionId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify(body)
-            });
+            }            
 
-            if (!response.ok) {
-                // Améliorer le message d'erreur
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || 'Erreur lors de la notation');
-            }
-            
-            return await response.json();
+            const response = await rateSubmissionService(submissionId, body);
+            console.log(response);
         } catch (err) {
             throw err;
         }

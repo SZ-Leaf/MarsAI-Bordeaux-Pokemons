@@ -1,7 +1,7 @@
 const FormField = ({ label, required, error, children, className = '' }) => {
   return (
     <div className={className}>
-      <label className="block text-sm font-medium mb-1">
+      <label className="block text-sm font-medium mb-1 text-white">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       {children}

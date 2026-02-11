@@ -34,6 +34,7 @@ const CreatorForm = ({ formData, errors, updateField }) => {
             value={formData.creator_firstname}
             onChange={(e) => handleNameChange('creator_firstname', e.target.value)}
             error={errors.creator_firstname}
+            variant="dark"
           />
         </FormField>
         
@@ -42,6 +43,7 @@ const CreatorForm = ({ formData, errors, updateField }) => {
             value={formData.creator_lastname}
             onChange={(e) => handleNameChange('creator_lastname', e.target.value)}
             error={errors.creator_lastname}
+            variant="dark"
           />
         </FormField>
         
@@ -58,6 +60,7 @@ const CreatorForm = ({ formData, errors, updateField }) => {
             }}
             onBlur={handleEmailBlur}
             error={errors.creator_email}
+            variant="dark"
           />
         </FormField>
         
@@ -67,6 +70,7 @@ const CreatorForm = ({ formData, errors, updateField }) => {
             onChange={(value) => updateField('creator_phone', value)}
             error={errors.creator_phone}
             placeholder="Numéro de téléphone"
+            variant="dark"
           />
         </FormField>
         
@@ -76,6 +80,7 @@ const CreatorForm = ({ formData, errors, updateField }) => {
             onChange={(value) => updateField('creator_mobile', value)}
             error={errors.creator_mobile}
             placeholder="Numéro de mobile"
+            variant="dark"
           />
         </FormField>
         
@@ -85,6 +90,7 @@ const CreatorForm = ({ formData, errors, updateField }) => {
             onChange={(e) => updateField('creator_gender', e.target.value)}
             error={errors.creator_gender}
             options={genderOptions}
+            variant="dark"
           />
         </FormField>
         
@@ -93,6 +99,7 @@ const CreatorForm = ({ formData, errors, updateField }) => {
             value={formData.creator_country}
             onChange={(value) => updateField('creator_country', value)}
             error={errors.creator_country}
+            variant="dark"
           />
         </FormField>
         
@@ -102,6 +109,7 @@ const CreatorForm = ({ formData, errors, updateField }) => {
             onChange={(e) => updateField('referral_source', e.target.value)}
             error={errors.referral_source}
             options={referralSourceOptions}
+            variant="dark"
           />
         </FormField>
       </div>
@@ -111,6 +119,7 @@ const CreatorForm = ({ formData, errors, updateField }) => {
           value={formData.creator_address}
           onChange={(e) => updateField('creator_address', e.target.value)}
           error={errors.creator_address}
+          variant="dark"
         />
       </FormField>
     </div>

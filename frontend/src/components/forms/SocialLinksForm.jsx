@@ -74,31 +74,33 @@ const SocialLinksForm = ({ formData, errors, updateField, updateSocialField }) =
                 <FormField 
                   label="Réseau social" 
                   required 
-                  error={errors[`social_${index}_network_id`]}
+                  error={errors[`socials_${index}_network_id`]}
                 >
                   <Select
                     value={social.network_id || ''}
                     onChange={(e) => handleNetworkChange(index, e.target.value)}
-                    error={errors[`social_${index}_network_id`]}
+                    error={errors[`socials_${index}_network_id`]}
                     options={socialNetworkOptions}
                     placeholder=""
+                    variant="dark"
                   />
                 </FormField>
                 
                 <FormField 
                   label="URL" 
                   required 
-                  error={errors[`social_${index}_url`]}
+                  error={errors[`socials_${index}_url`]}
                 >
                   <TextInput
                     type="url"
                     value={social.url}
                     onChange={(e) => update(formData.socials, index, 'url', e.target.value)}
-                    error={errors[`social_${index}_url`]}
+                    error={errors[`socials_${index}_url`]}
                     placeholder="https://exemple.com"
+                    variant="dark"
                   />
-                  {!errors[`social_${index}_url`] && social.url && (
-                    <p className="text-xs text-gray-500 mt-1">
+                  {!errors[`socials_${index}_url`] && social.url && (
+                    <p className="text-xs text-gray-400 mt-1">
                       L'URL doit commencer par https://
                     </p>
                   )}

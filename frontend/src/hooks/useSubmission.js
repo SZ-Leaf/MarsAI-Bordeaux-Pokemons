@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { submitFilm } from '../services/submissionService';
+import { submitFilm } from '../services/submission.service.js';
 import { 
   submissionSchema, 
   step1Schema, 
@@ -125,14 +125,18 @@ export const useSubmission = () => {
       4: step4Schema
     };
     
+    console.log(`Données envoyées à Zod (Step ${step}):`, formData);
     const result = schemas[step].safeParse(formData);
     
     if (!result.success) {
+      console.log('Issues Zod brutes:', result.error.issues);
       const stepErrors = formatZodErrors(result.error);
+      console.log('Erreurs de validation détectées:', stepErrors);
       setErrors(stepErrors);
       return false;
     }
     
+    console.log('Validation réussie');
     setErrors({});
     return true;
   };
@@ -245,6 +249,16 @@ export const useSubmission = () => {
       };
       
       formDataToSend.append('data', JSON.stringify(data));
+
+      console.log('Données à envoyer:', {
+        files: {
+          video: formData.video?.name,
+          cover: formData.cover?.name,
+          subtitles: formData.subtitles?.name,
+          gallery: formData.gallery?.length
+        },
+        data
+      });
       
       // Soumettre
       const result = await submitFilm(formDataToSend);

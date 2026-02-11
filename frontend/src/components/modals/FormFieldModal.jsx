@@ -24,7 +24,7 @@ const FormField = ({
       return children;
     }
 
-    const baseClassName = `${type === 'select' ? 'select-light' : 'input-light'} ${hasError ? 'border-red-500' : ''}`;
+    const baseClassName = `${type === 'select' ? 'select-dark' : 'input-dark'} ${hasError ? 'border-red-500' : ''}`;
 
     switch (type) {
       case 'textarea':
@@ -49,7 +49,7 @@ const FormField = ({
             className={baseClassName}
           >
             {options.map((option, index) => (
-              <option key={index} value={option.value} className="select-light-option">
+              <option key={index} value={option.value} className="select-dark-option">
                 {option.label}
               </option>
             ))}

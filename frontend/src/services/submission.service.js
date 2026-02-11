@@ -13,9 +13,14 @@ export const getSubmissionById = async (submissionId) => {
   return apiCall(`/api/submissions/${submissionId}`);
 };
 
-export const getSubmissionsService = async ({pagination}) => {
+export const getSubmissionsService = async ({filters}) => {
   return apiCall('/api/submissions', {
     method: 'GET',
-    params: pagination
+    params: {
+      limit: filters.limit,
+      offset: filters.offset,
+      orderBy: filters.orderBy,
+      status: filters.status
+    }
   });
 };

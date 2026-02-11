@@ -11,6 +11,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
+import Submissions from './pages/Submissions';
 
 function App() {
   const location = useLocation();
@@ -27,6 +28,7 @@ function App() {
           <Route path="/selector" element={<Selector />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/submissions" element={<Submissions />} />
           <Route path="*" element={<div>404 - Page Not Found</div>} />
         </Routes>
       </div>

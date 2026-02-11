@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getSubmissionsService } from "../services/submission.service";
 import { useLanguage } from "../context/LanguageContext";
 import { alertHelper as useAlertHelper } from "../helpers/alertHelper";
@@ -8,39 +8,41 @@ const Submissions = () => {
    const {language} = useLanguage();
    const [submissions, setSubmissions] = useState([]);
    const [loading, setLoading] = useState(true);
+   const [statusFilter, setStatusFilter] = useState(null);
    const [pagination, setPagination] =useState({
       limit: 15,
       offset: 0,
-      total: 0,
       orderBy: 'DESC'
    });
+
+   const [total, setTotal] = useState(0);
 
    const getSubmissions = async () => {
       setLoading(true);
       try {
-         const response = await getSubmissionsService({pagination});
+         const response = await getSubmissionsService({
+            ...pagination,
+            status: statusFilter
+         });
          setSubmissions(response.submissions);
-         setPagination(prev => ({
-            ...prev,
-            total: response.total,
-         }));
+         setTotal(response.total);
       } catch (error) {
-         useAlertHelper().showMessage(error?.message);
+         useAlertHelper().showMessage(error?.message?.[language] || 'Error retrieving submissions');
       } finally {
          setLoading(false);
       }
    }
+   
+   useEffect(() => {
+      getSubmissions();
+   }, [pagination.limit, pagination.offset, pagination.orderBy, statusFilter]);
 
    return (
       <div>
-         <h1>Soumissions</h1>
-         <div>
-            <button onClick={() => getSubmissions('ASC')}>Trier par date croissante</button>
-            <button onClick={() => getSubmissions('DESC')}>Trier par date décroissante</button>
-         </div>
+         <h1>{language === 'fr' ? 'Soumissions' : 'Submissions'}</h1>
          <div>
             {submissions.map(submission => (
-               <div key={submission.id}>{submission.title}</div>
+               <div key={submission.id}>{submission.original_title}</div>
             ))}
          </div>
       </div>

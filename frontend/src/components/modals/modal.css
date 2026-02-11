@@ -75,9 +75,9 @@
 
 .modal-close-btn:hover {
   @apply bg-white/10;
-  @apply border-white/20;
-  @apply rotate-90;
-  @apply text-white;
+  @apply border-red/20;
+  @apply scale-105;
+  @apply text-red;
 }
 
 .modal-close-btn:active {

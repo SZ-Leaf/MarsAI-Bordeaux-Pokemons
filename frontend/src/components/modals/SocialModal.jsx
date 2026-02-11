@@ -39,7 +39,7 @@ const SocialModal = ({ isOpen, onClose, social, socialIndex, onSave, errors }) =
           value={formData.network_id || ''}
           onChange={handleNetworkChange}
           error={localErrors.network_id}
-          externalError={errors?.[`social_${socialIndex}_network_id`]}
+          externalError={errors?.[`socials_${socialIndex}_network_id`]}
           required
           options={[
             { value: '', label: 'Sélectionner un réseau' },
@@ -57,7 +57,7 @@ const SocialModal = ({ isOpen, onClose, social, socialIndex, onSave, errors }) =
           value={formData.url}
           onChange={(value) => handleChange('url', value)}
           error={localErrors.url}
-          externalError={errors?.[`social_${socialIndex}_url`]}
+          externalError={errors?.[`socials_${socialIndex}_url`]}
           required
           placeholder="https://exemple.com"
           helpText={!localErrors.url && formData.url ? "L'URL doit commencer par https://" : ''}

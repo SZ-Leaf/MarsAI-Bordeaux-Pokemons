@@ -59,7 +59,7 @@ export const submissionSchema = z.object({
   language: z.string().min(1, "Requis"),
   english_synopsis: z.string().min(1, "Requis").max(300, "Maximum 300 caractères"),
   original_synopsis: z.string().max(300, "Maximum 300 caractères").optional().or(z.literal('')),
-  classification: z.enum(['IA', 'hybrid'], { 
+  classification: z.enum(['Full AI', 'Semi-AI'], { 
     errorMap: () => ({ message: "Requis" }) 
   }),
   tech_stack: z.string().min(1, "Requis").max(500, "Maximum 500 caractères"),
@@ -80,7 +80,17 @@ export const submissionSchema = z.object({
   creator_gender: z.string().min(1, "Requis"),
   creator_country: z.string().min(1, "Requis"),
   creator_address: z.string().min(1, "Requis"),
-  referral_source: z.string().min(1, "Requis").max(255, "Maximum 255 caractères"),
+  referral_source: z.enum([
+    'Friend',
+    'Social Media',
+    'Advertisement',
+    'Newsletter',
+    'Recommendation',
+    'Event',
+    'Other'
+  ], { 
+    errorMap: () => ({ message: "Requis" }) 
+  }),
   
   // Contributeurs et liens sociaux
   collaborators: z.array(collaboratorSchema).optional(),
@@ -127,11 +137,21 @@ export const step4Schema = submissionSchema.pick({
 
 export const formatZodErrors = (zodError) => {
   const errors = {};
-  zodError.errors.forEach(err => {
-    // Gérer les paths imbriqués (ex: collaborators.0.firstname -> collaborator_0_firstname)
+  
+  // Zod utilise .issues pour lister les erreurs
+  const issues = zodError.issues || zodError.errors || [];
+  
+  if (issues.length === 0) {
+    console.warn('Zod signale un échec mais aucune issue trouvée:', zodError);
+    return errors;
+  }
+  // Gère et formatte les erreurs
+  issues.forEach(err => {
     const path = err.path.join('_');
     errors[path] = err.message;
   });
+  
+  console.log('Erreurs formatées:', errors);
   return errors;
 };
 

@@ -23,7 +23,7 @@ const VideoUpload = ({ value, onChange, error }) => {
       
       <div 
         className={`border-2 border-dashed rounded p-6 text-center ${
-          dragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+          dragActive ? 'border-blue-500 bg-blue-500/10' : 'border-white/10'
         } ${error ? 'border-red-500' : ''}`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -41,19 +41,19 @@ const VideoUpload = ({ value, onChange, error }) => {
         
         {!value ? (
           <div>
-            <p className="text-gray-600 mb-2">
+            <p className="text-gray-300 mb-2">
               Glissez-déposez une vidéo ici ou{' '}
               <label htmlFor="video-upload" className="text-blue-500 cursor-pointer underline">
                 cliquez pour sélectionner
               </label>
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-400">
               Formats acceptés: MP4, MOV • Taille max: 300MB
             </p>
           </div>
         ) : (
           <div>
-            <div className="text-sm mb-2">
+            <div className="text-sm mb-2 text-white">
               {value.name} ({formatFileSize(value.size)})
             </div>
             {preview && (

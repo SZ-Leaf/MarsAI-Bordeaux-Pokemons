@@ -46,6 +46,8 @@ const CountrySelect = ({ value, onChange, error, variant = 'light' }) => {
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={`w-full border rounded p-2 text-left flex items-center justify-between ${
+          variant === 'dark' ? 'bg-white/5 border-white/10 text-white' : 'bg-white border-gray-200 text-black'
+        } ${
           error ? 'border-red-500' : ''
         }`}
       >
@@ -60,18 +62,18 @@ const CountrySelect = ({ value, onChange, error, variant = 'light' }) => {
                   e.target.style.display = 'none';
                 }}
               />
-              <span>{selectedCountry.name}</span>
+              <span className={variant === 'dark' ? 'text-white' : 'text-black'}>{selectedCountry.name}</span>
             </>
           ) : (
-            <span className="text-gray-500">Sélectionner un pays</span>
+            <span className={variant === 'dark' ? 'text-gray-400' : 'text-gray-500'}>Sélectionner un pays</span>
           )}
         </span>
-        <span className="text-gray-500">▼</span>
+        <span className={variant === 'dark' ? 'text-gray-400' : 'text-gray-500'}>▼</span>
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white border rounded shadow-lg max-h-60 overflow-y-auto">
-          <div className="p-2 sticky top-0 bg-white border-b">
+        <div className={`absolute z-50 w-full mt-1 ${variant === 'dark' ? 'bg-gray-900 border-white/10' : 'bg-white border-gray-200'} border rounded shadow-lg max-h-60 overflow-y-auto`}>
+          <div className={`p-2 sticky top-0 ${variant === 'dark' ? 'bg-gray-900 border-white/10' : 'bg-white border-gray-200'} border-b`}>
             <input
               type="text"
               placeholder="Rechercher un pays..."
@@ -87,8 +89,8 @@ const CountrySelect = ({ value, onChange, error, variant = 'light' }) => {
                 key={country.code}
                 type="button"
                 onClick={() => handleSelect(country)}
-                className={`w-full text-left px-3 py-2 hover:bg-gray-100 flex items-center gap-2 ${
-                  value === country.name ? 'bg-blue-50' : ''
+                className={`w-full text-left px-3 py-2 ${variant === 'dark' ? 'hover:bg-white/10 text-white' : 'hover:bg-gray-100 text-black'} flex items-center gap-2 ${
+                  value === country.name ? (variant === 'dark' ? 'bg-blue-500/20' : 'bg-blue-50') : ''
                 }`}
               >
                 <img

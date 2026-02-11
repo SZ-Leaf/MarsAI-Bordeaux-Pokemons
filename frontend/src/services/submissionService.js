@@ -20,9 +20,9 @@ export default {
   getSubmissionById
 };
 
-export const rateSubmissionService = async (submissionId, rating, comment) => {
+export const rateSubmissionService = async (submissionId, formData) => {
   return apiCall(`/api/selector/rate/${submissionId}`, {
     method: 'POST',
-    body: { rating, comment }
+    body: formData
   });
 };

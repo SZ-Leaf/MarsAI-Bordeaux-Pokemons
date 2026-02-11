@@ -43,20 +43,8 @@ export const useSelector = () => {
                 body.comment = comment.trim();
             }            
 
-            const response = await rateSubmissionService(submissionId, rating, comment);
-
-            if (!response.ok) {
-                // Améliorer le message d'erreur
-                const errorData = await response.json().catch(() => ({}));
-                console.log('Erreur du backend:', errorData); // Pour débogger
-                // Gérer le cas où message est un objet ou une chaîne
-                const errorMessage = typeof errorData.message === 'string' 
-                    ? errorData.message 
-                    : (errorData.error || JSON.stringify(errorData.message) || 'Erreur lors de la notation');
-                throw new Error(errorMessage);
-            }
-            
-            return await response.json();
+            const response = await rateSubmissionService(submissionId, body);
+            console.log(response);
         } catch (err) {
             throw err;
         }

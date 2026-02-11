@@ -46,6 +46,7 @@ const LoginForm = () => {
          }
          const response = await loginService(email, password);
          alertHelper.showMessage(getMessageFromResponse(response));
+         navigate("/");
       } catch (error) {
          alertHelper.showMessage(getMessageFromResponse(error));
       } finally {

@@ -18,6 +18,13 @@ export const apiCall = async (endpoint, options = {}) => {
   if (!(options.body instanceof FormData)) {
     defaultOptions.headers['Content-Type'] = 'application/json';
   }
+  if (
+    options.body &&
+    typeof options.body === 'object' &&
+    !(options.body instanceof FormData)
+  ) {
+    options.body = JSON.stringify(options.body);
+  }
   
   try {
     const response = await fetch(url, {
@@ -34,7 +41,7 @@ export const apiCall = async (endpoint, options = {}) => {
     if (!contentType || !contentType.includes('application/json')) {
       const text = await response.text();
       console.error('Réponse non-JSON reçue:', text.substring(0, 200));
-      throw new Error(`Réponse invalide du serveur (${response.status}): Le serveur a renvoyé du HTML au lieu de JSON. Vérifiez que le backend fonctionne correctement.`);
+      throw new Error(`Erreur: ${response.status} - ${text}`);
     }
     
     const data = await response.json();

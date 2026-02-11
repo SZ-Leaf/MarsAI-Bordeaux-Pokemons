@@ -27,6 +27,7 @@ function App() {
           <Route path="/selector" element={<Selector />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="*" element={<div>404 - Page Not Found</div>} />
         </Routes>
       </div>
 

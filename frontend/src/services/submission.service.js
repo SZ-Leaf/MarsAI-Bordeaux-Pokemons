@@ -13,8 +13,9 @@ export const getSubmissionById = async (submissionId) => {
   return apiCall(`/api/submissions/${submissionId}`);
 };
 
-// Export par défaut
-export default {
-  submitFilm,
-  getSubmissionById
+export const getSubmissionsService = async ({pagination}) => {
+  return apiCall('/api/submissions', {
+    method: 'GET',
+    params: pagination
+  });
 };

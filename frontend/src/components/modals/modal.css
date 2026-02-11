@@ -80,9 +80,6 @@
   @apply text-red;
 }
 
-.modal-close-btn:active {
-  @apply scale-95 rotate-90;
-}
 
 /* Contenu de la modal */
 .modal-content {

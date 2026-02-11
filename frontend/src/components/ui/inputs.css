@@ -8,6 +8,7 @@
   @apply rounded-lg;
   @apply border-2 border-gray-400;
   @apply text-sm font-medium;
+  @apply text-white;
   @apply transition-all duration-300 ease-out;
   @apply focus:outline-none focus:ring-2;
   @apply placeholder:text-gray-400;

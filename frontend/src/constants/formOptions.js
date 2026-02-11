@@ -1,5 +1,5 @@
 export const genderOptions = [
-  { value: '', label: 'Sélectionner' },
+  // { value: '', label: 'Sélectionner' },
   { value: 'Male', label: 'Homme' },
   { value: 'Female', label: 'Femme' },
   { value: 'Other', label: 'Autre' }
@@ -15,19 +15,16 @@ export const socialNetworks = [
 ];
 
 export const classificationOptions = [
-  { value: '', label: 'Sélectionner' },
-  { value: 'IA', label: '100% IA' },
-  { value: 'hybrid', label: 'Hybrid' }
+  { value: 'Full AI', label: 'IA' },
+  { value: 'Semi-AI', label: 'Hybride' }
 ];
 
 export const referralSourceOptions = [
-  { value: '', label: 'Sélectionner une source' },
-  { value: 'Réseaux sociaux', label: 'Réseaux sociaux' },
-  { value: 'Recommandation d\'un ami', label: 'Recommandation d\'un ami' },
-  { value: 'Média (presse, radio, TV)', label: 'Média (presse, radio, TV)' },
-  { value: 'École / Université', label: 'École / Université' },
-  { value: 'Partenaire / Sponsor', label: 'Partenaire / Sponsor' },
-  { value: 'Événement précédent', label: 'Événement précédent' },
-  { value: 'Moteur de recherche', label: 'Moteur de recherche' },
-  { value: 'Autre', label: 'Autre' }
+  { value: 'Friend', label: 'Recommandation d\'un ami' },
+  { value: 'Social Media', label: 'Réseaux sociaux' },
+  { value: 'Advertisement', label: 'Publicité' },
+  { value: 'Newsletter', label: 'Newsletter' },
+  { value: 'Recommendation', label: 'Recommandation' },
+  { value: 'Event', label: 'Événement' },
+  { value: 'Other', label: 'Autre' }
 ];

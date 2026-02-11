@@ -36,19 +36,19 @@ const SocialLinksList = ({ formData, errors, updateField }) => {
         </button>
       </div>
       
-      <p className="text-sm text-gray-600">
+      <p className="text-sm text-gray-300">
         Ajoutez les liens vers vos réseaux sociaux ou votre site web (optionnel).
       </p>
       
       {currentSocials.length === 0 ? (
-        <p className="text-gray-500 text-sm">Aucun lien ajouté pour le moment.</p>
+        <p className="text-gray-400 text-sm">Aucun lien ajouté pour le moment.</p>
       ) : (
         <div className="space-y-3">
           {currentSocials.map((social, index) => (
-            <div key={index} className="border rounded p-4 flex justify-between items-center">
+            <div key={index} className="border border-gray-700 rounded p-4 flex justify-between items-center bg-gray-800/30">
               <div>
-                <p className="font-medium">{getNetworkLabel(social.network_id)}</p>
-                <p className="text-sm text-gray-600 break-all">{social.url}</p>
+                <p className="font-medium text-white">{getNetworkLabel(social.network_id)}</p>
+                <p className="text-sm text-gray-300 break-all">{social.url}</p>
               </div>
               <div className="flex gap-2">
                 <button

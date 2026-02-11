@@ -245,6 +245,16 @@ export const useSubmission = () => {
       };
       
       formDataToSend.append('data', JSON.stringify(data));
+
+      console.log('Données à envoyer:', {
+        files: {
+          video: formData.video?.name,
+          cover: formData.cover?.name,
+          subtitles: formData.subtitles?.name,
+          gallery: formData.gallery?.length
+        },
+        data
+      });
       
       // Soumettre
       const result = await submitFilm(formDataToSend);

@@ -59,7 +59,7 @@ export const submissionSchema = z.object({
   language: z.string().min(1, "Requis"),
   english_synopsis: z.string().min(1, "Requis").max(300, "Maximum 300 caractères"),
   original_synopsis: z.string().max(300, "Maximum 300 caractères").optional().or(z.literal('')),
-  classification: z.enum(['IA', 'hybrid'], { 
+  classification: z.enum(['Full AI', 'Semi-AI'], { 
     errorMap: () => ({ message: "Requis" }) 
   }),
   tech_stack: z.string().min(1, "Requis").max(500, "Maximum 500 caractères"),
@@ -80,7 +80,17 @@ export const submissionSchema = z.object({
   creator_gender: z.string().min(1, "Requis"),
   creator_country: z.string().min(1, "Requis"),
   creator_address: z.string().min(1, "Requis"),
-  referral_source: z.string().min(1, "Requis").max(255, "Maximum 255 caractères"),
+  referral_source: z.enum([
+    'Friend',
+    'Social Media',
+    'Advertisement',
+    'Newsletter',
+    'Recommendation',
+    'Event',
+    'Other'
+  ], { 
+    errorMap: () => ({ message: "Requis" }) 
+  }),
   
   // Contributeurs et liens sociaux
   collaborators: z.array(collaboratorSchema).optional(),
@@ -127,6 +137,13 @@ export const step4Schema = submissionSchema.pick({
 
 export const formatZodErrors = (zodError) => {
   const errors = {};
+  
+  // Vérification défensive : s'assurer que zodError et zodError.errors existent
+  if (!zodError || !zodError.errors || !Array.isArray(zodError.errors)) {
+    console.error('Format d\'erreur Zod invalide:', zodError);
+    return errors;
+  }
+  
   zodError.errors.forEach(err => {
     // Gérer les paths imbriqués (ex: collaborators.0.firstname -> collaborator_0_firstname)
     const path = err.path.join('_');

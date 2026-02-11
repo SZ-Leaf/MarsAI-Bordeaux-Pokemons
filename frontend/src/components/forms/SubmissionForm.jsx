@@ -22,6 +22,7 @@ const SubmissionForm = ({ formData, errors, updateField }) => {
             onChange={(e) => updateField('english_title', e.target.value)}
             error={errors.english_title}
             maxLength={255}
+            variant="dark"
           />
         </FormField>
         
@@ -31,6 +32,7 @@ const SubmissionForm = ({ formData, errors, updateField }) => {
             onChange={(e) => updateField('original_title', e.target.value)}
             error={errors.original_title}
             maxLength={255}
+            variant="dark"
           />
         </FormField>
         
@@ -40,6 +42,7 @@ const SubmissionForm = ({ formData, errors, updateField }) => {
             onChange={(e) => updateField('language', e.target.value)}
             error={errors.language}
             placeholder="ex: French, English"
+            variant="dark"
           />
         </FormField>
         
@@ -62,6 +65,7 @@ const SubmissionForm = ({ formData, errors, updateField }) => {
           maxLength={300}
           showCounter={true}
           placeholder="Résumé de votre vidéo (max 300 caractères)"
+          variant="dark"
         />
       </FormField>
       
@@ -74,6 +78,7 @@ const SubmissionForm = ({ formData, errors, updateField }) => {
           maxLength={300}
           showCounter={true}
           placeholder="Résumé dans la langue originale (max 300 caractères)"
+          variant="dark"
         />
       </FormField>
       
@@ -86,6 +91,7 @@ const SubmissionForm = ({ formData, errors, updateField }) => {
           maxLength={500}
           showCounter={true}
           placeholder="Technologies utilisées (max 500 caractères)"
+          variant="dark"
         />
       </FormField>
       
@@ -98,6 +104,7 @@ const SubmissionForm = ({ formData, errors, updateField }) => {
           maxLength={500}
           showCounter={true}
           placeholder="Décrivez votre méthode créative (max 500 caractères)"
+          variant="dark"
         />
       </FormField>
 

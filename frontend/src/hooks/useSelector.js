@@ -48,11 +48,20 @@ export const useSelector = () => {
             if (!response.ok) {
                 // Améliorer le message d'erreur
                 const errorData = await response.json().catch(() => ({}));
-                console.log('Erreur du backend:', errorData); // Pour débogger
-                // Gérer le cas où message est un objet ou une chaîne
-                const errorMessage = typeof errorData.message === 'string' 
-                    ? errorData.message 
-                    : (errorData.error || JSON.stringify(errorData.message) || 'Erreur lors de la notation');
+                console.log('Erreur du backend:', errorData);
+                
+                // Gérer le cas où message est un objet avec traductions ou une chaîne
+                let errorMessage = 'Erreur lors de la notation';
+                
+                if (typeof errorData.message === 'string') {
+                    errorMessage = errorData.message;
+                } else if (typeof errorData.message === 'object' && errorData.message !== null) {
+                    // Prendre le message en français si disponible, sinon anglais
+                    errorMessage = errorData.message.fr || errorData.message.en || JSON.stringify(errorData.message);
+                } else if (errorData.error) {
+                    errorMessage = errorData.error;
+                }
+                
                 throw new Error(errorMessage);
             }
             

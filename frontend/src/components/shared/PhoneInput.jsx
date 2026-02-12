@@ -85,17 +85,19 @@ const PhoneInput = ({ value, onChange, error, placeholder, variant = 'light' }) 
           type="button"
           onClick={() => setIsDialCodeOpen(!isDialCodeOpen)}
           className={`w-full h-full border rounded p-2 text-left flex items-center justify-between ${
+            variant === 'dark' ? 'bg-white/5 border-white/10 text-white' : 'bg-white border-gray-200 text-black'
+          } ${
             error ? 'border-red-500' : ''
           }`}
           style={{ minHeight: '2.5rem' }}
         >
           <span className="text-sm font-medium">{selectedDialCode}</span>
-          <span className="text-gray-500 text-sm">▼</span>
+          <span className={variant === 'dark' ? 'text-gray-400 text-sm' : 'text-gray-500 text-sm'}>▼</span>
         </button>
 
         {isDialCodeOpen && (
-          <div className="absolute z-50 w-64 mt-1 bg-white border rounded shadow-lg max-h-60 overflow-y-auto left-0">
-            <div className="p-2 sticky top-0 bg-white border-b">
+          <div className={`absolute z-50 w-64 mt-1 ${variant === 'dark' ? 'bg-gray-900 border-white/10' : 'bg-white border-gray-200'} border rounded shadow-lg max-h-60 overflow-y-auto left-0`}>
+            <div className={`p-2 sticky top-0 ${variant === 'dark' ? 'bg-gray-900 border-white/10' : 'bg-white border-gray-200'} border-b`}>
               <input
                 type="text"
                 placeholder="Rechercher..."
@@ -111,8 +113,8 @@ const PhoneInput = ({ value, onChange, error, placeholder, variant = 'light' }) 
                   key={code.code}
                   type="button"
                   onClick={() => handleDialCodeSelect(code)}
-                  className={`w-full text-left px-3 py-2 hover:bg-gray-100 flex items-center justify-between text-sm ${
-                    selectedDialCode === code.dialCode ? 'bg-blue-50' : ''
+                  className={`w-full text-left px-3 py-2 ${variant === 'dark' ? 'hover:bg-white/10 text-white' : 'hover:bg-gray-100 text-black'} flex items-center justify-between text-sm ${
+                    selectedDialCode === code.dialCode ? (variant === 'dark' ? 'bg-blue-500/20' : 'bg-blue-50') : ''
                   }`}
                 >
                   <div className="flex items-center gap-2">

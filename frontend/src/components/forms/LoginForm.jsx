@@ -45,15 +45,10 @@ const LoginForm = () => {
             return;
          }
          const response = await loginService(email, password);
-         if (isSuccessResponse(response)) {
-            alertHelper.customMessage(getMessageFromResponse(response));
+         alertHelper.showMessage(getMessageFromResponse(response));
          navigate("/");
-         return;
-         }
-         alertHelper.customMessage(getMessageFromResponse(response));
-         return;
       } catch (error) {
-         alertHelper.customMessage(error?.message);
+         alertHelper.showMessage(getMessageFromResponse(error));
       } finally {
          setIsSubmitting(false);
       }

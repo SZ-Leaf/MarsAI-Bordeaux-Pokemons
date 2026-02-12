@@ -56,7 +56,7 @@ export default function Modal({
                 className="modal-close-btn" 
                 onClick={onClose}
                 aria-label="Fermer la modal"
-              >X
+              ><i className="pi pi-times"></i>
               </button>
             )}
           </div>

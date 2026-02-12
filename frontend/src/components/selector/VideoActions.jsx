@@ -1,31 +1,13 @@
 import { useState, useCallback } from 'react';
-import { Heart, Clock, Flag, Star } from 'lucide-react';
 import RatingModal from '../modals/RatingModal';
 import FavoriteButton from '../playlists/AddToFavoritesBtn';
 import WatchLaterButton from '../playlists/AddToWatchLaterBtn';
 import ReportButton from '../playlists/AddToReport';
+import RatingButton from '../playlists/AddToRatingBtn';
 
-import {useSubmissionPlaylistStatus} from "../../hooks/useSubmissionPlaylistStatus";
 
-// Composant de bouton d'action réutilisable
-const ActionButton = ({ onClick, icon: Icon, title, isActive = false }) => (
-  <button
-    onClick={onClick}
-    className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition"
-    title={title}
-  >
-    <Icon 
-      size={20} 
-      className="text-white" 
-      fill={isActive ? 'currentColor' : 'none'} 
-    />
-  </button>
-);
-
-const VideoActions = ({ submission, addToPlaylist, rateSubmission }) => {
-  const [rating, setRating] = useState(0);
+const VideoActions = ({ submission, addToPlaylist, rateSubmission, selection, toggle, hasRating, markAsRated }) => {
   const [showRatingModal, setShowRatingModal] = useState(false);
-  const { selection, loading, toggle } = useSubmissionPlaylistStatus(submission.id);
 
   const onFav = useCallback(() => toggle("FAVORITES"), [toggle]);
   const onWatch = useCallback(() => toggle("WATCH_LATER"), [toggle]);
@@ -44,7 +26,7 @@ const VideoActions = ({ submission, addToPlaylist, rateSubmission }) => {
   const handleRatingSubmit = async (submissionId, ratingValue, comment) => {
     try {
       await rateSubmission(submissionId, ratingValue, comment);
-      setRating(ratingValue);
+      markAsRated();
     } catch (err) {
       console.error(err);
       throw err;
@@ -65,11 +47,10 @@ const VideoActions = ({ submission, addToPlaylist, rateSubmission }) => {
           active={selection === "WATCH_LATER"}
           onToggle={onWatch}
         />
-        <ActionButton
-          onClick={() => setShowRatingModal(true)}
-          icon={Star}
-          title="Noter"
-          isActive={rating > 0}
+        <RatingButton
+          submissionId={submission.id}
+          active={hasRating}
+          onToggle={() => setShowRatingModal(true)}
         />
         <ReportButton
           submissionId={submission.id}

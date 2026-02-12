@@ -1,26 +1,19 @@
-import { Button } from "primereact/button";
-import { Tooltip } from "primereact/tooltip";
+import "../ui/icon-buttons.css";
+import "../ui/tooltips.css";
 
 export default function ReportButton({ submissionId, active, onToggle }) {
-  const btnId = `rep-btn-${submissionId}`;
-
   return (
-    <>
-      <Tooltip target={`#${btnId}`} position="bottom" />
-      <Button
-        id={btnId}
-        icon="pi pi-times"
-        rounded
-        outlined
-        data-pr-tooltip={active ? "Retirer des signalements" : "Ajouter aux signalements"}
-        style={
-          active
-            ? { color: "#e91e63", borderColor: "#e91e63", border: "none" }
-            : { color: "#9e9e9e", borderColor: "#9e9e9e", border: "none" }
-        }
-        aria-label="Signaler"
-        onClick={onToggle}
-      />
-    </>
+    <button
+      onClick={onToggle}
+      className={`
+        tooltip-container tooltip-bottom
+        btn-icon
+        ${active ? 'btn-icon-report' : 'btn-icon-default'}
+      `}
+      data-tooltip={active ? "Retirer des signalements" : "Ajouter aux signalements"}
+      aria-label={active ? "Retirer des signalements" : "Ajouter aux signalements"}
+    >
+      <i className="pi pi-flag icon-md"></i>
+    </button>
   );
 }

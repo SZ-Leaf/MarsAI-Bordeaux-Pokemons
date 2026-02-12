@@ -1,26 +1,19 @@
-import { Button } from "primereact/button";
-import { Tooltip } from "primereact/tooltip";
+import "../ui/icon-buttons.css";
+import "../ui/tooltips.css";
 
 export default function WatchLaterButton({ submissionId, active, onToggle }) {
-  const btnId = `wl-btn-${submissionId}`;
-
   return (
-    <>
-      <Tooltip target={`#${btnId}`} position="bottom" />
-      <Button
-        id={btnId}
-        icon="pi pi-history"
-        rounded
-        outlined
-        data-pr-tooltip={active ? "Retirer de la liste" : "A voir plus tard"}
-        style={
-          active
-            ? { color: "#211ee9", borderColor: "#211ee9", border: "none" }
-            : { color: "#9e9e9e", borderColor: "#9e9e9e", border: "none" }
-        }
-        aria-label="A voir plus tard"
-        onClick={onToggle}
-      />
-    </>
+    <button
+      onClick={onToggle}
+      className={`
+        tooltip-container tooltip-bottom
+        btn-icon
+        ${active ? 'btn-icon-watch-later' : 'btn-icon-default'}
+      `}
+      data-tooltip={active ? "Retirer de la liste" : "À voir plus tard"}
+      aria-label={active ? "Retirer de la liste" : "À voir plus tard"}
+    >
+      <i className="pi pi-history icon-md"></i>
+    </button>
   );
 }

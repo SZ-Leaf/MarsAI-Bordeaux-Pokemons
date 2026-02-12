@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getPopularTags, searchTags, createTag } from '../services/tagService';
+import { getPopularTags, searchTags, createTag } from '../services/tag.service';
 
 export const useTags = () => {
   const [allTags, setAllTags] = useState([]);

@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
-import { API_URL } from '../../utils/api';
 import VideoActions from './VideoActions';
 
 const VideoCard = ({ submission, isActive, addToPlaylist, rateSubmission }) => {
@@ -54,7 +53,7 @@ const VideoCard = ({ submission, isActive, addToPlaylist, rateSubmission }) => {
             />
 
             {/* Informations de la vidéo avec boutons d'action */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent pointer-events-none">
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-linear-to-t from-black/80 to-transparent pointer-events-none">
                 {/* Titre et boutons d'action */}
                 <div className="flex items-start justify-between gap-4 mb-2">
                     <h2 className="text-white text-2xl font-bold flex-1">

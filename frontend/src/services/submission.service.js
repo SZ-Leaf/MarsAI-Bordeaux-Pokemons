@@ -14,13 +14,16 @@ export const getSubmissionById = async (submissionId) => {
 };
 
 export const getSubmissionsService = async ({filters}) => {
+  const params = {
+    limit: filters.limit,
+    offset: filters.offset,
+    sortBy: filters.orderBy
+  };
+  if (filters.status) {
+    params.status = filters.status;
+  }
   return apiCall('/api/submissions', {
     method: 'GET',
-    params: {
-      limit: filters.limit,
-      offset: filters.offset,
-      orderBy: filters.orderBy,
-      status: filters.status
-    }
+    params: params
   });
 };

@@ -1,8 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-// Exporter API_URL pour qu'il soit réutilisable dans toute l'application
-export { API_URL };
-
 export const apiCall = async (endpoint, options = {}) => {
   let url = `${API_URL}${endpoint}`;
   
@@ -59,6 +56,5 @@ export const apiCall = async (endpoint, options = {}) => {
 
 // Export par défaut
 export default {
-  API_URL,
   apiCall
 };

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { API_URL } from '../utils/api';
 
 export const useSelector = () => {
     const [submissions, setSubmissions] = useState([]);
@@ -11,7 +10,7 @@ export const useSelector = () => {
     const fetchSubmissions = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_URL}/api/submissions`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/submissions`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -42,7 +41,7 @@ export const useSelector = () => {
                 body.comment = comment.trim();
             }
             
-            const response = await fetch(`${API_URL}/api/selector/rate/${submissionId}`, {
+            const response = await fetch(`${process.env.API_URL}/api/selector/rate/${submissionId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -67,7 +66,7 @@ export const useSelector = () => {
     const addToPlaylist = async (submissionId, playlistType) => {
         try {
             const response = await fetch(
-                `${API_URL}/api/selector/playlist/${playlistType}/${submissionId}`,
+                `${process.env.API_URL}/api/selector/playlist/${playlistType}/${submissionId}`,
                 {
                     method: 'POST',
                     headers: {

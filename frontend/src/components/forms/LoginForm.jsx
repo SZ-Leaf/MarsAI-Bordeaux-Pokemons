@@ -11,7 +11,7 @@ const LoginForm = () => {
    const { user } = useAuth();
    const { language } = useLanguage();
    const navigate = useNavigate();
-   const { getMessageFromResponse, isSuccessResponse } = responseHelper();
+   const { getMessageFromResponse } = responseHelper();
    const [isSubmitting, setIsSubmitting] = useState(false);
 
    useEffect(() => {

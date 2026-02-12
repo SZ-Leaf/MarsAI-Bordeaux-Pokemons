@@ -15,13 +15,12 @@ import Submissions from './pages/Submissions';
 
 function App() {
   const location = useLocation();
-  const isSelectorPage = location.pathname === '/selector';
 
   return (
     <LanguageProvider>
       <AuthProvider>
       <Header />
-      <div className={isSelectorPage ? '' : 'pt-24'}>
+      <main className="pt-24">
         <Routes>
           <Route path="/" element={<TestsGraphique />} />
           <Route path="/submit" element={<Submit />} />
@@ -31,9 +30,9 @@ function App() {
           <Route path="/submissions" element={<Submissions />} />
           <Route path="*" element={<div>404 - Page Not Found</div>} />
         </Routes>
-      </div>
+      </main>
 
-      {!isSelectorPage && <Footer />}
+      <Footer />
     </AuthProvider>
     </LanguageProvider>
   );

@@ -1,0 +1,22 @@
+@import "tailwindcss" reference;
+@import "../../theme.css";
+
+.submission-container-card {
+   @apply rounded-2xl overflow-hidden flex flex-col;
+}
+
+.submission-image-container {
+   @apply relative;
+}
+
+.submission-image {
+   @apply w-full h-full object-cover;
+}
+
+.submission-duration {
+   @apply absolute bg-(--color-green)/75 px-1 bottom-2 right-2 rounded-2xl border-2 border-(--color-green);
+}
+
+.submission-content {
+   @apply p-2 flex flex-col;
+}

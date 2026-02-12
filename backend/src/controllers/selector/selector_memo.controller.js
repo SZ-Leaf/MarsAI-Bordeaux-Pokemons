@@ -5,8 +5,12 @@ import {
   getPlaylist as getPlaylistModel,
   getSelectionForSubmission as getSelectionForSubmissionModel,
   addSubmissionToPlaylist as addSubmissionToPlaylistModel,
-  removeSubmissionFromPlaylist as removeSubmissionFromPlaylistModel
+  removeSubmissionFromPlaylist as removeSubmissionFromPlaylistModel,
+  getAllPlaylists,
+  findPendingSubmissions,
+  countPendingSubmissions
 } from '../../models/selector/selector_memo.model.js';
+
 
 export const createSelectorMemo = async (req, res) => {
   try {
@@ -127,5 +131,50 @@ export const getPlaylistStatus = async (req, res) => {
     return sendError(res, 500, "Erreur statut", "Status error", null);
   }
 };
+const REVERSE_MAP = {
+  FAVORITES: "favorites",
+  WATCH_LATER: "watch_later",
+  REPORT: "report",
+};
 
+export const getAllPlaylistsCount = async (req, res) => {
+  try {
+    const user_id = req.user.id;
+    const playlists = await getAllPlaylists(user_id);
+    //si jamais une playlist n'a pas de soumission assignée, on affiche quand même la playlist avec un compte à zéro
+    const counts = {
+      favorites: 0,
+      watch_later: 0,
+      report: 0,
+    };
 
+    for (const p of playlists) {
+      const key = REVERSE_MAP[p.selection_list];
+      if (key) counts[key] = Number(p.count);
+    }
+    return sendSuccess(res, 200, "Nombre de vidéos par playlist", "Playlists counts", counts )
+    
+  } catch (error) {
+    return sendError(res, 500, "Erreur lors de la récupération des playlists", "Error while retrieving all the playlists", null);
+
+  }
+}
+
+export async function getPendingSubmissions(req, res) {
+  try {
+    const userId = req.user.id;
+
+    const limit = Math.min(Number(req.query.limit) || 24, 100);
+    const offset = Math.max(Number(req.query.offset) || 0, 0);
+    const [data, total] = await Promise.all([
+      //ici on utilise promise.all pour exécuter en même temps et en parallèle les deux requêtes
+      findPendingSubmissions(userId, { limit, offset }),
+      countPendingSubmissions(userId),
+    ]);
+
+    return sendSuccess(res, 200, "Vidéos à traiter récupérées avec succès","Pending submissions retrieved with success", data, total);
+  } catch (err) {
+    console.error(err);
+    return sendError(res, 500, "Erreur lors de la récupération des vidéos à traiter", "Error while retrieving pending videos", null);
+  }
+}

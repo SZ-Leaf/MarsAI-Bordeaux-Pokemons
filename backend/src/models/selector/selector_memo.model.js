@@ -67,6 +67,16 @@ export async function getPlaylist(user_id, selection_list) {
     );
     return rows;
 };
+//récupération de toutes les playlists d'un user (utlisation du count pour avoir le nombre)
+export async function getAllPlaylists(user_id) {
+  const [rows] = await db.pool.execute(
+    `SELECT selection_list, COUNT(*) as count
+    FROM selector_memo WHERE user_id = ? AND selection_list IS NOT NULL
+    GROUP BY selection_list`,
+    [user_id]
+  );
+  return rows;
+}
 //fonction qui ajoute une soumission à une playlist 
 export async function addSubmissionToPlaylist(user_id, submission_id, selection_list) {
     const [result] = await db.pool.execute(`INSERT INTO selector_memo(user_id, submission_id, selection_list) VALUES (?,?,?)
@@ -97,4 +107,39 @@ export async function getSelectionForSubmission(user_id, submission_id) {
     [user_id, submission_id]
   );
   return rows[0]?.selection_list ?? null; // "FAVORITES", "WATCH_LATER", "REPORT", null
+};
+//récupération des vidéos qu'un selector n'aura ni commenter, ni noter ni ajouter à une playlist
+export async function findPendingSubmissions(user_id, { limit = 24, offset = 0 } = {}) {
+  const [rows] = await db.pool.execute(
+    ` SELECT s.*
+    FROM submissions s
+    LEFT JOIN selector_memo m
+      ON m.submission_id = s.id
+     AND m.user_id = ?
+    WHERE m.id IS NULL
+    ORDER BY s.created_at DESC
+    LIMIT ? OFFSET ?
+  `,
+    [user_id, limit, offset]
+  );
+  return rows
 }
+//récupération du nombre de vidéos en pending pour un selector
+export async function countPendingSubmissions(user_id) {
+  const [rows] = await db.pool.execute(
+    `
+    SELECT COUNT(*) AS total
+    FROM submissions s
+    LEFT JOIN selector_memo m
+      ON m.submission_id = s.id
+     AND m.user_id = ?
+    WHERE m.id IS NULL
+    `,
+    [user_id]
+  );
+//si rows[0] existe retourne le nombre correspondant au total sinon retourne 0
+  return rows[0]?.total ?? 0;
+}
+
+  
+  

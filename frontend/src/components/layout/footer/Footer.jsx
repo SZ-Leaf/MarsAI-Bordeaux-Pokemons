@@ -4,6 +4,13 @@ import '../navbar/navbar.css';
 import '../../ui/buttons.css';
 import { subscribeNewsletter } from '../../../services/newsletter.service';
 
+function getErrorMessage(err) {
+  const m = err?.message;
+  if (typeof m === 'string') return m;
+  if (m && typeof m === 'object' && (m.fr || m.en)) return m.fr || m.en;
+  return 'Une erreur est survenue.';
+}
+
 const Footer = () => {
   const [email, setEmail] = useState('');
   const [consent, setConsent] = useState(false);
@@ -30,7 +37,7 @@ const Footer = () => {
       setConsent(false);
       setIsSubscribed(true);
     } catch (err) {
-      alert(err?.message || 'Une erreur est survenue.');
+      alert(getErrorMessage(err));
     } finally {
       setIsSubmitting(false);
     }

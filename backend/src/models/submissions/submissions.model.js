@@ -153,12 +153,12 @@ export const getSubmissions = async (filters = {}) => {
       ${joinClause}
       ${whereClause}
       ORDER BY s.created_at ${orderBy}
-      LIMIT ?
-      OFFSET ?`;
+      LIMIT ${limit}
+      OFFSET ${offset}`;
 
     const [rows] = await connection.execute(
       dataQuery,
-      [...params, limit, offset]
+      params
     );
 
     return { submissions: rows, total };

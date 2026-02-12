@@ -110,36 +110,44 @@ export async function getSelectionForSubmission(user_id, submission_id) {
 };
 //récupération des vidéos qu'un selector n'aura ni commenter, ni noter ni ajouter à une playlist
 export async function findPendingSubmissions(user_id, { limit = 24, offset = 0 } = {}) {
+  const userId = Number(user_id);
+  const lim = Math.min(parseInt(limit, 10) || 24, 100);
+  const off = Math.max(parseInt(offset, 10) || 0, 0);
+
   const [rows] = await db.pool.execute(
-    ` SELECT s.*
-    FROM submissions s
-    LEFT JOIN selector_memo m
+    `SELECT s.*
+     FROM submissions s
+     LEFT JOIN selector_memo m
       ON m.submission_id = s.id
      AND m.user_id = ?
-    WHERE m.id IS NULL
-    ORDER BY s.created_at DESC
-    LIMIT ? OFFSET ?
-  `,
-    [user_id, limit, offset]
+     WHERE m.id IS NULL
+     ORDER BY s.created_at DESC
+     LIMIT ${lim} OFFSET ${off}
+    `,
+    [userId]
   );
-  return rows
+
+  return rows;
 }
+
 //récupération du nombre de vidéos en pending pour un selector
 export async function countPendingSubmissions(user_id) {
+  const userId = Number(user_id);
   const [rows] = await db.pool.execute(
-    `
-    SELECT COUNT(*) AS total
+   `SELECT COUNT(*) AS total
     FROM submissions s
     LEFT JOIN selector_memo m
       ON m.submission_id = s.id
-     AND m.user_id = ?
+    AND m.user_id = ?
     WHERE m.id IS NULL
     `,
-    [user_id]
+    [userId]
   );
-//si rows[0] existe retourne le nombre correspondant au total sinon retourne 0
+
+  //si rows[0] existe retourne le nombre correspondant au total sinon retourne 0
   return rows[0]?.total ?? 0;
 }
+
 
   
   

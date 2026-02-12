@@ -172,7 +172,7 @@ export async function getPendingSubmissions(req, res) {
       countPendingSubmissions(userId),
     ]);
 
-    return sendSuccess(res, 200, "Vidéos à traiter récupérées avec succès","Pending submissions retrieved with success", data, total);
+    return sendSuccess(res, 200, "Vidéos à traiter récupérées avec succès","Pending submissions retrieved with success", {data, total});
   } catch (err) {
     console.error(err);
     return sendError(res, 500, "Erreur lors de la récupération des vidéos à traiter", "Error while retrieving pending videos", null);

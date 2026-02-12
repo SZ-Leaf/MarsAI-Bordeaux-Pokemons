@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { API_URL } from '../utils/api';
-import { rateSubmissionService } from '../services/submission.service';
+// import { rateSubmissionService } from '../services/submission.service';
 
 export const useSelector = () => {
     const [submissions, setSubmissions] = useState([]);

@@ -4,7 +4,7 @@ import "../ui/icon-buttons.css";
 export default function RatingButton({ submissionId, active, onToggle }) {
   return (
     <button
-      onClick={onToggle(submissionId)}
+      onClick={onToggle()}
       className={`
         tooltip-container tooltip-bottom
         btn-icon

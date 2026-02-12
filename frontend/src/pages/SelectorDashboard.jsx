@@ -2,11 +2,20 @@ import React, { useMemo } from "react";
 import { useNavigate } from "react-router";
 import { PLAYLISTS } from "../helpers/playlistHelper.js";
 import { usePlaylistCounts } from "../hooks/usePlaylistCounts";
+import {usePendingSubmissions} from "../hooks/usePendingSubmissions";
 import PlaylistCard from "../components/playlists/PlaylistCard.jsx";
+import PendingCard from "../components/playlists/PendingCard.jsx";
+
 
 export default function SelectorDashboard() {
   const navigate = useNavigate();
   const { counts, loading, error } = usePlaylistCounts();
+
+    const {
+    total: pendingTotal,
+    loading: pendingLoading,
+    error: pendingError
+  } = usePendingSubmissions({ limit: 1, offset: 0 });
 
   const total = useMemo(() => {
     if (!counts) return 0;
@@ -32,11 +41,12 @@ export default function SelectorDashboard() {
       </header>
 
       {/* Error */}
-      {error && (
+      {(error || pendingError) && (
         <div className="rounded-xl border border-red-800 bg-red-950/40 p-4 text-red-200">
-          {error}
+          {error || pendingError}
         </div>
       )}
+
 
       {/* Playlists */}
       <div className="rounded-xl border border-zinc-800 bg-zinc-950/40 p-4">
@@ -59,10 +69,10 @@ export default function SelectorDashboard() {
 
       {/* (Optionnel) Bloc raccourcis */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <QuickAction
-          title="A traiter"
-          desc="Vidéos non notées, non commentées, non ajoutées à une playlist."
-          onClick={() => navigate("/selector")}
+        <PendingCard
+          total={pendingTotal}
+          loading={pendingLoading}
+          onClick={() => navigate("/selector/pending")}
         />
       </div>
     </section>

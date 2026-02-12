@@ -31,12 +31,15 @@ export function usePendingSubmissions({ limit = 24, offset = 0 } = {}) {
         }
 
         if (!res.ok) {
-          throw new Error(json?.message_fr || json?.message || `HTTP ${res.status}`);
+          throw new Error(
+            json?.message?.fr || json?.message_fr || json?.message || `HTTP ${res.status}`
+          );
         }
 
         if (!cancelled) {
-          setItems(Array.isArray(json?.data) ? json.data : []);
-          setTotal(Number(json?.total) || 0);
+          const payload = json?.data; // ✅ { data: [...], total: 12 }
+          setItems(Array.isArray(payload?.data) ? payload.data : []);
+          setTotal(Number(payload?.total) || 0);
         }
       } catch (e) {
         if (!cancelled) setError(e?.message || String(e));

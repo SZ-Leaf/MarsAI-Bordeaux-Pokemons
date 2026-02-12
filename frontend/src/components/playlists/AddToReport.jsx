@@ -4,7 +4,7 @@ import "../ui/tooltips.css";
 export default function ReportButton({ submissionId, active, onToggle }) {
   return (
     <button
-      onClick={onToggle}
+      onClick={onToggle(submissionId)}
       className={`
         tooltip-container tooltip-bottom
         btn-icon

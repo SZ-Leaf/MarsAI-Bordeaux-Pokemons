@@ -6,15 +6,15 @@ import {useAuth} from "../../hooks/useAuth";
 import { useNavigate } from "react-router";
 import { useLanguage } from "../../context/LanguageContext";
 import { responseHelper } from "../../helpers/responseHelper";
-import {alertHelper as useAlertHelper} from "../../helpers/alertHelper";
+import {useAlertHelper} from "../../helpers/alertHelper";
 
 const RegisterForm = ({ token, email }) => {
+   const alertHelper = useAlertHelper();
    const { user } = useAuth();
    const navigate = useNavigate();
    const { language } = useLanguage();
    const { getMessageFromResponse, isSuccessResponse } = responseHelper();
    const [isSubmitting, setIsSubmitting] = useState(false);
-   const alertHelper = useAlertHelper();
 
    useEffect(() => {
       if (user) {

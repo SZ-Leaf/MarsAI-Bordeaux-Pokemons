@@ -3,16 +3,16 @@ import { useNavigate } from "react-router";
 import { loginService } from "../../services/auth.service";
 import { useLanguage } from "../../context/LanguageContext";
 import { responseHelper } from "../../helpers/responseHelper";
-import {alertHelper as useAlertHelper} from "../../helpers/alertHelper";
+import { useAlertHelper } from "../../helpers/alertHelper";
 import { useAuth } from "../../hooks/useAuth";
 
 const LoginForm = () => {
+   const alertHelper = useAlertHelper();
    const { user } = useAuth();
    const { language } = useLanguage();
    const navigate = useNavigate();
    const { getMessageFromResponse, isSuccessResponse } = responseHelper();
    const [isSubmitting, setIsSubmitting] = useState(false);
-   const alertHelper = useAlertHelper();
 
    useEffect(() => {
       if (user) {

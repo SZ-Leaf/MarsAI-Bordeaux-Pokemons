@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { getSubmissionsService } from "../services/submission.service";
 import { useLanguage } from "../context/LanguageContext";
-import { alertHelper as useAlertHelper } from "../helpers/alertHelper";
+import { useAlertHelper } from "../helpers/alertHelper";
 
 const Submissions = () => {
-
+   const alertHelper = useAlertHelper();
    const {language} = useLanguage();
    const [submissions, setSubmissions] = useState([]);
    const [loading, setLoading] = useState(true);
@@ -18,6 +18,7 @@ const Submissions = () => {
    const [total, setTotal] = useState(0);
 
    const getSubmissions = async () => {
+      console.log('getSubmissions triggered');
       setLoading(true);
       try {
          const response = await getSubmissionsService({
@@ -27,7 +28,7 @@ const Submissions = () => {
          setSubmissions(response.submissions);
          setTotal(response.total);
       } catch (error) {
-         useAlertHelper().showMessage(error?.message?.[language] || 'Error retrieving submissions');
+         alertHelper.showMessage(getMessageFromResponse(error));
       } finally {
          setLoading(false);
       }

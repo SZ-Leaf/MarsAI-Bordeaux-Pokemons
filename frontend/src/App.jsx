@@ -9,6 +9,8 @@ import Sponsors from './components/sponsors/Sponsors.jsx';
 import Selector from './components/selector/Selector';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import NewsletterConfirm from './pages/NewsletterConfirm';
+import NewsletterUnsubscribe from './pages/NewsletterUnsubscribe';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 
@@ -35,6 +37,8 @@ function App() {
             <Route path="/selector" element={<Selector />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
+            <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
           </Routes>
         </div>
         

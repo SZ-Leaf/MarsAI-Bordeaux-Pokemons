@@ -38,7 +38,7 @@ const CollaboratorModal = ({ isOpen, onClose, collaborator, collaboratorIndex, o
             value={formData.firstname}
             onChange={(value) => handleChange('firstname', value)}
             error={localErrors.firstname}
-            externalError={errors?.[`collaborator_${collaboratorIndex}_firstname`]}
+            externalError={errors?.[`collaborators_${collaboratorIndex}_firstname`]}
             required
           />
 
@@ -48,7 +48,7 @@ const CollaboratorModal = ({ isOpen, onClose, collaborator, collaboratorIndex, o
             value={formData.lastname}
             onChange={(value) => handleChange('lastname', value)}
             error={localErrors.lastname}
-            externalError={errors?.[`collaborator_${collaboratorIndex}_lastname`]}
+            externalError={errors?.[`collaborators_${collaboratorIndex}_lastname`]}
             required
           />
 
@@ -59,7 +59,7 @@ const CollaboratorModal = ({ isOpen, onClose, collaborator, collaboratorIndex, o
             value={formData.email}
             onChange={(value) => handleChange('email', value)}
             error={localErrors.email}
-            externalError={errors?.[`collaborator_${collaboratorIndex}_email`]}
+            externalError={errors?.[`collaborators_${collaboratorIndex}_email`]}
             required
           />
 
@@ -70,7 +70,7 @@ const CollaboratorModal = ({ isOpen, onClose, collaborator, collaboratorIndex, o
             value={formData.gender}
             onChange={(value) => handleChange('gender', value)}
             error={localErrors.gender}
-            externalError={errors?.[`collaborator_${collaboratorIndex}_gender`]}
+            externalError={errors?.[`collaborators_${collaboratorIndex}_gender`]}
             required
             options={genderOptions}
           />
@@ -83,7 +83,7 @@ const CollaboratorModal = ({ isOpen, onClose, collaborator, collaboratorIndex, o
               value={formData.role}
               onChange={(value) => handleChange('role', value)}
               error={localErrors.role}
-              externalError={errors?.[`collaborator_${collaboratorIndex}_role`]}
+              externalError={errors?.[`collaborators_${collaboratorIndex}_role`]}
               required
               rows={2}
               maxLength={500}

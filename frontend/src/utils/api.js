@@ -18,6 +18,13 @@ export const apiCall = async (endpoint, options = {}) => {
   if (!(options.body instanceof FormData)) {
     defaultOptions.headers['Content-Type'] = 'application/json';
   }
+  if (
+    options.body &&
+    typeof options.body === 'object' &&
+    !(options.body instanceof FormData)
+  ) {
+    options.body = JSON.stringify(options.body);
+  }
   
   try {
     const response = await fetch(url, {
@@ -34,25 +41,17 @@ export const apiCall = async (endpoint, options = {}) => {
     if (!contentType || !contentType.includes('application/json')) {
       const text = await response.text();
       console.error('Réponse non-JSON reçue:', text.substring(0, 200));
-      throw new Error(`Réponse invalide du serveur (${response.status}): Le serveur a renvoyé du HTML au lieu de JSON. Vérifiez que le backend fonctionne correctement.`);
+      throw new Error(`Erreur: ${response.status} - ${text}`);
     }
     
     const data = await response.json();
     
     if (!response.ok) {
-      // Créer une erreur avec plus de détails
-      const errorMessage = data.error || `Erreur ${response.status}: ${response.statusText}`;
-      const error = new Error(errorMessage);
-      
-      // Ajouter les détails de l'erreur si disponibles (pour les erreurs de validation Zod)
-      if (data.details) {
-        error.details = data.details;
+      throw {
+        ...data,
+        status: response.status,
+        message: data.message,
       }
-      
-      // Ajouter le code de statut
-      error.status = response.status;
-      
-      throw error;
     }
     
     return data;

@@ -8,6 +8,9 @@ import Tag from '../components/tags/Tags.jsx';
 import SubmitModal from '../components/modals/SubmitModal.jsx';
 import '../components/ui/loading.css';
 import Countdown from '../components/coutndown/Countdown.jsx';
+import FavoriteButton from '../components/playlists/AddToFavoritesBtn.jsx';
+import WatchLaterButton from '../components/playlists/AddToWatchLaterBtn.jsx';
+import ReportButton from '../components/playlists/AddToReport.jsx';
 
 export default function Homepage() {
   const loginModal = useModal();
@@ -62,6 +65,12 @@ export default function Homepage() {
           <button className="btn btn-secondary">Secondary Action</button>
           <button className="btn btn-modern">Modern Action</button>
           <button className="btn btn-danger">Danger Action</button>
+        </div>
+
+        <div className='playlists-btns'>
+          <FavoriteButton/>
+          <WatchLaterButton/>
+          <ReportButton/>
         </div>
 
         {/* Section Tags */}

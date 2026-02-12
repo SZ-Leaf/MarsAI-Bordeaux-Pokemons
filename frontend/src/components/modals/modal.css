@@ -24,7 +24,7 @@
   @apply shadow-2xl;
   @apply max-h-[90vh] overflow-hidden;
   @apply flex flex-col;
-  background-color: bg-surface;
+  background-color: var(--bg-surface);
   backdrop-filter: blur(12px);
   animation: modalSlideIn 0.3s ease-out;
 }
@@ -56,7 +56,7 @@
 .modal-title {
   @apply text-xl font-bold;
   @apply pr-8;
-  color: color-white;
+  @apply text-white;
 }
 
 /* Bouton de fermeture */
@@ -75,14 +75,11 @@
 
 .modal-close-btn:hover {
   @apply bg-white/10;
-  @apply border-white/20;
-  @apply rotate-90;
-  color: color-white;
+  @apply border-red/20;
+  @apply scale-105;
+  @apply text-red;
 }
 
-.modal-close-btn:active {
-  @apply scale-95 rotate-90;
-}
 
 /* Contenu de la modal */
 .modal-content {

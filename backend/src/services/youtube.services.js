@@ -88,3 +88,31 @@ export const deleteVideo = async (videoId) => {
     throw error;
   }
 };
+
+export const updateYoutubeVideo = async ({ videoId, title, description, tags = [], privacyStatus = 'private', categoryId}) => {
+  try {
+    const { token } = await oauth2Client.getAccessToken();
+    oauth2Client.setCredentials({ access_token: token });
+
+    const response = await youtube.videos.update({
+      part: 'snippet,status',
+      requestBody: {
+        id: videoId,
+        snippet: {
+          title,
+          description,
+          tags,
+          categoryId
+        },
+        status: {
+          privacyStatus
+        }
+      }
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error('Erreur mise à jour YouTube :', err.response?.data || err.message);
+    throw err;
+  }
+};

@@ -1,5 +1,6 @@
 import React from "react";
 
+//formatage de l'heure
 function formatDuration(seconds) {
   if (!Number.isFinite(seconds) || seconds <= 0) return null;
   const s = Math.floor(seconds % 60);
@@ -13,7 +14,7 @@ export default function PlaylistSubmissionCard({
   submission,
   showSynopsis = false,
   actionLabel = "Ouvrir",
-  variant = "default", // 🔥 nouveau
+  variant = "default", 
 }) {
   const compact = variant === "compact";
 

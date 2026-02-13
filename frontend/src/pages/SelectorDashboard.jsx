@@ -1,17 +1,19 @@
-import React, { useMemo } from "react";
-import { useNavigate } from "react-router";
+import React, { useMemo, useState, useRef, useEffect } from "react";
 import { PLAYLISTS } from "../helpers/playlistHelper.js";
 import { usePlaylistCounts } from "../hooks/usePlaylistCounts";
-import {usePendingSubmissions} from "../hooks/usePendingSubmissions";
+import { usePendingSubmissions } from "../hooks/usePendingSubmissions";
 import PlaylistCard from "../components/playlists/PlaylistCard.jsx";
+import PlaylistDetail from "../components/playlists/PlaylistDetail.jsx";
 import PendingCard from "../components/playlists/PendingCard.jsx";
-
+import PendingDetail from "../components/playlists/PendingDetail.jsx";
 
 export default function SelectorDashboard() {
-  const navigate = useNavigate();
   const { counts, loading, error } = usePlaylistCounts();
+  //  un seul état pour ce qui est ouvert en bas (playlists et pending)
+  const [openPanel, setOpenPanel] = useState(null);
+  const detailRef = useRef(null);
 
-    const {
+  const {
     total: pendingTotal,
     loading: pendingLoading,
     error: pendingError
@@ -22,71 +24,105 @@ export default function SelectorDashboard() {
     return Object.values(counts).reduce((acc, n) => acc + (Number(n) || 0), 0);
   }, [counts]);
 
+
+  useEffect(() => {
+    if (openPanel && detailRef.current) {
+      detailRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [openPanel]);
+
+  const selectedPlaylist = useMemo(() => {
+    if (!openPanel || openPanel.type !== "playlist") return null;
+    return PLAYLISTS.find((p) => p.key === openPanel.key) || null;
+  }, [openPanel]);
+
   return (
     <section className="px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      {/* <header className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-2xl text-white font-semibold">Selector Dashboard</h1>
-          <p className="text-sm text-gray-400">
-            Gestion rapide des playlists et accès aux sélections.
-          </p>
-        </div>
-      </header> */}
-
-      {/* Error */}
       {(error || pendingError) && (
         <div className="rounded-xl border border-red-800 bg-red-950/40 p-4 text-red-200">
           {error || pendingError}
         </div>
       )}
 
-
-      {/* Playlists */}
       <div className="max-w-7xl mx-auto">
         <div className="rounded-xl border border-zinc-800 bg-zinc-950/40 p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-white text-3xl font-semibold">Playlists</h2>
-            <div className="flex items-center gap-3">
-              <div className="rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-gray-300">
-                {loading ? "…" : `${total} vidéo(s) au total`}
-              </div>
+          <div className="flex items-center justify-between mb-3 gap-6">
+            <div>
+              <h2 className="text-white text-3xl font-semibold">
+                Playlists & Évaluation
+              </h2>
+              <p className="mt-1 text-sm text-gray-400">
+                Cliquer sur la playlist correspondante pour afficher le contenu
+              </p>
+            </div>
+            <div className="rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-gray-300">
+              {loading ? "…" : `${total} vidéo(s) au total`}
             </div>
           </div>
 
           <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
+            {PLAYLISTS.map((p) => {
+              const isActive = openPanel?.type === "playlist" && openPanel.key === p.key;
 
-            {PLAYLISTS.map((p) => (
-              <PlaylistCard
-              key={p.key}
-              playlist={p}
-              loading={loading}
-              count={counts?.[p.key] ?? 0}
-              onClick={() => navigate(`/playlist/${p.key}`)}
-              />
-            ))}
+              return (
+                <PlaylistCard
+                  key={p.key}
+                  playlist={p}
+                  loading={loading}
+                  count={counts?.[p.key] ?? 0}
+                  isActive={isActive}
+                  onClick={() =>
+                    setOpenPanel((prev) =>
+                      prev?.type === "playlist" && prev.key === p.key
+                        ? null
+                        : { type: "playlist", key: p.key }
+                    )
+                  }
+                />
+              );
+            })}
+
             <PendingCard
               total={pendingTotal}
               loading={pendingLoading}
-              onClick={() => navigate("/selector/pending")}
+              isActive={openPanel?.type === "pending"}
+              onClick={() =>
+                setOpenPanel((prev) => (prev?.type === "pending" ? null : { type: "pending" }))
+              }
             />
           </div>
-
         </div>
+
+        {/*  zone détail en bas */}
+        {openPanel && (
+          <div ref={detailRef} className="mt-6">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-white text-2xl font-semibold">
+                {openPanel.type === "pending"
+                  ? "À Evaluer"
+                  : `Détail : ${
+                      selectedPlaylist?.title ?? selectedPlaylist?.name ?? selectedPlaylist?.key
+                    }`}
+              </h3>
+
+              <button
+                type="button"
+                onClick={() => setOpenPanel(null)}
+                className="rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-gray-200 hover:border-zinc-600"
+              >
+                Fermer
+              </button>
+            </div>
+
+            {openPanel.type === "pending" ? (
+              <PendingDetail />
+            ) : (
+              <PlaylistDetail listKey={openPanel.key} onBack={() => setOpenPanel(null)} />
+
+            )}
+          </div>
+        )}
       </div>
     </section>
-  );
-}
-
-function QuickAction({ title, desc, onClick }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="text-left rounded-xl border border-zinc-800 bg-zinc-900 p-4 hover:border-zinc-600 transition"
-    >
-      <div className="text-white font-semibold">{title}</div>
-      <div className="text-sm text-gray-400 mt-1">{desc}</div>
-    </button>
   );
 }

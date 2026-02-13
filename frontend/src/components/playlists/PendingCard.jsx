@@ -6,11 +6,12 @@ export default function PendingCard({ total = 0, loading = false, onClick }) {
       type="button"
       onClick={onClick}
       className="
-        text-left w-full rounded-xl border border-yellow-500
-        bg-zinc-900/60 hover:bg-zinc-900
+        cursor-pointer
+        text-left w-full rounded-xl border border-yellow-500/40
+        bg-zinc-950/40
         px-5 py-4
         transition
-        hover:border-zinc-600
+        hover:bg-yellow-700/10 hover:border-zinc-500/70
         focus:outline-none focus:ring-2 focus:ring-white/20
       "
     >
@@ -18,7 +19,7 @@ export default function PendingCard({ total = 0, loading = false, onClick }) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="text-white font-semibold text-lg truncate">
-            À traiter
+            A évaluer
           </div>
         </div>
 

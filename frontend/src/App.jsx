@@ -13,7 +13,7 @@ import NewsletterConfirm from './pages/NewsletterConfirm';
 import NewsletterUnsubscribe from './pages/NewsletterUnsubscribe';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
-import PlaylistDetail from './pages/PlaylistDetail.jsx';
+import PlaylistDetail from './components/playlists/PlaylistDetail.jsx';
 import SelectorDashboard from './pages/SelectorDashboard.jsx';
 
 function App() {
@@ -42,7 +42,7 @@ function App() {
             <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
             <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
             <Route path='/selector/dashboard' element={<SelectorDashboard/>}/>
-            <Route path='/playlist/:list' element={<PlaylistDetail/>}/>
+            {/* <Route path='/selector/pending' element={<}/> */}
           </Routes>
         </div>
         

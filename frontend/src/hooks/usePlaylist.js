@@ -5,7 +5,7 @@ const API = import.meta.env.VITE_API_URL;
 const ALLOWED = new Set(["favorites", "watch_later", "report"]);
 
 export function usePlaylist(listKey) {
-  const [items, setItems] = useState([]);
+  const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -36,7 +36,7 @@ export function usePlaylist(listKey) {
         }
 
         if (!cancelled) {
-          setItems(Array.isArray(data?.data) ? data.data : []);
+          setSubmissions(Array.isArray(data?.data) ? data.data : []);
         }
       } catch (e) {
         if (!cancelled) setError(e.message);
@@ -50,5 +50,5 @@ export function usePlaylist(listKey) {
     };
   }, [listKey]);
 
-  return { items, loading, error };
+  return { submissions, loading, error };
 }

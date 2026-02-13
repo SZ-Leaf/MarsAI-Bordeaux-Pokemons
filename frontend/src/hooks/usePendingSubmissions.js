@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 const API = import.meta.env.VITE_API_URL;
 
 export function usePendingSubmissions({ limit = 24, offset = 0 } = {}) {
-  const [items, setItems] = useState([]);
+  const [submissions, setSubmissions] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -38,7 +38,7 @@ export function usePendingSubmissions({ limit = 24, offset = 0 } = {}) {
 
         if (!cancelled) {
           const payload = json?.data; 
-          setItems(Array.isArray(payload?.data) ? payload.data : []);
+          setSubmissions(Array.isArray(payload?.data) ? payload.data : []);
           setTotal(Number(payload?.total) || 0);
         }
       } catch (e) {
@@ -53,5 +53,5 @@ export function usePendingSubmissions({ limit = 24, offset = 0 } = {}) {
     };
   }, [limit, offset]);
 
-  return { items, total, loading, error };
+  return { submissions, total, loading, error };
 }

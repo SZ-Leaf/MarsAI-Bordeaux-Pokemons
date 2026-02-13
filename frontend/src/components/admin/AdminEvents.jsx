@@ -1,5 +1,6 @@
 import React from 'react';
-import { Calendar as CalendarIcon, MapPin, Clock, Plus, ChevronRight, Settings } from 'lucide-react';
+import { Calendar as CalendarIcon, MapPin, Clock, Plus, ChevronRight } from 'lucide-react';
+import AdminSectionHeader from './shared/AdminSectionHeader';
 
 const AdminEvents = () => {
   const events = [
@@ -11,16 +12,16 @@ const AdminEvents = () => {
 
   return (
     <div className="p-2">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="section-title">Évènements</h1>
-          <p className="section-subtitle">Planifiez et gérez les moments forts du festival Mars AI.</p>
-        </div>
-        <button className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-xl flex items-center font-bold transition-colors">
-          <Plus size={18} className="mr-2" />
-          Nouvel évènement
-        </button>
-      </div>
+      <AdminSectionHeader 
+        title="Évènements" 
+        subtitle="Planifiez et gérez les moments forts du festival Mars AI."
+        action={{
+          label: "Nouvel évènement",
+          icon: Plus,
+          onClick: () => console.log('New event'),
+          color: 'orange'
+        }}
+      />
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         <div className="xl:col-span-2 space-y-4">

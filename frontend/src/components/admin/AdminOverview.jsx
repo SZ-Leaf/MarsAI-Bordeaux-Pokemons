@@ -2,48 +2,11 @@ import React from 'react';
 import { 
   Play, 
   ChevronRight,
-  ThumbsUp,
-  MessageSquare,
   Globe,
   Users as UsersIcon,
   Film
 } from 'lucide-react';
-
-const StatCard = ({ title, value, subtitle, badge, badgeColor, progress, progressColor, buttonText }) => (
-  <div className="stat-card">
-    <div className="flex justify-between items-start">
-      <div className="p-2 bg-blue-500/10 rounded-lg">
-        <Film size={18} className="text-blue-400" />
-      </div>
-      {badge && (
-        <span className={`stat-badge ${badgeColor}`}>
-          {badge}
-        </span>
-      )}
-    </div>
-    
-    <div className="mt-4">
-      <h2 className="stat-value">{value}</h2>
-      <p className="stat-label">{title}</p>
-      {subtitle && <p className="text-[10px] text-gray-500 font-bold mb-2">{subtitle}</p>}
-    </div>
-
-    {progress !== undefined && (
-      <div className="progress-container">
-        <div 
-          className={`progress-fill ${progressColor}`} 
-          style={{ width: `${progress}%` }}
-        ></div>
-      </div>
-    )}
-
-    {buttonText && (
-      <button className="mt-4 w-full border border-gray-700 hover:bg-white/5 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-colors">
-        {buttonText}
-      </button>
-    )}
-  </div>
-);
+import AdminStatCard from './shared/AdminStatCard';
 
 const FilmItem = ({ rank, title, likes, comments, imageUrl }) => (
   <div className="film-item">
@@ -52,17 +15,8 @@ const FilmItem = ({ rank, title, likes, comments, imageUrl }) => (
       <img src={imageUrl} alt={title} className="film-thumbnail" />
       <div>
         <h4 className="text-sm font-bold text-blue-400">{title}</h4>
-        <div className="flex mt-1">
-          <div className="film-stat-item">
-            <ThumbsUp size={12} className="mr-1" />
-            {likes}
-          </div>
-          {comments && (
-            <div className="film-stat-item">
-              <MessageSquare size={12} className="mr-1" />
-              {comments}
-            </div>
-          )}
+        <div className="flex mt-1 text-[10px] text-gray-500">
+           {likes} • {comments}
         </div>
       </div>
     </div>
@@ -95,7 +49,7 @@ const AdminOverview = () => {
 
       {/* First Row of Stats */}
       <div className="stats-grid">
-        <StatCard 
+        <AdminStatCard 
           title="Films évalués par le jury"
           value="482"
           subtitle="80.3% COMPLETE"
@@ -103,8 +57,9 @@ const AdminOverview = () => {
           badgeColor="text-green-400 bg-green-400/10"
           progress={80.3}
           progressColor="bg-blue-500"
+          icon={Film}
         />
-        <StatCard 
+        <AdminStatCard 
           title="Jurés ayant finalisé leur lot"
           value="08/12"
           subtitle="EN COURS DE LIBERATION"
@@ -112,19 +67,24 @@ const AdminOverview = () => {
           badgeColor="text-orange-400 bg-orange-400/10"
           progress={65}
           progressColor="bg-orange-500"
+          icon={Film}
+          iconColor="text-orange-400"
         />
-        <StatCard 
+        <AdminStatCard 
           title="Pays représentés"
           value="124"
           subtitle="TOP ZONE: EUROPE"
           badge={<Globe size={14} />}
           badgeColor="text-blue-400 bg-blue-400/10"
+          icon={Globe}
         />
-        <StatCard 
+        <AdminStatCard 
           title="Taux d'occupation workshops"
           value="86%"
           badge={<div className="w-4 h-3 bg-green-500 rounded-sm"></div>}
           buttonText="Voir les evenements"
+          icon={Film}
+          iconColor="text-green-400"
         />
       </div>
 

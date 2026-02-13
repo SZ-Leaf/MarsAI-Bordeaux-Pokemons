@@ -1,5 +1,7 @@
 import React from 'react';
-import { Search, UserPlus, MoreVertical, Edit2, Trash2, Mail } from 'lucide-react';
+import { UserPlus, Edit2, Trash2, Mail } from 'lucide-react';
+import AdminSectionHeader from './shared/AdminSectionHeader';
+import AdminSearchInput from './shared/AdminSearchInput';
 
 const AdminUsers = () => {
   const users = [
@@ -11,23 +13,20 @@ const AdminUsers = () => {
 
   return (
     <div className="p-2">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="section-title">Utilisateurs</h1>
-          <p className="section-subtitle">Gérez les comptes et les permissions des membres du festival.</p>
-        </div>
-        <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center font-bold transition-colors">
-          <UserPlus size={18} className="mr-2" />
-          Inviter un utilisateur
-        </button>
-      </div>
+      <AdminSectionHeader 
+        title="Utilisateurs" 
+        subtitle="Gérez les comptes et les permissions des membres du festival."
+        action={{
+          label: "Inviter un utilisateur",
+          icon: UserPlus,
+          onClick: () => console.log('Invite user'),
+          color: 'blue'
+        }}
+      />
 
       <div className="bg-[#1a1a1a] rounded-3xl border border-gray-800/50 overflow-hidden">
         <div className="p-6 border-b border-gray-800 flex justify-between items-center">
-          <div className="relative w-96">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-            <input type="text" placeholder="Rechercher un utilisateur..." className="search-input pl-12 w-full" />
-          </div>
+          <AdminSearchInput placeholder="Rechercher un utilisateur..." className="w-96" />
           <div className="flex space-x-2">
             <button className="px-4 py-2 bg-[#0a0a0a] border border-gray-800 rounded-lg text-xs font-bold uppercase hover:bg-gray-800">Tous</button>
             <button className="px-4 py-2 bg-[#0a0a0a] border border-gray-800 rounded-lg text-xs font-bold uppercase hover:bg-gray-800">Jury</button>

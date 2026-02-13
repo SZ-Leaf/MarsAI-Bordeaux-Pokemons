@@ -1,5 +1,7 @@
 import React from 'react';
-import { Search, Plus, Filter, Play, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import { Plus, Filter, Play, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import AdminSectionHeader from './shared/AdminSectionHeader';
+import AdminSearchInput from './shared/AdminSearchInput';
 
 const AdminVideos = () => {
   const videos = [
@@ -11,16 +13,11 @@ const AdminVideos = () => {
 
   return (
     <div className="p-2">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="section-title">Gestion Vidéos</h1>
-          <p className="section-subtitle">Modérez les soumissions et organisez le catalogue du festival.</p>
-        </div>
-        <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl flex items-center font-bold transition-colors">
-          <Plus size={18} className="mr-2" />
-          Ajouter une vidéo
-        </button>
-      </div>
+      <AdminSectionHeader 
+        title="Gestion Vidéos" 
+        subtitle="Modérez les soumissions et organisez le catalogue du festival."
+        action={null}
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-[#1a1a1a] p-6 rounded-3xl border border-gray-800/50">
@@ -48,10 +45,7 @@ const AdminVideos = () => {
 
       <div className="bg-[#1a1a1a] rounded-3xl border border-gray-800/50 overflow-hidden">
         <div className="p-6 border-b border-gray-800 flex justify-between items-center">
-          <div className="relative w-96">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-            <input type="text" placeholder="Titre, réalisateur..." className="search-input pl-12 w-full" />
-          </div>
+          <AdminSearchInput placeholder="Titre, réalisateur..." className="w-96" />
           <button className="flex items-center space-x-2 px-4 py-2 bg-[#0a0a0a] border border-gray-800 rounded-lg text-xs font-bold uppercase hover:bg-gray-800">
             <Filter size={14} />
             <span>Filtres</span>

@@ -9,6 +9,12 @@ import Sponsors from './components/sponsors/Sponsors.jsx';
 import Selector from './components/selector/Selector';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import NewsletterConfirm from './pages/NewsletterConfirm';
+import NewsletterUnsubscribe from './pages/NewsletterUnsubscribe';
+import AdminGuard from './components/admin/AdminGuard';
+import AdminNewslettersList from './pages/AdminNewslettersList';
+import AdminNewsletterForm from './pages/AdminNewsletterForm';
+import AdminNewsletterView from './pages/AdminNewsletterView';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 import Submissions from './pages/Submissions';
@@ -19,21 +25,42 @@ function App() {
   return (
     <LanguageProvider>
       <AuthProvider>
-      <Header />
-      <main className="pt-24">
-        <Routes>
-          <Route path="/" element={<TestsGraphique />} />
-          <Route path="/submit" element={<Submit />} />
-          <Route path="/selector" element={<Selector />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/submissions" element={<Submissions />} />
-          <Route path="*" element={<div>404 - Page Not Found</div>} />
-        </Routes>
-      </main>
-
-      <Footer />
-    </AuthProvider>
+        {/* Header desktop uniquement sur page selector, sinon toujours visible */}
+        {isSelectorPage ? (
+          <div className="hidden md:block">
+            <Header />
+          </div>
+        ) : (
+          <Header />
+        )}
+        
+        <div className={isSelectorPage ? '' : 'pt-0 md:pt-24'}>
+          <Routes>
+            <Route path="/" element={<TestsGraphique />} />
+            <Route path="/submit" element={<Submit />} />
+            <Route path="/selector" element={<Selector />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
+            <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
+            <Route path="/admin/newsletters" element={<AdminGuard><AdminNewslettersList /></AdminGuard>} />
+            <Route path="/admin/newsletters/new" element={<AdminGuard><AdminNewsletterForm /></AdminGuard>} />
+            <Route path="/admin/newsletters/:id/edit" element={<AdminGuard><AdminNewsletterForm /></AdminGuard>} />
+            <Route path="/admin/newsletters/:id/view" element={<AdminGuard><AdminNewsletterView /></AdminGuard>} />
+            <Route path="/submissions" element={<Submissions />} />
+            <Route path="*" element={<div>404 - Page Not Found</div>} />
+          </Routes>
+        </div>
+        
+        {/* Footer caché en mobile sur la page selector, visible desktop */}
+        {isSelectorPage ? (
+          <div className="hidden md:block">
+            <Footer />
+          </div>
+        ) : (
+          <Footer />
+        )}
+      </AuthProvider>
     </LanguageProvider>
   );
 }

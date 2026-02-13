@@ -26,7 +26,7 @@ const CGUForm = ({ formData, errors, updateField }) => {
         />
       </div>
       
-      <div className="bg-gray-100 p-4 rounded text-sm">
+      <div className="bg-surface p-4 rounded text-sm text-gray-300">
         <p className="mb-2">
           En soumettant votre film, vous acceptez que celui-ci soit évalué par le jury du festival.
         </p>

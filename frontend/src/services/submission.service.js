@@ -1,5 +1,6 @@
 import { apiCall } from '../utils/api';
 
+
 // Soumettre un film
 export const submitFilm = async (formData) => {
   return apiCall('/api/submissions', {

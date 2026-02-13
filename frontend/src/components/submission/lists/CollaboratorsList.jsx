@@ -30,23 +30,23 @@ const CollaboratorsList = ({ formData, errors, updateField }) => {
         </button>
       </div>
       
-      <p className="text-sm text-gray-600">
+      <p className="text-sm text-gray-300">
         Ajoutez les membres de votre équipe qui ont contribué à la création de la vidéo (optionnel).
       </p>
       
       {currentCollaborators.length === 0 ? (
-        <p className="text-gray-500 text-sm">Aucun contributeur ajouté pour le moment.</p>
+        <p className="text-gray-400 text-sm">Aucun contributeur ajouté pour le moment.</p>
       ) : (
         <div className="space-y-3">
           {currentCollaborators.map((collab, index) => (
-            <div key={index} className="border rounded p-4">
+            <div key={index} className="border border-white/10 rounded p-4 bg-white/5">
               <div className="flex justify-between items-start mb-2">
                 <div>
-                  <p className="font-medium">
+                  <p className="font-medium text-white">
                     {collab.firstname} {collab.lastname}
                   </p>
-                  <p className="text-sm text-gray-600">{collab.email}</p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-300">{collab.email}</p>
+                  <p className="text-sm text-gray-300">
                     {collab.gender} • {collab.role}
                   </p>
                 </div>

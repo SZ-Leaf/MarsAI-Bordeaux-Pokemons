@@ -41,22 +41,9 @@ export const useSelector = () => {
                 body.comment = comment.trim();
             }
             
-            const response = await fetch(`${process.env.API_URL}/api/selector/rate/${submissionId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify(body)
-            });
 
-            if (!response.ok) {
-                // Améliorer le message d'erreur
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || 'Erreur lors de la notation');
-            }
-            
-            return await response.json();
+            const response = await rateSubmissionService(submissionId, body);
+            console.log(response);
         } catch (err) {
             throw err;
         }

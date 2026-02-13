@@ -63,66 +63,71 @@ const CollaboratorsForm = ({ formData, errors, updateField, updateCollaboratorFi
                 <FormField 
                   label="Prénom" 
                   required 
-                  error={errors[`collaborator_${index}_firstname`]}
+                  error={errors[`collaborators_${index}_firstname`]}
                 >
                   <TextInput
                     value={collab.firstname}
                     onChange={(e) => update(formData.collaborators, index, 'firstname', e.target.value)}
-                    error={errors[`collaborator_${index}_firstname`]}
+                    error={errors[`collaborators_${index}_firstname`]}
+                    variant="dark"
                   />
                 </FormField>
                 
                 <FormField 
                   label="Nom" 
                   required 
-                  error={errors[`collaborator_${index}_lastname`]}
+                  error={errors[`collaborators_${index}_lastname`]}
                 >
                   <TextInput
                     value={collab.lastname}
                     onChange={(e) => update(formData.collaborators, index, 'lastname', e.target.value)}
-                    error={errors[`collaborator_${index}_lastname`]}
+                    error={errors[`collaborators_${index}_lastname`]}
+                    variant="dark"
                   />
                 </FormField>
                 
                 <FormField 
                   label="Email" 
                   required 
-                  error={errors[`collaborator_${index}_email`]}
+                  error={errors[`collaborators_${index}_email`]}
                 >
                   <TextInput
                     type="email"
                     value={collab.email}
                     onChange={(e) => update(formData.collaborators, index, 'email', e.target.value)}
-                    error={errors[`collaborator_${index}_email`]}
+                    error={errors[`collaborators_${index}_email`]}
+                    variant="dark"
                   />
                 </FormField>
                 
                 <FormField 
                   label="Genre" 
                   required 
-                  error={errors[`collaborator_${index}_gender`]}
+                  error={errors[`collaborators_${index}_gender`]}
                 >
                   <Select
                     value={collab.gender}
                     onChange={(e) => update(formData.collaborators, index, 'gender', e.target.value)}
-                    error={errors[`collaborator_${index}_gender`]}
+                    error={errors[`collaborators_${index}_gender`]}
                     options={genderOptions}
+                    variant="dark"
                   />
                 </FormField>
                 
                 <FormField 
                   label="Rôle" 
                   required 
-                  error={errors[`collaborator_${index}_role`]}
+                  error={errors[`collaborators_${index}_role`]}
                   className="md:col-span-2"
                 >
                   <TextArea
                     value={collab.role}
                     onChange={(e) => update(formData.collaborators, index, 'role', e.target.value)}
-                    error={errors[`collaborator_${index}_role`]}
+                    error={errors[`collaborators_${index}_role`]}
                     rows={2}
                     maxLength={500}
                     placeholder="Rôle dans la production (ex: Director, Producer, Editor)"
+                    variant="dark"
                   />
                 </FormField>
               </div>

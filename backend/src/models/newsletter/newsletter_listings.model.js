@@ -55,7 +55,11 @@ export const getActiveSubscribers = async (connection) => {
 };
 
 // Liste tous les abonnés avec filtres et pagination
+// LIMIT/OFFSET en littéraux (MySQL peut refuser les paramètres préparés)
 export const getSubscribers = async (connection, { confirmed, unsubscribed, limit = 20, offset = 0 }) => {
+   const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10) || 20));
+   const offsetNum = Math.max(0, parseInt(offset, 10) || 0);
+
    let query = "SELECT * FROM newsletter_listings WHERE 1=1";
    const params = [];
 
@@ -69,8 +73,7 @@ export const getSubscribers = async (connection, { confirmed, unsubscribed, limi
       params.push(unsubscribed);
    }
 
-   query += " ORDER BY created_at DESC LIMIT ? OFFSET ?";
-   params.push(limit, offset);
+   query += ` ORDER BY created_at DESC LIMIT ${limitNum} OFFSET ${offsetNum}`;
 
    const [rows] = await connection.execute(query, params);
    return rows;

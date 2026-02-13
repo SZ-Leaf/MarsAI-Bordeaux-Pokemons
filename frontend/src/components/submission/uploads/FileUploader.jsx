@@ -33,7 +33,7 @@ const FileUploader = ({
       
       <div
         className={`border-2 border-dashed rounded p-6 text-center ${
-          dragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+          dragActive ? 'border-blue-500 bg-blue-500/10' : 'border-white/10'
         } ${error ? 'border-red-500' : ''}`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -52,13 +52,13 @@ const FileUploader = ({
         
         {!value || (Array.isArray(value) && value.length === 0) ? (
           <div>
-            <p className="text-gray-600 mb-2">
+            <p className="text-gray-300 mb-2">
               Glissez-déposez un fichier ici ou{' '}
               <label htmlFor={`file-${label}`} className="text-blue-500 cursor-pointer underline">
                 cliquez pour sélectionner
               </label>
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-400">
               {accept && `Formats acceptés: ${accept}`}
               {maxSizeMB && ` • Taille max: ${maxSizeMB}MB`}
             </p>
@@ -68,14 +68,14 @@ const FileUploader = ({
             {Array.isArray(value) ? (
               <div className="space-y-2">
                 {value.map((file, index) => (
-                  <div key={index} className="text-sm">
+                  <div key={index} className="text-sm text-white">
                     {file.name} ({formatFileSize(file.size)})
                   </div>
                 ))}
               </div>
             ) : (
               <div>
-                <div className="text-sm mb-2">
+                <div className="text-sm mb-2 text-white">
                   {value.name} ({formatFileSize(value.size)})
                 </div>
                 {preview && (

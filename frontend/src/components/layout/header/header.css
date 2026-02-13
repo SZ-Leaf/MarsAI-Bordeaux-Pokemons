@@ -5,7 +5,14 @@
    HEADER CONTAINER & CONTENT
    ============================================ */
 .header-pill-container {
-  @apply fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl;
+  position: fixed;
+  z-index: 50;
+  top: var(--header-top, 1.25rem);
+  left: var(--header-left, 50%);
+  right: var(--header-right, auto);
+  width: var(--header-width, 95%);
+  max-width: var(--header-max-width, 80rem);
+  transform: var(--header-transform, translateX(-50%));
 }
 
 .header-pill-content {
@@ -15,6 +22,8 @@
   @apply bg-white/10 backdrop-blur-xl;
   @apply border border-white/10 rounded-full;
   @apply shadow-2xl;
+  width: var(--header-content-width, 100%);
+  max-width: var(--header-content-max-width, none);
 }
 
 /* ============================================
@@ -23,6 +32,9 @@
 @media (max-width: 768px) {
   .header-pill-container {
     @apply fixed bottom-0 top-auto left-0 translate-x-0 w-full max-w-full;
+    /* On s'assure que les variables ne cassent pas le mobile */
+    left: 0 !important;
+    transform: none !important;
   }
 
   .header-pill-content {

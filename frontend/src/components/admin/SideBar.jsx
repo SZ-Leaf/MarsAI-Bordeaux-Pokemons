@@ -1,28 +1,9 @@
 import React from 'react';
-import { 
-  LayoutDashboard, 
-  Film, 
-  Users, 
-  BarChart3, 
-  Trophy, 
-  Calendar, 
-  Mail, 
-  Package, 
-  Settings,
-  LogOut
-} from 'lucide-react';
 import './admin.css';
+import navItems from '../../constants/dashboard';
 
-const SideBar = () => {
-  const navItems = [
-    { id: 'overview', label: 'Overview', icon: LayoutDashboard, active: true },
-    { id: 'films', label: 'Gestion films', icon: Film },
-    { id: 'jury', label: 'Distribution & Jury', icon: Users },
-    { id: 'events', label: 'Evenements', icon: Calendar },
-    { id: 'config', label: 'Configuration Festival', icon: Settings },
-  ];
 
-  return (
+const SideBar = () => (
     <aside className="sidebar">
       {/* User Profile */}
       <div className="sidebar-user-profile">
@@ -34,8 +15,8 @@ const SideBar = () => {
           />
           <div className="absolute bottom-1 right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-[#121212]"></div>
         </div>
-        <h3 className="text-lg font-bold">Ocean Breeze</h3>
-        <p className="text-xs text-gray-500 uppercase tracking-widest font-bold">Réalisateur Studio</p>
+        <h3 className="text-lg font-bold">Admin</h3>
+        <p className="text-xs text-gray-500 uppercase tracking-widest font-bold">Mars AI</p>
       </div>
 
       {/* Navigation */}
@@ -73,6 +54,6 @@ const SideBar = () => {
       </div>
     </aside>
   );
-};
+
 
 export default SideBar;

@@ -11,7 +11,6 @@ export const uploadToYoutube = async (req, res) => {
     if (!submission) return sendError(res, 404, 'Vidéo introuvable', 'Video not found', null);
     if (submission.youtube_URL) return sendError(res, 409, 'Vidéo déjà uploadée', 'Video already uploaded', null);
 
-    // Upload vidéo + thumbnail + sous-titres
     const youtubeVideo = await uploadAllYoutubeAssets(submission);
 
     const youtubeUrl = `https://www.youtube.com/watch?v=${youtubeVideo.id}`;

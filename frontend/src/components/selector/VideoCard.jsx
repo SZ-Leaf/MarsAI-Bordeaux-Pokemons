@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
 import { Play, Volume2, VolumeX } from 'lucide-react';
-import { API_URL } from '../../utils/api';
 import VideoInfosDesktop from './VideoInfosDesktop';
 
 const VideoCard = ({ submission, isActive, addToPlaylist, rateSubmission, selection, toggle, hasRating, markAsRated }) => {

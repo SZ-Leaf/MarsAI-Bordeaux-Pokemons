@@ -44,10 +44,10 @@ const Submissions = () => {
    }, [pagination.limit, pagination.offset, pagination.orderBy, statusFilter]);
 
    return (
-      <section className="submissions-section w-19/20 m-auto">
-         <div className="submissions-header flex flex-col justify-between mx-auto p-4">
+      <section className="submissions-section m-auto">
+         <div className="submissions-header flex flex-col justify-between mx-auto py-5">
             <h1>{language === 'fr' ? 'La Galerie des Films' : 'The Movie Gallery'}</h1>
-            <div className="submissions-filters flex gap-4">
+            <div className="submissions-filters flex justify-between">
                <select className="select-dark">
                   <option value="Full AI">
                      {language === 'fr' ? 'Full IA' : 'Full AI'}

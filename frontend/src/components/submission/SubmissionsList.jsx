@@ -8,7 +8,7 @@ const SubmissionsList = ({submissions}) => {
       return <div>{language === 'fr' ? 'Aucune soumission trouvée' : 'No submissions found'}</div>;
    }
    return (
-      <div className="submissions-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+      <div className="submissions-list grid gap-10 grid-cols-[repeat(auto-fill,minmax(320px,1fr))]">
          {submissions.map((submission) => (
             <SubmissionCard
                submission={submission}

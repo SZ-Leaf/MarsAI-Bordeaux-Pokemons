@@ -18,18 +18,20 @@ const SubmissionCard = ({submission}) => {
             <img className="submission-image" src={`${import.meta.env.VITE_API_URL}${submission.cover}`} alt={submission.english_title} />
             <p className="submission-duration">{formatDuration(submission.duration_seconds)}</p>
          </div>
-         <div className="submission-title">
-            <h2>{submission.english_title}</h2>
-            {submission.original_title && <h3>{submission.original_title}</h3>}
-         </div>
-         <div className="submission-details flex justify-between">
-            <div className='submission-creator'>
-               <p>{language === 'fr' ? 'REALISATEUR' : 'DIRECTOR'}</p>
-               <p>{submission.creator_firstname}{submission.creator_lastname}</p>
+         <div className="submission-content">
+            <div className="submission-title mt-2">
+               <h2>{(submission.english_title).toUpperCase()}</h2>
+               {submission.original_title && <h3>{submission.original_title}</h3>}
             </div>
-            <div className='submission-country'>
-               <p>{language === 'fr' ? 'PAYS' : 'COUNTRY'}</p>
-               <p>{submission.creator_country}</p>
+            <div className="submission-details flex justify-between mt-2">
+               <div className='submission-creator'>
+                  <p>{language === 'fr' ? 'REALISATEUR' : 'DIRECTOR'}</p>
+                  <h5>{submission.creator_firstname}{submission.creator_lastname}</h5>
+               </div>
+               <div className='submission-country'>
+                  <p>{language === 'fr' ? 'PAYS' : 'COUNTRY'}</p>
+                  <h5>{(submission.creator_country).toUpperCase()}</h5>
+               </div>
             </div>
          </div>
       </article>

@@ -1,8 +1,12 @@
 import React from 'react';
 import './sideBar.css';
 import navItems from '../../constants/dashboard';
+import { useLanguage } from '../../context/LanguageContext';
 
-const SideBar = ({ activeView, onViewChange }) => (
+const SideBar = ({ activeView, onViewChange }) => {
+  const { language } = useLanguage();
+  const items = navItems();
+  return (
     <aside className="sidebar">
       {/* User Profile */}
       <div className="sidebar-user-profile">
@@ -20,14 +24,14 @@ const SideBar = ({ activeView, onViewChange }) => (
 
       {/* Navigation */}
       <nav className="sidebar-nav">
-        {navItems.map((item) => (
+        {items.map((item) => (
           <button 
             key={item.id} 
             className={`sidebar-nav-item w-full ${activeView === item.id ? 'active' : ''}`}
             onClick={() => onViewChange(item.id)}
           >
             <item.icon size={20} className="mr-3" />
-            <span className="sidebar-nav-label">{item.label}</span>
+            <span className="sidebar-nav-label">{item.label[language]}</span>
             {item.badge && (
               <span className="sidebar-nav-badge">
                 {item.badge}
@@ -53,6 +57,7 @@ const SideBar = ({ activeView, onViewChange }) => (
         </div>
       </div>
     </aside>
-);
+  );
+}
 
 export default SideBar;

@@ -10,7 +10,11 @@ export const createNewsletter = async (connection, { title, subject, content }) 
 };
 
 // Liste les newsletters avec filtres et pagination
+// LIMIT/OFFSET en littéraux (MySQL peut refuser les paramètres préparés pour LIMIT/OFFSET)
 export const getNewsletters = async (connection, { status, limit = 20, offset = 0 }) => {
+   const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10) || 20));
+   const offsetNum = Math.max(0, parseInt(offset, 10) || 0);
+
    let query = "SELECT * FROM newsletter";
    const params = [];
 
@@ -19,8 +23,7 @@ export const getNewsletters = async (connection, { status, limit = 20, offset = 
       params.push(status);
    }
 
-   query += " ORDER BY created_at DESC LIMIT ? OFFSET ?";
-   params.push(limit, offset);
+   query += ` ORDER BY created_at DESC LIMIT ${limitNum} OFFSET ${offsetNum}`;
 
    const [rows] = await connection.execute(query, params);
    return rows;

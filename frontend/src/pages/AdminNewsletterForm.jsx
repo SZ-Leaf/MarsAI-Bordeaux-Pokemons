@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router';
-import RichTextEditor from '../../components/rich-text-editor/RichTextEditor';
+import CKEditor from '../components/ckeditor/CKEditor';
 import {
   getNewsletterById,
   createNewsletter,
   updateNewsletter,
-} from '../../services/newsletter.service';
+} from '../services/newsletter.service';
 
 function getMessage(err) {
   const m = err?.message;
@@ -13,31 +13,6 @@ function getMessage(err) {
   if (m && typeof m === 'object' && (m.fr || m.en)) return m.fr || m.en;
   return 'Une erreur est survenue.';
 }
-
-const formStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '1rem',
-  maxWidth: '700px',
-};
-const inputStyle = {
-  padding: '0.5rem',
-  borderRadius: '6px',
-  border: '1px solid rgba(255,255,255,0.2)',
-  background: 'rgba(0,0,0,0.2)',
-  color: 'var(--color-white)',
-  width: '100%',
-};
-const labelStyle = { color: 'var(--color-white)', marginBottom: '0.25rem' };
-const btnStyle = {
-  padding: '0.5rem 1rem',
-  borderRadius: '6px',
-  border: 'none',
-  background: 'var(--color-blue)',
-  color: 'var(--color-white)',
-  cursor: 'pointer',
-  alignSelf: 'flex-start',
-};
 
 export default function AdminNewsletterForm() {
   const { id } = useParams();
@@ -94,59 +69,65 @@ export default function AdminNewsletterForm() {
   };
 
   if (loading) {
-    return <div style={{ padding: '1.5rem', color: 'var(--color-white)' }}>Chargement...</div>;
+    return (
+      <div className="p-6 text-color-white">Chargement...</div>
+    );
   }
 
   return (
-    <div style={{ padding: '1.5rem', maxWidth: '900px', margin: '0 auto' }}>
-      <h1 style={{ color: 'var(--color-white)', marginBottom: '1rem', fontSize: '1.5rem' }}>
+    <div className="p-6 max-w-[900px] mx-auto">
+      <h1 className="text-color-white mb-4 text-2xl">
         {isEdit ? 'Modifier la newsletter' : 'Nouvelle newsletter'}
       </h1>
 
-      <form onSubmit={handleSubmit} style={formStyle}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-[700px]">
         <div>
-          <label style={labelStyle}>Titre *</label>
+          <label className="text-color-white mb-1 block">Titre *</label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            style={inputStyle}
+            className="w-full p-2 rounded-md border border-white/20 bg-black/20 text-color-white"
             placeholder="Titre de la newsletter"
             required
           />
         </div>
         <div>
-          <label style={labelStyle}>Sujet (email) *</label>
+          <label className="text-color-white mb-1 block">Sujet (email) *</label>
           <input
             type="text"
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
-            style={inputStyle}
+            className="w-full p-2 rounded-md border border-white/20 bg-black/20 text-color-white"
             placeholder="Sujet de l'email"
             required
           />
         </div>
         <div>
-          <label style={labelStyle}>Contenu *</label>
-          <RichTextEditor
+          <label className="text-color-white mb-1 block">Contenu *</label>
+          <CKEditor
+            editorKey={isEdit && content ? `edit-${id}-loaded` : `${id ?? 'new'}-init`}
             value={content}
             onChange={setContent}
             placeholder="Contenu de la newsletter..."
-            minHeight="280px"
           />
         </div>
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-          <button type="submit" disabled={submitting} style={btnStyle}>
+        <div className="flex gap-3 items-center">
+          <button
+            type="submit"
+            disabled={submitting}
+            className="px-4 py-2 rounded-md border-none bg-color-blue text-color-white cursor-pointer disabled:opacity-70"
+          >
             {submitting ? 'Envoi...' : isEdit ? 'Enregistrer' : 'Créer'}
           </button>
-          <Link to="/admin/newsletters" style={{ color: 'var(--color-blue)' }}>
+          <Link to="/admin/newsletters" className="text-color-blue">
             Annuler
           </Link>
         </div>
       </form>
 
-      <p style={{ marginTop: '1.5rem' }}>
-        <Link to="/admin/newsletters" style={{ color: 'var(--color-blue)' }}>Retour à la liste</Link>
+      <p className="mt-6">
+        <Link to="/admin/newsletters" className="text-color-blue">Retour à la liste</Link>
       </p>
     </div>
   );

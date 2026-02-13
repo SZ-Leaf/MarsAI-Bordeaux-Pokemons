@@ -12,8 +12,9 @@ import Login from './pages/Login';
 import NewsletterConfirm from './pages/NewsletterConfirm';
 import NewsletterUnsubscribe from './pages/NewsletterUnsubscribe';
 import AdminGuard from './components/admin/AdminGuard';
-import AdminNewslettersList from './pages/admin/AdminNewslettersList';
-import AdminNewsletterForm from './pages/admin/AdminNewsletterForm';
+import AdminNewslettersList from './pages/AdminNewslettersList';
+import AdminNewsletterForm from './pages/AdminNewsletterForm';
+import AdminNewsletterView from './pages/AdminNewsletterView';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 import Submissions from './pages/Submissions';
@@ -46,6 +47,7 @@ function App() {
             <Route path="/admin/newsletters" element={<AdminGuard><AdminNewslettersList /></AdminGuard>} />
             <Route path="/admin/newsletters/new" element={<AdminGuard><AdminNewsletterForm /></AdminGuard>} />
             <Route path="/admin/newsletters/:id/edit" element={<AdminGuard><AdminNewsletterForm /></AdminGuard>} />
+            <Route path="/admin/newsletters/:id/view" element={<AdminGuard><AdminNewsletterView /></AdminGuard>} />
           </Routes>
         </div>
         

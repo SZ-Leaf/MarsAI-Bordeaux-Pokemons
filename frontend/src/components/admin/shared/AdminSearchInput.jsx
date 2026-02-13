@@ -1,10 +1,11 @@
 import React from 'react';
 import { Search } from 'lucide-react';
+import './adminShared.css';
 
 const AdminSearchInput = ({ placeholder, value, onChange, className = "" }) => {
   return (
-    <div className={`relative ${className}`}>
-      <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+    <div className={`admin-search-wrapper ${className}`}>
+      <Search className="admin-search-icon" size={18} />
       <input 
         type="text" 
         placeholder={placeholder} 

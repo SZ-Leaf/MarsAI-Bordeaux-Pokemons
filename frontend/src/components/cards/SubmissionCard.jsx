@@ -1,7 +1,9 @@
 import React from 'react';
 import './submissionCard.css';
+import { useLanguage } from '../../context/LanguageContext';
 
 const SubmissionCard = ({submission}) => {
+   const {language} = useLanguage();
 
    function formatDuration(seconds) {
       const mins = Math.floor(seconds / 60);           // get whole minutes
@@ -16,16 +18,19 @@ const SubmissionCard = ({submission}) => {
             <img className="submission-image" src={`${import.meta.env.VITE_API_URL}${submission.cover}`} alt={submission.english_title} />
             <p className="submission-duration">{formatDuration(submission.duration_seconds)}</p>
          </div>
-         <div className="submission-content">
+         <div className="submission-title">
             <h2>{submission.english_title}</h2>
             {submission.original_title && <h3>{submission.original_title}</h3>}
-            <p>{submission.language}</p>
-            <p>{submission.english_synopsis}</p>
-            <p>{submission.original_synopsis}</p>
-            <p>{submission.classification}</p>
-            <p>{submission.tech_stack}</p>
-            <p>{submission.creative_method}</p>
-            <p>{submission.subtitles}</p>
+         </div>
+         <div className="submission-details flex justify-between">
+            <div className='submission-creator'>
+               <p>{language === 'fr' ? 'REALISATEUR' : 'DIRECTOR'}</p>
+               <p>{submission.creator_firstname}{submission.creator_lastname}</p>
+            </div>
+            <div className='submission-country'>
+               <p>{language === 'fr' ? 'PAYS' : 'COUNTRY'}</p>
+               <p>{submission.creator_country}</p>
+            </div>
          </div>
       </article>
    )

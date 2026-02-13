@@ -23,22 +23,16 @@ export default function SelectorDashboard() {
   }, [counts]);
 
   return (
-    <section className="space-y-6">
+    <section className="px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
-      <header className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      {/* <header className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl text-white font-semibold">Selector Dashboard</h1>
           <p className="text-sm text-gray-400">
             Gestion rapide des playlists et accès aux sélections.
           </p>
         </div>
-
-        <div className="flex items-center gap-3">
-          <div className="rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-gray-300">
-            {loading ? "…" : `${total} vidéo(s) au total`}
-          </div>
-        </div>
-      </header>
+      </header> */}
 
       {/* Error */}
       {(error || pendingError) && (
@@ -49,31 +43,36 @@ export default function SelectorDashboard() {
 
 
       {/* Playlists */}
-      <div className="rounded-xl border border-zinc-800 bg-zinc-950/40 p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-white font-semibold">Playlists</h2>
-        </div>
+      <div className="max-w-7xl mx-auto">
+        <div className="rounded-xl border border-zinc-800 bg-zinc-950/40 p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-white text-3xl font-semibold">Playlists</h2>
+            <div className="flex items-center gap-3">
+              <div className="rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-gray-300">
+                {loading ? "…" : `${total} vidéo(s) au total`}
+              </div>
+            </div>
+          </div>
 
-        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3">
-          {PLAYLISTS.map((p) => (
-            <PlaylistCard
+          <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
+
+            {PLAYLISTS.map((p) => (
+              <PlaylistCard
               key={p.key}
               playlist={p}
               loading={loading}
               count={counts?.[p.key] ?? 0}
               onClick={() => navigate(`/playlist/${p.key}`)}
+              />
+            ))}
+            <PendingCard
+              total={pendingTotal}
+              loading={pendingLoading}
+              onClick={() => navigate("/selector/pending")}
             />
-          ))}
-        </div>
-      </div>
+          </div>
 
-      {/* (Optionnel) Bloc raccourcis */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <PendingCard
-          total={pendingTotal}
-          loading={pendingLoading}
-          onClick={() => navigate("/selector/pending")}
-        />
+        </div>
       </div>
     </section>
   );

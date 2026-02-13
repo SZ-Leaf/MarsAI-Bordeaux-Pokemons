@@ -37,7 +37,7 @@ export function usePendingSubmissions({ limit = 24, offset = 0 } = {}) {
         }
 
         if (!cancelled) {
-          const payload = json?.data; // ✅ { data: [...], total: 12 }
+          const payload = json?.data; 
           setItems(Array.isArray(payload?.data) ? payload.data : []);
           setTotal(Number(payload?.total) || 0);
         }

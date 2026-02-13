@@ -30,14 +30,14 @@ router.get('/unsubscribe', unsubscribe);
 
 router.post('/admin', authenticate, requireRole([2, 3]), validate(newsletterSchema), create);
 router.get('/admin', authenticate, requireRole([2, 3]), list);
+// Routes /admin/subscribers AVANT /admin/:id pour ne pas capturer "subscribers" comme id
+router.get('/admin/subscribers', authenticate, requireRole([2, 3]), listSubscribers);
+router.delete('/admin/subscribers/:id', authenticate, requireRole([2, 3]), deleteSubscriberController);
+
 router.get('/admin/:id', authenticate, requireRole([2, 3]), getById);
 router.patch('/admin/:id', authenticate, requireRole([2, 3]), validate(newsletterSchema), update);
 router.delete('/admin/:id', authenticate, requireRole([2, 3]), deleteNewsletterController);
-
 router.post('/admin/:id/send', authenticate, requireRole([2, 3]), send);
 router.get('/admin/:id/stats', authenticate, requireRole([2, 3]), getStatsController);
-
-router.get('/admin/subscribers', authenticate, requireRole([2, 3]), listSubscribers);
-router.delete('/admin/subscribers/:id', authenticate, requireRole([2, 3]), deleteSubscriberController);
 
 export default router;

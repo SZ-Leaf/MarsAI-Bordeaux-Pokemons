@@ -4,6 +4,7 @@ import {
   getNewsletters,
   deleteNewsletter,
   sendNewsletter,
+  listSubscribers,
 } from '../services/newsletter.service';
 
 function getMessage(err) {
@@ -19,10 +20,19 @@ function getMessage(err) {
   return 'Une erreur est survenue.';
 }
 
+function escapeCsvCell(value) {
+  const s = String(value ?? '');
+  if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+    return `"${s.replace(/"/g, '""')}"`;
+  }
+  return s;
+}
+
 export default function AdminNewslettersList() {
   const [newsletters, setNewsletters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionId, setActionId] = useState(null);
+  const [exporting, setExporting] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -68,16 +78,57 @@ export default function AdminNewslettersList() {
     }
   };
 
+  const handleExportCsv = async () => {
+    setExporting(true);
+    try {
+      const all = [];
+      let offset = 0;
+      const limit = 100;
+      let chunk;
+      do {
+        const res = await listSubscribers({ limit, offset });
+        chunk = res?.data?.subscribers ?? res?.subscribers ?? [];
+        if (Array.isArray(chunk)) all.push(...chunk);
+        offset += limit;
+      } while (chunk.length === limit);
+
+      const header = 'email';
+      const rows = all.map((s) => escapeCsvCell(s.email));
+      const csv = [header, ...rows].join('\n');
+      const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `abonnes-newsletter-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      alert(getMessage(err));
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <div className="p-6 max-w-[900px] mx-auto">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 flex-wrap gap-3">
         <h1 className="text-color-white m-0 text-2xl">Newsletters</h1>
-        <Link
-          to="/admin/newsletters/new"
-          className="text-color-white bg-color-blue px-4 py-2 rounded-md no-underline"
-        >
-          Nouvelle newsletter
-        </Link>
+        <div className="flex gap-3 items-center">
+          <button
+            type="button"
+            onClick={handleExportCsv}
+            disabled={exporting}
+            className="text-color-white px-4 py-2 rounded-md bg-transparent underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {exporting ? 'Export...' : 'Exporter les abonnés (CSV)'}
+          </button>
+          <Link
+            to="/admin/newsletters/new"
+            className="text-color-white bg-color-blue px-4 py-2 rounded-md no-underline"
+          >
+            Nouvelle newsletter
+          </Link>
+        </div>
       </div>
 
       {loading ? (

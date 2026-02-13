@@ -60,8 +60,9 @@ export const getNewsletterStats = async (id) => {
   return apiCall(`/api/newsletter/admin/${id}/stats`, { method: 'GET' });
 };
 
-export const listSubscribers = async () => {
-  return apiCall('/api/newsletter/admin/subscribers', { method: 'GET' });
+export const listSubscribers = async (params = {}) => {
+  const q = new URLSearchParams(params).toString();
+  return apiCall(`/api/newsletter/admin/subscribers${q ? `?${q}` : ''}`, { method: 'GET' });
 };
 
 export const deleteSubscriber = async (id) => {

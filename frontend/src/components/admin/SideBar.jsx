@@ -2,7 +2,7 @@ import React from 'react';
 import './sideBar.css';
 import navItems from '../../constants/dashboard';
 
-const SideBar = () => (
+const SideBar = ({ activeView, onViewChange }) => (
     <aside className="sidebar">
       {/* User Profile */}
       <div className="sidebar-user-profile">
@@ -23,7 +23,8 @@ const SideBar = () => (
         {navItems.map((item) => (
           <button 
             key={item.id} 
-            className={`sidebar-nav-item w-full ${item.active ? 'active' : ''}`}
+            className={`sidebar-nav-item w-full ${activeView === item.id ? 'active' : ''}`}
+            onClick={() => onViewChange(item.id)}
           >
             <item.icon size={20} className="mr-3" />
             <span className="sidebar-nav-label">{item.label}</span>

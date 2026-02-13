@@ -9,15 +9,12 @@ export const uploadToYoutube = async (req, res) => {
     const submissionId = req.params.id;
     const submission = await findSubmissionById(submissionId);
 
+    if (submission.youtube_URL) {
+      return sendError(res, 409, 'Vidéo déjà uploadée sur YouTube', 'Video already uploaded to YouTube', null);
+    }
     if (!submission) {
       return sendError(res, 404, 'Vidéo introuvable en base de données', 'Video not found in database', null);
     }
-
-    if (!submission.video_url) {
-      return sendError(res, 400, 'Aucun fichier vidéo associé à cette entrée', 'No video file associated with this entry', null);
-    }
-
-
 
     const submissionTags = await getTagsBySubmissionId(submission.id);
     const youtubeTags = (submissionTags || []).map(tag => tag.title);

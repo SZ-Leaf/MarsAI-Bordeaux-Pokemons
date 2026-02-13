@@ -36,10 +36,10 @@
 
 /* Bouton signaler (rouge/rose) */
 .btn-icon-report {
-  @apply bg-pink-500/20 text-pink-400;
-  @apply border-pink-400/30;
-  @apply hover:bg-pink-500/30 hover:border-pink-400/50;
-  @apply shadow-lg shadow-pink-400/20;
+  @apply bg-red-500/20 text-red-400;
+  @apply border-red-400/30;
+  @apply hover:bg-red-500/30 hover:border-red-400/50;
+  @apply shadow-lg shadow-red-400/20;
 }
 
 /* Bouton noter (orange/jaune) */

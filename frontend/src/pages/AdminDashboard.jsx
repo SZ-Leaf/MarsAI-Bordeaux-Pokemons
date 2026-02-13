@@ -1,19 +1,15 @@
 import React from 'react';
 import { 
-  Search, 
-  Home, 
-  Trophy, 
-  User, 
   Play, 
   ChevronRight,
   ThumbsUp,
   MessageSquare,
-  TrendingUp,
   Globe,
   Users as UsersIcon,
   Film
 } from 'lucide-react';
 import SideBar from '../components/admin/SideBar';
+import Header from '../components/layout/header/Header';
 import '../components/admin/admin.css';
 
 const StatCard = ({ title, value, subtitle, badge, badgeColor, progress, progressColor, buttonText }) => (
@@ -86,26 +82,7 @@ const AdminDashboard = () => {
       
       <main className="main-content">
         {/* Header */}
-        <header className="admin-header">
-          <div className="flex items-center space-x-6">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-              <input type="text" placeholder="Rechercher..." className="search-input pl-12" />
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-4">
-              <Home className="nav-icon-link" size={20} />
-              <Trophy className="nav-icon-link" size={20} />
-              <User className="nav-icon-link" size={20} />
-            </div>
-            <div className="flex items-center space-x-4 border-l border-gray-800 pl-6 ml-6">
-              <button className="text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-white">Connexion</button>
-              <button className="inscription-btn uppercase">Inscription</button>
-            </div>
-          </div>
-        </header>
+        <Header />
 
         {/* Banner */}
         <div className="relative group cursor-pointer">

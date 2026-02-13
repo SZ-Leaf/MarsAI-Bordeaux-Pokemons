@@ -18,11 +18,7 @@ const SideBar = () => {
     { id: 'overview', label: 'Overview', icon: LayoutDashboard, active: true },
     { id: 'films', label: 'Gestion films', icon: Film },
     { id: 'jury', label: 'Distribution & Jury', icon: Users },
-    { id: 'results', label: 'Resultats & classement', icon: BarChart3 },
-    { id: 'leaderboard', label: 'Leaderboard officiel', icon: Trophy },
     { id: 'events', label: 'Evenements', icon: Calendar },
-    { id: 'messages', label: 'Messages', icon: Mail, badge: 2 },
-    { id: 'box', label: 'Festival Box', icon: Package },
     { id: 'config', label: 'Configuration Festival', icon: Settings },
   ];
 
@@ -59,15 +55,6 @@ const SideBar = () => {
           </button>
         ))}
       </nav>
-
-      {/* Astronaut Image - Bottom Placeholder */}
-      <div className="mt-8 mb-6 overflow-hidden rounded-2xl bg-gray-900 aspect-[3/4] flex items-center justify-center relative">
-         <img 
-            src="https://images.unsplash.com/photo-1614728263952-84ea206f99b6?auto=format&fit=crop&q=80&w=400" 
-            alt="Astronaut" 
-            className="w-full h-full object-cover opacity-50 grayscale hover:grayscale-0 transition-all duration-500"
-         />
-      </div>
 
       {/* Sidebar Footer */}
       <div className="sidebar-footer">

@@ -16,20 +16,21 @@ import { LanguageProvider } from './context/LanguageContext';
 function App() {
   const location = useLocation();
   const isSelectorPage = location.pathname === '/selector';
+  const isAdminPage = location.pathname.startsWith('/admin');
 
   return (
     <LanguageProvider>
       <AuthProvider>
-        {/* Header desktop uniquement sur page selector, sinon toujours visible */}
-        {isSelectorPage ? (
+        {/* Header desktop uniquement sur page selector, sinon toujours visible. Caché sur l'admin. */}
+        {!isAdminPage && (isSelectorPage ? (
           <div className="hidden md:block">
             <Header />
           </div>
         ) : (
           <Header />
-        )}
+        ))}
         
-        <div className={isSelectorPage ? '' : 'pt-0 md:pt-24'}>
+        <div className={isSelectorPage || isAdminPage ? '' : 'pt-0 md:pt-24'}>
           <Routes>
             <Route path="/" element={<TestsGraphique />} />
             <Route path="/submit" element={<Submit />} />
@@ -42,14 +43,14 @@ function App() {
           </Routes>
         </div>
         
-        {/* Footer caché en mobile sur la page selector, visible desktop */}
-        {isSelectorPage ? (
+        {/* Footer caché en mobile sur la page selector, visible desktop. Caché sur l'admin. */}
+        {!isAdminPage && (isSelectorPage ? (
           <div className="hidden md:block">
             <Footer />
           </div>
         ) : (
           <Footer />
-        )}
+        ))}
       </AuthProvider>
     </LanguageProvider>
   );

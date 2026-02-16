@@ -4,7 +4,7 @@ import "../ui/tooltips.css";
 export default function FavoriteButton({ submissionId, active, onToggle }) {
   return (
     <button
-      onClick={onToggle()}
+      onClick={onToggle}
       className={`
         tooltip-container tooltip-bottom
         btn-icon

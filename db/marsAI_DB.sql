@@ -148,6 +148,8 @@ CREATE TABLE `newsletter` (
   `title` VARCHAR(255) NOT NULL,
   `subject` VARCHAR(255) NOT NULL,
   `content` TEXT NOT NULL,
+  `subject_en` VARCHAR(255) NULL,
+  `content_en` TEXT NULL,
   `status` ENUM('draft', 'sent') DEFAULT 'draft',
   `sent_at` DATETIME NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -156,6 +158,7 @@ CREATE TABLE `newsletter` (
 CREATE TABLE `newsletter_listings` (
   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(255) UNIQUE NOT NULL,
+  `language` ENUM('fr', 'en') NOT NULL DEFAULT 'fr',
   `unsubscribe_token` VARCHAR(64) UNIQUE NOT NULL,
   `confirmed` BOOLEAN DEFAULT 0,
   `confirmed_at` DATETIME NULL,
@@ -297,6 +300,7 @@ CREATE INDEX idx_reservations_event_id ON reservations(event_id);
 -- NEWSLETTER INDEXES
 CREATE INDEX idx_newsletter_status ON newsletter(status);
 CREATE INDEX idx_newsletter_listings_email ON newsletter_listings(email);
+CREATE INDEX idx_newsletter_listings_language ON newsletter_listings(language);
 CREATE INDEX idx_newsletter_listings_unsubscribe_token ON newsletter_listings(unsubscribe_token);
 CREATE INDEX idx_newsletter_listings_confirmed ON newsletter_listings(confirmed, unsubscribed);
 CREATE INDEX idx_newsletter_logs_newsletter_id ON newsletter_logs(newsletter_id);

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// Schéma d'inscription à la newsletter (email + consentement)
+// Schéma d'inscription à la newsletter (email + consentement + langue)
 export const subscribeSchema = z.object({
    email: z
       .string({
@@ -16,6 +16,11 @@ export const subscribeSchema = z.object({
       .refine((val) => val === true, {
          message: 'zod_errors.newsletter_subscribe.consent.must_accept',
       }),
+   language: z
+      .enum(['fr', 'en'], {
+         errorMap: () => ({ message: 'zod_errors.newsletter_subscribe.language.invalid' }),
+      })
+      .default('fr'),
 });
 
 // Schéma création / mise à jour newsletter (titre, objet, contenu, statut optionnel)
@@ -25,21 +30,34 @@ export const newsletterSchema = z.object({
          required_error: 'zod_errors.newsletter.title.required',
          invalid_type_error: 'zod_errors.newsletter.title.invalid',
       })
-      .min(3, { message: 'zod_errors.newsletter.title.min' })
+      .min(1, { message: 'zod_errors.newsletter.title.min' })
       .max(255, { message: 'zod_errors.newsletter.title.max' }),
    subject: z
       .string({
          required_error: 'zod_errors.newsletter.subject.required',
          invalid_type_error: 'zod_errors.newsletter.subject.invalid',
       })
-      .min(5, { message: 'zod_errors.newsletter.subject.min' })
+      .min(1, { message: 'zod_errors.newsletter.subject.min' })
       .max(255, { message: 'zod_errors.newsletter.subject.max' }),
    content: z
       .string({
          required_error: 'zod_errors.newsletter.content.required',
          invalid_type_error: 'zod_errors.newsletter.content.invalid',
       })
-      .min(10, { message: 'zod_errors.newsletter.content.min' }),
+      .min(1, { message: 'zod_errors.newsletter.content.min' }),
+   subject_en: z
+      .string({
+         required_error: 'zod_errors.newsletter.subject_en.required',
+         invalid_type_error: 'zod_errors.newsletter.subject_en.invalid',
+      })
+      .min(1, { message: 'zod_errors.newsletter.subject_en.min' })
+      .max(255, { message: 'zod_errors.newsletter.subject_en.max' }),
+   content_en: z
+      .string({
+         required_error: 'zod_errors.newsletter.content_en.required',
+         invalid_type_error: 'zod_errors.newsletter.content_en.invalid',
+      })
+      .min(1, { message: 'zod_errors.newsletter.content_en.min' }),
    status: z
       .enum(['draft', 'sent'], {
          errorMap: () => ({ message: 'zod_errors.newsletter.status.invalid' }),

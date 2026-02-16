@@ -1,56 +1,35 @@
 import path from 'path';
+import { uploadVideo, uploadThumbnail, uploadOrUpdateCaptions } from '../services/youtube.services.js';
 import { getTagsBySubmissionId } from '../models/tags/submissions_tags_youtube.model.js';
-import { uploadThumbnail, uploadCaptions, uploadVideo } from '../services/youtube.services.js';
 
-export const getSubmissionPaths = (submission) => {
-  const base = path.resolve('uploads/submissions', String(submission.id));
-  return {
-    videoPath: path.join(base, path.basename(submission.video_url)),
-    thumbnailPath: submission.cover ? path.join(base, path.basename(submission.cover)) : null,
-    srtPath: submission.subtitles ? path.join(base, path.basename(submission.subtitles)) : null,
-  };
+export const getYouTubeVideoId = (url) => {
+  if (!url) return null;
+  const match = url.match(/v=([a-zA-Z0-9_-]+)/);
+  return match ? match[1] : null;
 };
 
 export const uploadAllYoutubeAssets = async (submission) => {
-  const { videoPath, thumbnailPath, srtPath } = getSubmissionPaths(submission);
-
   const submissionTags = await getTagsBySubmissionId(submission.id);
   const youtubeTags = (submissionTags || []).map(tag => tag.title);
-
+  const videoPath = path.resolve('uploads/submissions', String(submission.id), path.basename(submission.video_url));
   const youtubeVideo = await uploadVideo({
     title: submission.english_title,
     description: submission.original_synopsis,
     tags: youtubeTags,
-    filePath: videoPath,
+    filePath: videoPath
   });
-
-  if (thumbnailPath) {
-    try {
-      await uploadThumbnail({ videoId: youtubeVideo.id, thumbnailPath });
-    } catch (err) {
-      console.error('Erreur Thumbnail :', err.message);
-    }
-  }
-
-  if (srtPath) {
-    try {
-      const lang = submission.language || 'fr';
-      await uploadCaptions({
-        videoId: youtubeVideo.id,
-        srtPath,
-        language: lang,
-      });
-    } catch (err) {
-      console.error('Erreur Captions :', err.message);
-    }
-  }
-
+  await uploadThumbnailAndCaptions(submission, youtubeVideo.id);
   return youtubeVideo;
 };
 
-
-export const getYouTubeVideoId = (youtubeUrl) => {
-  if (!youtubeUrl) return null;
-  const match = youtubeUrl.match(/v=([a-zA-Z0-9_-]+)/);
-  return match ? match[1] : null;
+export const uploadThumbnailAndCaptions = async (submission, videoId) => {
+  if (submission.cover) {
+    const thumbnailPath = path.resolve('uploads/submissions', String(submission.id), path.basename(submission.cover));
+    await uploadThumbnail({ videoId, thumbnailPath });
+  }
+  if (submission.subtitles) {
+    const srtPath = path.resolve('uploads/submissions', String(submission.id), path.basename(submission.subtitles));
+    const lang = submission.language || 'fr';
+    await uploadOrUpdateCaptions({ videoId, srtPath, language: lang, name: lang === 'fr' ? 'Français' : lang });
+  }
 };

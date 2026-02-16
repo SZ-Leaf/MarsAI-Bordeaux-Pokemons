@@ -136,7 +136,7 @@ const Home = () => {
             <span className="line"></span>
             LE PROJET MARS.A.I
           </div>
-          
+
           <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-12">
             <div className="max-w-2xl">
               <h2 className="section-title">
@@ -144,11 +144,11 @@ const Home = () => {
                 <span className="fade-text">COMPÉTITION</span>
               </h2>
               <p className="section-description">
-                Découvrez une sélection d'œuvres pionnières explorant les 
+                Découvrez une sélection d'œuvres pionnières explorant les
                 nouvelles frontières de l'imaginaire assisté par l'IA.
               </p>
             </div>
-            
+
             <button className="view-selection-btn">
               VOIR LA SÉLECTION
               <div className="arrow-circle">
@@ -247,7 +247,7 @@ const Home = () => {
             <div className="night-badge">
               SOIRÉE DE CLÔTURE
             </div>
-            
+
             <h2 className="night-title">
               MARS.A.I<br />
               <span className="night-accent">NIGHT</span>
@@ -279,7 +279,7 @@ const Home = () => {
             <MapPin size={14} className="text-blue" />
             LE LIEU
           </div>
-          
+
           <h2 className="venue-main-title">
             LA<span className="outline-text">PLATEFORME</span>
           </h2>
@@ -313,12 +313,19 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="venue-map-container">
-          <img 
-            src="/assets/Image_16-02-2026_a__10.57-7af8ed09-5380-46f4-b80c-92927634b0f5.png" 
-            alt="Carte Marseille La Plateforme" 
-            className="venue-map-image"
-          />
+        <div className="venue-map-wrapper">
+          <div className="venue-map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2903.0132951923456!2d5.368406487830724!3d43.313981112461356!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12c9c13ddc0211b9%3A0xd1642ae4b32c4bc4!2s%C3%89cole%20La%20Plateforme_%20Marseille%20-%20Entr%C3%A9e%20Sud!5e0!3m2!1sfr!2sfr!4v1771239065673!5m2!1sfr!2sfr" width="600" height="450" allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="venue-map-iframe"></iframe>
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=La+Plateforme+Marseille+12+Rue+d'Uzes+13002"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="venue-map-overlay"
+            >
+              <MapPin size={20} className="mr-2" />
+              Ouvrir dans Google Maps
+            </a>
+          </div>
         </div>
       </section>
 

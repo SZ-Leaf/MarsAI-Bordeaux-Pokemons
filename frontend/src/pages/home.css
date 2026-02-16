@@ -350,7 +350,7 @@
 /* Venue Section */
 .venue-section {
   @apply w-full py-32 px-4 z-10;
-  @apply max-w-[80%] mx-auto;
+  @apply max-w-[90%] mx-auto;
 }
 
 .venue-header {
@@ -400,9 +400,45 @@
   @apply text-base text-white/60 leading-relaxed font-medium;
 }
 
+.venue-map-wrapper {
+  @apply w-full flex justify-center;
+}
+
 .venue-map-container {
-  @apply w-full rounded-[60px] overflow-hidden border border-white/10;
-  @apply shadow-2xl;
+  @apply w-full rounded-[40px] overflow-hidden border-2 border-white/10;
+  @apply shadow-[0_20px_60px_rgba(0,0,0,0.5)];
+  @apply bg-[#0c0c0c] p-2;
+  @apply transition-all duration-500;
+  @apply relative;
+  /* Aspect ratio augmenté pour donner plus de hauteur */
+  @apply aspect-[16/7];
+}
+
+.venue-map-container:hover {
+  @apply border-blue/30 shadow-[0_20px_80px_rgba(43,127,255,0.3)];
+  @apply scale-[1.01];
+}
+
+.venue-map-iframe {
+  @apply w-full h-full rounded-[32px];
+  @apply absolute top-2 left-2 right-2 bottom-2;
+}
+
+.venue-map-overlay {
+  @apply absolute top-8 right-8 z-10;
+  @apply flex items-center gap-2;
+  @apply px-6 py-3 rounded-full;
+  @apply bg-white/95 backdrop-blur-sm text-black;
+  @apply text-xs font-bold tracking-wider uppercase;
+  @apply shadow-xl border-2 border-white;
+  @apply transition-all duration-300;
+  @apply opacity-0 translate-y-2;
+  @apply hover:bg-blue hover:text-white hover:border-blue;
+  @apply cursor-pointer;
+}
+
+.venue-map-container:hover .venue-map-overlay {
+  @apply opacity-100 translate-y-0;
 }
 
 .venue-map-image {

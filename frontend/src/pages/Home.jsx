@@ -98,7 +98,7 @@ const Home = () => {
           <p className="hero-description">
             Le festival de courts-métrages de 60 secondes réalisés par IA.
           </p>
-          <p className="hero-highlight">
+          <p className="hero-description">
             2 jours d'immersion au cœur de Marseille.
           </p>
         </div>

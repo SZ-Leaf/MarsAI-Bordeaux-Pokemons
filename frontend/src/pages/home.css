@@ -48,9 +48,6 @@
   @apply text-base md:text-xl text-white/60 font-medium max-w-2xl mx-auto mb-2;
 }
 
-.hero-highlight {
-  @apply text-base md:text-xl text-[#9fbf57] font-medium italic;
-}
 
 .hero-actions {
   @apply flex flex-col md:flex-row gap-4 items-center justify-center;

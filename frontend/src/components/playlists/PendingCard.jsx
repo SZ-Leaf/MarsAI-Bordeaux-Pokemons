@@ -15,7 +15,7 @@ export default function PendingCard({ total = 0, loading = false, onClick }) {
         focus:outline-none focus:ring-2 focus:ring-white/20
       "
     >
-      {/* Header */}
+      {/* titre card */}
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="text-white font-semibold text-lg truncate">
@@ -28,7 +28,7 @@ export default function PendingCard({ total = 0, loading = false, onClick }) {
         </div>
       </div>
 
-      {/* Main metric */}
+      {/* Données (compte du nbre de vidéos) */}
       <div className="mt-4 flex items-end justify-between gap-3">
         <div className="text-4xl font-semibold text-white leading-none tracking-tight">
           {loading ? "…" : total}

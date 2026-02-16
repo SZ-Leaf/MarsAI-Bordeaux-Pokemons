@@ -35,13 +35,13 @@ export default function PlaylistCard({
           </div>
         </div>
 
-        {/* icône en accent */}
+        {/* icône */}
         <div className={`shrink-0 ${playlist.accentClass ?? "text-gray-300"}`}>
           <i className={`${playlist.icon} text-xl`} />
         </div>
       </div>
 
-      {/* Main metric */}
+      {/* données compte nbre de vidéos */}
       <div className="mt-4 flex items-end justify-between gap-3">
         <div className="text-4xl font-semibold text-white leading-none tracking-tight">
           {loading ? "…" : count}
@@ -54,13 +54,6 @@ export default function PlaylistCard({
       <div className="mt-3 text-sm text-gray-400 line-clamp-2">
         {playlist.description}
       </div>
-
-      {/* petit accent en bas (optionnel mais très joli) */}
-      <div
-        className={`mt-4 h-1 w-12 rounded-full opacity-40 ${
-          playlist.accentBarClass ?? "bg-white/10"
-        }`}
-      />
     </button>
   );
 }

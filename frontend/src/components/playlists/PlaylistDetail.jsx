@@ -1,12 +1,12 @@
 import React, { useMemo } from "react";
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router";
 import { PLAYLISTS } from "../../helpers/playlistHelper.js";
 import { usePlaylist } from "../../hooks/usePlaylist.js";
 import PlaylistSubmissionCard from "./PlaylistSubmissionCard.jsx";
 
-export default function PlaylistDetail({ listKey, onBack }) {
+export default function PlaylistDetail({ listKey }) {
   const params = useParams();
-  const list = listKey ?? params.list; //  inline > route
+  const list = listKey ?? params.list;
 
   const meta = useMemo(
     () => (list ? PLAYLISTS.find((p) => p.key === list) : null),
@@ -14,7 +14,7 @@ export default function PlaylistDetail({ listKey, onBack }) {
   );
   const { submissions, loading, error } = usePlaylist(list || "");
 
-  // Si pas de clé => message clair
+  // gestion erreur 
   if (!list) {
     return (
       <section className="space-y-6">

@@ -17,7 +17,7 @@ export default function PendingDetail() {
       </div>
     );
   }
-
+  //gestion erreurs
   if (error) {
     return (
       <div className="rounded-xl border border-red-800 bg-red-950/40 p-6 text-red-200">
@@ -46,7 +46,7 @@ export default function PendingDetail() {
         </p>
       </header>
 
-      {/* List */}
+      {/* liste des cartes des soumissions */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {submissions.map((submission) => (
           <PlaylistSubmissionCard

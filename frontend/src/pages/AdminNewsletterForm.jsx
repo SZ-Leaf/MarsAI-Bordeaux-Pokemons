@@ -107,25 +107,33 @@ export default function AdminNewsletterForm() {
             required
           />
         </div>
-        <div>
-          <label className="text-color-white mb-1 block">Sujet (email) *</label>
-          <input
-            type="text"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            className="w-full p-2 rounded-md border border-white/20 bg-black/20 text-color-white"
-            placeholder="Sujet de l'email"
-            required
-          />
-        </div>
-        <div>
-          <label className="text-color-white mb-1 block">Contenu *</label>
+        <div className="border-t border-white/20 pt-4 mt-2">
+          <h2 className="text-color-white mb-3 text-lg">Version française</h2>
+          <p className="text-white/70 text-sm mb-3">
+            Les abonnés ayant choisi la langue FR recevront cette version.
+          </p>
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="text-color-white mb-1 block">Sujet (FR) *</label>
+              <input
+                type="text"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                className="w-full p-2 rounded-md border border-white/20 bg-black/20 text-color-white"
+                placeholder="Sujet de l'email"
+                required
+              />
+            </div>
+            <div>
+<label className="text-color-white mb-1 block">Contenu (FR) *</label>
           <CKEditor
             editorKey={isEdit && content ? `edit-${id}-loaded` : `${id ?? 'new'}-init`}
-            value={content}
-            onChange={setContent}
-            placeholder="Contenu de la newsletter..."
-          />
+                value={content}
+                onChange={setContent}
+                placeholder="Contenu de la newsletter..."
+              />
+            </div>
+          </div>
         </div>
 
         <div className="border-t border-white/20 pt-4 mt-2">
@@ -141,7 +149,7 @@ export default function AdminNewsletterForm() {
                 value={subjectEn}
                 onChange={(e) => setSubjectEn(e.target.value)}
                 className="w-full p-2 rounded-md border border-white/20 bg-black/20 text-color-white"
-                placeholder="Email subject (English)"
+                placeholder="Email subject"
                 required
               />
             </div>
@@ -151,7 +159,7 @@ export default function AdminNewsletterForm() {
                 editorKey={isEdit && contentEn ? `edit-en-${id}-loaded` : `en-${id ?? 'new'}-init`}
                 value={contentEn}
                 onChange={setContentEn}
-                placeholder="Newsletter content (English)..."
+                placeholder="Newsletter content..."
               />
             </div>
           </div>

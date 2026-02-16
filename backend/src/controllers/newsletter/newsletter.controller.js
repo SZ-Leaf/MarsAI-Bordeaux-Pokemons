@@ -16,13 +16,13 @@ import { createLog, getNewsletterStats } from "../../models/newsletter/newslette
 
 // Création d'une newsletter (brouillon)
 export const create = async (req, res) => {
-   const { title, subject, content } = req.body;
+   const { title, subject, content, subject_en, content_en } = req.body;
    const connection = await db.pool.getConnection();
 
    try {
       await connection.beginTransaction();
 
-      const newsletterId = await createNewsletter(connection, { title, subject, content });
+      const newsletterId = await createNewsletter(connection, { title, subject, content, subject_en, content_en });
 
       await connection.commit();
 
@@ -86,13 +86,15 @@ export const getById = async (req, res) => {
 // Mise à jour d'une newsletter
 export const update = async (req, res) => {
    const { id } = req.params;
-   const { title, subject, content, status } = req.body;
+   const { title, subject, content, subject_en, content_en, status } = req.body;
    const connection = await db.pool.getConnection();
 
    try {
       await connection.beginTransaction();
 
-      const updated = await updateNewsletter(connection, parseInt(id), { title, subject, content, status });
+      const existing = await getNewsletterById(connection, parseInt(id));
+      const effectiveStatus = status ?? existing?.status ?? 'draft';
+      const updated = await updateNewsletter(connection, parseInt(id), { title, subject, content, subject_en, content_en, status: effectiveStatus });
 
       if (!updated) {
          await connection.rollback();

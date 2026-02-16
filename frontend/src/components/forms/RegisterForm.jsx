@@ -46,7 +46,6 @@ const RegisterForm = ({ token, email }) => {
             return;
          }
          const response = await registerService(firstname, lastname, password, token);
-         console.log(response);
          if (isSuccessResponse(response)) {
             alertHelper.showMessage(getMessageFromResponse(response));
             navigate("/login");

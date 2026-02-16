@@ -50,11 +50,11 @@ const inviteUserController = async (req, res) => {
 
       const result = await inviteUser(email, numericRoleId);
       await sendInviteMail(email, result.token);
-      const messageFr = result.updated 
-         ? "Invitation renouvelée avec succès" 
+      const messageFr = result.updated
+         ? "Invitation renouvelée avec succès"
          : "Invitation envoyée avec succès";
-      const messageEn = result.updated 
-         ? "Invitation renewed successfully" 
+      const messageEn = result.updated
+         ? "Invitation renewed successfully"
          : "Invitation sent successfully";
       return sendSuccess(res, 200,
          messageFr,
@@ -162,7 +162,7 @@ const registerUserController = async (req, res) => {
 const deleteUserController = async (req, res) => {
    try {
       let { id } = req.params;
-      
+
       if (!id || isNaN(id)) {
          return sendError(res, 400,
             "ID utilisateur invalide",
@@ -228,7 +228,7 @@ const loginUserController = async (req, res) => {
       let { email, password } = req.body;
       email = email?.trim();
       password = password?.trim();
-      
+
       if (!email || !password) {
          return sendError(res, 400,
             "Email et mot de passe sont requis",
@@ -316,7 +316,7 @@ const updateUserController = async (req, res) => {
    try {
       const { id } = req.params;
       let { firstname, lastname } = req.body;
-      
+
       // Check if user is updating their own profile
       if (req.user.id.toString() !== id) {
          return sendError(res, 403,
@@ -353,7 +353,7 @@ const updateUserController = async (req, res) => {
          "Profile updated successfully",
          null
       );
-      
+
    } catch (error) {
       console.error("Error updating user:", error);
       return sendError(res, 500,
@@ -432,7 +432,7 @@ const updateUserPasswordController = async (req, res) => {
       console.error("Error updating user password:", error);
       return sendError(res, 500,
          "Erreur lors de la mise à jour du mot de passe",
-         "Error updating user password", 
+         "Error updating user password",
          error.message
       );
    }

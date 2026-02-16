@@ -43,18 +43,9 @@ const SideBar = ({ activeView, onViewChange }) => {
 
       {/* Sidebar Footer */}
       <div className="sidebar-footer">
-        <div className="sidebar-footer-card">
-            <div className="sidebar-footer-logo-container">
-                <div className="sidebar-footer-icon-outer">
-                    <div className="sidebar-footer-icon-inner"></div>
-                </div>
-                <span className="sidebar-footer-brand">Mars AI</span>
-            </div>
-            <p className="sidebar-footer-label">Dashboard</p>
             <button className="sidebar-logout-btn">
                 Log out
             </button>
-        </div>
       </div>
     </aside>
   );

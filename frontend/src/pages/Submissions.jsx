@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getSubmissionsService } from "../services/submission.service";
 import { useLanguage } from "../context/LanguageContext";
 import { useAlertHelper } from "../helpers/alertHelper";
 import { responseHelper } from "../helpers/responseHelper";
-import SubmissionCard from "../components/cards/SubmissionCard";
 import SubmissionsList from "../components/submission/SubmissionsList";
 
 const Submissions = () => {
+   const submissionsRef = useRef(null);
    const alertHelper = useAlertHelper();
    const { getMessageFromResponse } = responseHelper();
    const {language} = useLanguage();
@@ -43,8 +43,18 @@ const Submissions = () => {
       getSubmissions();
    }, [pagination.limit, pagination.offset, pagination.orderBy, statusFilter]);
 
+   useEffect(() => {
+      if (!loading && pagination.offset !== 0) {
+         submissionsRef.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+         });
+      }
+   }, [pagination.offset, loading]);   
+
    return (
-      <section className="submissions-section m-auto">
+      <section ref={submissionsRef} className="submissions-section">
+         
          <div className="submissions-header flex flex-col justify-between mx-auto py-5">
             <h1>{language === 'fr' ? 'La Galerie des Films' : 'The Movie Gallery'}</h1>
             <div className="submissions-filters flex justify-between">
@@ -66,7 +76,31 @@ const Submissions = () => {
                </select>
             </div>
          </div>
-         <SubmissionsList submissions={submissionsList} />
+
+         <div className="relative">
+            {loading && (
+               <div
+                  style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'rgba(0,0,0,0.2)',
+                  display: 'grid',
+                  placeItems: 'center',
+                  zIndex: 10,
+                  }}
+               >
+                  <div className="loading"></div>
+               </div>
+            )}   
+         </div>        
+         <SubmissionsList
+            submissions={submissionsList}
+            paginationFilters={pagination}
+            total={total}
+            loading={loading}
+            onPageChange={(newOffset) => {
+            setPagination(prev => ({ ...prev, offset: newOffset }))}}/
+         >
       </section>
    )
 };

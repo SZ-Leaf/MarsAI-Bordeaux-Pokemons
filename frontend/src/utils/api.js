@@ -12,8 +12,16 @@ export const apiCall = async (endpoint, options = {}) => {
   };
 
   if (options.params) {
-    const queryString = new URLSearchParams(options.params).toString();
-    url += `?${queryString}`;
+    const cleanedParams = Object.fromEntries(
+      Object.entries(options.params).filter(
+        ([_, value]) => value !== null && value !== undefined && value !== ''
+      )
+    );
+
+    const queryString = new URLSearchParams(cleanedParams).toString();
+    if(queryString) {
+      url += `?${queryString}`;
+    }
     delete options.params; // remove since fetch doesn't accept params in the options object
   }
   

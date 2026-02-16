@@ -47,16 +47,41 @@ export default function AdminNewsletterView() {
     );
   }
 
+  const viewBlockClass =
+    'ckeditor-view-content rounded-md border border-white/20 bg-black/20 p-4 text-color-white [&_a]:text-color-cyan [&_ul]:list-disc [&_ol]:list-decimal [&_ul,_ol]:pl-6';
+
   return (
     <div className="p-6 max-w-[900px] mx-auto">
-      <h1 className="text-color-white mb-4 text-2xl">{newsletter.title}</h1>
-      <p className="text-color-white/80 mb-4">
-        <span className="font-medium">Sujet (email) :</span> {newsletter.subject}
-      </p>
-      <div
-        className="ckeditor-view-content rounded-md border border-white/20 bg-black/20 p-4 text-color-white [&_a]:text-color-cyan [&_ul]:list-disc [&_ol]:list-decimal [&_ul,_ol]:pl-6"
-        dangerouslySetInnerHTML={{ __html: newsletter.content || '' }}
-      />
+      <h1 className="text-color-white mb-6 text-2xl">{newsletter.title}</h1>
+
+      {/* Version française */}
+      <section className="mb-8">
+        <h2 className="text-color-white text-lg font-semibold mb-3 pb-2 border-b border-white/20">
+          Version française
+        </h2>
+        <p className="text-color-white/80 mb-4">
+          <span className="font-medium">Sujet (email) :</span> {newsletter.subject}
+        </p>
+        <div
+          className={viewBlockClass}
+          dangerouslySetInnerHTML={{ __html: newsletter.content || '' }}
+        />
+      </section>
+
+      {/* Version anglaise */}
+      <section className="mb-8">
+        <h2 className="text-color-white text-lg font-semibold mb-3 pb-2 border-b border-white/20">
+          Version anglaise
+        </h2>
+        <p className="text-color-white/80 mb-4">
+          <span className="font-medium">Subject (email) :</span> {newsletter.subject_en || '—'}
+        </p>
+        <div
+          className={viewBlockClass}
+          dangerouslySetInnerHTML={{ __html: newsletter.content_en || '' }}
+        />
+      </section>
+
       <p className="mt-6">
         <Link to="/admin/newsletters" className="text-color-blue">Retour à la liste</Link>
       </p>

@@ -22,6 +22,8 @@ export default function AdminNewsletterForm() {
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');
   const [content, setContent] = useState('');
+  const [subjectEn, setSubjectEn] = useState('');
+  const [contentEn, setContentEn] = useState('');
   const [loading, setLoading] = useState(isEdit);
   const [submitting, setSubmitting] = useState(false);
 
@@ -36,6 +38,8 @@ export default function AdminNewsletterForm() {
         setTitle(n.title ?? '');
         setSubject(n.subject ?? '');
         setContent(n.content ?? '');
+        setSubjectEn(n.subject_en ?? '');
+        setContentEn(n.content_en ?? '');
       } catch (err) {
         alert(getMessage(err));
       } finally {
@@ -48,16 +52,27 @@ export default function AdminNewsletterForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title.trim() || !subject.trim() || !content.trim()) {
-      alert('Remplissez tous les champs.');
+      alert('Remplissez tous les champs obligatoires (FR).');
+      return;
+    }
+    if (!subjectEn.trim() || !contentEn.trim()) {
+      alert('Remplissez tous les champs obligatoires (EN).');
       return;
     }
     setSubmitting(true);
     try {
+      const payload = {
+        title: title.trim(),
+        subject: subject.trim(),
+        content,
+        subject_en: subjectEn.trim(),
+        content_en: contentEn,
+      };
       if (isEdit) {
-        await updateNewsletter(id, { title: title.trim(), subject: subject.trim(), content });
+        await updateNewsletter(id, payload);
         alert('Newsletter mise à jour.');
       } else {
-        await createNewsletter({ title: title.trim(), subject: subject.trim(), content });
+        await createNewsletter(payload);
         alert('Newsletter créée.');
       }
       navigate('/admin/newsletters');
@@ -112,6 +127,36 @@ export default function AdminNewsletterForm() {
             placeholder="Contenu de la newsletter..."
           />
         </div>
+
+        <div className="border-t border-white/20 pt-4 mt-2">
+          <h2 className="text-color-white mb-3 text-lg">Version anglaise</h2>
+          <p className="text-white/70 text-sm mb-3">
+            Les abonnés ayant choisi la langue EN recevront cette version.
+          </p>
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="text-color-white mb-1 block">Sujet (EN) *</label>
+              <input
+                type="text"
+                value={subjectEn}
+                onChange={(e) => setSubjectEn(e.target.value)}
+                className="w-full p-2 rounded-md border border-white/20 bg-black/20 text-color-white"
+                placeholder="Email subject (English)"
+                required
+              />
+            </div>
+            <div>
+              <label className="text-color-white mb-1 block">Contenu (EN) *</label>
+              <CKEditor
+                editorKey={isEdit && contentEn ? `edit-en-${id}-loaded` : `en-${id ?? 'new'}-init`}
+                value={contentEn}
+                onChange={setContentEn}
+                placeholder="Newsletter content (English)..."
+              />
+            </div>
+          </div>
+        </div>
+
         <div className="flex gap-3 items-center">
           <button
             type="submit"

@@ -1,0 +1,90 @@
+@import "tailwindcss" reference;
+
+@reference "../../App.css";
+
+@layer components {
+.admin-dashboard-container {
+    @apply min-h-screen bg-[#0a0a0a] text-white font-sans flex;
+    
+    /* Variables pour configurer le Header*/
+    --header-left: auto;
+    --header-right: 32px;
+    --header-width: calc(100% - 350px);
+    --header-transform: none;
+    --header-max-width: none;
+    --header-content-width: 100%;
+}
+
+.main-content {
+    @apply flex-1 overflow-y-auto p-8 pt-24;
+}
+
+/* SEARCH INPUT REUTILISABLE DANS LES VUES */
+.search-input {
+    @apply bg-[#1a1a1a] border border-gray-800/50 rounded-full px-6 py-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none transition-all;
+}
+
+.banner-img {
+    @apply w-full h-48 object-cover rounded-3xl mb-8;
+}
+
+.section-title {
+    @apply text-5xl font-bold mb-4 uppercase tracking-wider;
+}
+
+.section-subtitle {
+    @apply text-gray-400 text-lg mb-8 max-w-2xl leading-relaxed;
+}
+
+.stats-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8;
+}
+
+.stat-card {
+    @apply bg-[#1a1a1a] p-6 rounded-3xl border border-gray-800/50 flex flex-col justify-between min-h-[180px] transition-all hover:border-blue-500/30;
+}
+
+.stat-badge {
+    @apply self-end text-[10px] font-bold px-2 py-1 rounded-full uppercase mb-4;
+}
+
+.stat-value {
+    @apply text-4xl font-bold mb-2;
+}
+
+.stat-label {
+    @apply text-gray-500 text-[10px] uppercase font-bold tracking-tighter mb-4;
+}
+
+.progress-container {
+    @apply w-full bg-gray-800 rounded-full h-1.5 mt-auto;
+}
+
+.progress-fill {
+    @apply h-full rounded-full transition-all duration-1000;
+}
+
+.chart-card {
+    @apply bg-[#1a1a1a] p-8 rounded-3xl border border-gray-800/50 h-full;
+}
+
+.film-item {
+    @apply flex items-center justify-between p-4 bg-[#1a1a1a]/50 hover:bg-[#1a1a1a] rounded-2xl mb-3 transition-colors;
+}
+
+.film-thumbnail {
+    @apply w-12 h-16 rounded-lg object-cover mr-4;
+}
+
+.play-btn {
+    @apply w-10 h-10 flex items-center justify-center rounded-full border border-gray-700 hover:bg-white/10 transition-colors text-blue-400;
+}
+
+.top-film-rank {
+    @apply text-xs text-gray-500 font-bold italic mr-4 w-4;
+}
+
+.film-stat-item {
+    @apply flex items-center text-[10px] text-gray-500 mr-4;
+}
+}

@@ -214,7 +214,7 @@ const Home = () => {
       </Section>
 
       {/* 7. VENUE SECTION */}
-      <Section id="venue" wide className="py-32">
+      <Section id="venue" className="py-32">
         <div className="venue-header">
           <div className="venue-badge">
             <MapPin size={14} className="text-blue" />

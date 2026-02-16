@@ -7,7 +7,7 @@
 
 .hero-section {
   @apply flex flex-col items-center justify-center text-center px-4 z-10;
-  @apply min-h-[90vh] max-w-5xl mx-auto;
+  @apply min-h-[90vh] max-w-[80%] mx-auto;
 }
 
 .hero-badge {
@@ -59,7 +59,7 @@
 /* Features Section */
 .features-section {
   @apply w-full py-20 px-4 z-10;
-  @apply max-w-7xl mx-auto;
+  @apply max-w-[80%] mx-auto;
 }
 
 .features-grid {
@@ -105,7 +105,7 @@
 /* Films Section */
 .films-section {
   @apply w-full py-32 px-4 z-10;
-  @apply max-w-7xl mx-auto;
+  @apply max-w-[80%] mx-auto;
 }
 
 .section-label {
@@ -172,7 +172,7 @@
 /* Protocol Section */
 .protocol-section {
   @apply w-full py-32 px-4 z-10 flex flex-col items-center;
-  @apply max-w-7xl mx-auto;
+  @apply max-w-[80%] mx-auto;
 }
 
 .section-header-centered {
@@ -221,7 +221,7 @@
 /* Conferences Section */
 .conferences-section {
   @apply w-full py-32 px-4 z-10;
-  @apply max-w-7xl mx-auto;
+  @apply max-w-[80%] mx-auto;
 }
 
 .conf-content-top {
@@ -262,47 +262,50 @@
 
 .conf-card {
   @apply rounded-[40px] p-12 flex flex-col items-start min-h-[400px];
-  @apply transition-all duration-300;
-}
-
-.conf-card-light {
-  @apply bg-[#fff5f8] text-black;
-  @apply hover:-translate-y-2;
-}
-
-.conf-card-dark {
   @apply bg-[#0c0c0c] border border-white/5 text-white;
-  @apply hover:-translate-y-2 hover:border-white/20;
+  @apply transition-all duration-500 ease-in-out;
+  @apply cursor-pointer relative overflow-hidden;
+}
+
+.conf-card:hover {
+  @apply bg-white text-black border-white -translate-y-2 shadow-2xl;
 }
 
 .conf-card-icon {
-  @apply mb-12;
+  @apply mb-12 transition-colors duration-500;
 }
 
-.conf-card-light .conf-card-icon {
+.conf-card:nth-child(1) .conf-card-icon {
   @apply text-purple-600;
 }
 
-.conf-card-dark:nth-child(2) .conf-card-icon {
+.conf-card:nth-child(2) .conf-card-icon {
   @apply text-pink-500;
 }
 
-.conf-card-dark:nth-child(3) .conf-card-icon {
+.conf-card:nth-child(3) .conf-card-icon {
   @apply text-emerald-400;
 }
 
+/* On hover, we can keep the icon colors or make them darker for better contrast on white if needed */
+/* For now, keeping them as they are works well on white too */
+
 .conf-card-title {
-  @apply text-4xl font-black mb-10 uppercase tracking-tighter;
+  @apply text-4xl font-black mb-10 uppercase tracking-tighter transition-colors duration-500;
 }
 
 .conf-card-description {
-  @apply text-base font-medium opacity-60 leading-relaxed max-w-[80%];
+  @apply text-base font-medium opacity-60 leading-relaxed max-w-[80%] transition-opacity duration-500;
+}
+
+.conf-card:hover .conf-card-description {
+  @apply opacity-100;
 }
 
 /* Night Section */
 .night-section {
   @apply w-full py-32 px-4 z-10;
-  @apply max-w-7xl mx-auto;
+  @apply max-w-[80%] mx-auto;
 }
 
 .night-container {
@@ -349,7 +352,7 @@
 /* Venue Section */
 .venue-section {
   @apply w-full py-32 px-4 z-10;
-  @apply max-w-7xl mx-auto;
+  @apply max-w-[80%] mx-auto;
 }
 
 .venue-header {
@@ -411,7 +414,7 @@
 /* Stats Numbers Section */
 .stats-numbers-section {
   @apply w-full py-32 px-4 z-10;
-  @apply max-w-7xl mx-auto;
+  @apply max-w-[80%] mx-auto;
 }
 
 .stats-numbers-container {

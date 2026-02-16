@@ -58,19 +58,19 @@ const Home = () => {
       title: "PROJECTIONS",
       description: "Diffusion sur écran géant en présence des réalisateurs.",
       icon: Play,
-      className: "conf-card-light"
+      className: ""
     },
     {
       title: "WORKSHOPS",
       description: "Sessions pratiques pour maîtriser les outils IA.",
       icon: Users,
-      className: "conf-card-dark"
+      className: ""
     },
     {
       title: "AWARDS",
       description: "Cérémonie de clôture récompensant l'audace.",
       icon: Award,
-      className: "conf-card-dark"
+      className: ""
     }
   ];
 

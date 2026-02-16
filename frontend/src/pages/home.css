@@ -7,7 +7,7 @@
 
 .hero-section {
   @apply flex flex-col items-center justify-center text-center px-4 z-10;
-  @apply min-h-[90vh] max-w-[80%] mx-auto;
+  @apply min-h-[90vh] max-w-[90%] mx-auto;
 }
 
 .hero-badge {
@@ -65,9 +65,10 @@
 
 /* Overriding and extending Card component for Home */
 .feature-card.card {
-  @apply bg-[#0c0c0c] border-white/5 min-h-[320px] p-8;
+  @apply bg-[#0c0c0c] border-transparent min-h-[320px] p-8;
   @apply flex flex-col items-start text-left justify-start;
-  @apply hover:border-white/20 hover:bg-[#121212];
+  @apply transition-all duration-300;
+  @apply hover:border-white hover:bg-[#121212] hover:-translate-y-2;
 }
 
 .feature-card .card-title-accent {
@@ -85,12 +86,12 @@
 .card-purple.card { @apply border-purple-500/10 hover:border-purple-500/30; }
 
 .card-green .card-title-accent {
-  @apply bg-linear-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent;
+  @apply bg-linear-to-r from-green-400 to-teal-500 bg-clip-text text-transparent;
 }
-.card-green.card { @apply border-emerald-500/10 hover:border-emerald-500/30; }
+.card-green.card { @apply border-green-500/10 hover:border-green-500/30; }
 
 .card-pink .card-title-accent {
-  @apply bg-linear-to-r from-pink-400 to-rose-500 bg-clip-text text-transparent;
+  @apply bg-linear-to-r from-pink-400 to-purple-500 bg-clip-text text-transparent;
 }
 .card-pink.card { @apply border-pink-500/10 hover:border-pink-500/30; }
 

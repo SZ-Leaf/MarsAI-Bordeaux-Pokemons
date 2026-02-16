@@ -115,7 +115,7 @@
 }
 
 .section-title {
-  @apply text-6xl md:text-8xl font-black leading-[0.9] text-white uppercase mb-8;
+  @apply text-6xl md:text-[140px] font-black leading-[0.8] text-white uppercase mb-8 tracking-tighter;
 }
 
 .fade-text {

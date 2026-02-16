@@ -17,6 +17,8 @@ import AdminNewsletterForm from './pages/AdminNewsletterForm';
 import AdminNewsletterView from './pages/AdminNewsletterView';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
+import PlaylistDetail from './components/playlists/PlaylistDetail.jsx';
+import SelectorDashboard from './pages/SelectorDashboard.jsx';
 import Submissions from './pages/Submissions';
 
 function App() {
@@ -46,6 +48,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
             <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
+            <Route path='/selector/dashboard' element={<SelectorDashboard/>}/>
+            {/* <Route path='/selector/pending' element={<}/> */}
             <Route path="/admin/newsletters" element={<AdminGuard><AdminNewslettersList /></AdminGuard>} />
             <Route path="/admin/newsletters/new" element={<AdminGuard><AdminNewsletterForm /></AdminGuard>} />
             <Route path="/admin/newsletters/:id/edit" element={<AdminGuard><AdminNewsletterForm /></AdminGuard>} />

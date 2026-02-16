@@ -1,0 +1,475 @@
+@import "tailwindcss" reference;
+@import "../theme.css";
+
+.home-container {
+  @apply min-h-screen w-full flex flex-col items-center relative overflow-hidden bg-bg;
+}
+
+.hero-section {
+  @apply flex flex-col items-center justify-center text-center px-4 z-10;
+  @apply min-h-[90vh] max-w-5xl mx-auto;
+}
+
+.hero-badge {
+  @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8;
+  @apply bg-white/5 border border-white/10 backdrop-blur-sm;
+  @apply text-[10px] md:text-xs font-bold tracking-[0.2em] text-white/60 uppercase;
+}
+
+.sparkle {
+  @apply text-purple-400 text-sm;
+}
+
+.hero-title {
+  @apply text-[80px] md:text-[180px] font-black leading-[0.9] tracking-tighter mb-8;
+  @apply text-white uppercase;
+}
+
+.gradient-text {
+  @apply bg-linear-to-r from-blue-500 via-purple-500 to-pink-500;
+  @apply bg-clip-text text-transparent;
+}
+
+.hero-subtitle {
+  @apply text-2xl md:text-5xl font-bold tracking-tight mb-4 uppercase;
+  @apply text-white;
+}
+
+.gradient-text-alt {
+  @apply bg-linear-to-r from-purple-500 to-orange-500;
+  @apply bg-clip-text text-transparent;
+}
+
+.hero-description-container {
+  @apply mb-12;
+}
+
+.hero-description {
+  @apply text-base md:text-xl text-white/60 font-medium max-w-2xl mx-auto mb-2;
+}
+
+.hero-highlight {
+  @apply text-base md:text-xl text-[#9fbf57] font-medium italic;
+}
+
+.hero-actions {
+  @apply flex flex-col md:flex-row gap-4 items-center justify-center;
+}
+
+/* Features Section */
+.features-section {
+  @apply w-full py-20 px-4 z-10;
+  @apply max-w-7xl mx-auto;
+}
+
+.features-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6;
+}
+
+/* Overriding and extending Card component for Home */
+.feature-card.card {
+  @apply bg-[#0c0c0c] border-white/5 min-h-[320px] p-8;
+  @apply flex flex-col items-start text-left justify-start;
+  @apply hover:border-white/20 hover:bg-[#121212];
+}
+
+.feature-card .card-title-accent {
+  @apply text-[32px] md:text-[38px] mb-4 text-left w-full;
+}
+
+.feature-card .card-description {
+  @apply text-white/60 text-sm md:text-base font-bold tracking-widest max-w-none text-left;
+}
+
+/* Custom Card Colors */
+.card-purple .card-title-accent {
+  @apply bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent;
+}
+.card-purple.card { @apply border-purple-500/10 hover:border-purple-500/30; }
+
+.card-green .card-title-accent {
+  @apply bg-linear-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent;
+}
+.card-green.card { @apply border-emerald-500/10 hover:border-emerald-500/30; }
+
+.card-pink .card-title-accent {
+  @apply bg-linear-to-r from-pink-400 to-rose-500 bg-clip-text text-transparent;
+}
+.card-pink.card { @apply border-pink-500/10 hover:border-pink-500/30; }
+
+.card-blue .card-title-accent {
+  @apply bg-linear-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent;
+}
+.card-blue.card { @apply border-blue-500/10 hover:border-blue-500/30; }
+
+/* Films Section */
+.films-section {
+  @apply w-full py-32 px-4 z-10;
+  @apply max-w-7xl mx-auto;
+}
+
+.section-label {
+  @apply flex items-center gap-4 text-blue text-xs font-bold tracking-[0.3em] mb-8;
+}
+
+.section-label .line {
+  @apply w-12 h-[2px] bg-blue;
+}
+
+.section-title {
+  @apply text-6xl md:text-8xl font-black leading-[0.9] text-white uppercase mb-8;
+}
+
+.fade-text {
+  @apply bg-linear-to-b from-white to-white/20 bg-clip-text text-transparent;
+}
+
+.section-description {
+  @apply text-lg md:text-xl text-white/60 max-w-xl leading-relaxed;
+}
+
+.view-selection-btn {
+  @apply flex items-center gap-6 text-white text-xs font-bold tracking-widest uppercase;
+  @apply cursor-pointer transition-all duration-300;
+}
+
+.view-selection-btn:hover .arrow-circle {
+  @apply bg-white text-black border-white;
+  @apply scale-110;
+}
+
+.arrow-circle {
+  @apply w-14 h-14 rounded-full border border-white/20 flex items-center justify-center;
+  @apply transition-all duration-300;
+}
+
+.films-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-8;
+}
+
+/* Overriding Card for Films */
+.film-card.card {
+  @apply bg-[#0c0c0c] border-white/5 overflow-hidden rounded-[40px];
+  @apply hover:border-white/20 hover:bg-[#121212];
+}
+
+.film-card .card-image-container {
+  @apply aspect-[4/3] rounded-[30px] m-2;
+}
+
+.film-card .card-content {
+  @apply bg-transparent p-8 pt-4;
+}
+
+.film-card .card-image-title {
+  @apply text-white text-[32px] font-bold mb-2 tracking-tight;
+}
+
+.film-card .card-image-subtitle {
+  @apply text-white/30 text-xs font-bold tracking-[3px];
+}
+
+/* Protocol Section */
+.protocol-section {
+  @apply w-full py-32 px-4 z-10 flex flex-col items-center;
+  @apply max-w-7xl mx-auto;
+}
+
+.section-header-centered {
+  @apply text-center mb-20;
+}
+
+.centered-label {
+  @apply flex items-center justify-center gap-6 text-purple-400 text-[10px] md:text-xs font-bold tracking-[0.4em] mb-12 uppercase;
+}
+
+.centered-label .line {
+  @apply w-16 h-[1px] bg-white/20;
+}
+
+.protocol-title {
+  @apply text-6xl md:text-[110px] font-black leading-[0.9] text-white uppercase tracking-tighter;
+}
+
+.stats-grid {
+  @apply grid grid-cols-2 lg:grid-cols-4 gap-6 w-full mb-20;
+}
+
+.stat-card {
+  @apply bg-[#0c0c0c] border border-white/5 rounded-[32px] p-10 flex flex-col items-center justify-center text-center;
+  @apply transition-all duration-300 hover:border-white/20 hover:bg-[#121212];
+}
+
+.stat-value {
+  @apply text-2xl md:text-4xl font-black mb-3 uppercase tracking-tight;
+}
+
+.stat-subtitle {
+  @apply text-[10px] md:text-xs font-bold text-white/40 tracking-[0.2em] uppercase;
+}
+
+.protocol-actions {
+  @apply flex justify-center;
+}
+
+.btn-adventure {
+  @apply bg-linear-to-r from-[#9d31ff] to-[#e61d8c];
+  @apply text-white px-12 py-5 text-base shadow-[0_0_30px_rgba(157,49,255,0.3)];
+  @apply hover:scale-105 hover:shadow-[0_0_40px_rgba(157,49,255,0.5)];
+}
+
+/* Conferences Section */
+.conferences-section {
+  @apply w-full py-32 px-4 z-10;
+  @apply max-w-7xl mx-auto;
+}
+
+.conf-content-top {
+  @apply mb-24;
+}
+
+.conf-title {
+  @apply text-5xl md:text-[80px] font-black leading-[0.9] text-white uppercase mb-16;
+}
+
+.purple-underline {
+  @apply relative text-purple-500;
+  @apply after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-full after:h-[6px] after:bg-purple-500;
+}
+
+.conf-info-container {
+  @apply flex flex-col gap-12 mt-20;
+}
+
+.conf-list {
+  @apply flex flex-col gap-4 list-decimal list-inside;
+}
+
+.conf-list li {
+  @apply text-lg md:text-xl text-white font-medium;
+}
+
+.btn-agenda {
+  @apply flex items-center gap-3 w-fit px-6 py-4 rounded-full;
+  @apply bg-white/5 border border-white/10 backdrop-blur-sm;
+  @apply text-xs font-bold tracking-widest text-white uppercase;
+  @apply transition-all duration-300 hover:bg-white/10;
+}
+
+.conf-cards-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-8;
+}
+
+.conf-card {
+  @apply rounded-[40px] p-12 flex flex-col items-start min-h-[400px];
+  @apply transition-all duration-300;
+}
+
+.conf-card-light {
+  @apply bg-[#fff5f8] text-black;
+  @apply hover:-translate-y-2;
+}
+
+.conf-card-dark {
+  @apply bg-[#0c0c0c] border border-white/5 text-white;
+  @apply hover:-translate-y-2 hover:border-white/20;
+}
+
+.conf-card-icon {
+  @apply mb-12;
+}
+
+.conf-card-light .conf-card-icon {
+  @apply text-purple-600;
+}
+
+.conf-card-dark:nth-child(2) .conf-card-icon {
+  @apply text-pink-500;
+}
+
+.conf-card-dark:nth-child(3) .conf-card-icon {
+  @apply text-emerald-400;
+}
+
+.conf-card-title {
+  @apply text-4xl font-black mb-10 uppercase tracking-tighter;
+}
+
+.conf-card-description {
+  @apply text-base font-medium opacity-60 leading-relaxed max-w-[80%];
+}
+
+/* Night Section */
+.night-section {
+  @apply w-full py-32 px-4 z-10;
+  @apply max-w-7xl mx-auto;
+}
+
+.night-container {
+  @apply bg-[#0c0c0c] border border-white/5 rounded-[60px] p-12 md:p-24;
+  @apply flex flex-col md:flex-row justify-between items-center gap-16;
+  @apply relative overflow-hidden;
+}
+
+.night-badge {
+  @apply bg-purple-950/40 text-purple-400 text-[10px] font-bold tracking-[0.2em] px-4 py-1.5 rounded-sm mb-12 w-fit;
+  @apply border border-purple-500/20;
+}
+
+.night-title {
+  @apply text-6xl md:text-[100px] font-black leading-[0.85] text-white uppercase mb-12;
+}
+
+.night-accent {
+  @apply text-[#ff1b8d] italic;
+}
+
+.night-description {
+  @apply text-lg md:text-xl text-white/60 leading-relaxed;
+}
+
+.night-card {
+  @apply bg-[#111111] border border-white/5 rounded-[40px] p-12;
+  @apply flex flex-col items-center text-center min-w-[320px];
+  @apply shadow-2xl;
+}
+
+.night-card-icon {
+  @apply text-[#ff1b8d] mb-8;
+}
+
+.night-card-date {
+  @apply text-4xl md:text-5xl font-black text-white mb-2 uppercase;
+}
+
+.night-card-info {
+  @apply text-[10px] md:text-xs font-bold text-white/40 tracking-[0.2em] uppercase;
+}
+
+/* Venue Section */
+.venue-section {
+  @apply w-full py-32 px-4 z-10;
+  @apply max-w-7xl mx-auto;
+}
+
+.venue-header {
+  @apply mb-20;
+}
+
+.venue-badge {
+  @apply flex items-center gap-2 px-4 py-2 rounded-full mb-8 w-fit;
+  @apply bg-white/5 border border-white/10 text-[10px] font-bold tracking-[0.2em] text-white uppercase;
+}
+
+.venue-main-title {
+  @apply text-7xl md:text-[180px] font-black leading-none text-white uppercase mb-16 flex flex-wrap gap-x-8;
+}
+
+.outline-text {
+  @apply text-transparent;
+  -webkit-text-stroke: 2px var(--color-blue);
+}
+
+.venue-info-bar {
+  @apply flex flex-col md:grid md:grid-cols-3 gap-12 items-start;
+}
+
+.info-item-blue {
+  @apply text-blue text-xs font-bold tracking-[0.2em] uppercase leading-relaxed;
+}
+
+.info-item-white {
+  @apply text-white text-xs font-medium tracking-widest uppercase leading-relaxed;
+}
+
+.venue-cards-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-8 mb-20;
+}
+
+.venue-description-card {
+  @apply bg-[#0c0c0c] border border-white/5 rounded-[40px] p-12;
+  @apply transition-all duration-300 hover:border-white/10;
+}
+
+.venue-card-title {
+  @apply text-2xl font-bold mb-8 uppercase tracking-tighter;
+}
+
+.venue-card-text {
+  @apply text-base text-white/60 leading-relaxed font-medium;
+}
+
+.venue-map-container {
+  @apply w-full rounded-[60px] overflow-hidden border border-white/10;
+  @apply shadow-2xl;
+}
+
+.venue-map-image {
+  @apply w-full h-auto object-cover;
+}
+
+/* Stats Numbers Section */
+.stats-numbers-section {
+  @apply w-full py-32 px-4 z-10;
+  @apply max-w-7xl mx-auto;
+}
+
+.stats-numbers-container {
+  @apply flex flex-col lg:flex-row items-center justify-between gap-16;
+}
+
+.stats-main-title {
+  @apply text-6xl md:text-[80px] font-black leading-[0.9] text-white uppercase mb-8;
+}
+
+.stats-accent {
+  @apply text-[#e61d8c]; /* Le rose fuchsia des chiffres */
+}
+
+.stats-tagline {
+  @apply text-xs font-bold text-white/40 tracking-[0.2em] uppercase;
+}
+
+.stats-cards-wrapper {
+  @apply flex flex-col md:flex-row gap-8 flex-1 justify-end;
+}
+
+.stats-number-card {
+  @apply bg-[#0c0c0c] border border-white/5 rounded-[40px] p-12 min-w-[300px] flex flex-col items-center justify-center text-center;
+  @apply transition-all duration-300 hover:border-white/20 hover:bg-[#121212];
+}
+
+.stats-value {
+  @apply text-6xl md:text-8xl font-black text-white mb-4;
+}
+
+.stats-label {
+  @apply text-[10px] md:text-xs font-bold text-[#e61d8c] tracking-[0.3em] uppercase;
+}
+
+/* Animations */
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-title {
+    @apply text-[60px];
+  }
+  
+  .hero-subtitle {
+    @apply text-xl;
+  }
+}

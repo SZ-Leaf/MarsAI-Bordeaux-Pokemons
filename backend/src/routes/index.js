@@ -8,6 +8,7 @@ import oauthRoutes from './youtube/oauth.routes.js';
 import newsletterRoutes from './newsletter/newsletter.routes.js';
 import selectorRoutes from './selector/selector.routes.js'
 import eventRoutes from './events/event.routes.js';
+import reservationRoutes from './events/reservations.routes.js';
 
 const router = Router();
 
@@ -21,6 +22,7 @@ router.use('/sponsors', sponsorsRoutes);
 router.use('/newsletter', newsletterRoutes);
 router.use('/selector', selectorRoutes);
 router.use('/events', eventRoutes);
+router.use('/events', reservationRoutes);
 
 
 export default router;

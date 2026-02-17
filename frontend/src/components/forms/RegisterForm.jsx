@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
-import "../ui/inputs.css";
-import "../ui/buttons.css";
 import { registerService } from "../../services/auth.service";
-import {useAuth} from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router";
 import { useLanguage } from "../../context/LanguageContext";
 import { responseHelper } from "../../helpers/responseHelper";
-import {useAlertHelper} from "../../helpers/alertHelper";
+import { useAlertHelper } from "../../helpers/alertHelper";
 
-const RegisterForm = ({ token, email }) => {
+const RegisterForm = ({ token }) => {
    const alertHelper = useAlertHelper();
    const { user } = useAuth();
    const navigate = useNavigate();
@@ -26,6 +24,7 @@ const RegisterForm = ({ token, email }) => {
       firstname: "",
       lastname: "",
       password: "",
+      confirmPassword: "",
    });
 
    const handleChange = (e) => {
@@ -35,16 +34,28 @@ const RegisterForm = ({ token, email }) => {
       });
    };
 
+   const validateForm = () => {
+      const { firstname, lastname, password, confirmPassword } = formData;
+      if (!firstname.trim() || !lastname.trim() || !password.trim() || !confirmPassword.trim()) {
+         alertHelper.requiredFields();
+         return false;
+      }
+      if (password !== confirmPassword) {
+         alertHelper.passwordsMismatch();
+         return false;
+      }
+      return true;
+   };
+
    const handleSubmit = async (e) => {
       e.preventDefault();
+
+      if (!validateForm()) return;
+
       setIsSubmitting(true);
       const { firstname, lastname, password } = formData;
-      
+
       try {
-         if (!firstname.trim() || !lastname.trim() || !password.trim()) {
-            alertHelper.requiredFields();
-            return;
-         }
          const response = await registerService(firstname, lastname, password, token);
          if (isSuccessResponse(response)) {
             alertHelper.showMessage(getMessageFromResponse(response));
@@ -61,42 +72,83 @@ const RegisterForm = ({ token, email }) => {
    };
 
    return (
-      <>
-         <div>
-            <h1>{language === 'fr' ? 'Inscription' : 'Register'}</h1>
-            <p>{language === 'fr' ? 'Veuillez entrer vos informations de registration:' : 'Please enter your registration information:'}</p>
+      <form onSubmit={handleSubmit} className="login-form">
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="input-group">
+               <label className="input-label" htmlFor="firstname">
+                  {language === 'fr' ? 'Prénom' : 'Firstname'}
+               </label>
+               <input
+                  id="firstname"
+                  name="firstname"
+                  type="text"
+                  className="login-input"
+                  value={formData.firstname}
+                  onChange={handleChange}
+                  placeholder={language === 'fr' ? 'Prénom' : 'Firstname'}
+                  autoComplete="given-name"
+               />
+            </div>
+            <div className="input-group">
+               <label className="input-label" htmlFor="lastname">
+                  {language === 'fr' ? 'Nom' : 'Lastname'}
+               </label>
+               <input
+                  id="lastname"
+                  name="lastname"
+                  type="text"
+                  className="login-input"
+                  value={formData.lastname}
+                  onChange={handleChange}
+                  placeholder={language === 'fr' ? 'Nom' : 'Lastname'}
+                  autoComplete="family-name"
+               />
+            </div>
          </div>
-         <form onSubmit={handleSubmit}>
-            <input type="email" value={email} disabled />
-            <input
-            placeholder={language === 'fr' ? 'Prénom' : 'Firstname'}
-            className="input-light"
-            name="firstname"
-            type="text"
-            value={formData.firstname}
-            onChange={handleChange}
-            />
-            <input
-            placeholder={language === 'fr' ? 'Nom' : 'Lastname'}
-            className="input-light"
-            name="lastname"
-            type="text"
-            value={formData.lastname}
-            onChange={handleChange}
-            />
-            <input
-            placeholder={language === 'fr' ? 'Mot de passe' : 'Password'}
-            className="input-light"
-            name="password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-            />
-            <button type="submit"
-            disabled={isSubmitting || !formData.firstname || !formData.lastname || !formData.password}
-            >{language === 'fr' ? 'Inscription' : 'Register'}</button>
-         </form>
-      </>
+
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="input-group">
+               <label className="input-label" htmlFor="password">
+                  {language === 'fr' ? 'Mot de passe' : 'Password'}
+               </label>
+               <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  className="login-input"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+               />
+            </div>
+            <div className="input-group">
+               <label className="input-label" htmlFor="confirmPassword">
+                  {language === 'fr' ? 'Confirmation' : 'Confirm'}
+               </label>
+               <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  className="login-input"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+               />
+            </div>
+         </div>
+
+         <button
+            type="submit"
+            className="login-btn"
+            disabled={isSubmitting || !formData.firstname || !formData.lastname || !formData.password || !formData.confirmPassword}
+         >
+            {isSubmitting
+               ? (language === 'fr' ? 'Inscription en cours...' : 'Registering...')
+               : (language === 'fr' ? 'Créer mon compte' : 'Create account')}
+         </button>
+      </form>
    );
 };
 

@@ -1,7 +1,13 @@
 import React from "react";
 import { motion } from "motion/react";
+import { Plyr } from "plyr-react";
+import "plyr-react/plyr.css";
 import { useLanguage } from "../../context/LanguageContext";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+   X, ChevronLeft, ChevronRight,
+   User, Mail, Phone, MapPin, Globe,
+   Film, Clock, Calendar, Clapperboard, Cpu, Captions, Link, Sparkles
+} from "lucide-react";
 
 const VideoDetails = ({ video, onClose, onNext, onPrev, hasNext, hasPrev }) => {
    const { language } = useLanguage();
@@ -18,15 +24,36 @@ const VideoDetails = ({ video, onClose, onNext, onPrev, hasNext, hasPrev }) => {
       return `${mins}:${secs.toString().padStart(2, "0")}`;
    }
 
+   function formatDate(dateStr) {
+      if (!dateStr) return "";
+      return new Date(dateStr).toLocaleDateString(language === "fr" ? "fr-FR" : "en-US", {
+         year: "numeric",
+         month: "long",
+         day: "numeric",
+      });
+   }
+
+   const DetailItem = ({ icon: Icon, label, value }) => {
+      if (!value) return null;
+      return (
+         <div className="flex items-start gap-3">
+            <Icon size={16} className="text-gray-500 mt-0.5 shrink-0" />
+            <div>
+               <p className="text-gray-500 uppercase text-[10px] font-bold tracking-wide">{label}</p>
+               <p className="text-white mt-0.5">{value}</p>
+            </div>
+         </div>
+      );
+   };
+
    return (
       <motion.div
-         className="absolute inset-0 z-40 bg-black/95 overflow-y-auto"
          initial={{ opacity: 0 }}
          animate={{ opacity: 1 }}
          exit={{ opacity: 0 }}
       >
          {/* Top bar with close button */}
-         <div className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 bg-black/80 backdrop-blur-sm">
+         <div className="sticky top-0 flex items-center justify-between px-6 py-4 bg-black/80 backdrop-blur-sm">
             <h2 className="text-white text-lg font-semibold truncate">
                {video?.english_title}
             </h2>
@@ -39,43 +66,66 @@ const VideoDetails = ({ video, onClose, onNext, onPrev, hasNext, hasPrev }) => {
             </button>
          </div>
 
-         {/* Video player area with prev/next nav */}
-         <div className="relative w-full flex items-center justify-center bg-black">
-            {/* Previous button */}
-            {hasPrev && (
-               <button
-                  onClick={onPrev}
-                  className="absolute left-2 z-10 p-2 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
-                  title={language === "fr" ? "Précédent" : "Previous"}
-               >
-                  <ChevronLeft size={28} />
-               </button>
-            )}
-
-            <div className="w-full max-w-5xl mx-auto aspect-video">
-               <video
-                  key={video?.id}
-                  src={videoSrc}
-                  controls
-                  autoPlay
-                  className="w-full h-full object-contain"
+         {/* Video player */}
+         <div className="w-9/10 mx-auto" key={video?.id}>
+            <div className="aspect-video rounded-lg overflow-hidden">
+               <Plyr
+                  source={{
+                     type: "video",
+                     sources: [{ src: videoSrc, type: "video/mp4" }],
+                  }}
+                  options={{
+                     autoplay: true,
+                     controls: [
+                        "play-large",
+                        "play",
+                        "progress",
+                        "current-time",
+                        "duration",
+                        "mute",
+                        "volume",
+                        "settings",
+                        "pip",
+                        "fullscreen",
+                     ],
+                     settings: ["speed"],
+                  }}
                />
             </div>
 
-            {/* Next button */}
-            {hasNext && (
+            {/* Prev / Next navigation */}
+            <div className="flex items-center justify-between mt-4">
+               <button
+                  onClick={onPrev}
+                  disabled={!hasPrev}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                     hasPrev
+                        ? "text-white hover:bg-white/10 cursor-pointer"
+                        : "text-gray-600 cursor-not-allowed"
+                  }`}
+               >
+                  <ChevronLeft size={18} />
+                  {language === "fr" ? "Précédent" : "Previous"}
+               </button>
                <button
                   onClick={onNext}
-                  className="absolute right-2 z-10 p-2 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
-                  title={language === "fr" ? "Suivant" : "Next"}
+                  disabled={!hasNext}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                     hasNext
+                        ? "text-white hover:bg-white/10 cursor-pointer"
+                        : "text-gray-600 cursor-not-allowed"
+                  }`}
                >
-                  <ChevronRight size={28} />
+                  {language === "fr" ? "Suivant" : "Next"}
+                  <ChevronRight size={18} />
                </button>
-            )}
+            </div>
          </div>
 
          {/* Video details section */}
-         <div className="max-w-5xl mx-auto px-6 py-8 text-white space-y-6">
+         <div className="w-9/10 mx-auto py-8 text-white space-y-8">
+
+            {/* Title */}
             <div>
                <h1 className="text-3xl font-bold">{video?.english_title?.toUpperCase()}</h1>
                {video?.original_title && (
@@ -83,43 +133,120 @@ const VideoDetails = ({ video, onClose, onNext, onPrev, hasNext, hasPrev }) => {
                )}
             </div>
 
-            <div className="flex flex-wrap gap-8 text-sm">
-               {(video?.creator_firstname || video?.creator_lastname) && (
-                  <div>
-                     <p className="text-gray-500 uppercase text-xs font-bold tracking-wide">
-                        {language === "fr" ? "Réalisateur" : "Director"}
-                     </p>
-                     <p className="mt-1">
-                        {video.creator_firstname} {video.creator_lastname}
-                     </p>
-                  </div>
-               )}
-               {video?.creator_country && (
-                  <div>
-                     <p className="text-gray-500 uppercase text-xs font-bold tracking-wide">
-                        {language === "fr" ? "Pays" : "Country"}
-                     </p>
-                     <p className="mt-1">{video.creator_country.toUpperCase()}</p>
-                  </div>
-               )}
-               {video?.duration_seconds > 0 && (
-                  <div>
-                     <p className="text-gray-500 uppercase text-xs font-bold tracking-wide">
-                        {language === "fr" ? "Durée" : "Duration"}
-                     </p>
-                     <p className="mt-1">{formatDuration(video.duration_seconds)}</p>
-                  </div>
-               )}
-            </div>
-
-            {video?.english_synopsis && (
-               <div>
-                  <p className="text-gray-500 uppercase text-xs font-bold tracking-wide mb-2">
-                     Synopsis
-                  </p>
-                  <p className="text-gray-300 leading-relaxed">{video.english_synopsis}</p>
+            {/* Synopsis */}
+            {(video?.english_synopsis || video?.original_synopsis) && (
+               <div className="space-y-3">
+                  <h3 className="text-gray-500 uppercase text-xs font-bold tracking-wide">Synopsis</h3>
+                  {video?.english_synopsis && (
+                     <p className="text-gray-300 leading-relaxed">{video.english_synopsis}</p>
+                  )}
+                  {video?.original_synopsis && video.original_synopsis !== video.english_synopsis && (
+                     <p className="text-gray-400 leading-relaxed italic">{video.original_synopsis}</p>
+                  )}
                </div>
             )}
+
+            {/* Film details */}
+            <div className="space-y-4">
+               <h3 className="text-gray-500 uppercase text-xs font-bold tracking-wide border-b border-gray-800 pb-2">
+                  {language === "fr" ? "Détails du film" : "Film Details"}
+               </h3>
+               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-sm">
+                  <DetailItem
+                     icon={Film}
+                     label={language === "fr" ? "Classification" : "Classification"}
+                     value={video?.classification}
+                  />
+                  <DetailItem
+                     icon={Clock}
+                     label={language === "fr" ? "Durée" : "Duration"}
+                     value={video?.duration_seconds > 0 ? formatDuration(video.duration_seconds) : null}
+                  />
+                  <DetailItem
+                     icon={Globe}
+                     label={language === "fr" ? "Langue" : "Language"}
+                     value={video?.language?.toUpperCase()}
+                  />
+                  <DetailItem
+                     icon={Cpu}
+                     label={language === "fr" ? "Outils" : "Tech Stack"}
+                     value={video?.tech_stack}
+                  />
+                  <DetailItem
+                     icon={Sparkles}
+                     label={language === "fr" ? "Méthode créative" : "Creative Method"}
+                     value={video?.creative_method}
+                  />
+                  <DetailItem
+                     icon={Captions}
+                     label={language === "fr" ? "Sous-titres" : "Subtitles"}
+                     value={video?.subtitles}
+                  />
+                  <DetailItem
+                     icon={Calendar}
+                     label={language === "fr" ? "Soumis le" : "Submitted"}
+                     value={formatDate(video?.created_at)}
+                  />
+                  <DetailItem
+                     icon={Link}
+                     label="YouTube"
+                     value={video?.youtube_URL}
+                  />
+               </div>
+            </div>
+
+            {/* Creator info */}
+            <div className="space-y-4">
+               <h3 className="text-gray-500 uppercase text-xs font-bold tracking-wide border-b border-gray-800 pb-2">
+                  {language === "fr" ? "Réalisateur" : "Director"}
+               </h3>
+               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-sm">
+                  <DetailItem
+                     icon={User}
+                     label={language === "fr" ? "Nom" : "Name"}
+                     value={
+                        (video?.creator_firstname || video?.creator_lastname)
+                           ? `${video.creator_firstname ?? ""} ${video.creator_lastname ?? ""}`.trim()
+                           : null
+                     }
+                  />
+                  <DetailItem
+                     icon={User}
+                     label={language === "fr" ? "Genre" : "Gender"}
+                     value={video?.creator_gender ? video.creator_gender.charAt(0).toUpperCase() + video.creator_gender.slice(1) : null}
+                  />
+                  <DetailItem
+                     icon={Mail}
+                     label="Email"
+                     value={video?.creator_email}
+                  />
+                  <DetailItem
+                     icon={Phone}
+                     label={language === "fr" ? "Mobile" : "Mobile"}
+                     value={video?.creator_mobile}
+                  />
+                  <DetailItem
+                     icon={Phone}
+                     label={language === "fr" ? "Téléphone" : "Phone"}
+                     value={video?.creator_phone}
+                  />
+                  <DetailItem
+                     icon={MapPin}
+                     label={language === "fr" ? "Adresse" : "Address"}
+                     value={video?.creator_address}
+                  />
+                  <DetailItem
+                     icon={Globe}
+                     label={language === "fr" ? "Pays" : "Country"}
+                     value={video?.creator_country?.toUpperCase()}
+                  />
+                  <DetailItem
+                     icon={Clapperboard}
+                     label={language === "fr" ? "Source" : "Referral"}
+                     value={video?.referral_source}
+                  />
+               </div>
+            </div>
          </div>
       </motion.div>
    );

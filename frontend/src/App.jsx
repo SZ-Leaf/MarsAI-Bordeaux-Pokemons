@@ -4,6 +4,7 @@ import TestsGraphique from './pages/TestsGraphique';
 import Header from './components/layout/header/Header';
 import Footer from './components/layout/footer/Footer';
 import { Routes, Route, useLocation } from 'react-router';
+
 import Submit from './pages/Submit.jsx';
 import Register from './pages/Register';
 import Login from './pages/Login';
@@ -16,8 +17,6 @@ import AdminNewsletterForm from './pages/AdminNewsletterForm';
 import AdminNewsletterView from './pages/AdminNewsletterView';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
-import Submissions from './pages/Submissions';
-
 function App() {
   const location = useLocation();
   const isSelectorPage = location.pathname === '/selector';
@@ -47,12 +46,11 @@ function App() {
             <Route path="/admin/newsletters/new" element={<AdminNewsletterForm />} />
             <Route path="/admin/newsletters/:id/edit" element={<AdminNewsletterForm />} />
             <Route path="/admin/newsletters/:id/view" element={<AdminNewsletterView />} />
-            <Route path="/submissions" element={<Submissions />} />
-            <Route path="*" element={<div>404 - Page Not Found</div>} />
             <Route path="/dashboard" element={<AuthGuard><Dashboard /></AuthGuard>} />
+            <Route path="*" element={<div>404 - Page Not Found</div>} />
           </Routes>
         </div>
-        
+
         {/* Footer caché en mobile sur la page selector, visible desktop. Caché sur l'admin. */}
         {!isAdminPage && (isSelectorPage ? (
           <div className="hidden md:block">

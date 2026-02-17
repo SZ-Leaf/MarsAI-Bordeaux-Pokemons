@@ -115,6 +115,18 @@ export const getSubmissions = async (filters = {}) => {
       params.push(filters.status);
     }
 
+    if (filters.type !== undefined && filters.type !== null && filters.type !== '') {
+      conditions.push('s.classification = ?');
+      params.push(filters.type);
+    }
+
+    
+    if (filters.rated === 'rated') {
+      conditions.push('EXISTS (SELECT 1 FROM selector_memo sel WHERE sel.submission_id = s.id)');
+    } else if (filters.rated === 'unrated') {
+      conditions.push('NOT EXISTS (SELECT 1 FROM selector_memo sel WHERE sel.submission_id = s.id)');
+    }
+
     // WHERE clause (if conditions exists)
     const whereClause = conditions.length
       ? `WHERE ${conditions.join(' AND ')}`

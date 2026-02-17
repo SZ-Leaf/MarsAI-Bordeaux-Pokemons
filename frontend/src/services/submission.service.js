@@ -18,10 +18,13 @@ export const getSubmissionsService = async ({filters}) => {
   const params = {
     limit: filters.limit,
     offset: filters.offset,
-    sortBy: filters.orderBy
+    sortBy: filters.sortBy
   };
-  if (filters.status) {
-    params.status = filters.status;
+  if (filters.type) {
+    params.type = filters.type;
+  }
+  if (filters.rated) {
+    params.rated = filters.rated;
   }
   return apiCall('/api/submissions', {
     method: 'GET',

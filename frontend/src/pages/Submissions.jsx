@@ -5,7 +5,7 @@ import { useAlertHelper } from "../helpers/alertHelper";
 import { responseHelper } from "../helpers/responseHelper";
 import SubmissionsList from "../components/submission/SubmissionsList";
 import VideoDetails from "../components/submission/VideoDetails";
-import { AnimatePresence } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 
 const Submissions = () => {
    const [activeIndex, setActiveIndex] = useState(null);
@@ -15,11 +15,14 @@ const Submissions = () => {
    const {language} = useLanguage();
    const [submissionsList, setSubmissionsList] = useState([]);
    const [loading, setLoading] = useState(true);
-   const [statusFilter, setStatusFilter] = useState(null);
+   const [typeFilter, setTypeFilter] = useState(null);
+   const [ratedFilter, setRatedFilter] = useState(null);
+   const [sortBy, setSortBy] = useState("DESC");
+
+
    const [pagination, setPagination] =useState({
       limit: 15,
       offset: 0,
-      orderBy: 'DESC'
    });
 
    const [total, setTotal] = useState(0);
@@ -30,7 +33,9 @@ const Submissions = () => {
          const response = await getSubmissionsService({
             filters : {
                ...pagination,
-               status: statusFilter
+               type: typeFilter,
+               rated: ratedFilter,
+               sortBy: sortBy
             }
          });
          setSubmissionsList(response.data.submissions);
@@ -44,7 +49,7 @@ const Submissions = () => {
    
    useEffect(() => {
       getSubmissions();
-   }, [pagination.limit, pagination.offset, pagination.orderBy, statusFilter]);
+   }, [pagination.limit, pagination.offset, sortBy, typeFilter, ratedFilter]);
 
    useEffect(() => {
       if (!loading && pagination.offset !== 0) {
@@ -53,61 +58,16 @@ const Submissions = () => {
             block: 'start'
          });
       }
-   }, [pagination.offset, loading]);   
+   }, [pagination.offset, loading]);
+
 
    return (
-      <section ref={submissionsRef} className="submissions-section relative">
+      <section ref={submissionsRef} className="submissions-section">
          
-         <div className="submissions-header flex flex-col justify-between mx-auto py-5">
-            <h1>{language === 'fr' ? 'La Galerie des Films' : 'The Movie Gallery'}</h1>
-            <div className="submissions-filters flex justify-between">
-               <select className="select-dark">
-                  <option value="Full AI">
-                     {language === 'fr' ? 'Full IA' : 'Full AI'}
-                  </option>
-                  <option value="Semi-AI">
-                     {language === 'fr' ? 'Semi-IA' : 'Semi-AI'}
-                  </option>
-               </select>
-               <select name="sort-by" id="sort-by" className="select-dark">
-                  <option value="newest">
-                     {language === 'fr' ? 'Nouveaux' : 'Newest'}
-                  </option>
-                  <option value="oldest">
-                     {language === 'fr' ? 'Anciens' : 'Oldest'}
-                  </option>
-               </select>
-            </div>
-         </div>
-
-         <div className="relative">
-            {loading && (
-               <div
-                  style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'rgba(0,0,0,0.2)',
-                  display: 'grid',
-                  placeItems: 'center',
-                  zIndex: 10,
-                  }}
-               >
-                  <div className="loading"></div>
-               </div>
-            )}   
-         </div>        
-         <SubmissionsList
-            submissions={submissionsList}
-            paginationFilters={pagination}
-            total={total}
-            loading={loading}
-            onPageChange={(newOffset) => {
-            setPagination(prev => ({ ...prev, offset: newOffset }))}}
-            onVideoClick={(index) => setActiveIndex(index)}
-         />
-         <AnimatePresence>
-            {activeIndex !== null && (
+         <AnimatePresence mode="wait">
+            {activeIndex !== null ? (
                <VideoDetails
+                  key="video-details"
                   video={submissionsList[activeIndex]}
                   onClose={() => setActiveIndex(null)}
                   onPrev={() => setActiveIndex((i) => i - 1)}
@@ -115,6 +75,99 @@ const Submissions = () => {
                   hasPrev={activeIndex > 0}
                   hasNext={activeIndex < submissionsList.length - 1}
                />
+            ) : (
+               <motion.div
+                  key="submissions-list"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+               >
+                  <div className="submissions-header flex flex-col justify-between mx-auto py-5">
+                     <div className="submissions-filters flex gap-10 justify-between">
+                        <select
+                           name="ai-type-filter"
+                           className="select-dark"
+                           value={typeFilter || ''}
+                           onChange={(e) => {
+                              setTypeFilter(e.target.value || null);
+                              setPagination(prev => ({ ...prev, offset: 0 }));
+                           }}
+                        >
+                           <option defaultValue value="">{language === 'fr' ? 'Tous' : 'All'}</option>
+                           <option value="Full AI">
+                              {language === 'fr' ? 'Full IA' : 'Full AI'}
+                           </option>
+                           <option value="Semi-AI">
+                              {language === 'fr' ? 'Semi-IA' : 'Semi-AI'}
+                           </option>
+                        </select>
+
+                        <select
+                           name="sort-by"
+                           id="sort-by"
+                           className="select-dark"
+                           value={sortBy}
+                           onChange={(e) => {
+                              setSortBy(e.target.value);
+                              setPagination(prev => ({ ...prev, offset: 0 }));
+                           }}
+                        >
+                           <option value="DESC">
+                              {language === 'fr' ? 'Plus récents' : 'Newest'}
+                           </option>
+                           <option value="ASC">
+                              {language === 'fr' ? 'Plus anciens' : 'Oldest'}
+                           </option>
+                        </select>
+                        
+                        <select
+                           name="rating-status"
+                           id="rating-status"
+                           className="select-dark"
+                           value={ratedFilter || ''}
+                           onChange={(e) => {
+                              setRatedFilter(e.target.value || null);
+                              setPagination(prev => ({ ...prev, offset: 0 }));
+                           }}
+                        >
+                           <option defaultValue value="">
+                              {language === 'fr' ? 'Tous' : 'All'}
+                           </option>
+                           <option value="rated">
+                              {language === 'fr' ? 'Noté' : 'Rated'}
+                           </option>
+                           <option value="unrated">
+                              {language === 'fr' ? 'Non noté' : 'Unrated'}
+                           </option>
+                        </select>
+                     </div>
+                  </div>
+                  <div className="relative">
+                     {loading && (
+                        <div
+                           style={{
+                           position: 'absolute',
+                           inset: 0,
+                           background: 'rgba(0,0,0,0.2)',
+                           display: 'grid',
+                           placeItems: 'center',
+                           zIndex: 10,
+                           }}
+                        >
+                           <div className="loading"></div>
+                        </div>
+                     )}
+                  </div>
+                  <SubmissionsList
+                     submissions={submissionsList}
+                     paginationFilters={pagination}
+                     total={total}
+                     loading={loading}
+                     onPageChange={(newOffset) => {
+                     setPagination(prev => ({ ...prev, offset: newOffset }))}}
+                     onVideoClick={(index) => setActiveIndex(index)}
+                  />
+               </motion.div>
             )}
          </AnimatePresence>
       </section>

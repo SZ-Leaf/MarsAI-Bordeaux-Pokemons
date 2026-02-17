@@ -113,6 +113,10 @@ const Home = () => {
 
       {/* 2. FEATURES SECTION */}
       <Section className="py-20">
+        <h2 className="section-title-xl text-center mb-16">
+          L'IA SOUS <span className="stats-accent">TOUS SES ANGLES</span>
+        </h2>
+        
         <div className="features-grid">
           {FEATURES.map((feature, index) => (
             <Card

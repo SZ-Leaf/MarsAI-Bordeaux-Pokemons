@@ -1,7 +1,7 @@
-import { createReservationWithSeatUpdate } from "../../models/events/reservations.model.js"
+import { createReservation, confirmReservationWithSeatUpdate } from "../../models/events/reservations.model.js"
 import { getEventById } from "../../models/events/events.model.js";
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
-import { generateReservationConfirmToken } from '../../services/mailer/mailer.tokens.js';
+import { generateReservationConfirmToken, verifyReservationConfirmToken } from '../../services/mailer/mailer.tokens.js';
 import { sendReservationConfirmation } from "../../services/mailer/mailer.mail.js";
 
 export const createReservationController = async (req, res) => {
@@ -18,7 +18,7 @@ export const createReservationController = async (req, res) => {
       return sendError(res, 404, 'Événement introuvable', 'Event not found', null);
     }
 
-    const reservationId = await createReservationWithSeatUpdate({
+    const reservationId = await createReservation({
       first_name,
       last_name,
       email,
@@ -27,7 +27,7 @@ export const createReservationController = async (req, res) => {
 
     const token = generateReservationConfirmToken(reservationId, email);
 
-    await sendReservationConfirmation(email, token);
+    await sendReservationConfirmation(email, token, reservationId);
 
     return sendSuccess(
       res,
@@ -69,7 +69,43 @@ export const createReservationController = async (req, res) => {
   }
 };
 
-export const reservationConfirmation = (req, res) => {
-  const {token} = req.query;
-  console.log(token);
-}
+export const reservationConfirmation = async (req, res) => {
+  try {
+    const { token } = req.query;
+
+    if (!token) {
+      return sendError(res, 400, "Token manquant", "Missing token", null);
+    }
+
+    const decoded = verifyReservationConfirmToken(token);
+    const { reservationId } = decoded;
+
+    await confirmReservationWithSeatUpdate(reservationId);
+
+    return sendSuccess(
+      res,
+      200,
+      "Réservation confirmée avec succès",
+      "Reservation successfully confirmed",
+      null
+    );
+
+  } catch (error) {
+
+    if (error.message === "NO_PLACES_AVAILABLE") {
+      return sendError(res, 400, "Plus de places disponibles", "No seats available", null);
+    }
+
+    if (error.message === "ALREADY_CONFIRMED") {
+      return sendError(res, 400, "Déjà confirmée", "Already confirmed", null);
+    }
+
+    return sendError(
+      res,
+      400,
+      "Confirmation impossible",
+      "Confirmation failed",
+      error.message
+    );
+  }
+};

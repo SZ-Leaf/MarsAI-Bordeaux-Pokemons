@@ -1,39 +1,67 @@
 import db from '../../config/db_pool.js';
 
-export const createReservationWithSeatUpdate = async ({ first_name, last_name, email, event_id }) => {
+export const createReservation = async ({
+  first_name,
+  last_name,
+  email,
+  event_id
+}) => {
+
+  const [result] = await db.pool.execute(
+    `INSERT INTO reservations(first_name, last_name, email, event_id)
+     VALUES (?, ?, ?, ?)`,
+    [first_name, last_name, email, event_id]
+  );
+
+  return result.insertId;
+};
+
+export const confirmReservationWithSeatUpdate = async (reservationId) => {
   const connection = await db.pool.getConnection();
 
   try {
     await connection.beginTransaction();
 
-    const [updateResult] = await connection.execute(
+    const [reservations] = await connection.execute(
+      `SELECT event_id, confirmation
+       FROM reservations
+       WHERE id = ?`,
+      [reservationId]
+    );
+
+    if (reservations.length === 0) {
+      throw new Error("RESERVATION_NOT_FOUND");
+    }
+
+    if (reservations[0].confirmed_at) {
+      throw new Error("ALREADY_CONFIRMED");
+    }
+
+    const eventId = reservations[0].event_id;
+
+    const [updateEvent] = await connection.execute(
       `UPDATE events
        SET places = places - 1
        WHERE id = ? AND places > 0`,
-      [event_id]
+      [eventId]
     );
 
-    if (updateResult.affectedRows === 0) {
-      throw new Error('NO_PLACES_AVAILABLE');
+    if (updateEvent.affectedRows === 0) {
+      throw new Error("NO_PLACES_AVAILABLE");
     }
 
-    const [reservationResult] = await connection.execute(
-      `INSERT INTO reservations(first_name, last_name, email, event_id)
-       VALUES (?, ?, ?, ?)`,
-      [first_name, last_name, email, event_id]
+    await connection.execute(
+      `UPDATE reservations
+       SET confirmation = NOW()
+       WHERE id = ?`,
+      [reservationId]
     );
 
     await connection.commit();
-
-    return reservationResult.insertId;
+    return true;
 
   } catch (error) {
     await connection.rollback();
-
-    if (error.code === 'ER_DUP_ENTRY') {
-      throw new Error('EMAIL_ALREADY_REGISTERED');
-    }
-
     throw error;
   } finally {
     connection.release();

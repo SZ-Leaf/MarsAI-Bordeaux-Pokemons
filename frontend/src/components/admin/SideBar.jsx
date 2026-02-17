@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './sideBar.css';
 import navItems from '../../constants/dashboard';
 import { useLanguage } from '../../context/LanguageContext';
+import { useAuth } from '../../hooks/useAuth';
+
 
 const SideBar = ({ activeView, onViewChange }) => {
   const { language } = useLanguage();
+  const { user } = useAuth();
   const items = navItems();
   return (
     <aside className="sidebar">
@@ -18,8 +21,13 @@ const SideBar = ({ activeView, onViewChange }) => {
           />
           <div className="sidebar-status-dot"></div>
         </div>
-        <h3 className="sidebar-user-name">Admin</h3>
-        <p className="sidebar-user-role">Mars AI</p>
+        <h3 className="sidebar-user-name">{user?.data?.firstname} {user?.data?.lastname}</h3>
+        <p className="sidebar-user-role">
+          {
+            user?.data?.role_id === 1 ? {fr: 'Utilisateur', en: 'User'} [language]:
+            user?.data?.role_id === 2 ? {fr: 'Admin', en: 'Admin'} [language]:
+            {fr: 'Super Admin', en: 'Super Admin'} [language]
+          }</p>
       </div>
 
       {/* Navigation */}

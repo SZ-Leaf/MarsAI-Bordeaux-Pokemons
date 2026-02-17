@@ -11,7 +11,7 @@ import '../components/admin/admin.css';
 const Dashboard = () => {
   const [activeView, setActiveView] = useState('overview');
 
-  // Map view keys to components (NOT JSX, just components)
+  // Map view keys to components
   const viewComponents = {
     overview: AdminOverview,
     users: AdminUsers,

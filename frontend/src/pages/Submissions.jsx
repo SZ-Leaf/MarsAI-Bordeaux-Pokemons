@@ -4,8 +4,11 @@ import { useLanguage } from "../context/LanguageContext";
 import { useAlertHelper } from "../helpers/alertHelper";
 import { responseHelper } from "../helpers/responseHelper";
 import SubmissionsList from "../components/submission/SubmissionsList";
+import VideoDetails from "../components/submission/VideoDetails";
+import { AnimatePresence } from "motion/react";
 
 const Submissions = () => {
+   const [activeIndex, setActiveIndex] = useState(null);
    const submissionsRef = useRef(null);
    const alertHelper = useAlertHelper();
    const { getMessageFromResponse } = responseHelper();
@@ -53,7 +56,7 @@ const Submissions = () => {
    }, [pagination.offset, loading]);   
 
    return (
-      <section ref={submissionsRef} className="submissions-section">
+      <section ref={submissionsRef} className="submissions-section relative">
          
          <div className="submissions-header flex flex-col justify-between mx-auto py-5">
             <h1>{language === 'fr' ? 'La Galerie des Films' : 'The Movie Gallery'}</h1>
@@ -99,8 +102,21 @@ const Submissions = () => {
             total={total}
             loading={loading}
             onPageChange={(newOffset) => {
-            setPagination(prev => ({ ...prev, offset: newOffset }))}}/
-         >
+            setPagination(prev => ({ ...prev, offset: newOffset }))}}
+            onVideoClick={(index) => setActiveIndex(index)}
+         />
+         <AnimatePresence>
+            {activeIndex !== null && (
+               <VideoDetails
+                  video={submissionsList[activeIndex]}
+                  onClose={() => setActiveIndex(null)}
+                  onPrev={() => setActiveIndex((i) => i - 1)}
+                  onNext={() => setActiveIndex((i) => i + 1)}
+                  hasPrev={activeIndex > 0}
+                  hasNext={activeIndex < submissionsList.length - 1}
+               />
+            )}
+         </AnimatePresence>
       </section>
    )
 };

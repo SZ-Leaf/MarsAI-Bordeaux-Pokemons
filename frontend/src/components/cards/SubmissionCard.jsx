@@ -2,7 +2,7 @@ import React from 'react';
 import './submissionCard.css';
 import { useLanguage } from '../../context/LanguageContext';
 
-const SubmissionCard = ({submission}) => {
+const SubmissionCard = ({submission, onVideoClick}) => {
    const {language} = useLanguage();
 
    function formatDuration(seconds) {
@@ -14,7 +14,7 @@ const SubmissionCard = ({submission}) => {
 
    return (
       <article className="submission-container-card" key={submission.id}>
-         <div className="submission-image-container">
+         <div className="submission-image-container" onClick={onVideoClick}>
             <img className="submission-image" src={`${import.meta.env.VITE_API_URL}${submission.cover}`} alt={submission.english_title} />
             <p className="submission-duration">{formatDuration(submission.duration_seconds)}</p>
          </div>

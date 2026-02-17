@@ -13,6 +13,7 @@
     "@tailwindcss/vite": "^4.1.18",
     "clsx": "^2.1.1",
     "lucide-react": "^0.563.0",
+    "motion": "^12.34.0",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.7",
     "react": "^19.2.0",

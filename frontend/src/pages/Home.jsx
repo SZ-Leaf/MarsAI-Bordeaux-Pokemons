@@ -40,10 +40,10 @@ const FILMS = [
 ];
 
 const STATS = [
-  { title: "2 MOIS", subtitle: "DE PRÉPARATION", color: "text-purple-500" },
-  { title: "50 FILMS", subtitle: "EN SÉLECTION", color: "text-emerald-400" },
-  { title: "WEB 3.0", subtitle: "EXPÉRIENCE", color: "text-pink-500" },
-  { title: "J4", subtitle: "MARSEILLE", color: "text-cyan-400" }
+  { title: "2 MOIS", subtitle: "DE PRÉPARATION", color: "text-purple-500", borderClass: "border-purple" },
+  { title: "50 FILMS", subtitle: "EN SÉLECTION", color: "text-emerald-400", borderClass: "border-emerald" },
+  { title: "WEB 3.0", subtitle: "EXPÉRIENCE", color: "text-pink-500", borderClass: "border-pink" },
+  { title: "J4", subtitle: "MARSEILLE", color: "text-cyan-400", borderClass: "border-cyan" }
 ];
 
 const CONFERENCES = [
@@ -58,21 +58,24 @@ const OBJECTIVES = [
     description: "METTRE L'HUMAIN AU CŒUR DE LA CRÉATION POUR NE PAS PERDRE L'ÉMOTION.",
     icon: Target,
     color: "text-emerald-400",
-    bgColor: "bg-emerald-400/10"
+    bgColor: "bg-emerald-400/10",
+    borderClass: "border-emerald"
   },
   {
     title: "CHALLENGE CRÉATIF",
     description: "CHALLENGER LA CRÉATIVITÉ GRÂCE À UN FORMAT ULTRA-COURT DE 60S.",
     icon: Zap,
     color: "text-blue-400",
-    bgColor: "bg-blue-400/10"
+    bgColor: "bg-blue-400/10",
+    borderClass: "border-blue"
   },
   {
     title: "FUTURS SOUHAITABLES",
     description: "EXPLORER LES FUTURS DÉSIRABLES VIA LES TECHNOLOGIES ÉMERGENTES.",
     icon: Rocket,
     color: "text-purple-400",
-    bgColor: "bg-purple-400/10"
+    bgColor: "bg-purple-400/10",
+    borderClass: "border-purple"
   }
 ];
 
@@ -114,7 +117,7 @@ const Home = () => {
       {/* 2. FEATURES SECTION */}
       <Section className="py-20">
         <h2 className="section-title-xl text-center mb-16">
-          L'IA SOUS <span className="stats-accent">TOUS SES ANGLES</span>
+          L'AI SOUS <span className="stats-accent">TOUS SES ANGLES</span>
         </h2>
         
         <div className="features-grid">
@@ -175,7 +178,7 @@ const Home = () => {
           {OBJECTIVES.map((obj, index) => {
             const Icon = obj.icon;
             return (
-              <div key={index} className="objective-card">
+              <div key={index} className={`objective-card ${obj.borderClass}`}>
                 <div className={`objective-icon-wrapper ${obj.bgColor} ${obj.color}`}>
                   <Icon size={24} />
                 </div>
@@ -196,7 +199,7 @@ const Home = () => {
 
         <div className="stats-grid">
           {STATS.map((stat, index) => (
-            <div key={index} className="stat-card">
+            <div key={index} className={`stat-card ${stat.borderClass}`}>
               <h3 className={`stat-value ${stat.color}`}>{stat.title}</h3>
               <p className="stat-subtitle">{stat.subtitle}</p>
             </div>
@@ -280,11 +283,11 @@ const Home = () => {
         </div>
 
         <div className="venue-cards-grid">
-          <div className="venue-description-card">
+          <div className="venue-description-card border-blue">
             <h3 className="venue-card-title text-blue underline decoration-2 underline-offset-8">SALLE DES SUCRES</h3>
             <p className="venue-card-text">Futur sanctuaire des conférences et de la remise des prix de Mars.A.I. Un espace majestueux alliant patrimoine et technologie.</p>
           </div>
-          <div className="venue-description-card">
+          <div className="venue-description-card border-purple">
             <h3 className="venue-card-title text-purple-500 underline decoration-2 underline-offset-8">SALLE PLAZA</h3>
             <p className="venue-card-text">L'épicentre du festival : accueil, animations, workshops et restauration. Le point de rencontre de tous les participants.</p>
           </div>

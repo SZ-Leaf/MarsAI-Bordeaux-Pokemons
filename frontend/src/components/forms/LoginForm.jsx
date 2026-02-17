@@ -50,22 +50,46 @@ const LoginForm = () => {
    };
 
    return (
-      <form onSubmit={handleSubmit}>
-         <input
-         type="email"
-         name="email"
-         value={formData.email}
-         onChange={handleChange}
-         placeholder={language === 'fr' ? 'Email' : 'Email'}
-         />
-         <input
-         type="password"
-         name="password"
-         value={formData.password}
-         onChange={handleChange}
-         placeholder={language === 'fr' ? 'Mot de passe' : 'Password'}
-         />
-         <button type="submit" disabled={isSubmitting}>{language === 'fr' ? 'Connexion' : 'Login'}</button>
+      <form onSubmit={handleSubmit} className="login-form">
+         <div className="input-group">
+            <label className="input-label" htmlFor="email">
+               {language === 'fr' ? 'Email' : 'Email'}
+            </label>
+            <input
+               id="email"
+               type="email"
+               name="email"
+               className="login-input"
+               value={formData.email}
+               onChange={handleChange}
+               placeholder={language === 'fr' ? 'votre@email.com' : 'your@email.com'}
+               autoComplete="email"
+            />
+         </div>
+         <div className="input-group">
+            <label className="input-label" htmlFor="password">
+               {language === 'fr' ? 'Mot de passe' : 'Password'}
+            </label>
+            <input
+               id="password"
+               type="password"
+               name="password"
+               className="login-input"
+               value={formData.password}
+               onChange={handleChange}
+               placeholder="••••••••"
+               autoComplete="current-password"
+            />
+         </div>
+         <button 
+            type="submit" 
+            className="login-btn"
+            disabled={isSubmitting}
+         >
+            {isSubmitting 
+               ? (language === 'fr' ? 'Connexion en cours...' : 'Logging in...') 
+               : (language === 'fr' ? 'Connexion' : 'Login')}
+         </button>
       </form>
    );
 };

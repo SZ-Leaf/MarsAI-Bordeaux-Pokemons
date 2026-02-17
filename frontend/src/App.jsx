@@ -6,21 +6,26 @@ import Footer from './components/layout/footer/Footer';
 import { Routes, Route, useLocation } from 'react-router';
 
 import Submit from './pages/Submit.jsx';
+import Selector from './components/selector/Selector';
 import Register from './pages/Register';
 import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import NewsletterConfirm from './pages/NewsletterConfirm';
 import NewsletterUnsubscribe from './pages/NewsletterUnsubscribe';
-import AuthGuard from './context/AuthGuard.jsx';
+import AdminGuard from './components/admin/AdminGuard';
 import AdminNewslettersList from './pages/AdminNewslettersList';
 import AdminNewsletterForm from './pages/AdminNewsletterForm';
 import AdminNewsletterView from './pages/AdminNewsletterView';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
+import PlaylistDetail from './components/playlists/PlaylistDetail.jsx';
+import SelectorDashboard from './pages/SelectorDashboard.jsx';
+import Submissions from './pages/Submissions';
+
 function App() {
   const location = useLocation();
   const isSelectorPage = location.pathname === '/selector';
-  const isAdminPage = location.pathname.startsWith('/dashboard');
+  const isAdminPage = location.pathname.startsWith('/admin');
 
   return (
     <LanguageProvider>
@@ -48,10 +53,11 @@ function App() {
             <Route path="/admin/newsletters/:id/edit" element={<AdminNewsletterForm />} />
             <Route path="/admin/newsletters/:id/view" element={<AdminNewsletterView />} />
             <Route path="/dashboard" element={<AuthGuard><Dashboard /></AuthGuard>} />
+            <Route path='/selector/dashboard' element={<SelectorDashboard/>}/>
             <Route path="*" element={<div>404 - Page Not Found</div>} />
           </Routes>
         </div>
-
+        
         {/* Footer caché en mobile sur la page selector, visible desktop. Caché sur l'admin. */}
         {!isAdminPage && (isSelectorPage ? (
           <div className="hidden md:block">

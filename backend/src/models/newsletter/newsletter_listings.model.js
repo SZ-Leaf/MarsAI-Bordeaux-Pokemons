@@ -10,10 +10,10 @@ export const getSubscriberByEmail = async (connection, email) => {
 };
 
 // Inscrit un email (confirmed = 0, en attente de confirmation)
-export const subscribeEmail = async (connection, email, token) => {
+export const subscribeEmail = async (connection, email, token, language = 'fr') => {
    await connection.execute(
-      "INSERT INTO newsletter_listings (email, unsubscribe_token, consent_date) VALUES (?, ?, NOW())",
-      [email, token]
+      "INSERT INTO newsletter_listings (email, language, unsubscribe_token, consent_date) VALUES (?, ?, ?, NOW())",
+      [email, language, token]
    );
 };
 
@@ -27,12 +27,12 @@ export const confirmSubscription = async (connection, email) => {
 };
 
 // Réinscription : réactive un abonné désinscrit (nouveau token, reconfirmation requise)
-export const resubscribeEmail = async (connection, email, newUnsubscribeToken) => {
+export const resubscribeEmail = async (connection, email, newUnsubscribeToken, language = 'fr') => {
    const [result] = await connection.execute(
       `UPDATE newsletter_listings 
-       SET unsubscribed = 0, unsubscribed_at = NULL, unsubscribe_token = ?, confirmed = 0, confirmed_at = NULL, consent_date = NOW() 
+       SET unsubscribed = 0, unsubscribed_at = NULL, unsubscribe_token = ?, language = ?, confirmed = 0, confirmed_at = NULL, consent_date = NOW() 
        WHERE email = ? AND unsubscribed = 1`,
-      [newUnsubscribeToken, email]
+      [newUnsubscribeToken, language, email]
    );
    return result.affectedRows > 0;
 };
@@ -49,7 +49,7 @@ export const unsubscribeEmail = async (connection, token) => {
 // Liste les abonnés actifs (confirmés et non désinscrits)
 export const getActiveSubscribers = async (connection) => {
    const [rows] = await connection.execute(
-      "SELECT email, unsubscribe_token FROM newsletter_listings WHERE confirmed = 1 AND unsubscribed = 0"
+      "SELECT email, unsubscribe_token, language FROM newsletter_listings WHERE confirmed = 1 AND unsubscribed = 0"
    );
    return rows;
 };

@@ -1,10 +1,10 @@
 // ========== CAMPAGNES NEWSLETTER (table newsletter) ==========
 
 // Crée une newsletter (statut draft)
-export const createNewsletter = async (connection, { title, subject, content }) => {
+export const createNewsletter = async (connection, { title, subject, content, subject_en, content_en }) => {
    const [result] = await connection.execute(
-      "INSERT INTO newsletter (title, subject, content, status) VALUES (?, ?, ?, ?)",
-      [title, subject, content, "draft"]
+      "INSERT INTO newsletter (title, subject, content, subject_en, content_en, status) VALUES (?, ?, ?, ?, ?, ?)",
+      [title, subject, content, subject_en ?? null, content_en ?? null, "draft"]
    );
    return result.insertId;
 };
@@ -39,10 +39,10 @@ export const getNewsletterById = async (connection, id) => {
 };
 
 // Met à jour une newsletter
-export const updateNewsletter = async (connection, id, { title, subject, content, status }) => {
+export const updateNewsletter = async (connection, id, { title, subject, content, subject_en, content_en, status }) => {
    const [result] = await connection.execute(
-      "UPDATE newsletter SET title = ?, subject = ?, content = ?, status = ? WHERE id = ?",
-      [title, subject, content, status, id]
+      "UPDATE newsletter SET title = ?, subject = ?, content = ?, subject_en = ?, content_en = ?, status = ? WHERE id = ?",
+      [title, subject, content, subject_en ?? null, content_en ?? null, status, id]
    );
    return result.affectedRows > 0;
 };

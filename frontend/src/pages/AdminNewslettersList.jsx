@@ -118,7 +118,7 @@ export default function AdminNewslettersList() {
             type="button"
             onClick={handleExportCsv}
             disabled={exporting}
-            className="text-color-white px-4 py-2 rounded-md bg-transparent underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-color-white px-4 py-2 rounded-md bg-transparent cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {exporting ? 'Export...' : 'Exporter les abonnés (CSV)'}
           </button>

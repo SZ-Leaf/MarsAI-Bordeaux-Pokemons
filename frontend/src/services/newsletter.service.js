@@ -1,10 +1,14 @@
 import { apiCall } from '../utils/api';
 
 // Inscription à la newsletter (envoie un email de confirmation)
-export const subscribeNewsletter = async (email, consent) => {
+export const subscribeNewsletter = async (email, consent, language = 'fr') => {
   return apiCall('/api/newsletter/subscribe', {
     method: 'POST',
-    body: JSON.stringify({ email: email?.trim(), consent: !!consent }),
+    body: JSON.stringify({
+      email: email?.trim(),
+      consent: !!consent,
+      language: language === 'en' ? 'en' : 'fr',
+    }),
   });
 };
 
@@ -34,17 +38,17 @@ export const getNewsletterById = async (id) => {
   return apiCall(`/api/newsletter/admin/${id}`, { method: 'GET' });
 };
 
-export const createNewsletter = async ({ title, subject, content }) => {
+export const createNewsletter = async ({ title, subject, content, subject_en, content_en }) => {
   return apiCall('/api/newsletter/admin', {
     method: 'POST',
-    body: JSON.stringify({ title, subject, content }),
+    body: JSON.stringify({ title, subject, content, subject_en: subject_en ?? null, content_en: content_en ?? null }),
   });
 };
 
-export const updateNewsletter = async (id, { title, subject, content }) => {
+export const updateNewsletter = async (id, { title, subject, content, subject_en, content_en }) => {
   return apiCall(`/api/newsletter/admin/${id}`, {
     method: 'PATCH',
-    body: JSON.stringify({ title, subject, content }),
+    body: JSON.stringify({ title, subject, content, subject_en: subject_en ?? null, content_en: content_en ?? null }),
   });
 };
 

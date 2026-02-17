@@ -6,7 +6,6 @@ export default function TagSelectCreatable({
   value = [], 
   onChange, 
   onSearchTags,    // Fonction de recherche passée en prop
-  onCreateTag      // Fonction de création passée en prop
 }) {
   const [msg, setMsg] = useState("");
 
@@ -20,32 +19,43 @@ export default function TagSelectCreatable({
     return await onSearchTags(inputValue.trim());
   };
 
-  const handleCreateTag = async (inputValue) => {
+  const handleCreateTag =  (inputValue) => {
     const title = inputValue.trim();
     if (!title) return;
 
     setMsg("");
-    const result = await onCreateTag(title);
+    const temp = { value: null, label: title };
+    // const result = await onCreateTag(title);
 
-    if (!result.success) {
-      setMsg(result.message);
-
-      // Si c'est un doublon, sélectionner le tag existant
-      if (result.duplicate && result.data) {
-        const next = [...value];
-        if (!next.some((v) => v.value === result.data.id)) {
-          next.push({ value: result.data.id, label: result.data.title });
-        }
-        onChange(next);
-      }
-      return;
+    const exists = (value || []).some(
+      v => (v.label || "").toLowerCase() === title.toLowerCase()
+    );
+    if (!exists) {
+      onChange([...(value || []), temp]);
     }
 
-    // Succès - ajouter à la sélection
-    const created = result.data;
-    onChange([...value, { value: created.id, label: created.title }]);
-    setMsg(result.message);
+    setMsg("Tag ajouté (sera créé à la soumission)");
   };
+
+    // if (!result.success) {
+    //   setMsg(result.message);
+
+    //   // Si c'est un doublon, sélectionner le tag existant
+    //   if (result.duplicate && result.data) {
+    //     const next = [...value];
+    //     if (!next.some((v) => v.value === result.data.id)) {
+    //       next.push({ value: result.data.id, label: result.data.title });
+    //     }
+    //     onChange(next);
+    //   }
+    //   return;
+    // }
+
+    // Succès - ajouter à la sélection
+    // const created = result.data;
+    // onChange([...value, { value: created.id, label: created.title }]);
+    // setMsg(result.message);
+  
 
   const customStyles = {
     control: (base, state) => ({

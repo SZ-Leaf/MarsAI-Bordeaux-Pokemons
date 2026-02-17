@@ -8,6 +8,8 @@ import {
   step4Schema,
   formatZodErrors 
 } from '../schemas/submissionSchema.js';
+import { createTag } from "../services/tag.service.js";
+
 
 export const useSubmission = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -219,9 +221,68 @@ export const useSubmission = () => {
           formDataToSend.append('gallery', file);
         });
       }
-      const tagIds = (formData.tags || [])
-        .map(t => Number(t.value))
-        .filter(n => Number.isInteger(n) && n > 0);
+      // const tagIds = (formData.tags || [])
+      //   .map(t => Number(t.value))
+      //   .filter(n => Number.isInteger(n) && n > 0);
+      //ajout de tags au submit
+      const rawTags = formData.tags || [];
+
+      // ids des tags déjà existants (venus de la DB)
+      const existingIds = rawTags
+        .map(tag => Number(tag.value))
+        .filter(id => Number.isInteger(id) && id > 0);
+
+      // clés des tags déjà existants sélectionnés
+      const existingKeys = new Set(
+        rawTags
+          .filter(tag => Number.isInteger(Number(tag.value)) && Number(tag.value) > 0)
+          .map(tag => (tag.label || "").trim().toLowerCase())
+      );
+
+      const seen = new Set();
+      const newTitles = [];
+
+      for (const tag of rawTags) {
+        if (Number.isInteger(Number(tag.value)) && Number(tag.value) > 0) continue;
+
+        const title = (tag.label || "").trim();
+        if (!title) continue;
+
+        const key = title.toLowerCase();
+
+        // déjà présent comme tag existant OU déjà ajouté
+        if (existingKeys.has(key) || seen.has(key)) continue;
+
+        seen.add(key);
+        newTitles.push(title); // garde la casse tapée
+      }
+
+
+      // création des nouveaux tags en DB
+      const createdIds = [];
+
+      for (const title of newTitles) {
+        try {
+          const response = await createTag(title);
+
+          if (response?.data?.id) {
+            createdIds.push(response.data.id);
+          }
+        } catch (error) {
+          // Cas : le tag existe déjà (409)
+          if (error.status === 409 && error.details?.data?.id) {
+            createdIds.push(error.details.data.id);
+          } else {
+            throw error;
+          }
+        }
+      }
+
+      // fusion finale sans doublons
+      const tagIds = Array.from(
+        new Set([...existingIds, ...createdIds])
+      );
+
       
       // Préparer données JSON
       const data = {

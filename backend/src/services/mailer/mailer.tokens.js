@@ -33,7 +33,7 @@ const generateForgotPasswordToken = async (user_id, length = 32) => {
       const expires_at = new Date(Date.now() + 1000 * 60 * 60 * 2); // 2 hours
 
       const [result] = await connection.execute("INSERT INTO reset_password_tokens (user_id, token, expires_at) VALUES (?, ?, ?)", [user_id, token, expires_at]);
-      
+
       await connection.commit();
       return { token };
 
@@ -74,11 +74,11 @@ const generateNewsletterConfirmToken = (email) => {
 const verifyNewsletterConfirmToken = (token) => {
    try {
       const decoded = verifyToken(token);
-      
+
       if (decoded.type !== "newsletter_confirm") {
          throw new Error("Invalid token type");
       }
-      
+
       return decoded.email;
    } catch (error) {
       throw new Error("Token invalide ou expiré");
@@ -97,11 +97,11 @@ const verifyNewsletterUnsubscribeToken = async (token) => {
          "SELECT email FROM newsletter_listings WHERE unsubscribe_token = ?",
          [token]
       );
-      
+
       if (rows.length === 0) {
          throw new Error("Invalid token");
       }
-      
+
       return rows[0].email;
    } catch (error) {
       console.error("Error verifying newsletter unsubscribe token:", error);
@@ -109,14 +109,31 @@ const verifyNewsletterUnsubscribeToken = async (token) => {
    }
 };
 
+const generateReservationConfirmToken = (reservationId, email) => {
+  return signToken({ reservationId, email });
+};
 
-export { 
-   generateInviteToken, 
-   verifyInviteToken, 
-   generateForgotPasswordToken, 
+
+const verifyReservationConfirmToken = (token) => {
+  try {
+     const decoded = verifyToken(token);
+
+     return decoded;
+  } catch (error) {
+     throw new Error("Token invalide ou expiré");
+  }
+};
+
+
+export {
+   generateInviteToken,
+   verifyInviteToken,
+   generateForgotPasswordToken,
    verifyForgotPasswordToken,
    generateNewsletterConfirmToken,
    verifyNewsletterConfirmToken,
    generateNewsletterUnsubscribeToken,
-   verifyNewsletterUnsubscribeToken
+   verifyNewsletterUnsubscribeToken,
+   generateReservationConfirmToken,
+   verifyReservationConfirmToken
 };

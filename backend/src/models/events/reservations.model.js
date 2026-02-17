@@ -1,3 +1,5 @@
+import db from '../../config/db_pool.js';
+
 export const createReservationWithSeatUpdate = async ({ first_name, last_name, email, event_id }) => {
   const connection = await db.pool.getConnection();
 

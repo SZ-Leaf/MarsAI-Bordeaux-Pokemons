@@ -1,5 +1,5 @@
 import './App.css';
-import './theme.css';
+import Home from './pages/Home';
 import TestsGraphique from './pages/TestsGraphique';
 import Header from './components/layout/header/Header';
 import Footer from './components/layout/footer/Footer';
@@ -36,7 +36,8 @@ function App() {
         
         <div className={isSelectorPage || isAdminPage ? '' : 'pt-0 md:pt-24'}>
           <Routes>
-            <Route path="/" element={<TestsGraphique />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/ui-kit" element={<TestsGraphique />} />
             <Route path="/submit" element={<Submit />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />

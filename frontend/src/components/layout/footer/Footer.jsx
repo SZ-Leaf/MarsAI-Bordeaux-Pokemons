@@ -50,8 +50,8 @@ const Footer = () => {
         <div className="footer-grid">
           {/* Section Gauche - Logo & Description */}
           <div className="footer-brand">
-            <div className="navbar-logo">
-              MARS<span>AI</span>
+            <div className='navbar-logo'>
+              MARS<span className="gradient-text">AI</span>
             </div>
             <p className="footer-tagline">
               "La plateforme mondiale dédiée à l'univers Pokémon, ancrée dans la lumière de Bordeaux."

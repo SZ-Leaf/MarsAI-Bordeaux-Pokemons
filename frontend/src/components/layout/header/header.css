@@ -19,8 +19,8 @@
   @apply grid items-center;
   grid-template-columns: 1fr auto 1fr;
   @apply px-10 py-2;
-  @apply bg-white/10 backdrop-blur-xl;
-  @apply border border-white/10 rounded-full;
+  @apply bg-black/30 backdrop-blur-[40px];
+  @apply border border-white/20 rounded-full;
   @apply shadow-2xl;
   width: var(--header-content-width, 100%);
   max-width: var(--header-content-max-width, none);
@@ -41,7 +41,8 @@
     @apply flex justify-around;
     grid-template-columns: none;
     @apply px-4 py-3;
+    @apply bg-black/30 backdrop-blur-[40px];
     @apply rounded-t-3xl rounded-b-none;
-    @apply border-t border-x border-b-0;
+    @apply border-t border-x border-white/20 border-b-0;
   }
 }

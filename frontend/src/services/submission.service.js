@@ -14,15 +14,17 @@ export const getSubmissionById = async (submissionId) => {
   return apiCall(`/api/submissions/${submissionId}`);
 };
 
-// Export par défaut
-export default {
-  submitFilm,
-  getSubmissionById
-};
-
-export const rateSubmissionService = async (submissionId, formData) => {
-  return apiCall(`/api/selector/rate/${submissionId}`, {
-    method: 'POST',
-    body: formData
+export const getSubmissionsService = async ({filters}) => {
+  const params = {
+    limit: filters.limit,
+    offset: filters.offset,
+    sortBy: filters.orderBy
+  };
+  if (filters.status) {
+    params.status = filters.status;
+  }
+  return apiCall('/api/submissions', {
+    method: 'GET',
+    params: params
   });
 };

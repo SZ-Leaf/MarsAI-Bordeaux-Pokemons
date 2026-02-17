@@ -10,7 +10,7 @@
   body {
     background-color: var(--color-bg);
     color: var(--color-white);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Arimo', sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 }

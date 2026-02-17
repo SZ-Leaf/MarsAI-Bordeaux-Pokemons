@@ -6,6 +6,7 @@ import { sendError, sendSuccess } from "../../helpers/response.helper.js";
 import { generateForgotPasswordToken, verifyForgotPasswordToken } from "../../services/mailer/mailer.tokens.js";
 import { registerUserSchema, updateUserSchema, userPasswordSchema } from "../../utils/schemas/user.schemas.js";
 import { checkEmail } from "../../utils/email.validator.js";
+import { log } from "console";
 
 const inviteUserController = async (req, res) => {
    try {
@@ -134,7 +135,8 @@ const registerUserController = async (req, res) => {
 
       // register user
       const result = await registerUser(token, user);
-
+      console.log(result);
+      
       if (!result.success) {
          return sendError(res, 400,
             "Erreur lors de l'inscription",

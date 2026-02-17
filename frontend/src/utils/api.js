@@ -1,10 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-// Exporter API_URL pour qu'il soit réutilisable dans toute l'application
-export { API_URL };
-
 export const apiCall = async (endpoint, options = {}) => {
-  const url = `${API_URL}${endpoint}`;
+  let url = `${API_URL}${endpoint}`;
   
   const defaultOptions = {
     credentials: 'include',
@@ -13,6 +10,20 @@ export const apiCall = async (endpoint, options = {}) => {
       ...options.headers
     }
   };
+
+  if (options.params) {
+    const cleanedParams = Object.fromEntries(
+      Object.entries(options.params).filter(
+        ([_, value]) => value !== null && value !== undefined && value !== ''
+      )
+    );
+
+    const queryString = new URLSearchParams(cleanedParams).toString();
+    if(queryString) {
+      url += `?${queryString}`;
+    }
+    delete options.params; // remove since fetch doesn't accept params in the options object
+  }
   
   // Ne pas ajouter Content-Type si FormData (sera géré automatiquement)
   if (!(options.body instanceof FormData)) {
@@ -47,27 +58,18 @@ export const apiCall = async (endpoint, options = {}) => {
     const data = await response.json();
     
     if (!response.ok) {
-      throw {
-        ...data,
-        status: response.status,
-        message: data.message,
-      }
+      data.httpStatus = response.status;
+      throw data;
     }
     
     return data;
   } catch (error) {
     console.error('Erreur API:', error);
-    // Si c'est déjà une erreur avec des détails, la relancer telle quelle
-    if (error.details || error.status) {
-      throw error;
-    }
-    // Sinon, créer une nouvelle erreur avec le message
     throw error;
   }
 };
 
 // Export par défaut
 export default {
-  API_URL,
   apiCall
 };

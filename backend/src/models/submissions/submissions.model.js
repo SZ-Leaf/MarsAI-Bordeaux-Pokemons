@@ -56,26 +56,34 @@ export const updateFilePaths = async (connection, submissionId, videoUrl, cover,
 //   try {
 //     let query = 'SELECT * FROM submissions';
 //     const params = [];
-//     let conditions = [];
+//     const conditions = [];
 
-//     if (filters.status) {
+//     // status filter
+//     if (filters.status !== undefined && filters.status !== null && filters.status !== '') {
 //       conditions.push('moderation_id IN (SELECT id FROM submission_moderation WHERE status = ?)');
 //       params.push(filters.status);
 //     }
 
-//     conditions.push('ORDER BY created_at DESC');
+//     if (conditions.length) {
+//       query += ' WHERE ' + conditions.join(' AND ');
+//     }
 
-//     if (filters.limit !== undefined) {
-//       conditions.push('LIMIT ?');
-//       params.push(filters.limit);
+//     query += ' ORDER BY created_at DESC';
 
-//       if (filters.offset !== undefined) {
-//         conditions.push('OFFSET ?');
-//         params.push(filters.offset);
+//     // limit/offset
+//     if (typeof filters.limit === 'number' && !Number.isNaN(filters.limit)) {
+//       // Ensure it's a positive integer within reasonable bounds (max 1000)
+//       const limitValue = Math.min(1000, Math.max(1, Math.floor(Math.abs(filters.limit))));
+//       query += ` LIMIT ${limitValue}`;
+
+//       if (typeof filters.offset === 'number' && !Number.isNaN(filters.offset)) {
+//         // Ensure it's a non-negative integer
+//         const offsetValue = Math.max(0, Math.floor(Math.abs(filters.offset)));
+//         query += ` OFFSET ${offsetValue}`;
 //       }
 //     }
 
-//     const [rows] = await connection.execute(`${query} ${conditions.join(' ')}`, params);
+//     const [rows] = await connection.execute(query, params);
 //     return rows;
 //   } catch (error) {
 //     throw error;
@@ -88,44 +96,77 @@ export const getSubmissions = async (filters = {}) => {
   const connection = await db.pool.getConnection();
 
   try {
-    let query = 'SELECT * FROM submissions';
     const params = [];
     const conditions = [];
+    let joinClause = '';
 
-    // status filter
-    if (filters.status !== undefined && filters.status !== null && filters.status !== '') {
-      conditions.push('moderation_id IN (SELECT id FROM submission_moderation WHERE status = ?)');
+    // if filtering by moderation status, add JOIN
+    if (
+      filters.status !== undefined &&
+      filters.status !== null &&
+      filters.status !== ''
+    ) {
+      joinClause = `
+        JOIN submission_moderation sm 
+        ON s.moderation_id = sm.id
+      `;
+
+      conditions.push('sm.status = ?');
       params.push(filters.status);
     }
 
-    if (conditions.length) {
-      query += ' WHERE ' + conditions.join(' AND ');
-    }
+    // WHERE clause (if conditions exists)
+    const whereClause = conditions.length
+      ? `WHERE ${conditions.join(' AND ')}`
+      : '';
 
-    query += ' ORDER BY created_at DESC';
+    // sanitize pagination values
+    const limit =
+      typeof filters.limit === 'number' && !Number.isNaN(filters.limit)
+        ? Math.min(1000, Math.max(1, Math.floor(filters.limit)))
+        : 15;
 
-    // limit/offset
-    if (typeof filters.limit === 'number' && !Number.isNaN(filters.limit)) {
-      // Ensure it's a positive integer within reasonable bounds (max 1000)
-      const limitValue = Math.min(1000, Math.max(1, Math.floor(Math.abs(filters.limit))));
-      query += ` LIMIT ${limitValue}`;
+    const offset =
+      typeof filters.offset === 'number' && !Number.isNaN(filters.offset)
+        ? Math.max(0, Math.floor(filters.offset))
+        : 0;
 
-      if (typeof filters.offset === 'number' && !Number.isNaN(filters.offset)) {
-        // Ensure it's a non-negative integer
-        const offsetValue = Math.max(0, Math.floor(Math.abs(filters.offset)));
-        query += ` OFFSET ${offsetValue}`;
-      }
-    }
+    // count query
+    const countQuery = `
+      SELECT COUNT(*) as total
+      FROM submissions s
+      ${joinClause}
+      ${whereClause}
+    `;
 
-    const [rows] = await connection.execute(query, params);
-    return rows;
-  } catch (error) {
-    throw error;
+    const [countResult] = await connection.execute(countQuery, params);
+    const total = countResult[0].total;
+
+    const allowedOrders = ['ASC', 'DESC'];
+
+    const orderBy = allowedOrders.includes(filters.orderBy?.toUpperCase()) ? filters.orderBy.toUpperCase() : 'DESC';
+
+    // data query (paginated)
+    const dataQuery = `
+      SELECT s.*
+      FROM submissions s
+      ${joinClause}
+      ${whereClause}
+      ORDER BY s.created_at ${orderBy}
+      LIMIT ${limit}
+      OFFSET ${offset}`;
+
+    const [rows] = await connection.execute(
+      dataQuery,
+      params
+    );
+
+    return { submissions: rows, total };
+
   } finally {
     connection.release();
   }
 };
-
 
 export const getSubmissionById = async (submissionId) => {
   const connection = await db.pool.getConnection();

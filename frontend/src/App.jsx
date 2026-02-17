@@ -5,19 +5,23 @@ import Header from './components/layout/header/Header';
 import Footer from './components/layout/footer/Footer';
 import { Routes, Route, useLocation } from 'react-router';
 import Submit from './pages/Submit.jsx';
-import Selector from './components/selector/Selector';
 import Register from './pages/Register';
 import Login from './pages/Login';
-import AdminDashboard from './pages/AdminDashboard';
+import Dashboard from './pages/Dashboard';
 import NewsletterConfirm from './pages/NewsletterConfirm';
 import NewsletterUnsubscribe from './pages/NewsletterUnsubscribe';
+import AuthGuard from './context/AuthGuard.jsx';
+import AdminNewslettersList from './pages/AdminNewslettersList';
+import AdminNewsletterForm from './pages/AdminNewsletterForm';
+import AdminNewsletterView from './pages/AdminNewsletterView';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
+import Submissions from './pages/Submissions';
 
 function App() {
   const location = useLocation();
   const isSelectorPage = location.pathname === '/selector';
-  const isAdminPage = location.pathname.startsWith('/admin');
+  const isAdminPage = location.pathname.startsWith('/dashboard');
 
   return (
     <LanguageProvider>
@@ -36,12 +40,17 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/ui-kit" element={<TestsGraphique />} />
             <Route path="/submit" element={<Submit />} />
-            <Route path="/selector" element={<Selector />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
             <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
-            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/newsletters" element={<AdminNewslettersList />} />
+            <Route path="/admin/newsletters/new" element={<AdminNewsletterForm />} />
+            <Route path="/admin/newsletters/:id/edit" element={<AdminNewsletterForm />} />
+            <Route path="/admin/newsletters/:id/view" element={<AdminNewsletterView />} />
+            <Route path="/submissions" element={<Submissions />} />
+            <Route path="*" element={<div>404 - Page Not Found</div>} />
+            <Route path="/dashboard" element={<AuthGuard><Dashboard /></AuthGuard>} />
           </Routes>
         </div>
         

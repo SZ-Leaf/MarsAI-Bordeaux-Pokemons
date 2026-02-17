@@ -49,8 +49,8 @@ function App() {
             <Route path="/admin/newsletters/:id/edit" element={<AdminNewsletterForm />} />
             <Route path="/admin/newsletters/:id/view" element={<AdminNewsletterView />} />
             <Route path="/submissions" element={<Submissions />} />
-            <Route path="*" element={<div>404 - Page Not Found</div>} />
             <Route path="/dashboard" element={<AuthGuard><Dashboard /></AuthGuard>} />
+            <Route path="*" element={<div>404 - Page Not Found</div>} />
           </Routes>
         </div>
         

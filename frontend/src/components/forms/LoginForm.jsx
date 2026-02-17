@@ -22,8 +22,7 @@ const LoginForm = () => {
 
    const [formData, setFormData] = useState({
       email: "",
-      password: "",
-      confirmPassword: "",
+      password: ""
    });
 
    const handleChange = (e) => {
@@ -35,13 +34,9 @@ const LoginForm = () => {
       setIsSubmitting(true);
 
       try {
-         const { email, password, confirmPassword } = formData;
-         if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
+         const { email, password } = formData;
+         if (!email.trim() || !password.trim()) {
             alertHelper.requiredFields();
-            return;
-         }
-         if (password !== confirmPassword) {
-            alertHelper.passwordsMismatch();
             return;
          }
          const response = await loginService(email, password);
@@ -69,13 +64,6 @@ const LoginForm = () => {
          value={formData.password}
          onChange={handleChange}
          placeholder={language === 'fr' ? 'Mot de passe' : 'Password'}
-         />
-         <input
-         type="password"
-         name="confirmPassword"
-         value={formData.confirmPassword}
-         onChange={handleChange}
-         placeholder={language === 'fr' ? 'Confirmer le mot de passe' : 'Confirm Password'}
          />
          <button type="submit" disabled={isSubmitting}>{language === 'fr' ? 'Connexion' : 'Login'}</button>
       </form>

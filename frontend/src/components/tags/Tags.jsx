@@ -46,7 +46,11 @@ export default function Tag({
 
         {/* Affichage des tags récupérés depuis l'API */}
         {allTags.length > 0 && (
+
           <div className="tags-section">
+            <div>
+              <h2 className='my-2'>Tags les plus populaires</h2>
+            </div>
             <div className="tags-list">
               {allTags.map((tag) => (
                 <div key={tag.id} className={`tag tag-${variant}`}>

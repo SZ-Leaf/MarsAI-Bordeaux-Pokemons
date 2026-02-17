@@ -10,7 +10,6 @@ const Navbar = () => {
     { id: 'home', icon: Home, path: '/', label: 'Accueil' },
     { id: 'trophy', icon: Trophy, path: '/selector', label: 'Sélection' },
     { id: 'calendar', icon: Calendar, path: '/events', label: 'Calendrier' },
-    { id: 'user', icon: User, path: '/login', label: 'Profil' },
     { id: 'dashboard', icon: LayoutDashboard, path: '/dashboard', label: 'Admin' },
   ];
 

@@ -8,7 +8,7 @@ import { useAuth } from "../../hooks/useAuth";
 
 const LoginForm = () => {
    const alertHelper = useAlertHelper();
-   const { user } = useAuth();
+   const { user, login } = useAuth();
    const { language } = useLanguage();
    const navigate = useNavigate();
    const { getMessageFromResponse } = responseHelper();
@@ -39,7 +39,7 @@ const LoginForm = () => {
             alertHelper.requiredFields();
             return;
          }
-         const response = await loginService(email, password);
+         const response = await login(formData);
          alertHelper.showMessage(getMessageFromResponse(response));
          navigate("/");
       } catch (error) {

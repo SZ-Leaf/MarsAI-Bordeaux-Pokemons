@@ -41,6 +41,10 @@
   @apply md:text-[140px];
 }
 
+.section-title-medium {
+  @apply text-3xl md:text-[70px] font-black leading-[0.95] text-white uppercase mb-12 tracking-tighter;
+}
+
 /* Premium Dark Cards (Base) */
 .card-dark-premium {
   @apply bg-[#0c0c0c] border border-white/5 rounded-[40px];

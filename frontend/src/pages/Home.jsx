@@ -116,8 +116,8 @@ const Home = () => {
 
       {/* 2. FEATURES SECTION */}
       <Section className="py-20">
-        <h2 className="section-title-xl text-center mb-16">
-          L'AI SOUS <span className="stats-accent">TOUS SES ANGLES</span>
+        <h2 className="section-title-medium text-center mb-16">
+          UN FESTIVAL <span className="stats-accent">NOUVELLE GÉNÉRATION</span>
         </h2>
         
         <div className="features-grid">
@@ -170,7 +170,7 @@ const Home = () => {
 
       {/* 3.5 OBJECTIVES SECTION */}
       <Section id="objectives" className="flex flex-col items-center">
-        <h2 className="section-title-xl text-center mb-24">
+        <h2 className="section-title-medium text-center mb-24">
           OBJECTIFS DU <span className="stats-accent">FESTIVAL</span>
         </h2>
 

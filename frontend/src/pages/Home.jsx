@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Plus, Calendar, Play, Users, Award, Clock, MapPin } from 'lucide-react';
+import { ArrowRight, Plus, Calendar, Play, Users, Award, Clock, MapPin, Target, Zap, Rocket } from 'lucide-react';
 import Card from '../components/cards/Card';
 import '../App.css';
 import './home.css';
@@ -50,6 +50,30 @@ const CONFERENCES = [
   { title: "PROJECTIONS", description: "Diffusion sur écran géant en présence des réalisateurs.", icon: Play },
   { title: "WORKSHOPS", description: "Sessions pratiques pour maîtriser les outils IA.", icon: Users },
   { title: "AWARDS", description: "Cérémonie de clôture récompensant l'audace.", icon: Award }
+];
+
+const OBJECTIVES = [
+  {
+    title: "L'HUMAIN AU CENTRE",
+    description: "METTRE L'HUMAIN AU CŒUR DE LA CRÉATION POUR NE PAS PERDRE L'ÉMOTION.",
+    icon: Target,
+    color: "text-emerald-400",
+    bgColor: "bg-emerald-400/10"
+  },
+  {
+    title: "CHALLENGE CRÉATIF",
+    description: "CHALLENGER LA CRÉATIVITÉ GRÂCE À UN FORMAT ULTRA-COURT DE 60S.",
+    icon: Zap,
+    color: "text-blue-400",
+    bgColor: "bg-blue-400/10"
+  },
+  {
+    title: "FUTURS SOUHAITABLES",
+    description: "EXPLORER LES FUTURS DÉSIRABLES VIA LES TECHNOLOGIES ÉMERGENTES.",
+    icon: Rocket,
+    color: "text-purple-400",
+    bgColor: "bg-purple-400/10"
+  }
 ];
 
 // --- Main Component ---
@@ -134,6 +158,28 @@ const Home = () => {
               className="film-card"
             />
           ))}
+        </div>
+      </Section>
+
+      {/* 3.5 OBJECTIVES SECTION */}
+      <Section id="objectives" className="flex flex-col items-center">
+        <h2 className="section-title-xl text-center mb-24">
+          OBJECTIFS DU <span className="stats-accent">FESTIVAL</span>
+        </h2>
+
+        <div className="objectives-grid">
+          {OBJECTIVES.map((obj, index) => {
+            const Icon = obj.icon;
+            return (
+              <div key={index} className="objective-card">
+                <div className={`objective-icon-wrapper ${obj.bgColor} ${obj.color}`}>
+                  <Icon size={24} />
+                </div>
+                <h3 className="objective-title">{obj.title}</h3>
+                <p className="objective-description">{obj.description}</p>
+              </div>
+            );
+          })}
         </div>
       </Section>
 

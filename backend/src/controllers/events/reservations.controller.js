@@ -1,4 +1,4 @@
-import { createReservation } from "../../models/events/reservations.model.js"
+import { createReservationWithSeatUpdate } from "../../models/events/reservations.model.js"
 import { getEventById } from "../../models/events/events.model.js"
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
 
@@ -17,7 +17,7 @@ export const createReservationController = async (req, res) => {
       return sendError(res, 404, 'Événement introuvable', 'Event not found', null);
     }
 
-    const reservation = await createReservation({first_name, last_name, email, event_id: eventId});
+    const reservation = await createReservationWithSeatUpdate({first_name, last_name, email, event_id: eventId});
 
 
     return sendSuccess(res, 201, 'Réservation créée', 'Reservation created', reservation );

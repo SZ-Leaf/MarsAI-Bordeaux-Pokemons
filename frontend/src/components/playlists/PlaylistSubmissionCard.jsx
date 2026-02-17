@@ -44,7 +44,8 @@ export default function PlaylistSubmissionCard({
       >
         {s.cover ? (
           <img
-            src={s.cover}
+            src={`http://localhost:3000${s.cover}`}
+            // src={s.cover}
             alt={title}
             className="w-full h-full object-cover"
             loading="lazy"

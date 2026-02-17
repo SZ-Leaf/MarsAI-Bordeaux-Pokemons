@@ -23,7 +23,7 @@
 
 .navbar-item {
   @apply relative flex items-center justify-center;
-  @apply text-white/50 cursor-pointer;
+  @apply text-white/70 cursor-pointer;
   @apply h-10 w-10;
   @apply transition-all duration-300 ease-out;
 }

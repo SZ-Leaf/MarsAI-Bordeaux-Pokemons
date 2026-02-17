@@ -5,6 +5,8 @@ import {
   getPlaylistStatus,
   setPlaylistStatus,
   clearPlaylistStatus,
+  getAllPlaylistsCount,
+  getPendingSubmissions
 } from "../../controllers/selector/selector_memo.controller.js";
 import { authenticate } from "../../middlewares/auth.middleware.js";
 import { validate } from "../../middlewares/validation.js";
@@ -18,7 +20,9 @@ const router = Router();
 router.get("/playlist/status/:submissionId", authenticate, getPlaylistStatus);
 router.put("/playlist/status/:submissionId", authenticate, setPlaylistStatus);
 router.delete("/playlist/status/:submissionId", authenticate, clearPlaylistStatus);
+router.get("/playlists", authenticate, getAllPlaylistsCount);
 router.get("/playlist/:list", authenticate, getPlaylist);
+router.get("/submissions/pending", authenticate, getPendingSubmissions);
 
 // Rating operations - separate from playlists
 router.post("/rate/:id", authenticate, validate(rateSubmissionSchema), createSelectorMemo);

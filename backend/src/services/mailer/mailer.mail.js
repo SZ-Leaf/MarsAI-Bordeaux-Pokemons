@@ -131,6 +131,7 @@ const sendNewsletterBulk = async (newsletter, subscribers) => {
 
 const sendReservationConfirmation = async (email, token) => {
    const confirmationLink = `http://localhost:3000/api/events/:id/reservation/confirm?token=${token}&email=${email}`;
+};
 
 // Email de confirmation de soumission de film (envoyé au créateur)
 const sendSubmissionConfirmation = async (creatorEmail, creatorFirstname, submissionTitle = '') => {
@@ -157,4 +158,11 @@ const sendSubmissionConfirmation = async (creatorEmail, creatorFirstname, submis
    return true;
 };
 
-export { sendInviteMail, sendForgotPasswordMail, sendNewsletterConfirmation, sendNewsletterBulk, sendSubmissionConfirmation, sendReservationConfirmation };
+export {
+   sendSubmissionConfirmation,
+   sendInviteMail,
+   sendForgotPasswordMail,
+   sendNewsletterConfirmation,
+   sendNewsletterBulk,
+   sendReservationConfirmation
+};

@@ -46,10 +46,10 @@ function App() {
             <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
             <Route path='/selector/dashboard' element={<SelectorDashboard/>}/>
             {/* <Route path='/selector/pending' element={<}/> */}
-            <Route path="/admin/newsletters" element={<AdminGuard><AdminNewslettersList /></AdminGuard>} />
-            <Route path="/admin/newsletters/new" element={<AdminGuard><AdminNewsletterForm /></AdminGuard>} />
-            <Route path="/admin/newsletters/:id/edit" element={<AdminGuard><AdminNewsletterForm /></AdminGuard>} />
-            <Route path="/admin/newsletters/:id/view" element={<AdminGuard><AdminNewsletterView /></AdminGuard>} />
+            <Route path="/admin/newsletters" element={<AuthGuard><AdminNewslettersList /></AuthGuard>} />
+            <Route path="/admin/newsletters/new" element={<AuthGuard><AdminNewsletterForm /></AuthGuard>} />
+            <Route path="/admin/newsletters/:id/edit" element={<AuthGuard><AdminNewsletterForm /></AuthGuard>} />
+            <Route path="/admin/newsletters/:id/view" element={<AuthGuard><AdminNewsletterView /></AuthGuard>} />
             <Route path="/dashboard" element={<AuthGuard><Dashboard /></AuthGuard>} />
             <Route path="*" element={<div>404 - Page Not Found</div>} />
           </Routes>

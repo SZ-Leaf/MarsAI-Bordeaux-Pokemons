@@ -130,4 +130,29 @@ const sendNewsletterBulk = async (newsletter, subscribers) => {
 };
 
 
-export { sendInviteMail, sendForgotPasswordMail, sendNewsletterConfirmation, sendNewsletterBulk };
+// Email de confirmation de soumission de film (envoyé au créateur)
+const sendSubmissionConfirmation = async (creatorEmail, creatorFirstname, submissionTitle = '') => {
+   const titleText = submissionTitle ? ` pour « ${submissionTitle} »` : '';
+
+   await transporter.sendMail({
+      from: '"Mars AI" <no-reply@marsai.com>',
+      to: creatorEmail,
+      subject: "Votre soumission a bien été reçue — Mars AI",
+      html: `
+         <h1>Confirmation de soumission</h1>
+         <p>Bonjour ${creatorFirstname || 'Créateur'},</p>
+         <p>Nous vous confirmons la bonne réception de votre soumission${titleText}.</p>
+         <p>Votre film sera examiné par le jury du festival. Vous serez informé des suites données à votre candidature.</p>
+         <p style="color:#666;font-size:12px;margin-top:24px;">
+            Ceci est un message automatique, merci de ne pas y répondre.
+         </p>
+         <p style="color:#666;font-size:12px;">
+            — L'équipe Mars AI
+         </p>
+      `
+   });
+
+   return true;
+};
+
+export { sendInviteMail, sendForgotPasswordMail, sendNewsletterConfirmation, sendNewsletterBulk, sendSubmissionConfirmation };

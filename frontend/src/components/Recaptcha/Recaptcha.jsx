@@ -1,22 +1,20 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 
 const RECAPTCHA_SCRIPT_URL = 'https://www.google.com/recaptcha/api.js?render=explicit';
 
 /**
  * reCAPTCHA v2 (checkbox "Je ne suis pas un robot").
  * Nécessite VITE_RECAPTCHA_SITE_KEY dans .env.
- * En dev sans clé, le parent peut mettre recaptchaToken à 'dev-bypass'.
+ * Les callbacks sont lus via des refs pour éviter de recharger le widget à chaque re-render du parent (ex. cocher CGU/majeur).
  */
 export default function Recaptcha({ siteKey, onChange, onExpire, error }) {
   const containerRef = useRef(null);
   const widgetIdRef = useRef(null);
+  const onChangeRef = useRef(onChange);
+  const onExpireRef = useRef(onExpire);
 
-  const handleCallback = useCallback(
-    (token) => {
-      onChange?.(token);
-    },
-    [onChange]
-  );
+  onChangeRef.current = onChange;
+  onExpireRef.current = onExpire;
 
   useEffect(() => {
     if (!siteKey) return;
@@ -26,10 +24,10 @@ export default function Recaptcha({ siteKey, onChange, onExpire, error }) {
       try {
         widgetIdRef.current = window.grecaptcha.render(containerRef.current, {
           sitekey: siteKey,
-          callback: handleCallback,
+          callback: (token) => onChangeRef.current?.(token),
           'expired-callback': () => {
-            onChange?.('');
-            onExpire?.();
+            onChangeRef.current?.('');
+            onExpireRef.current?.();
           },
         });
       } catch (e) {
@@ -38,7 +36,6 @@ export default function Recaptcha({ siteKey, onChange, onExpire, error }) {
     };
 
     if (window.grecaptcha?.render) {
-      // Script déjà chargé : attendre que le DOM soit prêt (ref attaché)
       const t = setTimeout(renderWidget, 100);
       return () => clearTimeout(t);
     }
@@ -48,7 +45,6 @@ export default function Recaptcha({ siteKey, onChange, onExpire, error }) {
     script.async = true;
     script.defer = true;
     script.onload = () => {
-      // Laisser le temps au ref d'être attaché
       setTimeout(renderWidget, 100);
     };
     document.head.appendChild(script);
@@ -60,7 +56,7 @@ export default function Recaptcha({ siteKey, onChange, onExpire, error }) {
         } catch (_) {}
       }
     };
-  }, [siteKey, handleCallback, onChange, onExpire]);
+  }, [siteKey]);
 
   if (!siteKey) {
     return (

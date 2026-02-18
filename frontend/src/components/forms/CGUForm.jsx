@@ -1,9 +1,20 @@
+import { useEffect } from 'react';
 import Checkbox from '../shared/Checkbox';
+import Recaptcha from '../Recaptcha/Recaptcha';
+
+const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '';
 
 /**
- * Formulaire CGU - VERSION REFACTORISÉE
+ * Formulaire CGU - VERSION REFACTORISÉE (avec reCAPTCHA Google)
  */
 const CGUForm = ({ formData, errors, updateField }) => {
+  // En dev sans clé reCAPTCHA, on met un token factice pour que la validation passe
+  useEffect(() => {
+    if (!siteKey && !formData.recaptchaToken) {
+      updateField('recaptchaToken', 'dev-bypass');
+    }
+  }, [siteKey, formData.recaptchaToken, updateField]);
+
   return (
     <div className="space-y-6 pl-4">
       <h2 className="text-2xl font-bold mb-4">Conditions d'utilisation</h2>
@@ -23,6 +34,16 @@ const CGUForm = ({ formData, errors, updateField }) => {
           onChange={(e) => updateField('ageConfirmed', e.target.checked)}
           label="Je confirme avoir 18 ans ou plus"
           error={errors.ageConfirmed}
+        />
+      </div>
+
+      <div>
+        <p className="text-sm text-gray-300 mb-2">Vérification anti-robot</p>
+        <Recaptcha
+          siteKey={siteKey}
+          onChange={(token) => updateField('recaptchaToken', token || '')}
+          onExpire={() => updateField('recaptchaToken', '')}
+          error={errors.recaptchaToken}
         />
       </div>
       

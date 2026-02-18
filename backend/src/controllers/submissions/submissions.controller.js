@@ -9,6 +9,7 @@ import socialModel from '../../models/socials/socials.model.js';
 import submissions_tagsModel from '../../models/tags/submissions_tags.model.js';
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
 import { submissionSchema } from '../../utils/schemas/submission.schemas.js';
+import { verifyRecaptcha } from '../../utils/recaptcha.js';
 import db from '../../config/db_pool.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -20,6 +21,20 @@ const getUploadsBasePath = () => {
 };
 
 export const submitController = async (req, res) => {
+  //
+  // reCAPTCHA (anti-robot)
+  //
+  const recaptchaToken = req.body?.recaptchaToken;
+  const recaptchaOk = await verifyRecaptcha(recaptchaToken, req.ip);
+  if (!recaptchaOk) {
+    return sendError(
+      res,
+      400,
+      'Vérification anti-robot invalide ou expirée. Réessayez.',
+      'Invalid or expired captcha. Please try again.',
+      null
+    );
+  }
 
   //
   // Validate before database connection

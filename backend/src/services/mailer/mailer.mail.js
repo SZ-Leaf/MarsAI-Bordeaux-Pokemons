@@ -129,5 +129,21 @@ const sendNewsletterBulk = async (newsletter, subscribers) => {
    return results;
 };
 
+const sendReservationConfirmation = async (email, token) => {
+   const confirmationLink = `http://localhost:3000/api/events/:id/reservation/confirm?token=${token}&email=${email}`;
 
-export { sendInviteMail, sendForgotPasswordMail, sendNewsletterConfirmation, sendNewsletterBulk };
+   await transporter.sendMail({
+      from: '"Mars AI" <no-reply@marsai.com>',
+      to: email,
+      subject: "Confirmation invitation",
+      html: `
+         <p>Confirm:</p>
+         <a href="${confirmationLink}">${confirmationLink}</a>
+      `
+   });
+
+   return true;
+};
+
+
+export { sendInviteMail, sendForgotPasswordMail, sendNewsletterConfirmation, sendNewsletterBulk, sendReservationConfirmation};

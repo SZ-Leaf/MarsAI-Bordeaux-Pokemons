@@ -17,12 +17,14 @@ const MAX_SIZES = {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    let folder;
+    let folder = 'submissions/tmp';
 
-    if (file.fieldname === 'cover' && req.originalUrl.includes('/sponsors')) {
-      folder = 'sponsors/tmp';
-    } else {
-      folder = 'submissions/tmp';
+    if (file.fieldname === 'cover') {
+      if (req.originalUrl.includes('/sponsors')) {
+        folder = 'sponsors/tmp';
+      } else if (req.originalUrl.includes('/events')) {
+        folder = 'events/tmp';
+      }
     }
 
     const dir = path.join(getUploadsBasePath(), folder);
@@ -33,7 +35,7 @@ const storage = multer.diskStorage({
 
   filename: (req, file, cb) => {
     const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
+    const ext = path.extname(file.originalname).toLowerCase();
     cb(null, `${file.fieldname}-${unique}${ext}`);
   }
 });
@@ -46,11 +48,6 @@ const fileFilter = (req, file, cb) => {
     'application/x-subrip',
     'application/octet-stream'
   ];
-
-  const maxSize = MAX_SIZES[file.fieldname];
-  if (maxSize && file.size > maxSize) {
-    return cb(new Error(`Fichier trop volumineux (${file.fieldname})`));
-  }
 
   if (file.fieldname === 'video') {
     const ext = path.extname(file.originalname).toLowerCase();
@@ -78,7 +75,13 @@ const fileFilter = (req, file, cb) => {
   return cb(new Error('Type de fichier non autorisé'));
 };
 
-const upload = multer({ storage, fileFilter });
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: 300 * 1024 * 1024
+  }
+});
 
 export const uploadSubmissionFiles = upload.fields([
   { name: 'video', maxCount: 1 },
@@ -87,6 +90,9 @@ export const uploadSubmissionFiles = upload.fields([
   { name: 'subtitles', maxCount: 1 }
 ]);
 
+export const uploadEventCover = upload.single('cover');
+export const uploadSponsorCover = upload.single('cover');
+
 export const handleUploadError = (err, req, res, next) => {
   if (err) {
     return res.status(400).json({ error: err.message });
@@ -94,4 +100,4 @@ export const handleUploadError = (err, req, res, next) => {
   next();
 };
 
-export default uploadSubmissionFiles;
+export default upload;

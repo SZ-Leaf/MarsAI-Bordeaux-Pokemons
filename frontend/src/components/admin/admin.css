@@ -1,8 +1,7 @@
-@import "tailwindcss" reference;
+/* @import "tailwindcss" reference; */
 
 @reference "../../App.css";
 
-@layer components {
 .admin-dashboard-container {
     @apply min-h-screen bg-[#0a0a0a] text-white flex;
     
@@ -126,7 +125,7 @@
 }
 
 .modal-image-upload-container {
-    @apply relative group;
+    @apply relative;
 }
 
 .modal-image-upload-area {
@@ -213,4 +212,4 @@
 .modal-btn-submit {
     @apply flex-2 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-orange-600/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center;
 }
-}
+

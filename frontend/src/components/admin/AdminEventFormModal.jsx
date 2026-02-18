@@ -59,7 +59,7 @@ const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
 
             <form onSubmit={onSubmit} className="modal-form">
               {/* Image de couverture */}
-              <div className="modal-image-upload-container">
+              <div className="modal-image-upload-container group">
                 <div 
                   onClick={() => fileInputRef.current?.click()}
                   className={`modal-image-upload-area ${previewUrl ? 'modal-image-upload-area-filled' : 'modal-image-upload-area-empty'}`}

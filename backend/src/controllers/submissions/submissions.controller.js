@@ -385,8 +385,8 @@ export const submitController = async (req, res) => {
 
 export const getSubmissionsController = async (req, res) => {
   try {
-    const { type, limit = 15, offset = 0, sortBy, rated } = req.query;
-
+    const { type, limit = 15, offset = 0, sortBy, rated, playlist } = req.query;
+    const userId = req.user.id;
     const parsedLimit = parseInt(limit);
     const parsedOffset = parseInt(offset);
 
@@ -394,13 +394,18 @@ export const getSubmissionsController = async (req, res) => {
     const safeRated = rated 
       ? (rated.toLowerCase() === 'rated' ? 'rated' : 'unrated') 
       : null;
+
+    const allowedPlaylists = ['all', 'favorites', 'watch_later', 'report'];
+    const safePlaylist = playlist && allowedPlaylists.includes(playlist) ? playlist : null;
     
     const filters = {
       type: type || null,
       limit: Number.isNaN(parsedLimit) ? 15 : parsedLimit,
       offset: Number.isNaN(parsedOffset) ? 0 : parsedOffset,
       orderBy: safeSort,
-      rated: safeRated
+      rated: safeRated,
+      playlist: safePlaylist,
+      userId: userId
     };
 
     const {submissions, total} = await getSubmissions(filters);

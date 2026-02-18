@@ -17,6 +17,10 @@
    @apply absolute bg-[rgb(var(--color-green)/0.5)] text-xs px-1 bottom-2 right-2 rounded-lg border-2 border-[rgb(var(--color-green))];
 }
 
+.submission-rating {
+   @apply absolute top-2 left-2 flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-lg bg-yellow-500/80 text-black;
+}
+
 .submission-content {
    @apply px-1;
 }

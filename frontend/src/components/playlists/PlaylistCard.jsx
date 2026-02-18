@@ -1,4 +1,5 @@
 import React from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function PlaylistCard({
   playlist,
@@ -7,6 +8,7 @@ export default function PlaylistCard({
   onClick,
   isActive = false
 }) {
+  const { language } = useLanguage();
   return (
     <button
       type="button"
@@ -47,7 +49,7 @@ export default function PlaylistCard({
           {loading ? "…" : count}
         </div>
 
-        <div className="text-sm text-gray-400 pb-1">vidéo(s)</div>
+        <div className="text-sm text-gray-400 pb-1">{language === "fr" ? "vidéo(s)" : "video(s)"}</div>
       </div>
 
       {/* Description */}

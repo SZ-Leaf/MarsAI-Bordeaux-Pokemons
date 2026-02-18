@@ -1,16 +1,17 @@
 import React, { useMemo } from "react";
 import { useParams } from "react-router";
-import { PLAYLISTS } from "../../helpers/playlistHelper.js";
+import { usePlaylists } from "../../helpers/playlistHelper.js";
 import { usePlaylist } from "../../hooks/usePlaylist.js";
 import PlaylistSubmissionCard from "./PlaylistSubmissionCard.jsx";
 
 export default function PlaylistDetail({ listKey }) {
   const params = useParams();
   const list = listKey ?? params.list;
+  const playlists = usePlaylists();
 
   const meta = useMemo(
-    () => (list ? PLAYLISTS.find((p) => p.key === list) : null),
-    [list]
+    () => (list ? playlists.find((p) => p.key === list) : null),
+    [list, playlists]
   );
   const { submissions, loading, error } = usePlaylist(list || "");
 

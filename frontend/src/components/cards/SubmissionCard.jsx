@@ -1,4 +1,5 @@
 import React from 'react';
+import { Star } from 'lucide-react';
 import './submissionCard.css';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -6,17 +7,24 @@ const SubmissionCard = ({submission, onVideoClick}) => {
    const {language} = useLanguage();
 
    function formatDuration(seconds) {
-      const mins = Math.floor(seconds / 60);           // get whole minutes
-      const secs = seconds % 60;                       // get remaining seconds
-      return `${mins}:${secs.toString().padStart(2, '0')}`; // pad seconds to 2 digits
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
    }
-    
+
+   const rating = submission.memo_rating;
 
    return (
       <article className="submission-container-card" key={submission.id}>
          <div className="submission-image-container" onClick={onVideoClick}>
             <img className="submission-image" src={`${import.meta.env.VITE_API_URL}${submission.cover}`} alt={submission.english_title} />
             <p className="submission-duration">{formatDuration(submission.duration_seconds)}</p>
+            {rating != null && (
+               <div className="submission-rating">
+                  <Star size={12} fill="currentColor" />
+                  <span>{rating}</span>
+               </div>
+            )}
          </div>
          <div className="submission-content">
             <div className="submission-title mt-2">

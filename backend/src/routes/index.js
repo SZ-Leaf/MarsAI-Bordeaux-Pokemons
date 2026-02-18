@@ -9,11 +9,12 @@ import newsletterRoutes from './newsletter/newsletter.routes.js';
 import selectorRoutes from './selector/selector.routes.js'
 import eventRoutes from './events/event.routes.js';
 import reservationRoutes from './events/reservations.routes.js';
+import { authenticate } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
 // Routes de soumission
-router.use('/submissions', submissionRoutes);
+router.use('/submissions', authenticate, submissionRoutes);
 router.use('/youtube', youtubeRoutes);
 router.use('/oauth', oauthRoutes);
 router.use('/auth', authRoutes);

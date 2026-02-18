@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useRef, useEffect } from "react";
-import { PLAYLISTS } from "../helpers/playlistHelper.js";
+import { usePlaylists } from "../helpers/playlistHelper.js";
 import { usePlaylistCounts } from "../hooks/usePlaylistCounts";
 import { usePendingSubmissions } from "../hooks/usePendingSubmissions";
 import PlaylistCard from "../components/playlists/PlaylistCard.jsx";
@@ -8,6 +8,7 @@ import PendingCard from "../components/playlists/PendingCard.jsx";
 import PendingDetail from "../components/playlists/PendingDetail.jsx";
 
 export default function SelectorDashboard() {
+  const playlists = usePlaylists();
   const { counts, loading, error } = usePlaylistCounts();
   //  un seul état pour ce qui est ouvert en bas (playlists et pending)
   const [openPanel, setOpenPanel] = useState(null);
@@ -33,8 +34,8 @@ export default function SelectorDashboard() {
 
   const selectedPlaylist = useMemo(() => {
     if (!openPanel || openPanel.type !== "playlist") return null;
-    return PLAYLISTS.find((p) => p.key === openPanel.key) || null;
-  }, [openPanel]);
+    return playlists.find((p) => p.key === openPanel.key) || null;
+  }, [openPanel, playlists]);
 
   return (
     <section className="px-4 sm:px-6 lg:px-8 py-8">
@@ -61,7 +62,7 @@ export default function SelectorDashboard() {
           </div>
 
           <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
-            {PLAYLISTS.map((p) => {
+            {playlists.map((p) => {
               const isActive = openPanel?.type === "playlist" && openPanel.key === p.key;
 
               return (

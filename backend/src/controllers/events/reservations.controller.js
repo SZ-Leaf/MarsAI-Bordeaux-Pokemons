@@ -78,6 +78,7 @@ export const reservationConfirmation = async (req, res) => {
     }
 
     const decoded = verifyReservationConfirmToken(token);
+    console.log(decoded);
     const { reservationId } = decoded;
 
     await confirmReservationWithSeatUpdate(reservationId);

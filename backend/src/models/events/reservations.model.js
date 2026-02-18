@@ -1,19 +1,21 @@
 import db from '../../config/db_pool.js';
 
-export const createReservation = async ({
-  first_name,
-  last_name,
-  email,
-  event_id
-}) => {
+export const createReservation = async ({ first_name, last_name, email, event_id }) => {
+  try {
+    const [result] = await db.pool.execute(
+      `INSERT INTO reservations(first_name, last_name, email, event_id)
+       VALUES (?, ?, ?, ?)`,
+      [first_name, last_name, email, event_id]
+    );
 
-  const [result] = await db.pool.execute(
-    `INSERT INTO reservations(first_name, last_name, email, event_id)
-     VALUES (?, ?, ?, ?)`,
-    [first_name, last_name, email, event_id]
-  );
+    return result.insertId;
 
-  return result.insertId;
+  } catch (error) {
+    if (error.code === 'ER_DUP_ENTRY') {
+      throw new Error('EMAIL_ALREADY_REGISTERED');
+    }
+    throw error;
+  }
 };
 
 export const confirmReservationWithSeatUpdate = async (reservationId) => {
@@ -33,7 +35,7 @@ export const confirmReservationWithSeatUpdate = async (reservationId) => {
       throw new Error("RESERVATION_NOT_FOUND");
     }
 
-    if (reservations[0].confirmed_at) {
+    if (reservations[0].confirmation) {
       throw new Error("ALREADY_CONFIRMED");
     }
 

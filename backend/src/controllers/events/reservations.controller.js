@@ -53,11 +53,13 @@ export const createReservationController = async (req, res) => {
       return sendError(
         res,
         400,
-        'Email déjà inscrit pour cet événement',
-        'Email already registered for this event',
+        'E-mail déjà inscrit pour cet événement',
+        'E-mail already registered for this event',
         null
       );
     }
+
+
 
     return sendError(
       res,
@@ -78,7 +80,9 @@ export const reservationConfirmation = async (req, res) => {
     }
 
     const decoded = verifyReservationConfirmToken(token);
-    console.log(decoded);
+
+
+
     const { reservationId } = decoded;
 
     await confirmReservationWithSeatUpdate(reservationId);
@@ -94,11 +98,11 @@ export const reservationConfirmation = async (req, res) => {
   } catch (error) {
 
     if (error.message === "NO_PLACES_AVAILABLE") {
-      return sendError(res, 400, "Plus de places disponibles", "No seats available", null);
+      return sendError(res, 400, "Plus de places disponibles pour cet événement", "No seats available for the event", null);
     }
 
     if (error.message === "ALREADY_CONFIRMED") {
-      return sendError(res, 400, "Déjà confirmée", "Already confirmed", null);
+      return sendError(res, 400, "E-mail déjà confirmée", "E-mail already confirmed", null);
     }
 
     return sendError(

@@ -68,7 +68,7 @@ export default function Tag({
                 <button
                   key={tag.id}
                   type="button"
-                  className={`tag tag-${variant} ${selected ? "is-selected" : ""}`}
+                  className={`tag tag-${variant} cursor-pointer select-none ${selected ? "is-selected" : ""}`}
                   onClick={() => handlePopularClick(tag)}
                   title={selected ? "Déjà sélectionné" : "Ajouter ce tag"}
                 >

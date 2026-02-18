@@ -9,18 +9,19 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import NewsletterConfirm from './pages/NewsletterConfirm';
 import NewsletterUnsubscribe from './pages/NewsletterUnsubscribe';
-import AdminGuard from './components/admin/AdminGuard';
+import AuthGuard from './components/admin/AuthGuard.jsx';
 import AdminNewslettersList from './pages/AdminNewslettersList';
 import AdminNewsletterForm from './pages/AdminNewsletterForm';
 import AdminNewsletterView from './pages/AdminNewsletterView';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 import SelectorDashboard from './pages/SelectorDashboard.jsx';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   const location = useLocation();
   const isSelectorPage = location.pathname === '/selector';
-  const isAdminPage = location.pathname.startsWith('/admin');
+  const isAdminPage = location.pathname.startsWith('/dashboard');
 
   return (
     <LanguageProvider>
@@ -45,10 +46,10 @@ function App() {
             <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
             <Route path='/selector/dashboard' element={<SelectorDashboard/>}/>
             {/* <Route path='/selector/pending' element={<}/> */}
-            <Route path="/admin/newsletters" element={<AdminGuard><AdminNewslettersList /></AdminGuard>} />
-            <Route path="/admin/newsletters/new" element={<AdminGuard><AdminNewsletterForm /></AdminGuard>} />
-            <Route path="/admin/newsletters/:id/edit" element={<AdminGuard><AdminNewsletterForm /></AdminGuard>} />
-            <Route path="/admin/newsletters/:id/view" element={<AdminGuard><AdminNewsletterView /></AdminGuard>} />
+            <Route path="/admin/newsletters" element={<AuthGuard><AdminNewslettersList /></AuthGuard>} />
+            <Route path="/admin/newsletters/new" element={<AuthGuard><AdminNewsletterForm /></AuthGuard>} />
+            <Route path="/admin/newsletters/:id/edit" element={<AuthGuard><AdminNewsletterForm /></AuthGuard>} />
+            <Route path="/admin/newsletters/:id/view" element={<AuthGuard><AdminNewsletterView /></AuthGuard>} />
             <Route path="/dashboard" element={<AuthGuard><Dashboard /></AuthGuard>} />
             <Route path="*" element={<div>404 - Page Not Found</div>} />
           </Routes>

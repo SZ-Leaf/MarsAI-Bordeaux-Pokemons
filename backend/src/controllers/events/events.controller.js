@@ -77,7 +77,8 @@ export const updateEventController = async (req, res) => {
     await updateEvent(eventId, validatedData);
 
     if (coverFile) {
-      const oldCoverUrl = await getEventById(eventId).cover;
+      const event = await getEventById(eventId);
+      const oldCoverUrl = event?.cover;
 
       if (oldCoverUrl) {
         const oldCoverPath = path.join(__dirname, '../../../', oldCoverUrl);

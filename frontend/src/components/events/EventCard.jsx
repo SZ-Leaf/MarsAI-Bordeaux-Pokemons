@@ -1,5 +1,6 @@
 import React from 'react';
-import { Calendar, MapPin, Clock } from 'lucide-react';
+import { MapPin, Clock } from 'lucide-react';
+import './events.css';
 
 const EventCard = ({ event, onClick }) => {
   const { title, cover, start_date, location } = event;
@@ -8,7 +9,6 @@ const EventCard = ({ event, onClick }) => {
   const dateObj = new Date(start_date);
   const day = dateObj.getDate();
   const month = dateObj.toLocaleString('fr-FR', { month: 'short' }).toUpperCase().replace('.', '');
-  const fullDate = dateObj.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
   const time = dateObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
@@ -16,40 +16,40 @@ const EventCard = ({ event, onClick }) => {
 
   return (
     <div 
-      className="bg-[#1a1a1a] rounded-3xl overflow-hidden border border-gray-800/50 hover:border-orange-500/50 transition-all group cursor-pointer flex flex-col h-full"
+      className="event-card group"
       onClick={() => onClick(event)}
     >
       {/* Image de couverture */}
-      <div className="relative h-48 w-full overflow-hidden">
+      <div className="event-card-image-container">
         <img 
           src={imageUrl} 
           alt={title} 
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          className="event-card-image"
         />
-        <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl p-2 min-w-[60px] flex flex-col items-center justify-center">
-          <span className="text-xl font-bold text-orange-500">{day}</span>
-          <span className="text-[10px] font-bold text-gray-300 uppercase">{month}</span>
+        <div className="event-card-date-badge">
+          <span className="event-card-date-day">{day}</span>
+          <span className="event-card-date-month">{month}</span>
         </div>
       </div>
 
       {/* Contenu */}
-      <div className="p-6 flex flex-col flex-grow">
-        <h3 className="text-xl font-bold text-white mb-4 group-hover:text-orange-400 transition-colors line-clamp-2">
+      <div className="event-card-content">
+        <h3 className="event-card-title">
           {title}
         </h3>
         
-        <div className="mt-auto space-y-2">
-          <div className="flex items-center text-gray-400 text-sm">
-            <Clock size={16} className="mr-2 text-orange-500" />
+        <div className="event-card-info-container">
+          <div className="event-card-info-item">
+            <Clock size={16} className="event-card-info-icon" />
             <span>{time}</span>
           </div>
-          <div className="flex items-center text-gray-400 text-sm">
-            <MapPin size={16} className="mr-2 text-orange-500" />
+          <div className="event-card-info-item">
+            <MapPin size={16} className="event-card-info-icon" />
             <span className="line-clamp-1">{location}</span>
           </div>
         </div>
         
-        <button className="mt-6 w-full py-3 bg-white/5 hover:bg-orange-600 text-white rounded-xl text-sm font-bold transition-all border border-white/10 hover:border-orange-500">
+        <button className="event-card-button">
           Voir les détails
         </button>
       </div>

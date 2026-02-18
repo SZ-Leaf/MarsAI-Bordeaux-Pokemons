@@ -3,6 +3,7 @@ import { Calendar, Search, Filter, Loader2, Info } from 'lucide-react';
 import useEvents from '../hooks/useEvents';
 import EventCard from '../components/events/EventCard';
 import EventDetailModal from '../components/events/EventDetailModal';
+import '../components/events/events.css';
 import './home.css';
 
 const Events = () => {
@@ -37,18 +38,18 @@ const Events = () => {
 
       {/* Filters & Search */}
       <div className="max-w-7xl mx-auto mb-12 flex flex-col md:flex-row gap-4 items-center justify-between">
-        <div className="relative w-full md:w-96">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+        <div className="event-search-container">
+          <Search className="event-search-icon" size={18} />
           <input 
             type="text" 
             placeholder="Rechercher un événement ou un lieu..." 
-            className="w-full bg-[#1a1a1a] border border-gray-800 rounded-2xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-orange-500 transition-all text-sm"
+            className="event-search-input"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <div className="flex gap-4">
-          <button className="flex items-center gap-2 px-5 py-3 bg-[#1a1a1a] border border-gray-800 rounded-2xl text-gray-400 text-sm hover:border-white/20 transition-all">
+          <button className="event-filter-button">
             <Filter size={16} />
             Filtrer par date
           </button>
@@ -58,20 +59,20 @@ const Events = () => {
       {/* Grid Content */}
       <div className="max-w-7xl mx-auto">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <Loader2 className="animate-spin text-orange-500 mb-4" size={40} />
-            <p className="text-gray-500">Chargement des événements stellaires...</p>
+          <div className="event-loading-container">
+            <Loader2 className="event-loading-spinner" size={40} />
+            <p className="event-loading-text">Chargement des événements stellaires...</p>
           </div>
         ) : error ? (
-          <div className="bg-red-500/10 border border-red-500/20 p-8 rounded-[2rem] text-center max-w-xl mx-auto">
-            <Info className="text-red-500 mx-auto mb-4" size={32} />
-            <p className="text-white font-bold mb-2">Erreur système</p>
-            <p className="text-red-500/70 text-sm">{error}</p>
+          <div className="event-error-container">
+            <Info className="event-error-icon" size={32} />
+            <p className="event-error-title">Erreur système</p>
+            <p className="event-error-message">{error}</p>
           </div>
         ) : filteredEvents.length === 0 ? (
-          <div className="bg-[#1a1a1a] border border-gray-800 p-20 rounded-[3rem] text-center">
-            <p className="text-gray-500 text-lg mb-2">Aucun événement ne correspond à votre recherche.</p>
-            <p className="text-gray-600 text-sm">Essayez d'autres mots clés ou revenez plus tard.</p>
+          <div className="event-empty-container">
+            <p className="event-empty-text">Aucun événement ne correspond à votre recherche.</p>
+            <p className="event-empty-subtext">Essayez d'autres mots clés ou revenez plus tard.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

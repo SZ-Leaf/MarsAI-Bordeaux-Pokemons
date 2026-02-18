@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Calendar, MapPin, Clock, Users, Info, ChevronDown, ChevronUp } from 'lucide-react';
+import './events.css';
 
 const EventDetailModal = ({ event, isOpen, onClose }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -22,14 +23,14 @@ const EventDetailModal = ({ event, isOpen, onClose }) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="event-modal-overlay">
           {/* Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            className="event-modal-backdrop"
           />
 
           {/* Modal */}
@@ -37,100 +38,100 @@ const EventDetailModal = ({ event, isOpen, onClose }) => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative bg-[#111111] w-full max-w-2xl max-h-[90vh] flex flex-col rounded-[2rem] border border-gray-800 shadow-2xl overflow-hidden"
+            className="event-modal-container"
           >
-            <div className="overflow-y-auto flex-grow custom-scrollbar">
+            <div className="event-modal-scrollable">
               {/* Header / Image de couverture */}
-              <div className="relative h-48 md:h-56 w-full overflow-hidden">
+              <div className="event-modal-header-image">
                 <img 
                   src={imageUrl} 
                   alt={event.title} 
-                  className="w-full h-full object-cover"
+                  className="event-modal-header-image-img"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-transparent to-transparent" />
+                <div className="event-modal-header-gradient" />
                 
                 <button 
                   onClick={onClose}
-                  className="absolute top-6 right-6 p-2 bg-black/40 hover:bg-orange-600 text-white rounded-full transition-all border border-white/10 z-10"
+                  className="event-modal-close-btn"
                 >
                   <X size={20} />
                 </button>
               </div>
 
               {/* Contenu */}
-              <div className="px-8 pb-4 -mt-10 relative">
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="bg-orange-600 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+              <div className="event-modal-content">
+                <div className="event-modal-badges">
+                  <span className="event-modal-badge-primary">
                     Événement Officiel
                   </span>
-                  <span className="bg-white/5 text-gray-400 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-white/10">
+                  <span className="event-modal-badge-secondary">
                     {event.places} PLACES DISPONIBLES
                   </span>
                 </div>
 
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                <h2 className="event-modal-title">
                   {event.title}
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  <div className="space-y-3">
-                    <div className="flex items-start">
-                      <div className="p-2 bg-orange-600/10 rounded-xl mr-3 border border-orange-500/20">
-                        <Calendar className="text-orange-500" size={16} />
+                <div className="event-modal-info-grid">
+                  <div className="event-modal-info-section">
+                    <div className="event-modal-info-item">
+                      <div className="event-modal-info-icon-container">
+                        <Calendar className="event-modal-info-icon" size={16} />
                       </div>
                       <div>
-                        <p className="text-[9px] font-bold text-gray-500 uppercase">Date</p>
-                        <p className="text-sm text-gray-200 capitalize">{formattedDate}</p>
+                        <p className="event-modal-info-label">Date</p>
+                        <p className="event-modal-info-value-capitalize">{formattedDate}</p>
                       </div>
                     </div>
                     
-                    <div className="flex items-start">
-                      <div className="p-2 bg-orange-600/10 rounded-xl mr-3 border border-orange-500/20">
-                        <Clock className="text-orange-500" size={16} />
+                    <div className="event-modal-info-item">
+                      <div className="event-modal-info-icon-container">
+                        <Clock className="event-modal-info-icon" size={16} />
                       </div>
                       <div>
-                        <p className="text-[9px] font-bold text-gray-500 uppercase">Horaires</p>
-                        <p className="text-sm text-gray-200">{formattedTime}</p>
+                        <p className="event-modal-info-label">Horaires</p>
+                        <p className="event-modal-info-value">{formattedTime}</p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="space-y-3">
-                    <div className="flex items-start">
-                      <div className="p-2 bg-orange-600/10 rounded-xl mr-3 border border-orange-500/20">
-                        <MapPin className="text-orange-500" size={16} />
+                  <div className="event-modal-info-section">
+                    <div className="event-modal-info-item">
+                      <div className="event-modal-info-icon-container">
+                        <MapPin className="event-modal-info-icon" size={16} />
                       </div>
                       <div>
-                        <p className="text-[9px] font-bold text-gray-500 uppercase">Lieu</p>
-                        <p className="text-sm text-gray-200">{event.location}</p>
+                        <p className="event-modal-info-label">Lieu</p>
+                        <p className="event-modal-info-value">{event.location}</p>
                       </div>
                     </div>
                     
-                    <div className="flex items-start">
-                      <div className="p-2 bg-orange-600/10 rounded-xl mr-3 border border-orange-500/20">
-                        <Users className="text-orange-500" size={16} />
+                    <div className="event-modal-info-item">
+                      <div className="event-modal-info-icon-container">
+                        <Users className="event-modal-info-icon" size={16} />
                       </div>
                       <div>
-                        <p className="text-[9px] font-bold text-gray-500 uppercase">Capacité</p>
-                        <p className="text-sm text-gray-200">{event.places} inscrits max</p>
+                        <p className="event-modal-info-label">Capacité</p>
+                        <p className="event-modal-info-value">{event.places} inscrits max</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2 text-gray-400">
-                    <Info size={16} className="text-orange-500" />
-                    <h3 className="font-bold uppercase text-[10px] tracking-widest text-white">À propos</h3>
+                <div className="event-modal-description-section">
+                  <div className="event-modal-description-header">
+                    <Info size={16} className="event-modal-description-header-icon" />
+                    <h3 className="event-modal-description-header-title">À propos</h3>
                   </div>
-                  <div className="bg-white/5 p-4 rounded-2xl border border-white/5 relative">
-                    <p className={`text-gray-400 text-sm leading-relaxed whitespace-pre-line ${!isExpanded ? 'line-clamp-3' : ''}`}>
+                  <div className="event-modal-description-content">
+                    <p className={!isExpanded ? 'event-modal-description-text-clamped' : 'event-modal-description-text'}>
                       {event.description}
                     </p>
                     {event.description && (event.description.length > 150 || event.description.split('\n').length > 3) && (
                       <button 
                         onClick={() => setIsExpanded(!isExpanded)}
-                        className="mt-2 flex items-center text-orange-500 text-[10px] font-bold uppercase tracking-wider hover:text-orange-400 transition-colors"
+                        className="event-modal-description-toggle"
                       >
                         {isExpanded ? (
                           <>Voir moins <ChevronUp size={12} className="ml-1" /></>
@@ -145,9 +146,9 @@ const EventDetailModal = ({ event, isOpen, onClose }) => {
             </div>
             
             {/* Footer fixe avec bouton d'inscription */}
-            <div className="p-6 bg-[#111111] border-t border-gray-800/50 flex justify-center">
+            <div className="event-modal-footer">
               <button 
-                className="w-full md:w-auto px-10 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-orange-600/20 transform hover:-translate-y-1 active:scale-95"
+                className="event-modal-footer-button"
                 onClick={() => alert("Inscription bientôt disponible")}
               >
                 S'inscrire à l'événement

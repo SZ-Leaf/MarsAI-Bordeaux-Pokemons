@@ -6,21 +6,18 @@ import Footer from './components/layout/footer/Footer';
 import { Routes, Route, useLocation } from 'react-router';
 
 import Submit from './pages/Submit.jsx';
-import Selector from './components/selector/Selector';
 import Register from './pages/Register';
 import Login from './pages/Login';
-import AdminDashboard from './pages/AdminDashboard';
 import NewsletterConfirm from './pages/NewsletterConfirm';
 import NewsletterUnsubscribe from './pages/NewsletterUnsubscribe';
-import AdminGuard from './components/admin/AdminGuard';
+import AuthGuard from './components/admin/AuthGuard.jsx';
 import AdminNewslettersList from './pages/AdminNewslettersList';
 import AdminNewsletterForm from './pages/AdminNewsletterForm';
 import AdminNewsletterView from './pages/AdminNewsletterView';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
-import PlaylistDetail from './components/playlists/PlaylistDetail.jsx';
 import SelectorDashboard from './pages/SelectorDashboard.jsx';
-import Submissions from './pages/Submissions';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   const location = useLocation();

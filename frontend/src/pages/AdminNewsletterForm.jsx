@@ -125,7 +125,7 @@ export default function AdminNewsletterForm() {
               />
             </div>
             <div>
-<label className="text-color-white mb-1 block">Contenu (FR) *</label>
+            <label className="text-color-white mb-1 block">Contenu (FR) *</label>
           <CKEditor
             editorKey={isEdit && content ? `edit-${id}-loaded` : `${id ?? 'new'}-init`}
                 value={content}

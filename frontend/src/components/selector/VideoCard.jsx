@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
 import { Play, Volume2, VolumeX } from 'lucide-react';
-import { API_URL } from '../../utils/api';
 import VideoInfosDesktop from './VideoInfosDesktop';
 
 const VideoCard = ({ submission, isActive, addToPlaylist, rateSubmission, selection, toggle, hasRating, markAsRated }) => {
@@ -54,9 +53,12 @@ const VideoCard = ({ submission, isActive, addToPlaylist, rateSubmission, select
                         onClick={togglePlay}
                     />
                 </div>
-
-                <div className="absolute bottom-24 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/50 to-transparent pointer-events-none">
-                    <h2 className="text-white text-xl font-bold mb-1">
+            </div>
+            {/* Informations de la vidéo avec boutons d'action */}
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-linear-to-t from-black/80 to-transparent pointer-events-none">
+                {/* Titre et boutons d'action */}
+                <div className="flex items-start justify-between gap-4 mb-2">
+                    <h2 className="text-white text-2xl font-bold flex-1">
                         {submission.english_title}
                     </h2>
                     <p className="text-white/80 text-sm line-clamp-2">

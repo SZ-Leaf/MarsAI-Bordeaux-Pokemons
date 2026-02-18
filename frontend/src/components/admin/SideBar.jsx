@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './sideBar.css';
 import navItems from '../../constants/dashboard';
+import { useLanguage } from '../../context/LanguageContext';
+import { useAuth } from '../../hooks/useAuth';
 
-const SideBar = ({ activeView, onViewChange }) => (
+
+const SideBar = ({ activeView, onViewChange }) => {
+  const { language } = useLanguage();
+  const { user } = useAuth();
+  const items = navItems();
+  return (
     <aside className="sidebar">
       {/* User Profile */}
       <div className="sidebar-user-profile">
@@ -14,20 +21,25 @@ const SideBar = ({ activeView, onViewChange }) => (
           />
           <div className="sidebar-status-dot"></div>
         </div>
-        <h3 className="sidebar-user-name">Admin</h3>
-        <p className="sidebar-user-role">Mars AI</p>
+        <h3 className="sidebar-user-name">{user?.data?.firstname} {user?.data?.lastname}</h3>
+        <p className="sidebar-user-role">
+          {
+            user?.data?.role_id === 1 ? {fr: 'Utilisateur', en: 'User'} [language]:
+            user?.data?.role_id === 2 ? {fr: 'Admin', en: 'Admin'} [language]:
+            {fr: 'Super Admin', en: 'Super Admin'} [language]
+          }</p>
       </div>
 
       {/* Navigation */}
       <nav className="sidebar-nav">
-        {navItems.map((item) => (
+        {items.map((item) => (
           <button 
             key={item.id} 
             className={`sidebar-nav-item w-full ${activeView === item.id ? 'active' : ''}`}
             onClick={() => onViewChange(item.id)}
           >
             <item.icon size={20} className="mr-3" />
-            <span className="sidebar-nav-label">{item.label}</span>
+            <span className="sidebar-nav-label">{item.label[language]}</span>
             {item.badge && (
               <span className="sidebar-nav-badge">
                 {item.badge}
@@ -39,20 +51,12 @@ const SideBar = ({ activeView, onViewChange }) => (
 
       {/* Sidebar Footer */}
       <div className="sidebar-footer">
-        <div className="sidebar-footer-card">
-            <div className="sidebar-footer-logo-container">
-                <div className="sidebar-footer-icon-outer">
-                    <div className="sidebar-footer-icon-inner"></div>
-                </div>
-                <span className="sidebar-footer-brand">Mars AI</span>
-            </div>
-            <p className="sidebar-footer-label">Dashboard</p>
             <button className="sidebar-logout-btn">
                 Log out
             </button>
-        </div>
       </div>
     </aside>
-);
+  );
+}
 
 export default SideBar;

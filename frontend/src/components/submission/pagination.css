@@ -1,0 +1,15 @@
+@import "tailwindcss" reference;
+@import "../../theme.css";
+
+.pagination-button {
+   @apply px-4 py-2 rounded-xl font-semibold;
+}
+
+.pagination-button:hover {
+   cursor: pointer;
+   background-color: var(--color-blue);
+}
+
+.pagination-button:disabled {
+   @apply opacity-50 cursor-not-allowed;
+}

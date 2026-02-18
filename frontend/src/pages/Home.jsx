@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Plus, Calendar, Play, Users, Award, Clock, MapPin } from 'lucide-react';
+import { ArrowRight, Plus, Calendar, Play, Users, Award, Clock, MapPin, Target, Zap, Rocket } from 'lucide-react';
 import Card from '../components/cards/Card';
 import '../App.css';
 import './home.css';
@@ -40,16 +40,43 @@ const FILMS = [
 ];
 
 const STATS = [
-  { title: "2 MOIS", subtitle: "DE PRÉPARATION", color: "text-purple-500" },
-  { title: "50 FILMS", subtitle: "EN SÉLECTION", color: "text-emerald-400" },
-  { title: "WEB 3.0", subtitle: "EXPÉRIENCE", color: "text-pink-500" },
-  { title: "J4", subtitle: "MARSEILLE", color: "text-cyan-400" }
+  { title: "2 MOIS", subtitle: "DE PRÉPARATION", color: "text-purple-500", borderClass: "border-purple" },
+  { title: "50 FILMS", subtitle: "EN SÉLECTION", color: "text-emerald-400", borderClass: "border-emerald" },
+  { title: "WEB 3.0", subtitle: "EXPÉRIENCE", color: "text-pink-500", borderClass: "border-pink" },
+  { title: "J4", subtitle: "MARSEILLE", color: "text-cyan-400", borderClass: "border-cyan" }
 ];
 
 const CONFERENCES = [
   { title: "PROJECTIONS", description: "Diffusion sur écran géant en présence des réalisateurs.", icon: Play },
   { title: "WORKSHOPS", description: "Sessions pratiques pour maîtriser les outils IA.", icon: Users },
   { title: "AWARDS", description: "Cérémonie de clôture récompensant l'audace.", icon: Award }
+];
+
+const OBJECTIVES = [
+  {
+    title: "L'HUMAIN AU CENTRE",
+    description: "METTRE L'HUMAIN AU CŒUR DE LA CRÉATION POUR NE PAS PERDRE L'ÉMOTION.",
+    icon: Target,
+    color: "text-emerald-400",
+    bgColor: "bg-emerald-400/10",
+    borderClass: "border-emerald"
+  },
+  {
+    title: "CHALLENGE CRÉATIF",
+    description: "CHALLENGER LA CRÉATIVITÉ GRÂCE À UN FORMAT ULTRA-COURT DE 60S.",
+    icon: Zap,
+    color: "text-blue-400",
+    bgColor: "bg-blue-400/10",
+    borderClass: "border-blue"
+  },
+  {
+    title: "FUTURS SOUHAITABLES",
+    description: "EXPLORER LES FUTURS DÉSIRABLES VIA LES TECHNOLOGIES ÉMERGENTES.",
+    icon: Rocket,
+    color: "text-purple-400",
+    bgColor: "bg-purple-400/10",
+    borderClass: "border-purple"
+  }
 ];
 
 // --- Main Component ---
@@ -89,6 +116,10 @@ const Home = () => {
 
       {/* 2. FEATURES SECTION */}
       <Section className="py-20">
+        <h2 className="section-title-medium text-center mb-16">
+          UN FESTIVAL <span className="stats-accent">NOUVELLE GÉNÉRATION</span>
+        </h2>
+        
         <div className="features-grid">
           {FEATURES.map((feature, index) => (
             <Card
@@ -137,6 +168,28 @@ const Home = () => {
         </div>
       </Section>
 
+      {/* 3.5 OBJECTIVES SECTION */}
+      <Section id="objectives" className="flex flex-col items-center">
+        <h2 className="section-title-medium text-center mb-24">
+          OBJECTIFS DU <span className="stats-accent">FESTIVAL</span>
+        </h2>
+
+        <div className="objectives-grid">
+          {OBJECTIVES.map((obj, index) => {
+            const Icon = obj.icon;
+            return (
+              <div key={index} className={`objective-card ${obj.borderClass}`}>
+                <div className={`objective-icon-wrapper ${obj.bgColor} ${obj.color}`}>
+                  <Icon size={24} />
+                </div>
+                <h3 className="objective-title">{obj.title}</h3>
+                <p className="objective-description">{obj.description}</p>
+              </div>
+            );
+          })}
+        </div>
+      </Section>
+
       {/* 4. PROTOCOL SECTION */}
       <Section id="protocol" className="flex flex-col items-center">
         <div className="text-center mb-20">
@@ -146,7 +199,7 @@ const Home = () => {
 
         <div className="stats-grid">
           {STATS.map((stat, index) => (
-            <div key={index} className="stat-card">
+            <div key={index} className={`stat-card ${stat.borderClass}`}>
               <h3 className={`stat-value ${stat.color}`}>{stat.title}</h3>
               <p className="stat-subtitle">{stat.subtitle}</p>
             </div>
@@ -213,7 +266,7 @@ const Home = () => {
         </div>
       </Section>
 
-      {/* 7. VENUE SECTION */}
+      {/* 7. LOCATION SECTION */}
       <Section id="venue" className="py-32">
         <div className="venue-header">
           <div className="venue-badge">
@@ -230,11 +283,11 @@ const Home = () => {
         </div>
 
         <div className="venue-cards-grid">
-          <div className="venue-description-card">
+          <div className="venue-description-card border-blue">
             <h3 className="venue-card-title text-blue underline decoration-2 underline-offset-8">SALLE DES SUCRES</h3>
             <p className="venue-card-text">Futur sanctuaire des conférences et de la remise des prix de Mars.A.I. Un espace majestueux alliant patrimoine et technologie.</p>
           </div>
-          <div className="venue-description-card">
+          <div className="venue-description-card border-purple">
             <h3 className="venue-card-title text-purple-500 underline decoration-2 underline-offset-8">SALLE PLAZA</h3>
             <p className="venue-card-text">L'épicentre du festival : accueil, animations, workshops et restauration. Le point de rencontre de tous les participants.</p>
           </div>

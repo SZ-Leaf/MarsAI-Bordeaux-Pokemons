@@ -9,6 +9,8 @@ import socialModel from '../../models/socials/socials.model.js';
 import submissions_tagsModel from '../../models/tags/submissions_tags.model.js';
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
 import { submissionSchema } from '../../utils/schemas/submission.schemas.js';
+import { verifyRecaptcha } from '../../utils/recaptcha.js';
+import { sendSubmissionConfirmation } from '../../services/mailer/mailer.mail.js';
 import db from '../../config/db_pool.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -20,6 +22,20 @@ const getUploadsBasePath = () => {
 };
 
 export const submitController = async (req, res) => {
+  //
+  // reCAPTCHA (anti-robot)
+  //
+  const recaptchaToken = req.body?.recaptchaToken;
+  const recaptchaOk = await verifyRecaptcha(recaptchaToken, req.ip);
+  if (!recaptchaOk) {
+    return sendError(
+      res,
+      400,
+      'Vérification anti-robot invalide ou expirée. Réessayez.',
+      'Invalid or expired captcha. Please try again.',
+      null
+    );
+  }
 
   //
   // Validate before database connection
@@ -305,7 +321,17 @@ export const submitController = async (req, res) => {
 
     await connection.commit();
     transactionStarted = false;
-    // return success response
+
+    // Envoi d'un email de confirmation au créateur (ne pas bloquer la réponse en cas d'échec)
+    try {
+      await sendSubmissionConfirmation(
+        validatedData.creator_email,
+        validatedData.creator_firstname,
+        validatedData.english_title || ''
+      );
+    } catch (emailErr) {
+      console.warn('Envoi email confirmation soumission:', emailErr.message);
+    }
 
     return sendSuccess(res, 201, 'Soumission créée avec succès', 'Submission created successfully', {
       submission_id: submissionId,

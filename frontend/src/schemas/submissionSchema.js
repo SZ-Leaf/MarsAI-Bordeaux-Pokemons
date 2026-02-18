@@ -49,9 +49,10 @@ const socialSchema = z.object({
 
 // Schéma complet de soumission
 export const submissionSchema = z.object({
-  // Étape 1 : CGU
+  // Étape 1 : CGU + reCAPTCHA
   termsAccepted: z.boolean().refine(val => val === true, "Vous devez accepter les conditions d'utilisation"),
   ageConfirmed: z.boolean().refine(val => val === true, "Vous devez confirmer avoir 18 ans ou plus"),
+  recaptchaToken: z.string().min(1, "Veuillez valider la vérification anti-robot"),
   
   // Étape 2 : Métadonnées vidéo
   english_title: z.string().min(1, "Requis").max(255, "Maximum 255 caractères"),
@@ -100,7 +101,8 @@ export const submissionSchema = z.object({
 // Schémas par étape pour validation progressive
 export const step1Schema = submissionSchema.pick({
   termsAccepted: true,
-  ageConfirmed: true
+  ageConfirmed: true,
+  recaptchaToken: true
 });
 
 export const step2Schema = submissionSchema.pick({

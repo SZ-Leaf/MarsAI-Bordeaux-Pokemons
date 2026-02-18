@@ -139,8 +139,8 @@
 
 .newsletter-lang-select-wrap {
   @apply shrink-0 relative;
-  width: 5.25rem;
-  min-width: 5.25rem;
+  width: 6rem;
+  min-width: 6rem;
 }
 
 .newsletter-lang-select {
@@ -155,7 +155,7 @@
 }
 
 .newsletter-lang-flag {
-  @apply shrink-0 rounded-sm object-cover;
+  @apply shrink-0 object-cover;
   width: 20px;
   height: 14px;
 }

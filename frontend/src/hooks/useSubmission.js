@@ -19,9 +19,10 @@ export const useSubmission = () => {
   
   // État du formulaire
   const [formData, setFormData] = useState({
-    // Partie 1 : CGU
+    // Partie 1 : CGU + reCAPTCHA
     termsAccepted: false,
     ageConfirmed: false,
+    recaptchaToken: '',
     
     // Partie 2 : Métadonnées vidéo
     english_title: '',
@@ -160,8 +161,8 @@ export const useSubmission = () => {
   const getStepWithErrors = (errors) => {
     const errorKeys = Object.keys(errors);
     
-    // Étape 1 : CGU
-    if (errorKeys.some(key => ['termsAccepted', 'ageConfirmed'].includes(key))) {
+    // Étape 1 : CGU + reCAPTCHA
+    if (errorKeys.some(key => ['termsAccepted', 'ageConfirmed', 'recaptchaToken'].includes(key))) {
       return 1;
     }
     
@@ -310,6 +311,9 @@ export const useSubmission = () => {
       };
       
       formDataToSend.append('data', JSON.stringify(data));
+      if (formData.recaptchaToken) {
+        formDataToSend.append('recaptchaToken', formData.recaptchaToken);
+      }
 
       console.log('Données à envoyer:', {
         files: {
@@ -351,6 +355,7 @@ export const useSubmission = () => {
     setFormData({
       termsAccepted: false,
       ageConfirmed: false,
+      recaptchaToken: '',
       english_title: '',
       original_title: '',
       language: '',

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCallback } from 'react';
 import './tags.css';
 import TagSelectCreatable from './TagSelectCreate';
 import { useTags } from '../../hooks/useTags';
@@ -10,12 +11,29 @@ export default function Tag({
   onChange = () => {},
 }) {
   const { 
-    allTags, 
+    popularTags, 
     loading, 
     error, 
-    searchTags, 
-    createTag 
+    searchTags,
   } = useTags();
+
+    const addOption = useCallback(
+    (opt) => {
+      const exists = (value || []).some(
+        (v) =>
+          // même id
+          (v?.value != null && opt.value != null && v.value === opt.value) ||
+          // ou même label
+          String(v?.label || "").toLowerCase() === String(opt?.label || "").toLowerCase()
+      );
+      if (!exists) onChange([...(value || []), opt]);
+    },
+    [value, onChange]
+  );
+
+  const handlePopularClick = (tag) => {
+    addOption({ value: tag.id, label: tag.title });
+  };
 
   if (loading) {
     return <p>Chargement tags…</p>;
@@ -24,39 +42,43 @@ export default function Tag({
   return (
     <div className="tag-input-container flex flex-col gap-4">
       <TagSelectCreatable
-        allTags={allTags}
+        allTags={popularTags}
         value={value}
         onChange={onChange}
         onSearchTags={searchTags}
-        onCreateTag={createTag}
       />
       
-      <div className="tag-input-container">
-        {/* Affichage du statut (tag spécial) */}
-        {status && (
-          <div className="status-section">
-            <div className={`tag tag-status tag-${variant}`}>
-              {status}
-            </div>
-          </div>
-        )}
+            {status && (
+        <div className="status-section">
+          <div className={`tag tag-status tag-${variant}`}>{status}</div>
+        </div>
+      )}
 
-        {/* Message d'erreur / info */}
-        {error && <p>{error}</p>}
+      {error && <p>{error}</p>}
 
-        {/* Affichage des tags récupérés depuis l'API */}
-        {allTags.length > 0 && (
-          <div className="tags-section">
-            <div className="tags-list">
-              {allTags.map((tag) => (
-                <div key={tag.id} className={`tag tag-${variant}`}>
+      {popularTags.length > 0 && (
+        <div className="tags-section">
+          <h2 className="my-2">Tags les plus populaires</h2>
+
+          <div className="tags-list">
+            {popularTags.map((tag) => {
+              const selected = (value || []).some((v) => v?.value === tag.id);
+
+              return (
+                <button
+                  key={tag.id}
+                  type="button"
+                  className={`tag tag-${variant} cursor-pointer select-none ${selected ? "is-selected" : ""}`}
+                  onClick={() => handlePopularClick(tag)}
+                  title={selected ? "Déjà sélectionné" : "Ajouter ce tag"}
+                >
                   {tag.title}
-                </div>
-              ))}
-            </div>
+                </button>
+              );
+            })}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

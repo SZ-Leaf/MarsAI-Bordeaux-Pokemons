@@ -84,11 +84,15 @@ export const getSubmissions = async (filters = {}) => {
       params.push(filters.type);
     }
 
-    
+    if (filters.playlist && filters.playlist !== 'all') {
+      conditions.push('sel.selection_list = ?');
+      params.push(filters.playlist);
+    }
+
     if (filters.rated === 'rated') {
-      conditions.push('sel.id IS NOT NULL');
+      conditions.push('sel.rating IS NOT NULL');
     } else if (filters.rated === 'unrated') {
-      conditions.push('sel.id IS NULL');
+      conditions.push('(sel.rating IS NULL)');
     }
 
     // WHERE clause (if conditions exists)
@@ -128,7 +132,8 @@ export const getSubmissions = async (filters = {}) => {
         s.*,
         sel.id as memo_id,
         sel.rating as memo_rating,
-        sel.comment as memo_comment
+        sel.comment as memo_comment,
+        sel.selection_list as memo_selection_list
       FROM submissions s
       ${joinClause}
       ${whereClause}

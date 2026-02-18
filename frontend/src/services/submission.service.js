@@ -26,6 +26,9 @@ export const getSubmissionsService = async ({filters}) => {
   if (filters.rated) {
     params.rated = filters.rated;
   }
+  if (filters.playlist) {
+    params.playlist = filters.playlist;
+  }
   return apiCall('/api/submissions', {
     method: 'GET',
     params: params

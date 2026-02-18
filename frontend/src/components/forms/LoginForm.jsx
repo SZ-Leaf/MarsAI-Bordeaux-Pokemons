@@ -3,16 +3,16 @@ import { useNavigate } from "react-router";
 import { loginService } from "../../services/auth.service";
 import { useLanguage } from "../../context/LanguageContext";
 import { responseHelper } from "../../helpers/responseHelper";
-import {alertHelper as useAlertHelper} from "../../helpers/alertHelper";
+import { useAlertHelper } from "../../helpers/alertHelper";
 import { useAuth } from "../../hooks/useAuth";
 
 const LoginForm = () => {
-   const { user } = useAuth();
+   const alertHelper = useAlertHelper();
+   const { user, login } = useAuth();
    const { language } = useLanguage();
    const navigate = useNavigate();
-   const { getMessageFromResponse, isSuccessResponse } = responseHelper();
+   const { getMessageFromResponse } = responseHelper();
    const [isSubmitting, setIsSubmitting] = useState(false);
-   const alertHelper = useAlertHelper();
 
    useEffect(() => {
       if (user) {
@@ -22,8 +22,7 @@ const LoginForm = () => {
 
    const [formData, setFormData] = useState({
       email: "",
-      password: "",
-      confirmPassword: "",
+      password: ""
    });
 
    const handleChange = (e) => {
@@ -35,16 +34,12 @@ const LoginForm = () => {
       setIsSubmitting(true);
 
       try {
-         const { email, password, confirmPassword } = formData;
-         if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
+         const { email, password } = formData;
+         if (!email.trim() || !password.trim()) {
             alertHelper.requiredFields();
             return;
          }
-         if (password !== confirmPassword) {
-            alertHelper.passwordsMismatch();
-            return;
-         }
-         const response = await loginService(email, password);
+         const response = await login(formData);
          alertHelper.showMessage(getMessageFromResponse(response));
          navigate("/");
       } catch (error) {
@@ -55,29 +50,46 @@ const LoginForm = () => {
    };
 
    return (
-      <form onSubmit={handleSubmit}>
-         <input
-         type="email"
-         name="email"
-         value={formData.email}
-         onChange={handleChange}
-         placeholder={language === 'fr' ? 'Email' : 'Email'}
-         />
-         <input
-         type="password"
-         name="password"
-         value={formData.password}
-         onChange={handleChange}
-         placeholder={language === 'fr' ? 'Mot de passe' : 'Password'}
-         />
-         <input
-         type="password"
-         name="confirmPassword"
-         value={formData.confirmPassword}
-         onChange={handleChange}
-         placeholder={language === 'fr' ? 'Confirmer le mot de passe' : 'Confirm Password'}
-         />
-         <button type="submit" disabled={isSubmitting}>{language === 'fr' ? 'Connexion' : 'Login'}</button>
+      <form onSubmit={handleSubmit} className="login-form">
+         <div className="input-group">
+            <label className="input-label" htmlFor="email">
+               {language === 'fr' ? 'Email' : 'Email'}
+            </label>
+            <input
+               id="email"
+               type="email"
+               name="email"
+               className="login-input"
+               value={formData.email}
+               onChange={handleChange}
+               placeholder={language === 'fr' ? 'votre@email.com' : 'your@email.com'}
+               autoComplete="email"
+            />
+         </div>
+         <div className="input-group">
+            <label className="input-label" htmlFor="password">
+               {language === 'fr' ? 'Mot de passe' : 'Password'}
+            </label>
+            <input
+               id="password"
+               type="password"
+               name="password"
+               className="login-input"
+               value={formData.password}
+               onChange={handleChange}
+               placeholder="••••••••"
+               autoComplete="current-password"
+            />
+         </div>
+         <button 
+            type="submit" 
+            className="login-btn"
+            disabled={isSubmitting}
+         >
+            {isSubmitting 
+               ? (language === 'fr' ? 'Connexion en cours...' : 'Logging in...') 
+               : (language === 'fr' ? 'Connexion' : 'Login')}
+         </button>
       </form>
    );
 };

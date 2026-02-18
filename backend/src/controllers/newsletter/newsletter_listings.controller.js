@@ -21,7 +21,7 @@ import {
 
 // Inscription à la newsletter (envoie email de confirmation)
 export const subscribe = async (req, res) => {
-   const { email } = req.body; // consent déjà validé par subscribeSchema (middleware)
+   const { email, language = 'fr' } = req.body; // consent déjà validé par subscribeSchema (middleware)
 
    const connection = await db.pool.getConnection();
 
@@ -40,11 +40,11 @@ export const subscribe = async (req, res) => {
             // Réinscription : réactive la ligne et envoie un nouvel email de confirmation
             const confirmToken = generateNewsletterConfirmToken(email);
             const unsubscribeToken = generateNewsletterUnsubscribeToken();
-            const reactivated = await resubscribeEmail(connection, email, unsubscribeToken);
+            const reactivated = await resubscribeEmail(connection, email, unsubscribeToken, language);
             if (!reactivated) {
                return sendError(res, 500, "Erreur lors de la réinscription", "Error resubscribing", null);
             }
-            await sendNewsletterConfirmation(email, confirmToken);
+            await sendNewsletterConfirmation(email, confirmToken, language);
             await connection.commit();
             return sendSuccess(res, 201, "Vérifiez votre email pour confirmer", "Check your email to confirm", null);
          }
@@ -59,10 +59,10 @@ export const subscribe = async (req, res) => {
       const unsubscribeToken = generateNewsletterUnsubscribeToken();
 
       // Enregistre l'abonné en BDD
-      await subscribeEmail(connection, email, unsubscribeToken);
+      await subscribeEmail(connection, email, unsubscribeToken, language);
 
-      // Envoie l'email de confirmation
-      await sendNewsletterConfirmation(email, confirmToken);
+      // Envoie l'email de confirmation (FR ou EN selon la langue choisie)
+      await sendNewsletterConfirmation(email, confirmToken, language);
 
       await connection.commit();
 

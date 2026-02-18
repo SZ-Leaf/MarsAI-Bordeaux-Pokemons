@@ -137,6 +137,62 @@
   @apply flex gap-2 items-stretch;
 }
 
+.newsletter-lang-select-wrap {
+  @apply shrink-0 relative;
+  width: 5.25rem;
+  min-width: 5.25rem;
+}
+
+.newsletter-lang-select {
+  @apply w-full h-full min-h-[38px] px-2.5 py-2 flex items-center gap-2;
+  @apply bg-black/20 backdrop-blur-sm;
+  @apply border border-white/20 rounded-lg;
+  @apply text-white text-left text-sm;
+  @apply outline-none transition-all duration-300;
+  @apply focus:border-blue-400 focus:bg-black/30;
+  @apply focus:ring-1 focus:ring-blue-400/20;
+  @apply cursor-pointer;
+}
+
+.newsletter-lang-flag {
+  @apply shrink-0 rounded-sm object-cover;
+  width: 20px;
+  height: 14px;
+}
+
+.newsletter-lang-label {
+  @apply flex-1 truncate;
+}
+
+.newsletter-lang-chevron {
+  @apply shrink-0 text-[10px] text-white/60 transition-transform duration-200;
+}
+
+.newsletter-lang-chevron--open {
+  transform: rotate(180deg);
+}
+
+.newsletter-lang-dropdown {
+  @apply absolute left-0 right-0 top-full mt-1 z-10;
+  @apply py-1 rounded-lg;
+  @apply bg-black/90 backdrop-blur-md border border-white/20;
+  @apply shadow-xl list-none m-0 p-0;
+}
+
+.newsletter-lang-option {
+  @apply flex items-center gap-2 px-2.5 py-2 text-sm text-white/90 cursor-pointer;
+  @apply transition-colors duration-150;
+  @apply hover:bg-white/10;
+}
+
+.newsletter-lang-option--selected {
+  @apply bg-blue-500/20 text-white;
+}
+
+.newsletter-lang-option .newsletter-lang-flag {
+  @apply shrink-0;
+}
+
 .footer-newsletter-card .newsletter-input {
   @apply flex-1 min-w-0 px-3 py-2;
   @apply bg-black/20 backdrop-blur-sm;

@@ -8,8 +8,8 @@ const Header = () => {
     <header className="header-pill-container">
       <div className="header-pill-content">
         {/* Logo */}
-        <div className="navbar-logo">
-          MARS<span>AI</span>
+        <div className='navbar-logo'>
+          MARS<span className="gradient-text">AI</span>
         </div>
 
         {/* Navbar (Icons) */}

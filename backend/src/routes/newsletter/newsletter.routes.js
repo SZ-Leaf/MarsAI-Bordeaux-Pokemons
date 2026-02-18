@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { authenticate, requireRole } from '../../middlewares/auth.middleware.js';
 import { validate } from '../../middlewares/validation.js';
 import { subscribeSchema, newsletterSchema } from '../../utils/schemas/newsletter.schemas.js';
 import {
@@ -21,25 +22,22 @@ import {
 const router = Router();
 
 // ========== ROUTES PUBLIQUES ==========
-router.post('/subscribe', validate(subscribeSchema), subscribe);  // Inscription (email + consent validés)
-router.get('/confirm', confirm);                // Confirmation (double opt-in) ?token=xxx
-router.get('/unsubscribe', unsubscribe);        // Désinscription ?token=xxx 
+router.post('/subscribe', validate(subscribeSchema), subscribe);
+router.get('/confirm', confirm);
+router.get('/unsubscribe', unsubscribe);
 
 // ========== ROUTES ADMIN ==========
-router.post('/admin', validate(newsletterSchema), create);
-router.get('/admin', list);
-router.get('/admin/:id', getById);
-router.patch('/admin/:id', validate(newsletterSchema), update);
-router.delete('/admin/:id', deleteNewsletterController);
 
-// Envoi
-router.post('/admin/:id/send', send);
+router.post('/admin', authenticate, requireRole([2, 3]), validate(newsletterSchema), create);
+router.get('/admin', authenticate, requireRole([2, 3]), list);
+// Routes /admin/subscribers AVANT /admin/:id pour ne pas capturer "subscribers" comme id
+router.get('/admin/subscribers', authenticate, requireRole([2, 3]), listSubscribers);
+router.delete('/admin/subscribers/:id', authenticate, requireRole([2, 3]), deleteSubscriberController);
 
-// Statistiques
-router.get('/admin/:id/stats', getStatsController);
-
-// Gestion des abonnés
-router.get('/admin/subscribers', listSubscribers);
-router.delete('/admin/subscribers/:id', deleteSubscriberController);
+router.get('/admin/:id', authenticate, requireRole([2, 3]), getById);
+router.patch('/admin/:id', authenticate, requireRole([2, 3]), validate(newsletterSchema), update);
+router.delete('/admin/:id', authenticate, requireRole([2, 3]), deleteNewsletterController);
+router.post('/admin/:id/send', authenticate, requireRole([2, 3]), send);
+router.get('/admin/:id/stats', authenticate, requireRole([2, 3]), getStatsController);
 
 export default router;

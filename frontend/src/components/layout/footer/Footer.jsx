@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './footer.css';
 import '../navbar/navbar.css';
 import '../../ui/buttons.css';
@@ -11,11 +11,32 @@ function getErrorMessage(err) {
   return 'Une erreur est survenue.';
 }
 
+const FLAG_CDN = 'https://flagcdn.com/w40';
+const LANG_OPTIONS = [
+  { value: 'fr', label: 'FR', flagSrc: `${FLAG_CDN}/fr.png` },
+  { value: 'en', label: 'EN', flagSrc: `${FLAG_CDN}/gb.png` },
+];
+
 const Footer = () => {
   const [email, setEmail] = useState('');
+  const [language, setLanguage] = useState('fr');
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const langDropdownRef = useRef(null);
   const [consent, setConsent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
+
+  const selectedOption = LANG_OPTIONS.find((o) => o.value === language) || LANG_OPTIONS[0];
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (langDropdownRef.current && !langDropdownRef.current.contains(e.target)) {
+        setLangDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +52,7 @@ const Footer = () => {
     setIsSubmitting(true);
     setIsSubscribed(false);
     try {
-      await subscribeNewsletter(trimmedEmail, true);
+      await subscribeNewsletter(trimmedEmail, true, language);
       alert('Vérifiez votre email pour confirmer votre inscription.');
       setEmail('');
       setConsent(false);
@@ -50,8 +71,8 @@ const Footer = () => {
         <div className="footer-grid">
           {/* Section Gauche - Logo & Description */}
           <div className="footer-brand">
-            <div className="navbar-logo">
-              MARS<span>AI</span>
+            <div className='navbar-logo'>
+              MARS<span className="gradient-text">AI</span>
             </div>
             <p className="footer-tagline">
               "La plateforme mondiale dédiée à l'univers Pokémon, ancrée dans la lumière de Bordeaux."
@@ -110,6 +131,59 @@ const Footer = () => {
             </h3>
             <form className="newsletter-form" onSubmit={handleSubmit}>
               <div className="newsletter-row">
+                <div
+                  className="newsletter-lang-select-wrap"
+                  ref={langDropdownRef}
+                >
+                  <button
+                    type="button"
+                    className="newsletter-lang-select"
+                    onClick={() => !isSubmitting && setLangDropdownOpen((v) => !v)}
+                    disabled={isSubmitting}
+                    aria-label="Langue de la newsletter"
+                    aria-expanded={langDropdownOpen}
+                    aria-haspopup="listbox"
+                  >
+                    <img
+                      src={selectedOption.flagSrc}
+                      alt=""
+                      className="newsletter-lang-flag"
+                      width={20}
+                      height={14}
+                    />
+                    <span className="newsletter-lang-label">{selectedOption.label}</span>
+                    <span className={`newsletter-lang-chevron ${langDropdownOpen ? 'newsletter-lang-chevron--open' : ''}`} aria-hidden>▼</span>
+                  </button>
+                  {langDropdownOpen && (
+                    <ul
+                      className="newsletter-lang-dropdown"
+                      role="listbox"
+                      aria-label="Choisir la langue"
+                    >
+                      {LANG_OPTIONS.map((opt) => (
+                        <li
+                          key={opt.value}
+                          role="option"
+                          aria-selected={language === opt.value}
+                          className={`newsletter-lang-option ${language === opt.value ? 'newsletter-lang-option--selected' : ''}`}
+                          onClick={() => {
+                            setLanguage(opt.value);
+                            setLangDropdownOpen(false);
+                          }}
+                        >
+                          <img
+                            src={opt.flagSrc}
+                            alt=""
+                            className="newsletter-lang-flag"
+                            width={20}
+                            height={14}
+                          />
+                          <span>{opt.label}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
                 <input
                   type="email"
                   placeholder="Votre email"

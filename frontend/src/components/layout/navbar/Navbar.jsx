@@ -1,30 +1,42 @@
 import React, { useState } from 'react';
-import { Home, Trophy, Calendar, User } from 'lucide-react';
+import { Home, Trophy, Calendar, User, LayoutDashboard } from 'lucide-react';
+import { Link, useLocation } from 'react-router';
 import './navbar.css';
 
 const Navbar = () => {
-  const [activeItem, setActiveItem] = useState('calendar');
-
+  const location = useLocation();
+  
   const navItems = [
-    { id: 'home', icon: Home },
-    { id: 'trophy', icon: Trophy },
-    { id: 'calendar', icon: Calendar },
-    { id: 'user', icon: User },
+    { id: 'home', icon: Home, path: '/', label: 'Accueil' },
+    { id: 'trophy', icon: Trophy, path: '/selector', label: 'Sélection' },
+    { id: 'calendar', icon: Calendar, path: '/events', label: 'Calendrier' },
+    { id: 'dashboard', icon: LayoutDashboard, path: '/dashboard', label: 'Admin' },
   ];
+
+  const getActiveItem = () => {
+    const currentPath = location.pathname;
+    const activeNav = navItems.find(item => item.path === currentPath);
+    return activeNav ? activeNav.id : 'home';
+  };
+
+  const activeItem = getActiveItem();
 
   return (
     <nav className="navbar-links">
       {navItems.map((item) => {
         const Icon = item.icon;
+        const isActive = activeItem === item.id;
+        
         return (
-          <div
+          <Link
             key={item.id}
-            className={`navbar-item ${activeItem === item.id ? 'active' : ''}`}
-            onClick={() => setActiveItem(item.id)}
+            to={item.path}
+            className={`navbar-item ${isActive ? 'active' : ''}`}
+            aria-label={item.label} // Pour l'accessibilité
           >
             <Icon size={22} strokeWidth={1.5} />
-            {activeItem === item.id && <div className="navbar-dot" />}
-          </div>
+            {isActive && <div className="navbar-dot" />}
+          </Link>
         );
       })}
     </nav>

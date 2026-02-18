@@ -359,23 +359,35 @@ export const submitController = async (req, res) => {
 
 export const getSubmissionsController = async (req, res) => {
   try {
-    const { status, limit = 20, offset = 0 } = req.query;
+    const { type, limit = 15, offset = 0, sortBy, rated } = req.query;
 
     const parsedLimit = parseInt(limit);
     const parsedOffset = parseInt(offset);
 
+    const safeSort = sortBy?.toLowerCase() === 'asc' ? 'ASC' : 'DESC';
+    const safeRated = rated 
+      ? (rated.toLowerCase() === 'rated' ? 'rated' : 'unrated') 
+      : null;
+    
     const filters = {
-      status: status || null,
-      limit: Number.isNaN(parsedLimit) ? 20 : parsedLimit,
-      offset: Number.isNaN(parsedOffset) ? 0 : parsedOffset
+      type: type || null,
+      limit: Number.isNaN(parsedLimit) ? 15 : parsedLimit,
+      offset: Number.isNaN(parsedOffset) ? 0 : parsedOffset,
+      orderBy: safeSort,
+      rated: safeRated
     };
 
-    const submissions = await getSubmissions(filters);
+    const {submissions, total} = await getSubmissions(filters);
 
     return sendSuccess(res, 200,
       'Soumissions récupérées avec succès',
       'Submissions retrieved successfully',
-      { count: submissions.length, submissions }
+      { 
+        count: total,
+        limit: filters.limit,
+        offset: filters.offset,
+        submissions
+      }
     );
 
   } catch (error) {

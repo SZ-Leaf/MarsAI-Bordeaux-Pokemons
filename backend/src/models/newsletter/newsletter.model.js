@@ -1,16 +1,20 @@
 // ========== CAMPAGNES NEWSLETTER (table newsletter) ==========
 
 // Crée une newsletter (statut draft)
-export const createNewsletter = async (connection, { title, subject, content }) => {
+export const createNewsletter = async (connection, { title, subject, content, subject_en, content_en }) => {
    const [result] = await connection.execute(
-      "INSERT INTO newsletter (title, subject, content, status) VALUES (?, ?, ?, ?)",
-      [title, subject, content, "draft"]
+      "INSERT INTO newsletter (title, subject, content, subject_en, content_en, status) VALUES (?, ?, ?, ?, ?, ?)",
+      [title, subject, content, subject_en ?? null, content_en ?? null, "draft"]
    );
    return result.insertId;
 };
 
 // Liste les newsletters avec filtres et pagination
+// LIMIT/OFFSET en littéraux (MySQL peut refuser les paramètres préparés pour LIMIT/OFFSET)
 export const getNewsletters = async (connection, { status, limit = 20, offset = 0 }) => {
+   const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10) || 20));
+   const offsetNum = Math.max(0, parseInt(offset, 10) || 0);
+
    let query = "SELECT * FROM newsletter";
    const params = [];
 
@@ -19,8 +23,7 @@ export const getNewsletters = async (connection, { status, limit = 20, offset = 
       params.push(status);
    }
 
-   query += " ORDER BY created_at DESC LIMIT ? OFFSET ?";
-   params.push(limit, offset);
+   query += ` ORDER BY created_at DESC LIMIT ${limitNum} OFFSET ${offsetNum}`;
 
    const [rows] = await connection.execute(query, params);
    return rows;
@@ -36,10 +39,10 @@ export const getNewsletterById = async (connection, id) => {
 };
 
 // Met à jour une newsletter
-export const updateNewsletter = async (connection, id, { title, subject, content, status }) => {
+export const updateNewsletter = async (connection, id, { title, subject, content, subject_en, content_en, status }) => {
    const [result] = await connection.execute(
-      "UPDATE newsletter SET title = ?, subject = ?, content = ?, status = ? WHERE id = ?",
-      [title, subject, content, status, id]
+      "UPDATE newsletter SET title = ?, subject = ?, content = ?, subject_en = ?, content_en = ?, status = ? WHERE id = ?",
+      [title, subject, content, subject_en ?? null, content_en ?? null, status, id]
    );
    return result.affectedRows > 0;
 };

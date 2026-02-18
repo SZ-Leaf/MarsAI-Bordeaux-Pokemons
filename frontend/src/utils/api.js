@@ -1,8 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-// Exporter API_URL pour qu'il soit réutilisable dans toute l'application
-export { API_URL };
-
 export const apiCall = async (endpoint, options = {}) => {
   let url = `${API_URL}${endpoint}`;
   
@@ -15,8 +12,16 @@ export const apiCall = async (endpoint, options = {}) => {
   };
 
   if (options.params) {
-    const queryString = new URLSearchParams(options.params).toString();
-    url += `?${queryString}`;
+    const cleanedParams = Object.fromEntries(
+      Object.entries(options.params).filter(
+        ([_, value]) => value !== null && value !== undefined && value !== ''
+      )
+    );
+
+    const queryString = new URLSearchParams(cleanedParams).toString();
+    if(queryString) {
+      url += `?${queryString}`;
+    }
     delete options.params; // remove since fetch doesn't accept params in the options object
   }
   
@@ -66,6 +71,5 @@ export const apiCall = async (endpoint, options = {}) => {
 
 // Export par défaut
 export default {
-  API_URL,
   apiCall
 };

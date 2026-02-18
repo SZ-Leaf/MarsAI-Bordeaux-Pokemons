@@ -115,6 +115,18 @@ export const getSubmissions = async (filters = {}) => {
       params.push(filters.status);
     }
 
+    if (filters.type !== undefined && filters.type !== null && filters.type !== '') {
+      conditions.push('s.classification = ?');
+      params.push(filters.type);
+    }
+
+    
+    if (filters.rated === 'rated') {
+      conditions.push('EXISTS (SELECT 1 FROM selector_memo sel WHERE sel.submission_id = s.id)');
+    } else if (filters.rated === 'unrated') {
+      conditions.push('NOT EXISTS (SELECT 1 FROM selector_memo sel WHERE sel.submission_id = s.id)');
+    }
+
     // WHERE clause (if conditions exists)
     const whereClause = conditions.length
       ? `WHERE ${conditions.join(' AND ')}`
@@ -153,12 +165,12 @@ export const getSubmissions = async (filters = {}) => {
       ${joinClause}
       ${whereClause}
       ORDER BY s.created_at ${orderBy}
-      LIMIT ?
-      OFFSET ?`;
+      LIMIT ${limit}
+      OFFSET ${offset}`;
 
     const [rows] = await connection.execute(
       dataQuery,
-      [...params, limit, offset]
+      params
     );
 
     return { submissions: rows, total };

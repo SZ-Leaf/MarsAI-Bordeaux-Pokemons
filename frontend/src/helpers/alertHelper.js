@@ -1,6 +1,6 @@
 import { useLanguage } from "../context/LanguageContext";
 
-export const alertHelper = () => {
+export const useAlertHelper = () => {
 
    const { language } = useLanguage();
 

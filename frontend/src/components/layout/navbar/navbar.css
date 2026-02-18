@@ -10,11 +10,6 @@
   @apply justify-self-start;
 }
 
-.navbar-logo span {
-  @apply bg-linear-to-r from-blue to-cyan;
-  @apply bg-clip-text text-transparent font-bold ml-0.5;
-}
-
 /* Navbar Links */
 .navbar-links {
   @apply flex items-center justify-center gap-10;

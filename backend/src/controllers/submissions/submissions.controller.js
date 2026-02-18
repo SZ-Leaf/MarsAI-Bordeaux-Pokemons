@@ -359,19 +359,22 @@ export const submitController = async (req, res) => {
 
 export const getSubmissionsController = async (req, res) => {
   try {
-    const { status, limit = 15, offset = 0, sortBy } = req.query;
+    const { type, limit = 15, offset = 0, sortBy, rated } = req.query;
 
     const parsedLimit = parseInt(limit);
     const parsedOffset = parseInt(offset);
 
     const safeSort = sortBy?.toLowerCase() === 'asc' ? 'ASC' : 'DESC';
+    const safeRated = rated 
+      ? (rated.toLowerCase() === 'rated' ? 'rated' : 'unrated') 
+      : null;
     
-
     const filters = {
-      status: status || null,
+      type: type || null,
       limit: Number.isNaN(parsedLimit) ? 15 : parsedLimit,
       offset: Number.isNaN(parsedOffset) ? 0 : parsedOffset,
-      orderBy: safeSort
+      orderBy: safeSort,
+      rated: safeRated
     };
 
     const {submissions, total} = await getSubmissions(filters);

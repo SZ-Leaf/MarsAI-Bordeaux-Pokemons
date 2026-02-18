@@ -41,56 +41,12 @@ export const createSubmission = async (connection, data, videoPath, coverPath, d
   return result.insertId;
 };
 
-
 export const updateFilePaths = async (connection, submissionId, videoUrl, cover, subtitles = null) => {
   await connection.execute(
     'UPDATE submissions SET video_url = ?, cover = ?, subtitles = ? WHERE id = ?',
     [videoUrl, cover, subtitles, submissionId]
   );
 };
-
-
-// export const getSubmissions = async (filters = {}) => {
-//   const connection = await db.pool.getConnection();
-
-//   try {
-//     let query = 'SELECT * FROM submissions';
-//     const params = [];
-//     const conditions = [];
-
-//     // status filter
-//     if (filters.status !== undefined && filters.status !== null && filters.status !== '') {
-//       conditions.push('moderation_id IN (SELECT id FROM submission_moderation WHERE status = ?)');
-//       params.push(filters.status);
-//     }
-
-//     if (conditions.length) {
-//       query += ' WHERE ' + conditions.join(' AND ');
-//     }
-
-//     query += ' ORDER BY created_at DESC';
-
-//     // limit/offset
-//     if (typeof filters.limit === 'number' && !Number.isNaN(filters.limit)) {
-//       // Ensure it's a positive integer within reasonable bounds (max 1000)
-//       const limitValue = Math.min(1000, Math.max(1, Math.floor(Math.abs(filters.limit))));
-//       query += ` LIMIT ${limitValue}`;
-
-//       if (typeof filters.offset === 'number' && !Number.isNaN(filters.offset)) {
-//         // Ensure it's a non-negative integer
-//         const offsetValue = Math.max(0, Math.floor(Math.abs(filters.offset)));
-//         query += ` OFFSET ${offsetValue}`;
-//       }
-//     }
-
-//     const [rows] = await connection.execute(query, params);
-//     return rows;
-//   } catch (error) {
-//     throw error;
-//   } finally {
-//     connection.release();
-//   }
-// };
 
 export const getSubmissions = async (filters = {}) => {
   const connection = await db.pool.getConnection();
@@ -115,6 +71,14 @@ export const getSubmissions = async (filters = {}) => {
       params.push(filters.status);
     }
 
+    // join selector_memo for current user
+    joinClause += `
+      LEFT JOIN selector_memo sel
+        ON sel.submission_id = s.id
+        AND sel.user_id = ?
+    `;
+    params.push(filters.userId);
+
     if (filters.type !== undefined && filters.type !== null && filters.type !== '') {
       conditions.push('s.classification = ?');
       params.push(filters.type);
@@ -122,9 +86,9 @@ export const getSubmissions = async (filters = {}) => {
 
     
     if (filters.rated === 'rated') {
-      conditions.push('EXISTS (SELECT 1 FROM selector_memo sel WHERE sel.submission_id = s.id)');
+      conditions.push('sel.id IS NOT NULL');
     } else if (filters.rated === 'unrated') {
-      conditions.push('NOT EXISTS (SELECT 1 FROM selector_memo sel WHERE sel.submission_id = s.id)');
+      conditions.push('sel.id IS NULL');
     }
 
     // WHERE clause (if conditions exists)
@@ -160,7 +124,11 @@ export const getSubmissions = async (filters = {}) => {
 
     // data query (paginated)
     const dataQuery = `
-      SELECT s.*
+      SELECT  
+        s.*,
+        sel.id as memo_id,
+        sel.rating as memo_rating,
+        sel.comment as memo_comment
       FROM submissions s
       ${joinClause}
       ${whereClause}

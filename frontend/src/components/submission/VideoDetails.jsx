@@ -3,6 +3,8 @@ import { motion } from "motion/react";
 import { Plyr } from "plyr-react";
 import "plyr-react/plyr.css";
 import { useLanguage } from "../../context/LanguageContext";
+import './styles/videoDetails.css';
+
 import {
    X, ChevronLeft, ChevronRight,
    User, Mail, Phone, MapPin, Globe,
@@ -52,23 +54,10 @@ const VideoDetails = ({ video, onClose, onNext, onPrev, hasNext, hasPrev }) => {
          animate={{ opacity: 1 }}
          exit={{ opacity: 0 }}
       >
-         {/* Top bar with close button */}
-         <div className="sticky top-0 flex items-center justify-between px-6 py-4 bg-black/80 backdrop-blur-sm">
-            <h2 className="text-white text-lg font-semibold truncate">
-               {video?.english_title}
-            </h2>
-            <button
-               onClick={onClose}
-               className="text-white hover:text-gray-300 flex items-center gap-2 transition-colors"
-            >
-               {language === "fr" ? "Fermer" : "Close"}
-               <X size={20} />
-            </button>
-         </div>
 
          {/* Video player */}
          <div className="w-9/10 mx-auto" key={video?.id}>
-            <div className="aspect-video rounded-lg overflow-hidden">
+            <div className="video-container relative aspect-video rounded-lg overflow-hidden">
                <Plyr
                   source={{
                      type: "video",
@@ -91,6 +80,13 @@ const VideoDetails = ({ video, onClose, onNext, onPrev, hasNext, hasPrev }) => {
                      settings: ["speed"],
                   }}
                />
+               <button
+                  onClick={onClose}
+                  className="video-close-btn absolute top-3 right-3 z-50 text-white hover:text-gray-300 flex items-center gap-2 bg-black/50 rounded-lg px-3 py-1.5 backdrop-blur-sm cursor-pointer"
+               >
+                  {language === "fr" ? "Fermer" : "Close"}
+                  <X size={20} />
+               </button>
             </div>
 
             {/* Prev / Next navigation */}

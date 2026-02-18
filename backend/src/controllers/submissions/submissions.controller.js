@@ -360,7 +360,7 @@ export const submitController = async (req, res) => {
 export const getSubmissionsController = async (req, res) => {
   try {
     const { type, limit = 15, offset = 0, sortBy, rated } = req.query;
-
+    const userId = req.user.id;
     const parsedLimit = parseInt(limit);
     const parsedOffset = parseInt(offset);
 
@@ -374,7 +374,8 @@ export const getSubmissionsController = async (req, res) => {
       limit: Number.isNaN(parsedLimit) ? 15 : parsedLimit,
       offset: Number.isNaN(parsedOffset) ? 0 : parsedOffset,
       orderBy: safeSort,
-      rated: safeRated
+      rated: safeRated,
+      userId: userId
     };
 
     const {submissions, total} = await getSubmissions(filters);

@@ -7,7 +7,7 @@ import SubmissionsList from "../components/submission/SubmissionsList";
 import VideoDetails from "../components/submission/VideoDetails";
 import { AnimatePresence, motion } from "motion/react";
 
-const Submissions = () => {
+const Submissions = ({ onDetailToggle }) => {
    const [activeIndex, setActiveIndex] = useState(null);
    const submissionsRef = useRef(null);
    const alertHelper = useAlertHelper();
@@ -60,9 +60,13 @@ const Submissions = () => {
       }
    }, [pagination.offset, loading]);
 
+   useEffect(() => {
+      onDetailToggle?.(activeIndex !== null);
+   }, [activeIndex]);
+
 
    return (
-      <section ref={submissionsRef} className="submissions-section">
+      <section ref={submissionsRef} className="submissions-section pt-20">
          
          <AnimatePresence mode="wait">
             {activeIndex !== null ? (

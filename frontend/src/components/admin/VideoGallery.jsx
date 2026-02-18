@@ -5,7 +5,7 @@ import AdminSearchInput from './shared/AdminSearchInput';
 import Submissions from '../../pages/Submissions';
 import { useLanguage } from '../../context/LanguageContext';
 
-const VideoGallery = () => {
+const VideoGallery = ({ onDetailToggle }) => {
   const {language} = useLanguage();
   return (
     <div className="p-2">
@@ -17,7 +17,7 @@ const VideoGallery = () => {
 
       
 
-      <Submissions />
+      <Submissions onDetailToggle={onDetailToggle} />
     </div>
   );
 };

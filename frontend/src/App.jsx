@@ -22,7 +22,7 @@ import Dashboard from './pages/Dashboard';
 function App() {
   const location = useLocation();
   const isSelectorPage = location.pathname === '/selector';
-  const isAdminPage = location.pathname.startsWith('/admin');
+  const isAdminPage = location.pathname.startsWith('/dashboard');
 
   return (
     <LanguageProvider>

@@ -10,6 +10,7 @@ import '../components/admin/admin.css';
 
 const Dashboard = () => {
   const [activeView, setActiveView] = useState('overview');
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
 
   // Map view keys to components
   const viewComponents = {
@@ -39,10 +40,8 @@ const Dashboard = () => {
       />
 
       <main className="main-content">
-        <Header />
-        <div className="mt-8">
-          <ActiveComponent />
-        </div>
+        {!isDetailOpen && <Header />}
+        <ActiveComponent onDetailToggle={setIsDetailOpen} />
       </main>
     </div>
   );

@@ -64,6 +64,19 @@ const Submissions = ({ onDetailToggle }) => {
       onDetailToggle?.(activeIndex !== null);
    }, [activeIndex]);
 
+   useEffect(() => {
+      if (activeIndex !== null) {
+         const timeout = setTimeout(() => {
+            submissionsRef.current?.scrollIntoView({
+               behavior: "smooth",
+               block: "start"
+            });
+         }, 100); // small delay for animation
+   
+         return () => clearTimeout(timeout);
+      }
+   }, [activeIndex]);    
+
 
    return (
       <section ref={submissionsRef} className="submissions-section pt-20">

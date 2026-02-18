@@ -1,14 +1,26 @@
 import React from 'react';
-import { Calendar as CalendarIcon, MapPin, Clock, Plus, ChevronRight } from 'lucide-react';
+import { MapPin, Clock, Plus, Edit2, Trash2, Loader2, Search, Info } from 'lucide-react';
 import AdminSectionHeader from './shared/AdminSectionHeader';
+import AdminEventFormModal from './AdminEventFormModal';
+import useAdminEvents from '../../hooks/useAdminEvents';
+import '../events/events.css';
 
 const AdminEvents = () => {
-  const events = [
-    { id: 1, title: 'Cérémonie d\'ouverture', date: '20 Mai 2024', time: '19:00', location: 'Grand Amphithéâtre', status: 'Confirmé', attendees: 450 },
-    { id: 2, title: 'Workshop IA & Cinéma', date: '21 Mai 2024', time: '14:30', location: 'Salle Mars', status: 'Complet', attendees: 80 },
-    { id: 3, title: 'Projection Red Horizon', date: '22 Mai 2024', time: '21:00', location: 'Cinéma Galaxie', status: 'Confirmé', attendees: 320 },
-    { id: 4, title: 'Dîner de Gala', date: '24 Mai 2024', time: '20:30', location: 'Terrasse Étoilée', status: 'En attente', attendees: 150 },
-  ];
+  const {
+    events,
+    filteredEvents,
+    loading,
+    error,
+    searchTerm,
+    setSearchTerm,
+    isFormModalOpen,
+    eventToEdit,
+    openCreateModal,
+    openEditModal,
+    closeFormModal,
+    removeEvent,
+    fetchEvents,
+  } = useAdminEvents();
 
   return (
     <div className="p-2">
@@ -18,84 +30,108 @@ const AdminEvents = () => {
         action={{
           label: "Nouvel évènement",
           icon: Plus,
-          onClick: () => console.log('New event'),
+          onClick: openCreateModal,
           color: 'orange'
         }}
       />
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-        <div className="xl:col-span-2 space-y-4">
-          {events.map((event) => (
-            <div key={event.id} className="bg-[#1a1a1a] p-6 rounded-3xl border border-gray-800/50 hover:border-orange-500/30 transition-all group cursor-pointer">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-6">
-                  <div className="w-16 h-16 bg-[#0a0a0a] rounded-2xl border border-gray-800 flex flex-col items-center justify-center text-orange-500">
-                    <span className="text-xl font-bold">{event.date.split(' ')[0]}</span>
-                    <span className="text-[10px] uppercase font-bold text-gray-500">{event.date.split(' ')[1]}</span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-white group-hover:text-orange-400 transition-colors">{event.title}</h3>
-                    <div className="flex items-center space-x-4 mt-2 text-gray-500">
-                      <div className="flex items-center text-xs">
-                        <Clock size={14} className="mr-1" />
-                        {event.time}
-                      </div>
-                      <div className="flex items-center text-xs">
-                        <MapPin size={14} className="mr-1" />
-                        {event.location}
+      <div className="mb-8 relative max-w-md">
+        <Search className="event-search-icon" size={18} />
+        <input 
+          type="text" 
+          placeholder="Rechercher par titre ou lieu..."
+          className="event-search-input"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
+      <div className="space-y-4">
+        {loading ? (
+          <div className="event-admin-loading-container">
+            <Loader2 className="event-admin-loading-spinner" size={32} />
+            <p className="event-admin-loading-text">Chargement des événements...</p>
+          </div>
+        ) : error ? (
+          <div className="event-admin-error-container">
+            <Info className="event-admin-error-icon" size={32} />
+            <p className="event-admin-error-title">Erreur de chargement</p>
+            <p className="event-admin-error-message">{error}</p>
+            <button onClick={fetchEvents} className="event-admin-error-retry">Réessayer</button>
+          </div>
+        ) : filteredEvents.length === 0 ? (
+          <div className="event-admin-empty-container">
+            <p className="event-admin-empty-text">Aucun événement trouvé.</p>
+            <button onClick={openCreateModal} className="event-admin-empty-button">
+              Créer votre premier événement
+            </button>
+          </div>
+        ) : (
+          filteredEvents.map((event) => {
+            const dateStart = new Date(event.start_date);
+            const day = dateStart.getDate();
+            const month = dateStart.toLocaleString('fr-FR', { month: 'short' }).toUpperCase().replace('.', '');
+            const time = dateStart.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+
+            return (
+              <div key={event.id} className="event-list-item group">
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="flex items-center space-x-6">
+                    <div className="event-list-item-date-badge">
+                      <span className="event-list-item-date-day">{day}</span>
+                      <span className="event-list-item-date-month">{month}</span>
+                    </div>
+                    <div>
+                      <h3 className="event-list-item-title">{event.title}</h3>
+                      <div className="event-list-item-info">
+                        <div className="event-list-item-info-item">
+                          <Clock size={14} className="event-list-item-info-icon" />
+                          {time}
+                        </div>
+                        <div className="event-list-item-info-item">
+                          <MapPin size={14} className="event-list-item-info-icon" />
+                          {event.location}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="flex items-center space-x-8">
-                  <div className="text-right hidden md:block">
-                    <div className="text-xs font-bold text-gray-500 uppercase mb-1">Inscrits</div>
-                    <div className="text-lg font-bold">{event.attendees}</div>
+                  
+                  <div className="flex items-center space-x-4 ml-auto">
+                    <div className="event-list-item-capacity">
+                      <div className="event-list-item-capacity-label">Capacité</div>
+                      <div className="event-list-item-capacity-value">{event.places}</div>
+                    </div>
+                    
+                    <div className="event-list-item-actions">
+                      <button 
+                        onClick={(e) => openEditModal(event, e)}
+                        className="event-list-item-action-btn"
+                        title="Modifier"
+                      >
+                        <Edit2 size={16} />
+                      </button>
+                      <button 
+                        onClick={(e) => removeEvent(event.id, e)}
+                        className="event-list-item-action-btn-danger"
+                        title="Supprimer"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
                   </div>
-                  <div className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${
-                    event.status === 'Complet' ? 'bg-red-500/10 text-red-500' : 'bg-green-500/10 text-green-500'
-                  }`}>
-                    {event.status}
-                  </div>
-                  <ChevronRight className="text-gray-700 group-hover:text-white transition-colors" />
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="space-y-6">
-          <div className="bg-[#1a1a1a] p-6 rounded-3xl border border-gray-800/50">
-            <h3 className="font-bold mb-4 flex items-center">
-              <CalendarIcon size={18} className="mr-2 text-orange-500" />
-              Calendrier rapide
-            </h3>
-            <div className="grid grid-cols-7 gap-2 mb-4 text-center">
-              {['L', 'M', 'M', 'J', 'V', 'S', 'D'].map(d => (
-                <span key={d} className="text-[10px] text-gray-600 font-bold">{d}</span>
-              ))}
-              {Array.from({ length: 31 }).map((_, i) => (
-                <div key={i} className={`aspect-square flex items-center justify-center text-xs rounded-lg transition-colors cursor-pointer ${
-                  i + 1 === 20 ? 'bg-orange-600 text-white' : 'hover:bg-white/5'
-                }`}>
-                  {i + 1}
-                </div>
-              ))}
-            </div>
-            <button className="w-full py-2 text-[10px] font-bold uppercase text-gray-500 hover:text-white transition-colors border-t border-gray-800 pt-4">
-              Voir tout le calendrier
-            </button>
-          </div>
-
-          <div className="bg-gradient-to-br from-orange-600/20 to-transparent p-6 rounded-3xl border border-orange-500/20">
-            <h3 className="font-bold text-orange-400 mb-2">Statistiques d'affluence</h3>
-            <p className="text-xs text-gray-400 mb-4">Le taux d'occupation moyen des workshops est de 86% cette année.</p>
-            <div className="h-2 w-full bg-gray-800 rounded-full overflow-hidden">
-              <div className="h-full bg-orange-500 w-[86%]"></div>
-            </div>
-          </div>
-        </div>
+            );
+          })
+        )}
       </div>
+
+      <AdminEventFormModal 
+        isOpen={isFormModalOpen}
+        onClose={closeFormModal}
+        eventToEdit={eventToEdit}
+        onRefresh={fetchEvents}
+      />
     </div>
   );
 };

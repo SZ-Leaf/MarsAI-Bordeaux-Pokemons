@@ -17,6 +17,7 @@ import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 import SelectorDashboard from './pages/SelectorDashboard.jsx';
 import Dashboard from './pages/Dashboard';
+import Events from './pages/Events';
 
 function App() {
   const location = useLocation();
@@ -38,6 +39,7 @@ function App() {
         <div className={isSelectorPage || isAdminPage ? '' : 'pt-0 md:pt-24'}>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/events" element={<Events />} />
             <Route path="/ui-kit" element={<TestsGraphique />} />
             <Route path="/submit" element={<Submit />} />
             <Route path="/register" element={<Register />} />

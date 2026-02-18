@@ -1,6 +1,7 @@
+@import 'tailwindcss' reference;
+
 @reference "../../../App.css";
 
-@layer components {
     /* Styles pour AdminSectionHeader */
     .admin-section-header {
         @apply flex justify-between items-center mb-8;
@@ -43,4 +44,4 @@
     .admin-stat-icon-container {
         @apply p-2 rounded-lg mb-4 w-fit transition-colors;
     }
-}
+

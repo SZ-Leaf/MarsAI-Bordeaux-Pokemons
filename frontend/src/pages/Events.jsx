@@ -1,48 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { getEvents } from '../services/event.service';
+import React from 'react';
+import { Calendar, Search, Filter, Loader2, Info } from 'lucide-react';
+import useEvents from '../hooks/useEvents';
 import EventCard from '../components/events/EventCard';
 import EventDetailModal from '../components/events/EventDetailModal';
-import { Calendar, Search, Filter, Loader2, Info } from 'lucide-react';
-import './home.css'; // Pour réutiliser certains styles si besoin
+import './home.css';
 
 const Events = () => {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        setLoading(true);
-        const response = await getEvents();
-        setEvents(response.data.events || []);
-      } catch (err) {
-        console.error('Erreur lors du chargement des événements:', err);
-        setError("Impossible de charger les événements. Veuillez réessayer plus tard.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEvents();
-  }, []);
-
-  const handleOpenModal = (event) => {
-    setSelectedEvent(event);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const filteredEvents = events.filter(event => 
-    event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    event.location.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const {
+    filteredEvents,
+    loading,
+    error,
+    searchTerm,
+    setSearchTerm,
+    selectedEvent,
+    isDetailModalOpen,
+    openDetailModal,
+    closeDetailModal,
+  } = useEvents();
 
   return (
     <div className="home-container min-h-screen pt-24 pb-20 px-4 md:px-8">
@@ -53,7 +27,7 @@ const Events = () => {
           AGENDA OFFICIEL 2026
         </div>
         <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 uppercase tracking-tighter">
-          LES ÉVÉNEMENTS <span className="gradient-text">MARS AI</span>
+          LES ÉVÉNEMENTS MARS<span className="gradient-text">AI</span>
         </h1>
         <p className="text-gray-400 max-w-2xl mx-auto text-lg leading-relaxed">
           Découvrez notre programmation exclusive de workshops, conférences et projections 
@@ -105,18 +79,17 @@ const Events = () => {
               <EventCard 
                 key={event.id} 
                 event={event} 
-                onClick={handleOpenModal}
+                onClick={openDetailModal}
               />
             ))}
           </div>
         )}
       </div>
 
-      {/* Detail Modal */}
       <EventDetailModal 
         event={selectedEvent} 
-        isOpen={isModalOpen} 
-        onClose={handleCloseModal}
+        isOpen={isDetailModalOpen} 
+        onClose={closeDetailModal}
       />
     </div>
   );

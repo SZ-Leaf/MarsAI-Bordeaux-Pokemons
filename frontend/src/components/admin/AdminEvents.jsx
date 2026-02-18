@@ -1,82 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Calendar as CalendarIcon, MapPin, Clock, Plus, ChevronRight, Edit2, Trash2, Loader2, Search, Info } from 'lucide-react';
 import AdminSectionHeader from './shared/AdminSectionHeader';
-import { getEvents, deleteEvent } from '../../services/event.service';
 import AdminEventFormModal from './AdminEventFormModal';
+import useAdminEvents from '../../hooks/useAdminEvents';
 
 const AdminEvents = () => {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-
-  // Modal state
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [eventToEdit, setEventToEdit] = useState(null);
-
-  const fetchEvents = async () => {
-    try {
-      setLoading(true);
-      const response = await getEvents();
-      setEvents(response.data.events || []);
-      setError(null);
-    } catch (err) {
-      console.error('Erreur lors du chargement des événements:', err);
-      setError("Impossible de charger les événements.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-
-  const handleCreate = () => {
-    setEventToEdit(null);
-    setIsModalOpen(true);
-  };
-
-  const handleEdit = (event, e) => {
-    e.stopPropagation();
-    setEventToEdit(event);
-    setIsModalOpen(true);
-  };
-
-  const handleDelete = async (id, e) => {
-    e.stopPropagation();
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer cet événement ? Cette action est irréversible.")) {
-      try {
-        await deleteEvent(id);
-        fetchEvents();
-      } catch (err) {
-        alert("Erreur lors de la suppression de l'événement.");
-      }
-    }
-  };
-
-  const filteredEvents = events.filter(event =>
-    event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    event.location.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const {
+    events,
+    filteredEvents,
+    loading,
+    error,
+    searchTerm,
+    setSearchTerm,
+    isFormModalOpen,
+    eventToEdit,
+    openCreateModal,
+    openEditModal,
+    closeFormModal,
+    removeEvent,
+    fetchEvents,
+  } = useAdminEvents();
 
   return (
     <div className="p-2">
-      <AdminSectionHeader
-        title="Évènements"
+      <AdminSectionHeader 
+        title="Évènements" 
         subtitle="Planifiez et gérez les moments forts du festival Mars AI."
         action={{
           label: "Nouvel évènement",
           icon: Plus,
-          onClick: handleCreate,
+          onClick: openCreateModal,
           color: 'orange'
         }}
       />
 
       <div className="mb-8 relative max-w-md">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-        <input
-          type="text"
+        <input 
+          type="text" 
           placeholder="Rechercher par titre ou lieu..."
           className="w-full bg-[#1a1a1a] border border-gray-800 rounded-2xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-orange-500 transition-all text-sm"
           value={searchTerm}
@@ -101,7 +62,7 @@ const AdminEvents = () => {
           ) : filteredEvents.length === 0 ? (
             <div className="p-20 bg-[#1a1a1a] border border-gray-800 rounded-[2.5rem] text-center">
               <p className="text-gray-500 text-sm">Aucun événement trouvé.</p>
-              <button onClick={handleCreate} className="mt-4 text-xs text-orange-500 uppercase font-bold border border-orange-500/30 px-4 py-2 rounded-xl hover:bg-orange-500/10 transition-all">
+              <button onClick={openCreateModal} className="mt-4 text-xs text-orange-500 uppercase font-bold border border-orange-500/30 px-4 py-2 rounded-xl hover:bg-orange-500/10 transition-all">
                 Créer votre premier événement
               </button>
             </div>
@@ -134,23 +95,23 @@ const AdminEvents = () => {
                         </div>
                       </div>
                     </div>
-
+                    
                     <div className="flex items-center space-x-4 ml-auto">
                       <div className="text-right hidden md:block border-r border-gray-800 pr-4 mr-2">
                         <div className="text-[10px] font-bold text-gray-500 uppercase mb-1">Capacité</div>
                         <div className="text-lg font-bold text-gray-300">{event.places}</div>
                       </div>
-
+                      
                       <div className="flex gap-2">
-                        <button
-                          onClick={(e) => handleEdit(event, e)}
+                        <button 
+                          onClick={(e) => openEditModal(event, e)}
                           className="p-3 bg-white/5 hover:bg-orange-500/20 text-gray-400 hover:text-orange-500 rounded-xl transition-all border border-white/5"
                           title="Modifier"
                         >
                           <Edit2 size={16} />
                         </button>
-                        <button
-                          onClick={(e) => handleDelete(event.id, e)}
+                        <button 
+                          onClick={(e) => removeEvent(event.id, e)}
                           className="p-3 bg-white/5 hover:bg-red-500/20 text-gray-400 hover:text-red-500 rounded-xl transition-all border border-white/5"
                           title="Supprimer"
                         >
@@ -167,9 +128,9 @@ const AdminEvents = () => {
 
       </div>
 
-      <AdminEventFormModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+      <AdminEventFormModal 
+        isOpen={isFormModalOpen}
+        onClose={closeFormModal}
         eventToEdit={eventToEdit}
         onRefresh={fetchEvents}
       />

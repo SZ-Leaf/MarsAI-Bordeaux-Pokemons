@@ -25,6 +25,7 @@ export default function TagSelectCreatable({
     if (!title) return;
 
     setMsg("");
+    //on stock les tags sélectionnés pour les ajouter au submit de la vidéo
     const temp = { value: null, label: title };
 
     const exists = (value || []).some(

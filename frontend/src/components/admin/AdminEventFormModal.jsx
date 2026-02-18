@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Upload, Calendar, MapPin, Users, Clock, Loader2, Image as ImageIcon } from 'lucide-react';
 import useEventForm from '../../hooks/useEventForm';
+import './admin.css';
 
 const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
   const {
@@ -18,68 +19,67 @@ const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="modal-overlay">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            className="modal-backdrop"
           />
 
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative bg-[#1a1a1a] w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-[2.5rem] border border-gray-800 shadow-2xl p-8 md:p-10"
+            className="modal-container"
           >
-            <div className="flex justify-between items-center mb-8">
+            <div className="modal-header">
               <div>
-                <h2 className="text-2xl font-bold text-white">
+                <h2 className="modal-title">
                   {eventToEdit ? "Modifier l'événement" : 'Nouvel événement'}
                 </h2>
-                <p className="text-gray-500 text-xs mt-1 uppercase tracking-widest font-bold">
+                <p className="modal-subtitle">
                   {eventToEdit ? 'Édition des paramètres stellaires' : "Configuration d'une nouvelle mission"}
                 </p>
               </div>
               <button 
                 onClick={onClose}
-                className="p-3 bg-white/5 hover:bg-red-500/20 text-gray-400 hover:text-red-500 rounded-2xl transition-all border border-white/5"
+                className="modal-close-btn"
               >
                 <X size={20} />
               </button>
             </div>
 
             {error && (
-              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-500 text-sm">
+              <div className="modal-error">
                 {error}
               </div>
             )}
 
-            <form onSubmit={onSubmit} className="space-y-8">
+            <form onSubmit={onSubmit} className="modal-form">
               {/* Image de couverture */}
-              <div className="relative group">
+              <div className="modal-image-upload-container">
                 <div 
                   onClick={() => fileInputRef.current?.click()}
-                  className={`relative h-48 rounded-[2rem] border-2 border-dashed transition-all cursor-pointer overflow-hidden flex flex-col items-center justify-center
-                    ${previewUrl ? 'border-orange-500/50' : 'border-gray-800 hover:border-orange-500/30 bg-black/20'}`}
+                  className={`modal-image-upload-area ${previewUrl ? 'modal-image-upload-area-filled' : 'modal-image-upload-area-empty'}`}
                 >
                   {previewUrl ? (
                     <>
                       <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                        <div className="bg-orange-600 p-3 rounded-full text-white">
+                      <div className="modal-image-overlay">
+                        <div className="modal-image-upload-icon">
                           <Upload size={20} />
                         </div>
                       </div>
                     </>
                   ) : (
-                    <div className="text-center p-6">
-                      <div className="bg-orange-600/10 p-4 rounded-3xl inline-block mb-3 border border-orange-500/20">
-                        <ImageIcon size={32} className="text-orange-500" />
+                    <div className="modal-image-placeholder">
+                      <div className="modal-image-icon-container">
+                        <ImageIcon size={32} className="modal-image-icon" />
                       </div>
-                      <p className="text-white font-bold text-sm">Ajouter une image de couverture</p>
-                      <p className="text-gray-500 text-[10px] uppercase mt-1">Recommandé : 1200 x 600 px</p>
+                      <p className="modal-image-text">Ajouter une image de couverture</p>
+                      <p className="modal-image-hint">Recommandé : 1200 x 600 px</p>
                     </div>
                   )}
                 </div>
@@ -92,9 +92,9 @@ const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="md:col-span-2">
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 ml-1">Titre de l'événement</label>
+              <div className="modal-form-grid">
+                <div className="modal-form-grid-full">
+                  <label className="modal-label">Titre de l'événement</label>
                   <input 
                     type="text"
                     name="title"
@@ -102,40 +102,68 @@ const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
                     value={formData.title}
                     onChange={onFieldChange}
                     placeholder="Ex: Conférence IA & Créativité"
-                    className="w-full bg-black/40 border border-gray-800 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-orange-500 transition-all"
+                    className="modal-input"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 ml-1 flex items-center">
-                    <Calendar size={12} className="mr-1" /> Date de début
+                  <label className="modal-label-with-icon">
+                    <Calendar size={12} className="mr-1" /> Date et heure de début
                   </label>
-                  <input 
-                    type="datetime-local"
-                    name="start_date"
-                    required
-                    value={formData.start_date}
-                    onChange={onFieldChange}
-                    className="w-full bg-black/40 border border-gray-800 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-orange-500 transition-all [color-scheme:dark]"
-                  />
+                  <div className="modal-date-time-grid">
+                    <input
+                      type="date"
+                      required
+                      value={formData.start_date ? formData.start_date.split('T')[0] : ''}
+                      onChange={(e) => {
+                        const time = formData.start_date ? formData.start_date.split('T')[1] : '00:00';
+                        onFieldChange({ target: { name: 'start_date', value: `${e.target.value}T${time}` } });
+                      }}
+                      className="modal-input-date-time"
+                    />
+                    <input
+                      type="time"
+                      required
+                      value={formData.start_date ? formData.start_date.split('T')[1] : ''}
+                      onChange={(e) => {
+                        const date = formData.start_date ? formData.start_date.split('T')[0] : '';
+                        onFieldChange({ target: { name: 'start_date', value: `${date}T${e.target.value}` } });
+                      }}
+                      className="modal-input-date-time"
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 ml-1 flex items-center">
-                    <Clock size={12} className="mr-1" /> Date de fin
+                  <label className="modal-label-with-icon">
+                    <Clock size={12} className="mr-1" /> Date et heure de fin
                   </label>
-                  <input 
-                    type="datetime-local"
-                    name="end_date"
-                    required
-                    value={formData.end_date}
-                    onChange={onFieldChange}
-                    className="w-full bg-black/40 border border-gray-800 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-orange-500 transition-all [color-scheme:dark]"
-                  />
+                  <div className="modal-date-time-grid">
+                    <input
+                      type="date"
+                      required
+                      value={formData.end_date ? formData.end_date.split('T')[0] : ''}
+                      onChange={(e) => {
+                        const time = formData.end_date ? formData.end_date.split('T')[1] : '00:00';
+                        onFieldChange({ target: { name: 'end_date', value: `${e.target.value}T${time}` } });
+                      }}
+                      className="modal-input-date-time"
+                    />
+                    <input
+                      type="time"
+                      required
+                      value={formData.end_date ? formData.end_date.split('T')[1] : ''}
+                      onChange={(e) => {
+                        const date = formData.end_date ? formData.end_date.split('T')[0] : '';
+                        onFieldChange({ target: { name: 'end_date', value: `${date}T${e.target.value}` } });
+                      }}
+                      className="modal-input-date-time"
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 ml-1 flex items-center">
+                  <label className="modal-label-with-icon">
                     <MapPin size={12} className="mr-1" /> Lieu
                   </label>
                   <input 
@@ -145,12 +173,12 @@ const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
                     value={formData.location}
                     onChange={onFieldChange}
                     placeholder="Ex: Palais des Congrès, Bordeaux"
-                    className="w-full bg-black/40 border border-gray-800 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-orange-500 transition-all"
+                    className="modal-input"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 ml-1 flex items-center">
+                  <label className="modal-label-with-icon">
                     <Users size={12} className="mr-1" /> Capacité (places)
                   </label>
                   <input 
@@ -160,12 +188,12 @@ const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
                     min="1"
                     value={formData.places}
                     onChange={onFieldChange}
-                    className="w-full bg-black/40 border border-gray-800 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-orange-500 transition-all"
+                    className="modal-input"
                   />
                 </div>
 
-                <div className="md:col-span-2">
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 ml-1">Description</label>
+                <div className="modal-form-grid-full">
+                  <label className="modal-label">Description</label>
                   <textarea 
                     name="description"
                     required
@@ -173,23 +201,23 @@ const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
                     value={formData.description}
                     onChange={onFieldChange}
                     placeholder="Décrivez l'événement en quelques lignes..."
-                    className="w-full bg-black/40 border border-gray-800 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-orange-500 transition-all resize-none"
+                    className="modal-textarea"
                   />
                 </div>
               </div>
 
-              <div className="flex gap-4 pt-4">
+              <div className="modal-form-actions">
                 <button 
                   type="button"
                   onClick={onClose}
-                  className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl transition-all border border-white/5"
+                  className="modal-btn-cancel"
                 >
                   Annuler
                 </button>
                 <button 
                   type="submit"
                   disabled={loading}
-                  className="flex-2 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-orange-600/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="modal-btn-submit"
                 >
                   {loading && <Loader2 className="animate-spin mr-2" size={20} />}
                   {eventToEdit ? 'Enregistrer les modifications' : "Créer l'événement"}

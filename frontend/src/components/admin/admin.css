@@ -87,4 +87,130 @@
 .film-stat-item {
     @apply flex items-center text-[10px] text-gray-500 mr-4;
 }
+
+/* MODAL FORM STYLES */
+.modal-overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center p-4;
+}
+
+.modal-backdrop {
+    @apply absolute inset-0 bg-black/80 backdrop-blur-sm;
+}
+
+.modal-container {
+    @apply relative bg-[#1a1a1a] w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-[2.5rem] border border-gray-800 shadow-2xl p-8 md:p-10;
+}
+
+.modal-header {
+    @apply flex justify-between items-center mb-8;
+}
+
+.modal-title {
+    @apply text-2xl font-bold text-white;
+}
+
+.modal-subtitle {
+    @apply text-gray-500 text-xs mt-1 uppercase tracking-widest font-bold;
+}
+
+.modal-close-btn {
+    @apply p-3 bg-white/5 hover:bg-red-500/20 text-gray-400 hover:text-red-500 rounded-2xl transition-all border border-white/5;
+}
+
+.modal-error {
+    @apply mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-500 text-sm;
+}
+
+.modal-form {
+    @apply space-y-8;
+}
+
+.modal-image-upload-container {
+    @apply relative group;
+}
+
+.modal-image-upload-area {
+    @apply relative h-48 rounded-[2rem] border-2 border-dashed transition-all cursor-pointer overflow-hidden flex flex-col items-center justify-center;
+}
+
+.modal-image-upload-area-empty {
+    @apply border-gray-800 hover:border-orange-500/30 bg-black/20;
+}
+
+.modal-image-upload-area-filled {
+    @apply border-orange-500/50;
+}
+
+.modal-image-overlay {
+    @apply absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px];
+}
+
+.modal-image-upload-icon {
+    @apply bg-orange-600 p-3 rounded-full text-white;
+}
+
+.modal-image-placeholder {
+    @apply text-center p-6;
+}
+
+.modal-image-icon-container {
+    @apply bg-orange-600/10 p-4 rounded-3xl inline-block mb-3 border border-orange-500/20;
+}
+
+.modal-image-icon {
+    @apply text-orange-500;
+}
+
+.modal-image-text {
+    @apply text-white font-bold text-sm;
+}
+
+.modal-image-hint {
+    @apply text-gray-500 text-[10px] uppercase mt-1;
+}
+
+.modal-form-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+}
+
+.modal-form-grid-full {
+    @apply md:col-span-2;
+}
+
+.modal-label {
+    @apply block text-[10px] font-bold text-gray-500 uppercase mb-2 ml-1;
+}
+
+.modal-label-with-icon {
+    @apply block text-[10px] font-bold text-gray-500 uppercase mb-2 ml-1 flex items-center;
+}
+
+.modal-input {
+    @apply w-full bg-black/40 border border-gray-800 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-orange-500 transition-all;
+}
+
+.modal-input-date-time {
+    @apply w-full bg-black/40 border border-gray-800 rounded-2xl py-4 px-4 text-sm text-white focus:outline-none focus:border-orange-500 transition-all;
+    color-scheme: dark;
+}
+
+.modal-textarea {
+    @apply w-full bg-black/40 border border-gray-800 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-orange-500 transition-all resize-none;
+}
+
+.modal-date-time-grid {
+    @apply grid grid-cols-2 gap-2;
+}
+
+.modal-form-actions {
+    @apply flex gap-4 pt-4;
+}
+
+.modal-btn-cancel {
+    @apply flex-1 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl transition-all border border-white/5;
+}
+
+.modal-btn-submit {
+    @apply flex-2 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-orange-600/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center;
+}
 }

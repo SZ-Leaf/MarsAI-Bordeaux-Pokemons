@@ -20,15 +20,14 @@ const useEventForm = ({ eventToEdit, isOpen, onRefresh, onClose }) => {
 
   useEffect(() => {
     if (eventToEdit) {
+      const startDate = eventToEdit.start_date ? new Date(eventToEdit.start_date) : null;
+      const endDate = eventToEdit.end_date ? new Date(eventToEdit.end_date) : null;
+
       setFormData({
         title: eventToEdit.title || '',
         description: eventToEdit.description || '',
-        start_date: eventToEdit.start_date
-          ? new Date(eventToEdit.start_date).toISOString().slice(0, 16)
-          : '',
-        end_date: eventToEdit.end_date
-          ? new Date(eventToEdit.end_date).toISOString().slice(0, 16)
-          : '',
+        start_date: startDate ? startDate.toISOString().slice(0, 16) : '',
+        end_date: endDate ? endDate.toISOString().slice(0, 16) : '',
         location: eventToEdit.location || '',
         places: eventToEdit.places || 100,
       });

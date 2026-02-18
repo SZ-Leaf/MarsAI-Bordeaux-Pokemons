@@ -155,7 +155,7 @@
 }
 
 .newsletter-lang-flag {
-  @apply shrink-0 rounded-sm object-cover;
+  @apply shrink-0 object-cover;
   width: 20px;
   height: 14px;
 }

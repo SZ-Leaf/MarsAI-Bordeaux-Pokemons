@@ -21,6 +21,22 @@
    @apply absolute top-2 left-2 flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-lg bg-yellow-500/80 text-black;
 }
 
+.submission-playlist {
+   @apply absolute top-2 right-2 flex items-center justify-center w-7 h-7 rounded-lg;
+}
+
+.submission-playlist-favorites {
+   @apply bg-green-500/80 text-white;
+}
+
+.submission-playlist-watch-later {
+   @apply bg-blue-500/80 text-white;
+}
+
+.submission-playlist-report {
+   @apply bg-red-500/80 text-white;
+}
+
 .submission-content {
    @apply px-1;
 }

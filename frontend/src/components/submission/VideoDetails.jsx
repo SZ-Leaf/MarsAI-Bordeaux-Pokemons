@@ -8,16 +8,13 @@ import './styles/videoDetails.css';
 import {
    X, ChevronLeft, ChevronRight,
    User, Mail, Phone, MapPin, Globe,
-   Film, Clock, Calendar, Clapperboard, Cpu, Captions, Link, Sparkles,
-   Star, MessageSquare
+   Film, Clock, Calendar, Clapperboard, Cpu, Captions, Link, Sparkles
 } from "lucide-react";
+import MemoBlock from "./uploads/MemoBlock";
 
-const VideoDetails = ({ video, onClose, onNext, onPrev, hasNext, hasPrev }) => {
+const VideoDetails = ({ video, onClose, onNext, onPrev, hasNext, hasPrev, onMemoUpdate }) => {
    const { language } = useLanguage();
    const API_URL = import.meta.env.VITE_API_URL;
-   const [ratingValue, setRatingValue] = useState(0);
-   const [hoverRating, setHoverRating] = useState(0);
-   const [comment, setComment] = useState("");
 
    const videoSrc = video?.video_url?.startsWith("http")
       ? video.video_url
@@ -248,105 +245,8 @@ const VideoDetails = ({ video, onClose, onNext, onPrev, hasNext, hasPrev }) => {
                </div>
             </div>
 
-            {/* Rating section */}
-            <div className="space-y-4">
-               <h3 className="text-gray-500 uppercase text-xs font-bold tracking-wide border-b border-gray-800 pb-2">
-                  {language === "fr" ? "Évaluation" : "Rating"}
-               </h3>
-
-               {video?.memo_rating != null ? (
-                  <div className="bg-[#1a1a1a] rounded-2xl border border-gray-800/50 p-6 space-y-4">
-                     <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-1">
-                           {[1, 2, 3, 4, 5].map((star) => (
-                              <Star
-                                 key={star}
-                                 size={22}
-                                 className={star <= video.memo_rating ? "text-yellow-400" : "text-gray-700"}
-                                 fill={star <= video.memo_rating ? "currentColor" : "none"}
-                              />
-                           ))}
-                        </div>
-                        <span className="text-2xl font-bold text-yellow-400">{video.memo_rating}/5</span>
-                     </div>
-                     {video?.memo_comment && (
-                        <div className="flex items-start gap-3">
-                           <MessageSquare size={16} className="text-gray-500 mt-0.5 shrink-0" />
-                           <div>
-                              <p className="text-gray-500 uppercase text-[10px] font-bold tracking-wide">
-                                 {language === "fr" ? "Commentaire" : "Comment"}
-                              </p>
-                              <p className="text-gray-300 mt-1 leading-relaxed">{video.memo_comment}</p>
-                           </div>
-                        </div>
-                     )}
-                  </div>
-               ) : (
-                  <div className="bg-[#1a1a1a] rounded-2xl border border-gray-800/50 p-6 space-y-5">
-                     <p className="text-gray-400 text-sm">
-                        {language === "fr"
-                           ? "Ce film n'a pas encore été évalué."
-                           : "This film has not been rated yet."}
-                     </p>
-
-                     <div className="space-y-2">
-                        <label className="text-gray-500 uppercase text-[10px] font-bold tracking-wide">
-                           {language === "fr" ? "Note" : "Rating"}
-                        </label>
-                        <div className="flex items-center gap-1">
-                           {[1, 2, 3, 4, 5].map((star) => (
-                              <button
-                                 key={star}
-                                 type="button"
-                                 onClick={() => setRatingValue(star)}
-                                 onMouseEnter={() => setHoverRating(star)}
-                                 onMouseLeave={() => setHoverRating(0)}
-                                 className="bg-transparent border-none cursor-pointer p-1 transition-transform hover:scale-110"
-                              >
-                                 <Star
-                                    size={28}
-                                    className={
-                                       star <= (hoverRating || ratingValue)
-                                          ? "text-yellow-400"
-                                          : "text-gray-700"
-                                    }
-                                    fill={star <= (hoverRating || ratingValue) ? "currentColor" : "none"}
-                                 />
-                              </button>
-                           ))}
-                           {ratingValue > 0 && (
-                              <span className="text-yellow-400 font-bold ml-2">{ratingValue}/5</span>
-                           )}
-                        </div>
-                     </div>
-
-                     <div className="space-y-2">
-                        <label className="text-gray-500 uppercase text-[10px] font-bold tracking-wide">
-                           {language === "fr" ? "Commentaire" : "Comment"}
-                        </label>
-                        <textarea
-                           value={comment}
-                           onChange={(e) => setComment(e.target.value)}
-                           rows={3}
-                           placeholder={
-                              language === "fr"
-                                 ? "Ajouter un commentaire..."
-                                 : "Add a comment..."
-                           }
-                           className="w-full p-3 rounded-xl border border-gray-800 bg-[#0a0a0a] text-white placeholder-gray-600 focus:border-yellow-500/50 outline-none transition-colors resize-none"
-                        />
-                     </div>
-
-                     <button
-                        type="button"
-                        disabled={ratingValue === 0 && comment.trim() === ""}
-                        className="px-5 py-2.5 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-sm transition-colors cursor-pointer border-none disabled:opacity-40 disabled:cursor-not-allowed"
-                     >
-                        {language === "fr" ? "Enregistrer l'évaluation" : "Save rating"}
-                     </button>
-                  </div>
-               )}
-            </div>
+            {/* Memo / Rating section */}
+            <MemoBlock video={video} onMemoUpdate={onMemoUpdate} />
          </div>
       </motion.div>
    );

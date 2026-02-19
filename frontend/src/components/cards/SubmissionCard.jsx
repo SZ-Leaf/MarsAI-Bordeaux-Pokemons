@@ -1,7 +1,13 @@
 import React from 'react';
-import { Star } from 'lucide-react';
+import { Star, Heart, Clock, Flag } from 'lucide-react';
 import './submissionCard.css';
 import { useLanguage } from '../../context/LanguageContext';
+
+const PLAYLIST_BADGE = {
+   FAVORITES:   { icon: Heart, cls: "submission-playlist-favorites" },
+   WATCH_LATER: { icon: Clock, cls: "submission-playlist-watch-later" },
+   REPORT:      { icon: Flag,  cls: "submission-playlist-report" },
+};
 
 const SubmissionCard = ({submission, onVideoClick}) => {
    const {language} = useLanguage();
@@ -13,6 +19,7 @@ const SubmissionCard = ({submission, onVideoClick}) => {
    }
 
    const rating = submission.memo_rating;
+   const badge = PLAYLIST_BADGE[submission.memo_selection_list];
 
    return (
       <article className="submission-container-card" key={submission.id}>
@@ -23,6 +30,11 @@ const SubmissionCard = ({submission, onVideoClick}) => {
                <div className="submission-rating">
                   <Star size={12} fill="currentColor" />
                   <span>{rating}</span>
+               </div>
+            )}
+            {badge && (
+               <div className={`submission-playlist ${badge.cls}`}>
+                  <badge.icon size={12} fill="currentColor" />
                </div>
             )}
          </div>

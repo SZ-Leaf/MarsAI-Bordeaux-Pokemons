@@ -2,7 +2,7 @@
 
 @layer components {
     .sidebar {
-        @apply w-72 bg-[#121212] flex flex-col p-6 sticky top-0 h-screen overflow-y-auto border-r border-gray-800;
+        @apply w-70 bg-[#121212] flex flex-col p-6 sticky top-0 h-screen overflow-y-auto border-r border-gray-800;
     }
 
     .sidebar-user-profile {

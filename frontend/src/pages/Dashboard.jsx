@@ -6,6 +6,7 @@ import AdminUsers from '../components/admin/AdminUsers';
 import VideoGallery from '../components/admin/VideoGallery';
 import AdminEvents from '../components/admin/AdminEvents';
 import AdminNewsletter from '../components/admin/AdminNewsletter';
+import Invitations from '../components/admin/Invitations';
 import '../components/admin/admin.css';
 
 const Dashboard = () => {
@@ -19,6 +20,7 @@ const Dashboard = () => {
     films: VideoGallery,
     events: AdminEvents,
     newsletter: AdminNewsletter,
+    invitations: Invitations,
     config: () => (
       <div className="flex flex-col items-center justify-center h-[60vh]">
         <h1 className="section-title">Configuration</h1>

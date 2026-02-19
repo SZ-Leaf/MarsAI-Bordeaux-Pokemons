@@ -1,5 +1,4 @@
 import React from 'react';
-import { Plus, Filter, Play, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import AdminSectionHeader from './shared/AdminSectionHeader';
 import AdminSearchInput from './shared/AdminSearchInput';
 import Submissions from '../../pages/Submissions';

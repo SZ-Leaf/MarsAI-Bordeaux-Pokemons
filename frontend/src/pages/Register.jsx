@@ -1,5 +1,5 @@
 import React from "react";
-import RegisterForm from "../components/forms/RegisterForm";
+import { RegisterForm } from "../components/features/auth";
 import { useLocation, Navigate, Link } from "react-router";
 import { useLanguage } from "../context/LanguageContext";
 import "../styles.css";

@@ -2,9 +2,9 @@ import { useSubmission } from '../hooks/useSubmission.js';
 import { useScrollOnStepChange } from '../hooks/useScrollOnStepChange.js';
 import { useScrollToError } from '../hooks/useScrollToError.js';
 import useModal from '../hooks/useModal.js';
-import { StepIndicator, StepContent, SubmissionSuccess } from '../components/submission';
-import FormNavigation from '../components/forms/NaviguationForm.jsx';
-import ActionConfirmationModal from '../components/modals/ActionConfirmationModal.jsx';
+import { StepIndicator, StepContent, SubmissionSuccess } from '../components/features/submission';
+import { FormNavigation } from '../components/features/submission';
+import { ActionConfirmationModal } from '../components/features/submission';
 import { totalSteps } from '../constants/submissionSteps.js';
 
 /**

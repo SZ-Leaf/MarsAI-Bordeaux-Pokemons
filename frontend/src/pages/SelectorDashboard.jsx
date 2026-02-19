@@ -2,10 +2,7 @@ import React, { useMemo, useState, useRef, useEffect } from "react";
 import { usePlaylists } from "../helpers/playlistHelper.js";
 import { usePlaylistCounts } from "../hooks/usePlaylistCounts";
 import { usePendingSubmissions } from "../hooks/usePendingSubmissions";
-import PlaylistCard from "../components/playlists/PlaylistCard.jsx";
-import PlaylistDetail from "../components/playlists/PlaylistDetail.jsx";
-import PendingCard from "../components/playlists/PendingCard.jsx";
-import PendingDetail from "../components/playlists/PendingDetail.jsx";
+import { PlaylistCard, PlaylistDetail, PendingCard, PendingDetail } from "../components/features/playlists";
 
 export default function SelectorDashboard() {
   const playlists = usePlaylists();

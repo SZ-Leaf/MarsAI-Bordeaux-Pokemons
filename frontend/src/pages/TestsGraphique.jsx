@@ -1,15 +1,12 @@
 import React from 'react';
 import '../styles.css';
 import useModal from '../hooks/useModal';
-import Modal from '../components/modals/Modal';
-import Card from '../components/cards/Card';
-import Form from '../components/forms/Form';
-import Tag from '../components/tags/Tags.jsx';
-import SubmitModal from '../components/modals/SubmitModal.jsx';
-import Countdown from '../components/coutndown/Countdown.jsx';
-import FavoriteButton from '../components/playlists/AddToFavoritesBtn.jsx';
-import WatchLaterButton from '../components/playlists/AddToWatchLaterBtn.jsx';
-import ReportButton from '../components/playlists/AddToReport.jsx';
+import { Modal, Card } from '../components/ui';
+import { Form } from '../components/features/submission';
+import { Tags } from '../components/features/tags';
+import { SubmitModal } from '../components/features/submission';
+import { Countdown } from '../components/shared/ui';
+import { AddToFavoritesBtn, AddToWatchLaterBtn, AddToReport } from '../components/features/playlists/PlaylistActions';
 
 export default function Homepage() {
   const loginModal = useModal();
@@ -67,9 +64,9 @@ export default function Homepage() {
         </div>
 
         <div className='playlists-btns'>
-          <FavoriteButton/>
-          <WatchLaterButton/>
-          <ReportButton/>
+          <AddToFavoritesBtn/>
+          <AddToWatchLaterBtn/>
+          <AddToReport/>
         </div>
 
         {/* Section Tags */}
@@ -79,7 +76,7 @@ export default function Homepage() {
           <div className="flex flex-col gap-8">
             {/* Tags Light avec Statut */}
             <div className="p-6 bg-white rounded-xl shadow-md">
-              <Tag
+              <Tags
                 variant="light"
                 status="En attente"
                 tags={['Animation', 'VFX', 'Motion Design', 'Court-métrage']}
@@ -88,7 +85,7 @@ export default function Homepage() {
 
             {/* Tags Dark avec Statut */}
             <div className="p-6 bg-gray-900 rounded-xl shadow-md">
-              <Tag
+              <Tags
                 variant="dark"
                 status="Approuvé"
                 tags={['3D', 'Cinématique', 'Sci-Fi', 'Prix du Jury']}

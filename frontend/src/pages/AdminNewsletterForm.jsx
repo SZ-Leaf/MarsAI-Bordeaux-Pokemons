@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router';
-import CKEditor from '../components/ckeditor/CKEditor';
+import { CKEditor } from '../components/shared/lib';
 import {
   getNewsletterById,
   createNewsletter,

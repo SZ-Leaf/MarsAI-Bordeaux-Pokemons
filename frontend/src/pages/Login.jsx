@@ -2,7 +2,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router";
 import { useLanguage } from "../context/LanguageContext";
 import { Link } from "react-router";
-import LoginForm from "../components/forms/LoginForm";
+import { LoginForm } from "../components/features/auth";
 import "../styles.css";
 
 const Login = () => {

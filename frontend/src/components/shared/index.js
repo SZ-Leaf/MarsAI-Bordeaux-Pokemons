@@ -1,8 +1,2 @@
-export { default as FormField } from './FormField';
-export { default as TextInput } from './TextInput';
-export { default as TextArea } from './TextArea';
-export { default as Select } from './Select';
-export { default as StarRating } from './StarRating';
-export { default as Checkbox } from './Checkbox';
-export { default as CountrySelect } from './CountrySelect';
-export { default as PhoneInput } from './PhoneInput';
+// Les composants UI de base sont maintenant dans components/ui/
+// Ce fichier est conservé pour compatibilité mais les exports sont dans ui/

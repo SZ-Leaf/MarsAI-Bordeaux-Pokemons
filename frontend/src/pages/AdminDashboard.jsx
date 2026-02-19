@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
-import SideBar from '../components/admin/SideBar';
-import Header from '../components/layout/header/Header';
-import AdminOverview from '../components/admin/AdminOverview';
-import AdminUsers from '../components/admin/AdminUsers';
-import AdminVideos from '../components/admin/AdminVideos';
-import AdminEvents from '../components/admin/AdminEvents';
-import AdminNewsletter from '../components/admin/AdminNewsletter';
+import { SideBar } from '../components/features/admin/AdminLayout';
+import { Header } from '../components/layout';
+import { AdminOverview, AdminUsers, AdminVideos, AdminEvents, AdminNewsletter } from '../components/features/admin';
 import '../styles.css';
 
 const AdminDashboard = () => {

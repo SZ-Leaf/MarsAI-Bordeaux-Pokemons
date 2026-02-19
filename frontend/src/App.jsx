@@ -1,15 +1,14 @@
 import './styles.css';
 import Home from './pages/Home';
 import TestsGraphique from './pages/TestsGraphique';
-import Header from './components/layout/header/Header';
-import Footer from './components/layout/footer/Footer';
+import { Header, Footer } from './components/layout';
 import { Routes, Route, useLocation } from 'react-router';
 import Submit from './pages/Submit.jsx';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import NewsletterConfirm from './pages/NewsletterConfirm';
 import NewsletterUnsubscribe from './pages/NewsletterUnsubscribe';
-import AuthGuard from './components/admin/AuthGuard.jsx';
+import { AuthGuard } from './components/features/admin/AdminLayout';
 import AdminNewslettersList from './pages/AdminNewslettersList';
 import AdminNewsletterForm from './pages/AdminNewsletterForm';
 import AdminNewsletterView from './pages/AdminNewsletterView';

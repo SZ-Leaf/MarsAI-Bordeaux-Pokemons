@@ -3,12 +3,11 @@ import { getSubmissionsService } from "../services/submission.service";
 import { useLanguage } from "../context/LanguageContext";
 import { useAlertHelper } from "../helpers/alertHelper";
 import { responseHelper } from "../helpers/responseHelper";
-import SubmissionsList from "../components/submission/SubmissionsList";
-import VideoDetails from "../components/submission/VideoDetails";
+import { SubmissionsList, VideoDetails } from "../components/features/submission";
 import { AnimatePresence, motion } from "motion/react";
 import { usePlaylists } from "../helpers/playlistHelper";
 import { usePlaylistCounts } from "../hooks/usePlaylistCounts";
-import PlaylistCard from "../components/playlists/PlaylistCard";
+import { PlaylistCard } from "../components/features/playlists";
 
 const Submissions = ({ onDetailToggle }) => {
    const [activeIndex, setActiveIndex] = useState(null);

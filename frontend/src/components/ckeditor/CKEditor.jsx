@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import './CKEditor.css';
+import '../../styles.css';
 
 /**
  * Éditeur riche minimal (contentEditable + barre d'outils).

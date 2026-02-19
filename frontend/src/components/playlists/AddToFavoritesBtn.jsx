@@ -1,5 +1,4 @@
-import "../ui/icon-buttons.css";
-import "../ui/tooltips.css";
+import "../../styles.css";
 
 export default function FavoriteButton({ submissionId, active, onToggle }) {
   return (

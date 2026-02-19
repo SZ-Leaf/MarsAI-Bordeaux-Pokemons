@@ -1,5 +1,5 @@
 import React from 'react';
-import './adminShared.css';
+import '../../../styles.css';
 
 const AdminStatCard = ({ 
   title, 

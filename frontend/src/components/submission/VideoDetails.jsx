@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { Plyr } from "plyr-react";
 import "plyr-react/plyr.css";
 import { useLanguage } from "../../context/LanguageContext";
-import './styles/videoDetails.css';
+import '../../styles.css';
 
 import {
    X, ChevronLeft, ChevronRight,

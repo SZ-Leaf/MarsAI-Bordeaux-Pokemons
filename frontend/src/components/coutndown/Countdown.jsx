@@ -1,7 +1,7 @@
 // frontend/src/components/coutndown/Countdown.jsx
 import React from 'react';
 import { useCountdown } from '../../hooks/useCountdown';
-import './countdown.css';
+import '../../styles.css';
 
 const Countdown = ({ targetDate, className = '' }) => {
   const { days, hours, minutes, seconds, isExpired } = useCountdown(targetDate);

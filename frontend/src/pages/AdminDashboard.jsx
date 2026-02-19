@@ -6,7 +6,7 @@ import AdminUsers from '../components/admin/AdminUsers';
 import AdminVideos from '../components/admin/AdminVideos';
 import AdminEvents from '../components/admin/AdminEvents';
 import AdminNewsletter from '../components/admin/AdminNewsletter';
-import '../components/admin/admin.css';
+import '../styles.css';
 
 const AdminDashboard = () => {
   const [activeView, setActiveView] = useState('overview');

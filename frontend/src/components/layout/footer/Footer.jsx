@@ -1,7 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import './footer.css';
-import '../navbar/navbar.css';
-import '../../ui/buttons.css';
+import '../../../styles.css';
 import { subscribeNewsletter } from '../../../services/newsletter.service';
 
 function getErrorMessage(err) {

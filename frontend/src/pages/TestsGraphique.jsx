@@ -1,12 +1,11 @@
 import React from 'react';
-import '../App.css';
+import '../styles.css';
 import useModal from '../hooks/useModal';
 import Modal from '../components/modals/Modal';
 import Card from '../components/cards/Card';
 import Form from '../components/forms/Form';
 import Tag from '../components/tags/Tags.jsx';
 import SubmitModal from '../components/modals/SubmitModal.jsx';
-import '../components/ui/loading.css';
 import Countdown from '../components/coutndown/Countdown.jsx';
 import FavoriteButton from '../components/playlists/AddToFavoritesBtn.jsx';
 import WatchLaterButton from '../components/playlists/AddToWatchLaterBtn.jsx';

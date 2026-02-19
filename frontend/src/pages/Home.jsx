@@ -1,8 +1,7 @@
 import React from 'react';
 import { ArrowRight, Plus, Calendar, Play, Users, Award, Clock, MapPin, Target, Zap, Rocket } from 'lucide-react';
 import Card from '../components/cards/Card';
-import '../App.css';
-import './home.css';
+import '../styles.css';
 
 // --- Shared Internal Components ---
 

@@ -3,8 +3,7 @@ import { Calendar, Search, Filter, Loader2, Info } from 'lucide-react';
 import useEvents from '../hooks/useEvents';
 import EventCard from '../components/events/EventCard';
 import EventDetailModal from '../components/events/EventDetailModal';
-import '../components/events/events.css';
-import './home.css';
+import '../styles.css';
 
 const Events = () => {
   const {

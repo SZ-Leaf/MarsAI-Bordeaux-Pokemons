@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import '../ui/inputs.css';
-import '../ui/buttons.css';
+import '../../styles.css';
 
 export default function Form({ variant = 'light', onSubmit, onCancel }) {
   const [formData, setFormData] = useState({

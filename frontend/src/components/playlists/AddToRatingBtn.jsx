@@ -1,5 +1,4 @@
-import "../ui/tooltips.css";
-import "../ui/icon-buttons.css";
+import "../../styles.css";
 
 export default function RatingButton({ submissionId, active, onToggle }) {
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Star } from 'lucide-react';
-import './submissionCard.css';
+import '../../styles.css';
 import { useLanguage } from '../../context/LanguageContext';
 
 const SubmissionCard = ({submission, onVideoClick}) => {

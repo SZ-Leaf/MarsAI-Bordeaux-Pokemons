@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
-import './pagination.css';
+import '../../styles.css';
 
 const Pagination = ({total, limit, offset, loading, onPageChange}) => {
    const {language} = useLanguage();

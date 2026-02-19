@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { useLanguage } from "../context/LanguageContext";
 import { Link } from "react-router";
 import LoginForm from "../components/forms/LoginForm";
-import "./auth.css";
+import "../styles.css";
 
 const Login = () => {
    const { language } = useLanguage();

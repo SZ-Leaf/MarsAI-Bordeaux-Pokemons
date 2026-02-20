@@ -1,0 +1,64 @@
+/* ==========================================================================
+   COMPOSANTS UI - TOOLTIPS
+   ========================================================================== */
+
+/* Conteneur avec tooltip */
+.tooltip-container {
+  @apply relative inline-block;
+}
+
+/* Tooltip - affiché au hover */
+.tooltip-container[data-tooltip]:hover::before {
+  content: attr(data-tooltip);
+  @apply absolute bottom-full left-1/2 -translate-x-1/2 mb-2;
+  @apply px-3 py-1.5 rounded-lg;
+  @apply bg-gray-900 text-white text-xs font-medium whitespace-nowrap;
+  @apply shadow-lg;
+  @apply opacity-100 z-50;
+  @apply transition-all duration-200;
+}
+
+/* Flèche du tooltip */
+.tooltip-container[data-tooltip]:hover::after {
+  content: "";
+  @apply absolute bottom-full left-1/2 -translate-x-1/2 -mb-1;
+  @apply border-4 border-transparent border-t-gray-900;
+  @apply opacity-100 z-50;
+  @apply transition-all duration-200;
+}
+
+/* États initial (caché) */
+.tooltip-container::before,
+.tooltip-container::after {
+  @apply opacity-0 pointer-events-none;
+  @apply transition-all duration-200;
+}
+
+/* Variantes de position */
+.tooltip-top[data-tooltip]:hover::before {
+  @apply bottom-full mb-2;
+}
+.tooltip-top[data-tooltip]:hover::after {
+  @apply bottom-full -mb-1 border-t-gray-900 border-b-transparent;
+}
+
+.tooltip-bottom[data-tooltip]:hover::before {
+  @apply top-full bottom-auto mt-2 mb-0;
+}
+.tooltip-bottom[data-tooltip]:hover::after {
+  @apply top-full bottom-auto mt-1 mb-0 border-b-gray-900 border-t-transparent;
+}
+
+.tooltip-left[data-tooltip]:hover::before {
+  @apply right-full left-auto bottom-auto top-1/2 -translate-y-1/2 translate-x-0 mr-2 mb-0;
+}
+.tooltip-left[data-tooltip]:hover::after {
+  @apply right-full left-auto bottom-auto top-1/2 -translate-y-1/2 mr-1 border-l-gray-900 border-t-transparent;
+}
+
+.tooltip-right[data-tooltip]:hover::before {
+  @apply left-full right-auto bottom-auto top-1/2 -translate-y-1/2 translate-x-0 ml-2 mb-0;
+}
+.tooltip-right[data-tooltip]:hover::after {
+  @apply left-full right-auto bottom-auto top-1/2 -translate-y-1/2 ml-1 border-r-gray-900 border-t-transparent;
+}

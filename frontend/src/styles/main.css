@@ -1,0 +1,42 @@
+/* ==========================================================================
+   MAIN CSS - Point d'entrée principal
+   ========================================================================== */
+
+/* Tailwind CSS */
+@import "tailwindcss";
+
+/* Settings - Variables et configuration */
+@import "./settings/variables.css";
+@import "./settings/typography.css";
+
+/* Generic - Reset et normalisation */
+@import "./generic/reset.css";
+
+/* Elements - Styles de base pour les éléments HTML */
+@import "./elements/base.css";
+
+/* Components - Composants UI réutilisables */
+@import "./components/buttons.css";
+@import "./components/inputs.css";
+@import "./components/alerts.css";
+@import "./components/loading.css";
+@import "./components/tooltips.css";
+@import "./components/modals.css";
+@import "./components/cards.css";
+@import "./components/tags.css";
+@import "./components/countdown.css";
+@import "./components/sponsors.css";
+@import "./components/ckeditor.css";
+@import "./components/pagination.css";
+@import "./components/video-details.css";
+
+/* Features - Styles spécifiques aux features */
+@import "./features/layout/header.css";
+@import "./features/layout/navbar.css";
+@import "./features/layout/footer.css";
+@import "./features/submission/submission.css";
+@import "./features/admin/admin.css";
+
+/* Pages - Styles spécifiques aux pages */
+@import "./pages/home.css";
+@import "./pages/auth.css";

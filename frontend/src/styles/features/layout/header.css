@@ -1,0 +1,42 @@
+/* ==========================================================================
+   COMPOSANTS LAYOUT - HEADER
+   ========================================================================== */
+
+.header-pill-container {
+  position: fixed;
+  z-index: 50;
+  top: var(--header-top, 1.25rem);
+  left: var(--header-left, 50%);
+  right: var(--header-right, auto);
+  width: var(--header-width, 95%);
+  max-width: var(--header-max-width, 80rem);
+  transform: var(--header-transform, translateX(-50%));
+}
+
+.header-pill-content {
+  @apply grid items-center;
+  grid-template-columns: 1fr auto 1fr;
+  @apply px-10 py-2;
+  @apply bg-black/30 backdrop-blur-[40px];
+  @apply border border-white/20 rounded-full;
+  @apply shadow-2xl;
+  width: var(--header-content-width, 100%);
+  max-width: var(--header-content-max-width, none);
+}
+
+@media (max-width: 768px) {
+  .header-pill-container {
+    @apply fixed bottom-0 top-auto left-0 translate-x-0 w-full max-w-full;
+    left: 0 !important;
+    transform: none !important;
+  }
+
+  .header-pill-content {
+    @apply flex justify-around;
+    grid-template-columns: none;
+    @apply px-4 py-3;
+    @apply bg-black/30 backdrop-blur-[40px];
+    @apply rounded-t-3xl rounded-b-none;
+    @apply border-t border-x border-white/20 border-b-0;
+  }
+}

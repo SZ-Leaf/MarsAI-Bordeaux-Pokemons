@@ -1,0 +1,46 @@
+/* ==========================================================================
+   COMPOSANTS SPONSORS
+   ========================================================================== */
+
+.marquee-container {
+  overflow: hidden;
+  user-select: none;
+  display: flex;
+  position: relative;
+  padding: 10px 0;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 15%,
+    black 85%,
+    transparent
+  );
+}
+
+.marquee-content-left,
+.marquee-content-right {
+  display: flex;
+  flex-shrink: 0;
+  gap: 2rem;
+  padding-right: 2rem;
+  min-width: 100%;
+  align-items: center;
+}
+
+.marquee-content-left { animation: scroll-left 30s linear infinite; }
+.marquee-content-right { animation: scroll-right 30s linear infinite; }
+
+.marquee-container:hover .marquee-content-left,
+.marquee-container:hover .marquee-content-right {
+  animation-play-state: paused;
+}
+
+@keyframes scroll-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+@keyframes scroll-right {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}

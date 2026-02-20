@@ -1,0 +1,17 @@
+/* ==========================================================================
+   TYPOGRAPHY - Polices et styles de texte
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Arimo';
+  src: url('../../assets/fonts/arimo/Arimo-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Arimo';
+  src: url('../../assets/fonts/arimo/Arimo-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+}

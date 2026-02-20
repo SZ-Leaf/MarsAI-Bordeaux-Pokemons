@@ -1,0 +1,28 @@
+/* ==========================================================================
+   COMPOSANTS UI - ALERTS
+   ========================================================================== */
+
+/* Classe de base pour les alertes */
+.alert {
+  @apply rounded p-4 mb-6;
+}
+
+.alert-error {
+  @apply bg-red-50 border border-red-500;
+}
+
+.alert-error-text {
+  @apply text-red-700;
+}
+
+.alert-success {
+  @apply bg-green-50 border border-green-500;
+}
+
+.alert-success-text {
+  @apply text-green-700;
+}
+
+.alert-success-title {
+  @apply text-2xl font-bold mb-4;
+}

@@ -1,0 +1,72 @@
+/* ==========================================================================
+   COMPOSANTS UI - INPUTS
+   ========================================================================== */
+
+/* Classe de base commune à tous les inputs */
+.input-dark {
+  background-color: transparent !important;
+  @apply w-full px-4 py-2;
+  @apply rounded-lg;
+  @apply border-2 border-white/10;
+  @apply text-sm font-medium;
+  @apply text-white;
+  @apply transition-all duration-300 ease-out;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500/50;
+  @apply placeholder:text-gray-500;
+}
+
+.input-light {
+  @apply bg-white text-black backdrop-blur-md;
+  @apply w-full px-4 py-2;
+  @apply rounded-lg;
+  @apply border-2 border-gray-400;
+  @apply text-sm font-medium;
+  @apply transition-all duration-300 ease-out;
+  @apply focus:outline-none focus:ring-2;
+  @apply placeholder:text-gray-400;
+}
+
+/* Selects */
+.select-dark {
+  background-color: transparent !important;
+  color: white !important;
+  color-scheme: dark;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 1rem center !important;
+  @apply w-full px-4 py-2;
+  @apply rounded-lg;
+  @apply border-2 border-white/10;
+  @apply text-sm font-medium;
+  @apply transition-all duration-300 ease-out;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500/50;
+}
+
+.select-light {
+  background-color: white;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  @apply text-black backdrop-blur-md;
+  @apply w-full px-4 py-2;
+  @apply rounded-lg;
+  @apply border-2 border-gray-400;
+  @apply text-sm font-medium;
+  @apply transition-all duration-300 ease-out;
+  @apply focus:outline-none focus:ring-2;
+}
+
+/* Style pour les options pour assurer la lisibilité */
+.select-dark-option {
+  @apply bg-slate-800 text-white;
+}
+
+.select-light-option {
+  @apply bg-white text-black;
+}

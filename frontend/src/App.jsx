@@ -1,4 +1,4 @@
-import './styles.css';
+import './styles/main.css';
 import Home from './pages/Home';
 import TestsGraphique from './pages/TestsGraphique';
 import { Header, Footer } from './components/layout';

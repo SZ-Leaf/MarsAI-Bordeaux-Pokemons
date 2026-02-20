@@ -1,0 +1,85 @@
+/* ==========================================================================
+   PAGES - AUTH
+   ========================================================================== */
+
+.login-page {
+  @apply min-h-screen w-full flex flex-col items-center justify-center relative overflow-hidden bg-bg px-4;
+}
+
+.login-container {
+  @apply w-full max-w-md z-10;
+}
+
+.login-card {
+  @apply bg-[#0c0c0c] border border-white/5 rounded-[40px] p-8 md:p-12;
+  @apply shadow-[0_20px_60px_rgba(0,0,0,0.5)];
+  @apply transition-all duration-300;
+}
+
+.login-title-group {
+  @apply flex flex-col items-center mb-10 text-center;
+}
+
+.login-label {
+  @apply flex items-center gap-4 text-blue text-[10px] font-bold tracking-[0.3em] mb-4 uppercase;
+}
+
+.login-label .line {
+  @apply w-8 h-[2px] bg-blue;
+}
+
+.login-title {
+  @apply text-4xl md:text-5xl font-black text-white uppercase tracking-tighter;
+}
+
+.login-form {
+  @apply flex flex-col gap-6;
+}
+
+.input-group {
+  @apply flex flex-col gap-2;
+}
+
+.input-label {
+  @apply text-[10px] font-bold text-white/40 tracking-widest uppercase ml-4;
+}
+
+.login-input {
+  @apply w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white;
+  @apply transition-all duration-300;
+  @apply focus:outline-none focus:border-blue/50 focus:bg-white/10;
+}
+
+.login-btn {
+  @apply mt-4 w-full bg-linear-to-r from-[#9d31ff] to-[#e61d8c];
+  @apply text-white font-black py-5 rounded-2xl uppercase tracking-widest text-sm;
+  @apply shadow-[0_0_30px_rgba(157,49,255,0.3)];
+  @apply transition-all duration-300 cursor-pointer;
+  @apply hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(157,49,255,0.5)];
+  @apply disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.login-footer {
+  @apply mt-8 text-center;
+}
+
+.login-footer-text {
+  @apply text-xs font-medium text-white/40 tracking-wide uppercase mb-2;
+}
+
+.login-link {
+  @apply text-xs font-bold text-white uppercase tracking-widest;
+  @apply transition-all duration-300;
+  @apply hover:text-blue;
+}
+
+.back-home-link {
+  @apply mt-10 flex justify-center text-[10px] font-bold text-white/40 uppercase tracking-[0.2em];
+  @apply transition-all duration-300;
+  @apply hover:text-white;
+}
+
+.login-bg-glow {
+  @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px];
+  @apply bg-purple-600/10 blur-[120px] rounded-full -z-10;
+}

@@ -1,0 +1,170 @@
+/* ==========================================================================
+   COMPOSANTS MODALS
+   ========================================================================== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 50;  
+  @apply flex items-center justify-center;
+  @apply p-4;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.modal-container {
+  @apply relative;
+  @apply rounded-2xl;
+  @apply border border-white/10;
+  @apply shadow-2xl;
+  @apply max-h-[90vh] overflow-hidden;
+  @apply flex flex-col;
+  background-color: var(--bg-surface);
+  backdrop-filter: blur(12px);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.modal-sm {
+  @apply w-full max-w-sm;
+}
+
+.modal-md {
+  @apply w-full max-w-md;
+}
+
+.modal-lg {
+  @apply w-full max-w-2xl;
+}
+
+.modal-xl {
+  @apply w-full max-w-4xl;
+}
+
+.modal-header {
+  @apply flex items-center justify-between;
+  @apply px-6 py-4;
+  @apply border-b border-white/10;
+}
+
+.modal-title {
+  @apply text-xl font-bold;
+  @apply pr-8;
+  @apply text-white;
+}
+
+.modal-close-btn {
+  @apply absolute top-4 right-4;
+  @apply w-10 h-10;
+  @apply flex items-center justify-center;
+  @apply rounded-full;
+  @apply bg-white/5;
+  @apply border border-white/10;
+  @apply text-white/70;
+  @apply cursor-pointer;
+  @apply transition-all duration-300 ease-out;
+  backdrop-filter: blur(12px);
+}
+
+.modal-close-btn:hover {
+  @apply bg-white/10;
+  @apply border-red/20;
+  @apply scale-105;
+  @apply text-red;
+}
+
+.modal-content {
+  @apply px-6 py-5;
+  @apply overflow-y-auto;
+  @apply flex-1;
+}
+
+.modal-content::-webkit-scrollbar {
+  @apply w-2;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  @apply bg-white/5 rounded-full;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  @apply bg-white/20 rounded-full;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  @apply bg-white/30;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-overlay.closing {
+  animation: modalFadeOut 0.2s ease-in;
+}
+
+.modal-overlay.closing .modal-container {
+  animation: modalSlideOut 0.2s ease-in;
+}
+
+@keyframes modalFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes modalSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+}
+
+@media (max-width: 640px) {
+  .modal-container {
+    @apply rounded-xl max-h-[95vh];
+  }
+
+  .modal-header {
+    @apply px-4 py-3;
+  }
+
+  .modal-title {
+    @apply text-lg;
+  }
+
+  .modal-content {
+    @apply p-4;
+  }
+
+  .modal-close-btn {
+    @apply top-3 right-3;
+    @apply w-9 h-9;
+  }
+}

@@ -1,0 +1,661 @@
+/* ==========================================================================
+   FEATURE - ADMIN
+   ========================================================================== */
+
+.admin-dashboard-container {
+    @apply min-h-screen bg-[#0a0a0a] text-white flex;
+    --header-left: auto;
+    --header-right: 32px;
+    --header-width: calc(100% - 350px);
+    --header-transform: none;
+    --header-max-width: none;
+    --header-content-width: 100%;
+}
+
+.main-content {
+    @apply flex-1 overflow-y-auto p-8 pt-24;
+}
+
+.search-input {
+    @apply bg-[#1a1a1a] border border-gray-800/50 rounded-full px-6 py-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none transition-all;
+}
+
+.banner-img {
+    @apply w-full h-48 object-cover rounded-3xl mb-8;
+}
+
+.section-title {
+    @apply text-5xl font-bold mb-4 uppercase tracking-wider;
+}
+
+.section-subtitle {
+    @apply text-gray-400 text-lg mb-8 max-w-2xl leading-relaxed;
+}
+
+.stats-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8;
+}
+
+.stat-card {
+    @apply bg-[#1a1a1a] p-6 rounded-3xl border border-gray-800/50 flex flex-col justify-between min-h-[180px] transition-all hover:border-blue-500/30;
+}
+
+.stat-badge {
+    @apply self-end text-[10px] font-bold px-2 py-1 rounded-full uppercase mb-4;
+}
+
+.stat-value {
+    @apply text-4xl font-bold mb-2;
+}
+
+.stat-label {
+    @apply text-gray-500 text-[10px] uppercase font-bold tracking-tighter mb-4;
+}
+
+.progress-container {
+    @apply w-full bg-gray-800 rounded-full h-1.5 mt-auto;
+}
+
+.progress-fill {
+    @apply h-full rounded-full transition-all duration-1000;
+}
+
+.chart-card {
+    @apply bg-[#1a1a1a] p-8 rounded-3xl border border-gray-800/50 h-full;
+}
+
+.film-item {
+    @apply flex items-center justify-between p-4 bg-[#1a1a1a]/50 hover:bg-[#1a1a1a] rounded-2xl mb-3 transition-colors;
+}
+
+.film-thumbnail {
+    @apply w-12 h-16 rounded-lg object-cover mr-4;
+}
+
+.play-btn {
+    @apply w-10 h-10 flex items-center justify-center rounded-full border border-gray-700 hover:bg-white/10 transition-colors text-blue-400;
+}
+
+.top-film-rank {
+    @apply text-xs text-gray-500 font-bold italic mr-4 w-4;
+}
+
+.film-stat-item {
+    @apply flex items-center text-[10px] text-gray-500 mr-4;
+}
+
+/* Admin Sidebar */
+.sidebar {
+    @apply w-72 bg-[#121212] flex flex-col p-6 sticky top-0 h-screen overflow-y-auto border-r border-gray-800;
+}
+
+.sidebar-user-profile {
+    @apply flex flex-col items-center mb-10;
+}
+
+.sidebar-avatar-container {
+    @apply relative;
+}
+
+.sidebar-avatar {
+    @apply w-20 h-20 rounded-full border-2 border-purple-500 mb-4 p-0.5;
+}
+
+.sidebar-status-dot {
+    @apply absolute bottom-1 right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-[#121212];
+}
+
+.sidebar-user-name {
+    @apply text-lg font-bold;
+}
+
+.sidebar-user-role {
+    @apply text-xs text-gray-500 uppercase tracking-widest font-bold;
+}
+
+.sidebar-nav {
+    @apply flex-1 space-y-2;
+}
+
+.sidebar-nav-item {
+    @apply flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-gray-400 hover:text-white hover:bg-white/5;
+}
+
+.sidebar-nav-item.active {
+    @apply bg-blue-600/20 text-blue-400 font-medium;
+}
+
+.sidebar-nav-label {
+    @apply flex-1 text-left text-sm;
+}
+
+.sidebar-nav-badge {
+    @apply bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full;
+}
+
+.sidebar-footer {
+    @apply mt-auto pt-6 space-y-4;
+}
+
+.sidebar-footer-card {
+    @apply bg-gray-800/50 p-4 rounded-2xl;
+}
+
+.sidebar-footer-logo-container {
+    @apply flex items-center mb-4;
+}
+
+.sidebar-footer-icon-outer {
+    @apply w-6 h-6 bg-blue-500 rounded-full mr-2 flex items-center justify-center;
+}
+
+.sidebar-footer-icon-inner {
+    @apply w-2 h-2 bg-white rounded-full;
+}
+
+.sidebar-footer-brand {
+    @apply font-bold text-sm;
+}
+
+.sidebar-footer-label {
+    @apply text-[10px] text-gray-400 mb-4;
+}
+
+.sidebar-logout-btn {
+    @apply w-full bg-[#1a1a1a] text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center hover:bg-gray-800 transition-colors;
+}
+
+/* Admin Shared */
+.admin-section-header {
+    @apply flex justify-between items-center mb-8;
+}
+
+.admin-action-btn {
+    @apply px-6 py-3 rounded-xl flex items-center font-bold transition-all shadow-lg text-white;
+}
+
+.admin-action-btn-blue {
+    @apply bg-blue-600 hover:bg-blue-700 shadow-blue-600/20;
+}
+
+.admin-action-btn-purple {
+    @apply bg-purple-600 hover:bg-purple-700 shadow-purple-600/20;
+}
+
+.admin-action-btn-orange {
+    @apply bg-orange-600 hover:bg-orange-700 shadow-orange-600/20;
+}
+
+.admin-action-btn-pink {
+    @apply bg-pink-600 hover:bg-pink-700 shadow-pink-600/20;
+}
+
+.admin-action-btn-gray {
+    @apply bg-gray-800 hover:bg-gray-700 shadow-gray-900/20;
+}
+
+.admin-search-wrapper {
+    @apply relative;
+}
+
+.admin-search-icon {
+    @apply absolute left-4 top-1/2 -translate-y-1/2 text-gray-500;
+}
+
+.admin-stat-icon-container {
+    @apply p-2 rounded-lg mb-4 w-fit transition-colors;
+}
+
+/* Events styles for admin */
+.event-card {
+    @apply bg-[#1a1a1a] rounded-3xl overflow-hidden border border-gray-800/50 hover:border-orange-500/50 transition-all cursor-pointer flex flex-col h-full;
+}
+
+.event-card-image-container {
+    @apply relative h-48 w-full overflow-hidden;
+}
+
+.event-card-image {
+    @apply w-full h-full object-cover group-hover:scale-105 transition-transform duration-500;
+}
+
+.event-card-date-badge {
+    @apply absolute top-4 left-4 bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl p-2 min-w-[60px] flex flex-col items-center justify-center;
+}
+
+.event-card-date-day {
+    @apply text-xl font-bold text-orange-500;
+}
+
+.event-card-date-month {
+    @apply text-[10px] font-bold text-gray-300 uppercase;
+}
+
+.event-card-content {
+    @apply p-6 flex flex-col flex-grow;
+}
+
+.event-card-title {
+    @apply text-xl font-bold text-white mb-4 group-hover:text-orange-400 transition-colors line-clamp-2;
+}
+
+.event-card-info-container {
+    @apply mt-auto space-y-2;
+}
+
+.event-card-info-item {
+    @apply flex items-center text-gray-400 text-sm;
+}
+
+.event-card-info-icon {
+    @apply mr-2 text-orange-500;
+}
+
+.event-card-button {
+    @apply mt-6 w-full py-3 bg-white/5 hover:bg-orange-600 text-white rounded-xl text-sm font-bold transition-all border border-white/10 hover:border-orange-500;
+}
+
+.event-list-item {
+    @apply w-full bg-[#1a1a1a] p-6 rounded-[2rem] border border-gray-800/50 hover:border-orange-500/30 transition-all;
+}
+
+.event-list-item-date-badge {
+    @apply w-16 h-16 bg-[#0a0a0a] rounded-2xl border border-gray-800 flex flex-col items-center justify-center text-orange-500 group-hover:border-orange-500/20 transition-all shadow-lg;
+}
+
+.event-list-item-date-day {
+    @apply text-xl font-bold leading-none;
+}
+
+.event-list-item-date-month {
+    @apply text-[10px] uppercase font-bold text-gray-500 mt-1;
+}
+
+.event-list-item-title {
+    @apply text-lg font-bold text-white group-hover:text-orange-400 transition-colors line-clamp-1;
+}
+
+.event-list-item-info {
+    @apply flex items-center space-x-4 mt-2 text-gray-500;
+}
+
+.event-list-item-info-item {
+    @apply flex items-center text-xs;
+}
+
+.event-list-item-info-icon {
+    @apply mr-1 text-orange-500/60;
+}
+
+.event-list-item-capacity {
+    @apply text-right hidden md:block border-r border-gray-800 pr-4 mr-2;
+}
+
+.event-list-item-capacity-label {
+    @apply text-[10px] font-bold text-gray-500 uppercase mb-1;
+}
+
+.event-list-item-capacity-value {
+    @apply text-lg font-bold text-gray-300;
+}
+
+.event-list-item-actions {
+    @apply flex gap-2;
+}
+
+.event-list-item-action-btn {
+    @apply p-3 bg-white/5 hover:bg-orange-500/20 text-gray-400 hover:text-orange-500 rounded-xl transition-all border border-white/5;
+}
+
+.event-list-item-action-btn-danger {
+    @apply p-3 bg-white/5 hover:bg-red-500/20 text-gray-400 hover:text-red-500 rounded-xl transition-all border border-white/5;
+}
+
+.event-modal-overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center p-4;
+}
+
+.event-modal-backdrop {
+    @apply absolute inset-0 bg-black/80 backdrop-blur-sm;
+}
+
+.event-modal-container {
+    @apply relative bg-[#111111] w-full max-w-2xl max-h-[90vh] flex flex-col rounded-[2rem] border border-gray-800 shadow-2xl overflow-hidden;
+}
+
+.event-modal-scrollable {
+    @apply overflow-y-auto flex-grow;
+}
+
+.event-modal-header-image {
+    @apply relative h-48 md:h-56 w-full overflow-hidden;
+}
+
+.event-modal-header-image-img {
+    @apply w-full h-full object-cover;
+}
+
+.event-modal-header-gradient {
+    @apply absolute inset-0 bg-gradient-to-t from-[#111111] via-transparent to-transparent;
+}
+
+.event-modal-close-btn {
+    @apply absolute top-6 right-6 p-2 bg-black/40 hover:bg-orange-600 text-white rounded-full transition-all border border-white/10 z-10;
+}
+
+.event-modal-content {
+    @apply px-8 pb-4 -mt-10 relative;
+}
+
+.event-modal-badges {
+    @apply flex flex-wrap gap-2 mb-4;
+}
+
+.event-modal-badge-primary {
+    @apply bg-orange-600 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full;
+}
+
+.event-modal-badge-secondary {
+    @apply bg-white/5 text-gray-400 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-white/10;
+}
+
+.event-modal-title {
+    @apply text-2xl md:text-3xl font-bold text-white mb-4;
+}
+
+.event-modal-info-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-4 mb-6;
+}
+
+.event-modal-info-section {
+    @apply space-y-3;
+}
+
+.event-modal-info-item {
+    @apply flex items-start;
+}
+
+.event-modal-info-icon-container {
+    @apply p-2 bg-orange-600/10 rounded-xl mr-3 border border-orange-500/20;
+}
+
+.event-modal-info-icon {
+    @apply text-orange-500;
+}
+
+.event-modal-info-label {
+    @apply text-[9px] font-bold text-gray-500 uppercase;
+}
+
+.event-modal-info-value {
+    @apply text-sm text-gray-200;
+}
+
+.event-modal-info-value-capitalize {
+    @apply text-sm text-gray-200 capitalize;
+}
+
+.event-modal-description-section {
+    @apply space-y-3;
+}
+
+.event-modal-description-header {
+    @apply flex items-center space-x-2 text-gray-400;
+}
+
+.event-modal-description-header-icon {
+    @apply text-orange-500;
+}
+
+.event-modal-description-header-title {
+    @apply font-bold uppercase text-[10px] tracking-widest text-white;
+}
+
+.event-modal-description-content {
+    @apply bg-white/5 p-4 rounded-2xl border border-white/5 relative;
+}
+
+.event-modal-description-text {
+    @apply text-gray-400 text-sm leading-relaxed whitespace-pre-line;
+}
+
+.event-modal-description-text-clamped {
+    @apply text-gray-400 text-sm leading-relaxed whitespace-pre-line line-clamp-3;
+}
+
+.event-modal-description-toggle {
+    @apply mt-2 flex items-center text-orange-500 text-[10px] font-bold uppercase tracking-wider hover:text-orange-400 transition-colors;
+}
+
+.event-modal-footer {
+    @apply p-6 bg-[#111111] border-t border-gray-800/50 flex justify-center;
+}
+
+.event-modal-footer-button {
+    @apply w-full md:w-auto px-10 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-orange-600/20 transform hover:-translate-y-1 active:scale-95;
+}
+
+.event-form-modal-overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center p-4;
+}
+
+.event-form-modal-backdrop {
+    @apply absolute inset-0 bg-black/80 backdrop-blur-sm;
+}
+
+.event-form-modal-container {
+    @apply relative bg-[#1a1a1a] w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-[2.5rem] border border-gray-800 shadow-2xl p-8 md:p-10;
+}
+
+.event-form-modal-header {
+    @apply flex justify-between items-center mb-8;
+}
+
+.event-form-modal-title {
+    @apply text-2xl font-bold text-white;
+}
+
+.event-form-modal-subtitle {
+    @apply text-gray-500 text-xs mt-1 uppercase tracking-widest font-bold;
+}
+
+.event-form-modal-close-btn {
+    @apply p-3 bg-white/5 hover:bg-red-500/20 text-gray-400 hover:text-red-500 rounded-2xl transition-all border border-white/5;
+}
+
+.event-form-modal-error {
+    @apply mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-500 text-sm;
+}
+
+.event-form-modal-form {
+    @apply space-y-8;
+}
+
+.event-form-modal-image-upload-container {
+    @apply relative;
+}
+
+.event-form-modal-image-upload-area {
+    @apply relative h-48 rounded-[2rem] border-2 border-dashed transition-all cursor-pointer overflow-hidden flex flex-col items-center justify-center;
+}
+
+.event-form-modal-image-upload-area-empty {
+    @apply border-gray-800 hover:border-orange-500/30 bg-black/20;
+}
+
+.event-form-modal-image-upload-area-filled {
+    @apply border-orange-500/50;
+}
+
+.event-form-modal-image-overlay {
+    @apply absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px];
+}
+
+.event-form-modal-image-upload-icon {
+    @apply bg-orange-600 p-3 rounded-full text-white;
+}
+
+.event-form-modal-image-placeholder {
+    @apply text-center p-6;
+}
+
+.event-form-modal-image-icon-container {
+    @apply bg-orange-600/10 p-4 rounded-3xl inline-block mb-3 border border-orange-500/20;
+}
+
+.event-form-modal-image-icon {
+    @apply text-orange-500;
+}
+
+.event-form-modal-image-text {
+    @apply text-white font-bold text-sm;
+}
+
+.event-form-modal-image-hint {
+    @apply text-gray-500 text-[10px] uppercase mt-1;
+}
+
+.event-form-modal-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+}
+
+.event-form-modal-grid-full {
+    @apply md:col-span-2;
+}
+
+.event-form-modal-label {
+    @apply block text-[10px] font-bold text-gray-500 uppercase mb-2 ml-1;
+}
+
+.event-form-modal-label-with-icon {
+    @apply block text-[10px] font-bold text-gray-500 uppercase mb-2 ml-1 flex items-center;
+}
+
+.event-form-modal-input {
+    @apply w-full bg-black/40 border border-gray-800 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-orange-500 transition-all;
+}
+
+.event-form-modal-input-date-time {
+    @apply w-full bg-black/40 border border-gray-800 rounded-2xl py-4 px-4 text-sm text-white focus:outline-none focus:border-orange-500 transition-all;
+    color-scheme: dark;
+}
+
+.event-form-modal-textarea {
+    @apply w-full bg-black/40 border border-gray-800 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-orange-500 transition-all resize-none;
+}
+
+.event-form-modal-date-time-grid {
+    @apply grid grid-cols-2 gap-2;
+}
+
+.event-form-modal-actions {
+    @apply flex gap-4 pt-4;
+}
+
+.event-form-modal-btn-cancel {
+    @apply flex-1 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl transition-all border border-white/5;
+}
+
+.event-form-modal-btn-submit {
+    @apply flex-2 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-orange-600/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center;
+}
+
+.event-search-container {
+    @apply relative w-full md:w-96;
+}
+
+.event-search-icon {
+    @apply absolute left-4 top-1/2 -translate-y-1/2 text-gray-500;
+}
+
+.event-search-input {
+    @apply w-full bg-[#1a1a1a] border border-gray-800 rounded-2xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-orange-500 transition-all text-sm;
+}
+
+.event-filter-button {
+    @apply flex items-center gap-2 px-5 py-3 bg-[#1a1a1a] border border-gray-800 rounded-2xl text-gray-400 text-sm hover:border-white/20 transition-all;
+}
+
+.event-loading-container {
+    @apply flex flex-col items-center justify-center py-20;
+}
+
+.event-loading-spinner {
+    @apply animate-spin text-orange-500 mb-4;
+}
+
+.event-loading-text {
+    @apply text-gray-500;
+}
+
+.event-error-container {
+    @apply bg-red-500/10 border border-red-500/20 p-8 rounded-[2rem] text-center max-w-xl mx-auto;
+}
+
+.event-error-icon {
+    @apply text-red-500 mx-auto mb-4;
+}
+
+.event-error-title {
+    @apply text-white font-bold mb-2;
+}
+
+.event-error-message {
+    @apply text-red-500/70 text-sm;
+}
+
+.event-empty-container {
+    @apply bg-[#1a1a1a] border border-gray-800 p-20 rounded-[3rem] text-center;
+}
+
+.event-empty-text {
+    @apply text-gray-500 text-lg mb-2;
+}
+
+.event-empty-subtext {
+    @apply text-gray-600 text-sm;
+}
+
+.event-admin-empty-container {
+    @apply p-20 bg-[#1a1a1a] border border-gray-800 rounded-[2.5rem] text-center;
+}
+
+.event-admin-empty-text {
+    @apply text-gray-500 text-sm;
+}
+
+.event-admin-empty-button {
+    @apply mt-4 text-xs text-orange-500 uppercase font-bold border border-orange-500/30 px-4 py-2 rounded-xl hover:bg-orange-500/10 transition-all;
+}
+
+.event-admin-loading-container {
+    @apply flex flex-col items-center justify-center py-20 bg-[#1a1a1a] rounded-[2.5rem] border border-gray-800/50;
+}
+
+.event-admin-loading-spinner {
+    @apply animate-spin text-orange-500 mb-4;
+}
+
+.event-admin-loading-text {
+    @apply text-gray-500 text-sm;
+}
+
+.event-admin-error-container {
+    @apply p-10 bg-red-500/5 border border-red-500/10 rounded-[2.5rem] text-center;
+}
+
+.event-admin-error-icon {
+    @apply text-red-500 mx-auto mb-3;
+}
+
+.event-admin-error-title {
+    @apply text-white font-bold mb-1;
+}
+
+.event-admin-error-message {
+    @apply text-red-500/70 text-xs;
+}
+
+.event-admin-error-retry {
+    @apply mt-4 text-xs text-orange-500 underline uppercase font-bold;
+}

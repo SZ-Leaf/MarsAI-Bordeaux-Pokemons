@@ -333,15 +333,21 @@ export const useSubmission = () => {
     } catch (error) {
       // Construire un message d'erreur détaillé
       let errorMessage = error.message || 'Erreur lors de la soumission';
-      
+      // L'API renvoie souvent message: { fr, en } — on extrait une chaîne pour l'affichage
+      if (typeof errorMessage === 'object' && errorMessage !== null && ('fr' in errorMessage || 'en' in errorMessage)) {
+        errorMessage = errorMessage.fr || errorMessage.en || 'Erreur lors de la soumission';
+      }
       // Si l'erreur contient des détails de validation (erreurs Zod du backend)
       if (error.details && Array.isArray(error.details)) {
         const validationErrors = error.details
-          .map(detail => `${detail.field}: ${detail.message}`)
+          .map(detail => {
+            const msg = detail.message;
+            const msgStr = typeof msg === 'object' && msg !== null && ('fr' in msg || 'en' in msg) ? (msg.fr || msg.en) : msg;
+            return `${detail.field}: ${msgStr}`;
+          })
           .join(', ');
         errorMessage = `Erreurs de validation: ${validationErrors}`;
       }
-      
       setSubmitError(errorMessage);
       console.error('Erreur lors de la soumission:', error);
       throw error;

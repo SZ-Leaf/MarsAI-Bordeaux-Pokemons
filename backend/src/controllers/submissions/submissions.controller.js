@@ -21,7 +21,26 @@ const getUploadsBasePath = () => {
   return path.join(__dirname, '../../../uploads');
 };
 
+/** Supprime les fichiers temporaires uploadés par multer (uploads/submissions/tmp). */
+async function cleanupTempFiles(req) {
+  if (!req.files) return;
+  const filesToClean = [
+    req.files.video?.[0]?.path,
+    req.files.cover?.[0]?.path,
+    req.files.subtitles?.[0]?.path,
+    ...(req.files.gallery || []).map(f => f.path)
+  ].filter(Boolean);
+  for (const p of filesToClean) {
+    try {
+      await fs.unlink(p);
+    } catch {
+      // Fichier déjà déplacé ou déjà supprimé
+    }
+  }
+}
+
 export const submitController = async (req, res) => {
+  try {
   //
   // reCAPTCHA (anti-robot)
   //
@@ -352,25 +371,6 @@ export const submitController = async (req, res) => {
       }
     }
 
-    //
-    // cleanup remaining temporary files
-    //
-
-    if (req.files) {
-      const filesToClean = [
-        req.files.video?.[0]?.path,
-        req.files.cover?.[0]?.path,
-        req.files.subtitles?.[0]?.path,
-        ...(req.files.gallery || []).map(f => f.path)
-      ].filter(Boolean);
-
-      for (const p of filesToClean) {
-        try {
-          await fs.unlink(p);
-        } catch (_) { }
-      }
-    }
-
     console.error('Erreur soumission:', error);
 
     return sendError(res, 500, 'Erreur lors de la création de la soumission', 'Error creating submission', null);
@@ -379,6 +379,9 @@ export const submitController = async (req, res) => {
     if (connection) {
       connection.release();
     }
+  }
+  } finally {
+    await cleanupTempFiles(req);
   }
 };
 

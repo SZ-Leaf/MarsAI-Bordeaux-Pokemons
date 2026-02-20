@@ -8,7 +8,7 @@ export const jurySchema = z.object({
         invalid_type_error: 'zod_errors.jury.firstname.invalid',
     })
     .trim()
-    .min(1, {message: 'zod_errors.jury.firstname.required'})
+    .min(2, {message: 'zod_errors.jury.firstname.required'})
     .max(100, {message: 'zod_errors.jury.firstname.max_length'}),
 
     lastname: z
@@ -17,7 +17,7 @@ export const jurySchema = z.object({
         invalid_type_error: 'zod_errors.jury.lastname.invalid',
     })
     .trim()
-    .min(1, {message: 'zod_errors.jury.lastname.required'})
+    .min(2, {message: 'zod_errors.jury.lastname.required'})
     .max(100, {message: 'zod_errors.jury.lastname.max_length'}),
 
     job: z
@@ -26,7 +26,7 @@ export const jurySchema = z.object({
         invalid_type_error: 'zod_errors.jury.job.invalid',
     })
     .trim()
-    .min(1, {message: 'zod_errors.jury.job.required'})
+    .min(2, {message: 'zod_errors.jury.job.required'})
     .max(100, {message: 'zod_errors.jury.job.max_length'}),
 })
 

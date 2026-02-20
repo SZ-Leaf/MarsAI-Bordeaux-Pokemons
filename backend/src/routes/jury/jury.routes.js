@@ -9,8 +9,9 @@ const router = Router();
 
 router.get("/", juryList);
 router.get("/:id", findJuryById );
-router.post("/", uploadJuryCover, validate(jurySchema), createNewJuryMember,);
+router.post("/", validate(jurySchema), uploadJuryCover,createNewJuryMember,);
 router.delete("/:id", deleteMemberById);
-router.put("/:id", uploadJuryCover, validate(jurySchema), updateMemberById);
+router.put("/:id", validate(jurySchema), uploadJuryCover,updateMemberById);
 
 export default router;
+

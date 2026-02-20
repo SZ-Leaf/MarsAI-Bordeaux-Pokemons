@@ -1,6 +1,6 @@
 import React from 'react';
 import { Search } from 'lucide-react';
-import '../../../../../styles.css';
+import '../../../../../styles/main.css';
 
 const AdminSearchInput = ({ placeholder, value, onChange, className = "" }) => {
   return (

@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import '../../../../styles.css';
+import '../../../../styles/main.css';
 
 /**
  * Éditeur riche minimal (contentEditable + barre d'outils).

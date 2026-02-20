@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import { RatingModal } from '../../submission';
 import { useRatingModal } from '../../../../hooks/useRatingModal';
-import '../../../../styles.css';
+import '../../../../styles/main.css';
 
 
 const MobileBottomNav = ({ 

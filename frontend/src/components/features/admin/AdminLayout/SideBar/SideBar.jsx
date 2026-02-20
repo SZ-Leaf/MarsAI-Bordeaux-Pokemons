@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import '../../../../../styles.css';
+import '../../../../../styles/main.css';
 import navItems from '../../../../../constants/dashboard';
 import { useLanguage } from '../../../../../context/LanguageContext';
 import { useAuth } from '../../../../../hooks/useAuth';

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Checkbox } from '../../../../ui';
 import { Recaptcha } from '../../../../shared/ui';
-import '../../../../../styles.css';
+import '../../../../../styles/main.css';
 
 const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '';
 

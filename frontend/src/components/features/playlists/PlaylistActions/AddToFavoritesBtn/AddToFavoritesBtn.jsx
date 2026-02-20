@@ -1,4 +1,4 @@
-import "../../../../../styles.css";
+import "../../../../../styles/main.css";
 
 export default function FavoriteButton({ submissionId, active, onToggle }) {
   return (

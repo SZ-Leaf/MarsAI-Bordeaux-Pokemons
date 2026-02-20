@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles.css';
+import '../styles/main.css';
 import useModal from '../hooks/useModal';
 import { Modal, Card } from '../components/ui';
 import { Form } from '../components/features/submission';

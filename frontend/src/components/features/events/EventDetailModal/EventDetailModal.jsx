@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Calendar, MapPin, Clock, Users, Info, ChevronDown, ChevronUp } from 'lucide-react';
-import '../../../../styles.css';
+import '../../../../styles/main.css';
 
 const EventDetailModal = ({ event, isOpen, onClose }) => {
   const [isExpanded, setIsExpanded] = useState(false);

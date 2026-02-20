@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { SideBar } from '../components/features/admin/AdminLayout';
 import { Header } from '../components/layout';
 import { AdminOverview, AdminUsers, VideoGallery, AdminEvents, AdminNewsletter } from '../components/features/admin';
-import '../styles.css';
+import '../styles/main.css';
 
 const Dashboard = () => {
   const [activeView, setActiveView] = useState('overview');

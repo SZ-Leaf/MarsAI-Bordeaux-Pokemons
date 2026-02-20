@@ -3,7 +3,7 @@ import { MapPin, Clock, Plus, Edit2, Trash2, Loader2, Search, Info } from 'lucid
 import { AdminSectionHeader } from '../shared';
 import AdminEventFormModal from '../AdminEventFormModal';
 import useAdminEvents from '../../../../hooks/useAdminEvents';
-import '../../../../styles.css';
+import '../../../../styles/main.css';
 
 const AdminEvents = () => {
   const {

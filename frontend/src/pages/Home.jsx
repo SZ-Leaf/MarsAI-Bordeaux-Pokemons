@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight, Plus, Calendar, Play, Users, Award, Clock, MapPin, Target, Zap, Rocket } from 'lucide-react';
 import { Card } from '../components/ui';
-import '../styles.css';
+import '../styles/main.css';
 
 // --- Shared Internal Components ---
 

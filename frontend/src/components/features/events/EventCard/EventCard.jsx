@@ -1,6 +1,6 @@
 import React from 'react';
 import { MapPin, Clock } from 'lucide-react';
-import '../../../../styles.css';
+import '../../../../styles/main.css';
 
 const EventCard = ({ event, onClick }) => {
   const { title, cover, start_date, location } = event;

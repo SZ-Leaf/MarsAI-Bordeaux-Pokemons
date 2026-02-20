@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiCall } from "../../utils/api.js";
-import "../styles.css";
+import "../styles/main.css";
 
 export default function Sponsors() {
   const [sponsors, setSponsors] = useState([]);

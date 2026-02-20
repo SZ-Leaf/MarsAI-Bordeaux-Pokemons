@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../../../../styles.css';
+import '../../../../../styles/main.css';
 
 const AdminSectionHeader = ({ title, subtitle, action }) => {
   return (

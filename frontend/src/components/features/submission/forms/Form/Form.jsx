@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../../../../../styles.css';
+import '../../../../../styles/main.css';
 
 export default function Form({ variant = 'light', onSubmit, onCancel }) {
   const [formData, setFormData] = useState({

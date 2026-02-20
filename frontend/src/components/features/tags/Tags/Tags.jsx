@@ -1,6 +1,6 @@
 import React from 'react';
 import { useCallback } from 'react';
-import '../../../../styles.css';
+import '../../../../styles/main.css';
 import TagSelectCreatable from '../TagSelectCreate/TagSelectCreate';
 import { useTags } from '../../../../hooks/useTags';
 

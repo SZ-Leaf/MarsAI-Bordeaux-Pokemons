@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Upload, Calendar, MapPin, Users, Clock, Loader2, Image as ImageIcon } from 'lucide-react';
 import useEventForm from '../../../../hooks/useEventForm';
-import '../../../../styles.css';
+import '../../../../styles/main.css';
 
 const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
   const {

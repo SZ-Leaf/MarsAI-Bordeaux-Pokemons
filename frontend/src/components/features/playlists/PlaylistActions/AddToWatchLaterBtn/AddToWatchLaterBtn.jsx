@@ -1,4 +1,4 @@
-import "../../../../../styles.css";
+import "../../../../../styles/main.css";
 
 export default function WatchLaterButton({ submissionId, active, onToggle }) {
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import { AdminSectionHeader } from '../shared';
-import { AdminSubmissions } from '../AdminSubmissions';
+import { AdminSubmissions } from '../index';
 import { useLanguage } from '../../../../context/LanguageContext';
 
 const VideoGallery = ({ onDetailToggle }) => {

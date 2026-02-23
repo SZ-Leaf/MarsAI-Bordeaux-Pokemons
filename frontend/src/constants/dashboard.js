@@ -17,12 +17,14 @@ const navItems = () => {
             { id: 'invitations', label: { fr: 'Invitations', en: 'Invitations' }, icon: Send },
             { id: 'rejected-submissions', label: { fr: 'Soumissions rejetées', en: 'Rejected Submissions' }, icon: SquareX },
             { id: 'newsletter', label: { fr: 'Newsletter', en: 'Newsletter' }, icon: Mail },
-            { id: 'config', label: { fr: 'Configuration', en: 'Configuration' }, icon: Settings },
             { id: 'events', label: { fr: 'Évènements', en: 'Events' }, icon: Calendar },
             { id: 'jury', label: { fr: 'Jury', en: 'Jury' }, icon: Award },
         ] : []),
         ...(user.role_id === 3 ? [
             { id: 'users', label: { fr: 'Utilisateurs', en: 'Users' }, icon: Users },
+        ] : []),
+        ...(user.role_id === 2 || user.role_id === 3 ? [
+            { id: 'config', label: { fr: 'Configuration', en: 'Configuration' }, icon: Settings },
         ] : []),
     ];
 }

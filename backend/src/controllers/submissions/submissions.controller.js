@@ -325,10 +325,6 @@ export const submitController = async (req, res) => {
     await connection.commit();
     transactionStarted = false;
 
-    //
-    // upload to YouTube (after DB commit)
-    //
-
     let youtubeId = null;
     try {
       const ytResponse = await uploadVideo({
@@ -341,10 +337,8 @@ export const submitController = async (req, res) => {
       youtubeId = ytResponse.id;
 
       if (youtubeId) {
-        // thumbnail
         await uploadThumbnail({ videoId: youtubeId, thumbnailPath: finalCoverPath });
 
-        // subtitles
         if (finalSubtitlesPath) {
           await uploadOrUpdateCaptions({ videoId: youtubeId, srtPath: finalSubtitlesPath });
         }

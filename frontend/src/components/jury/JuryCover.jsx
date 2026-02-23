@@ -10,7 +10,7 @@ export default function JuryCover({
   const name = `${jury?.firstname || ""} ${jury?.lastname || ""}`.trim();
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl ${aspect} bg-zinc-200`}>
+    <div className={`card relative ${aspect}`}>
       {img && (
         <img
           src={img}

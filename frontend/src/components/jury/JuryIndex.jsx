@@ -48,19 +48,19 @@ export default function JuryIndex() {
   }, []);
 
   return (
-    <section className="px-4 py-8">
-      <div className="mx-auto w-full max-w-5xl">
+    <section className="section-container">
+      <div className="section-container-wide">
         {/* Header */}
         <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-xl font-bold text-zinc-100">Jury</h1>
+            <h1 className="section-title-medium">Jury</h1>
           </div>
 
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <button
               type="button"
               onClick={() => setCreateOpen(true)}
-              className="inline-flex items-center justify-center rounded-xl bg-zinc-100 px-4 py-2 text-sm font-semibold text-zinc-900 hover:bg-white"
+              className="btn btn-primary"
             >
               Ajouter
             </button>
@@ -68,12 +68,14 @@ export default function JuryIndex() {
         </div>
 
         {apiError && (
-          <div className="mb-4 rounded-xl border border-red-900/40 bg-red-950/30 p-3 text-red-200">
-            <div className="font-semibold text-sm">
-              Erreur {apiError.httpStatus ? `(HTTP ${apiError.httpStatus})` : ""}
-            </div>
-            <div className="text-xs opacity-90">
-              {apiError.message || "Une erreur est survenue"}
+          <div className="alert alert-error">
+            <div className="alert-error-text">
+              <div className="font-semibold text-sm">
+                Erreur {apiError.httpStatus ? `(HTTP ${apiError.httpStatus})` : ""}
+              </div>
+              <div className="text-xs opacity-90">
+                {apiError.message?.fr || apiError.message?.en || "Une erreur est survenue"}
+              </div>
             </div>
           </div>
         )}
@@ -84,12 +86,12 @@ export default function JuryIndex() {
         ) : items.length === 0 ? (
           <div className="text-sm text-zinc-400">Aucun membre trouvé.</div>
         ) : (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="films-grid">
             {items.map((j) => (
               <Link
                 key={j.id}
                 to={`/jury/${j.id}`}
-                className="block rounded-2xl hover:bg-zinc-900/70 transition"
+                className="block"
               >
                 <JuryCard jury={j} />
               </Link>

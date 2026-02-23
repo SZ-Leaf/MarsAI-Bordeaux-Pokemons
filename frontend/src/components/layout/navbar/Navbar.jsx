@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, Trophy, Calendar, User, LayoutDashboard } from 'lucide-react';
+import { Home, Trophy, Calendar, User, LayoutDashboard, Users } from 'lucide-react';
 import { Link, useLocation } from 'react-router';
 import '../../../styles/main.css';
 
@@ -10,12 +10,17 @@ const Navbar = () => {
     { id: 'home', icon: Home, path: '/', label: 'Accueil' },
     { id: 'trophy', icon: Trophy, path: '/selector', label: 'Sélection' },
     { id: 'calendar', icon: Calendar, path: '/events', label: 'Calendrier' },
+    { id: 'jury', icon: Users, path: '/jury', label: 'Jury' },
     { id: 'dashboard', icon: LayoutDashboard, path: '/dashboard', label: 'Admin' },
   ];
 
   const getActiveItem = () => {
     const currentPath = location.pathname;
-    const activeNav = navItems.find(item => item.path === currentPath);
+    const activeNav = navItems.find(
+      (item) =>
+        currentPath === item.path ||
+        (item.path !== '/' && currentPath.startsWith(item.path + '/'))
+    );
     return activeNav ? activeNav.id : 'home';
   };
 

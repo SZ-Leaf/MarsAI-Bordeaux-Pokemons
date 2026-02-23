@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { SideBar } from '../components/features/admin/AdminLayout';
 import { Header } from '../components/layout';
-import { AdminOverview, AdminUsers, VideoGallery, AdminEvents, AdminNewsletter, AdminInvitations } from '../components/features/admin';
+import { AdminOverview, AdminUsers, VideoGallery, AdminEvents, AdminNewsletter, AdminInvitations, AdminJury } from '../components/features/admin';
 import '../styles/main.css';
 
 const Dashboard = () => {
@@ -16,6 +16,7 @@ const Dashboard = () => {
     events: AdminEvents,
     newsletter: AdminNewsletter,
     invitations: AdminInvitations,
+    jury: AdminJury,
     config: () => (
       <div className="flex flex-col items-center justify-center h-[60vh]">
         <h1 className="section-title">Configuration</h1>

@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link, useParams } from "react-router";
 import { juryService } from "../../services/jury.service";
-import JuryEditModal from "./JuryEditModal.jsx";
 import JuryDetails from "../../components/jury/JuryDetails.jsx";
 
 export default function JuryShow() {
@@ -10,7 +9,6 @@ export default function JuryShow() {
   const [jury, setJury] = useState(null);
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState(null);
-  const [editOpen, setEditOpen] = useState(false);
 
   const fetchJury = useCallback(async () => {
     try {
@@ -46,7 +44,7 @@ export default function JuryShow() {
               Erreur {apiError.httpStatus ? `(HTTP ${apiError.httpStatus})` : ""}
             </div>
             <div className="text-xs opacity-90">
-              {apiError.message || "Une erreur est survenue"}
+              {apiError.message?.fr || apiError.message?.en || "Une erreur est survenue"}
             </div>
           </div>
         )}
@@ -56,16 +54,9 @@ export default function JuryShow() {
         ) : !jury ? (
           <div className="text-sm text-zinc-400">Introuvable.</div>
         ) : (
-          <JuryDetails jury={jury} onEdit={() => setEditOpen(true)} />
+          <JuryDetails jury={jury} />
         )}
       </div>
-
-      <JuryEditModal
-        isOpen={editOpen}
-        onClose={() => setEditOpen(false)}
-        juryId={Number(id)}
-        onUpdated={fetchJury}
-      />
     </section>
   );
 }

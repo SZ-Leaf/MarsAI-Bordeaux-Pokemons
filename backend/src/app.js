@@ -6,7 +6,6 @@ import { fileURLToPath } from 'url';
 import routes from './routes/index.js';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import './crons/youtube.cron.js';
 
 dotenv.config();
 

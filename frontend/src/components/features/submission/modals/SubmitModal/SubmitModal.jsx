@@ -1,5 +1,5 @@
 import { Modal } from '../../../../ui';
-import Submit from '../../../../../pages/Submit';
+import Submit from '../../components/Submit/Submit';
 
 const SubmitModal = ({ isOpen, onClose }) => {
   return (

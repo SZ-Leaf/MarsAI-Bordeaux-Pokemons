@@ -2,7 +2,6 @@ import './styles/main.css';
 import Home from './pages/Home';
 import { Header, Footer } from './components/layout';
 import { Routes, Route, useLocation } from 'react-router';
-import Submit from './pages/Submit.jsx';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import NewsletterConfirm from './pages/NewsletterConfirm';
@@ -36,7 +35,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/events" element={<Events />} />
-            <Route path="/submit" element={<Submit />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />

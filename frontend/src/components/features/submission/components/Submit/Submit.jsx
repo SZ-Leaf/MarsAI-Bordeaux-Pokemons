@@ -1,11 +1,9 @@
-import { useSubmission } from '../hooks/useSubmission.js';
-import { useScrollOnStepChange } from '../hooks/useScrollOnStepChange.js';
-import { useScrollToError } from '../hooks/useScrollToError.js';
-import useModal from '../hooks/useModal.js';
-import { StepIndicator, StepContent, SubmissionSuccess } from '../components/features/submission';
-import { FormNavigation } from '../components/features/submission';
-import { ActionConfirmationModal } from '../components/features/submission';
-import { totalSteps } from '../constants/submissionSteps.js';
+import { useSubmission } from '../../../../../hooks/useSubmission.js';
+import { useScrollOnStepChange } from '../../../../../hooks/useScrollOnStepChange.js';
+import { useScrollToError } from '../../../../../hooks/useScrollToError.js';
+import useModal from '../../../../../hooks/useModal.js';
+import { StepIndicator, StepContent, SubmissionSuccess, FormNavigation, ActionConfirmationModal } from '../../index.js';
+import { totalSteps } from '../../../../../constants/submissionSteps.js';
 
 /**
  * Page de soumission de film (4 étapes)

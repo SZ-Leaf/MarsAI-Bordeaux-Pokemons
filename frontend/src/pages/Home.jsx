@@ -1,6 +1,8 @@
 import React from 'react';
 import { ArrowRight, Plus, Calendar, Play, Users, Award, Clock, MapPin, Target, Zap, Rocket } from 'lucide-react';
 import { Card } from '../components/ui';
+import useModal from '../hooks/useModal';
+import { SubmitModal } from '../components/features/submission';
 import '../styles/main.css';
 
 // --- Shared Internal Components ---
@@ -81,6 +83,8 @@ const OBJECTIVES = [
 // --- Main Component ---
 
 const Home = () => {
+  const { isOpen: isSubmitModalOpen, openModal: openSubmitModal, closeModal: closeSubmitModal } = useModal();
+
   return (
     <div className="home-container">
       {/* 1. HERO SECTION */}
@@ -107,8 +111,13 @@ const Home = () => {
           <button className="btn btn-primary flex items-center gap-2 group">
             VOIR LES FILMS <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
           </button>
-          <button className="btn btn-secondary flex items-center gap-2 group">
-            MON ESPACE AI <Plus size={18} className="text-purple-400 transition-transform group-hover:rotate-90" />
+          <button
+            type="button"
+            className="btn btn-secondary flex items-center gap-2 group"
+            onClick={openSubmitModal}
+          >
+            SOUMETTRE UN FILM
+            <Plus size={18} className="text-purple-400 transition-transform group-hover:rotate-90" />
           </button>
         </div>
       </main>
@@ -336,6 +345,8 @@ const Home = () => {
           </div>
         </div>
       </Section>
+
+      <SubmitModal isOpen={isSubmitModalOpen} onClose={closeSubmitModal} />
     </div>
   );
 };

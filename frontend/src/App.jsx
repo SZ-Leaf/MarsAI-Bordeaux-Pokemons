@@ -1,6 +1,5 @@
 import './styles/main.css';
 import Home from './pages/Home';
-import TestsGraphique from './pages/TestsGraphique';
 import { Header, Footer } from './components/layout';
 import { Routes, Route, useLocation } from 'react-router';
 import Submit from './pages/Submit.jsx';
@@ -9,12 +8,8 @@ import Login from './pages/Login';
 import NewsletterConfirm from './pages/NewsletterConfirm';
 import NewsletterUnsubscribe from './pages/NewsletterUnsubscribe';
 import { AuthGuard } from './components/features/admin/AdminLayout';
-import AdminNewslettersList from './pages/AdminNewslettersList';
-import AdminNewsletterForm from './pages/AdminNewsletterForm';
-import AdminNewsletterView from './pages/AdminNewsletterView';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
-import SelectorDashboard from './pages/SelectorDashboard.jsx';
 import Dashboard from './pages/Dashboard';
 import Events from './pages/Events';
 import JuryIndex from './components/jury/JuryIndex.jsx';
@@ -41,18 +36,11 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/events" element={<Events />} />
-            <Route path="/ui-kit" element={<TestsGraphique />} />
             <Route path="/submit" element={<Submit />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
             <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
-            <Route path='/selector/dashboard' element={<SelectorDashboard/>}/>
-            {/* <Route path='/selector/pending' element={<}/> */}
-            <Route path="/admin/newsletters" element={<AuthGuard><AdminNewslettersList /></AuthGuard>} />
-            <Route path="/admin/newsletters/new" element={<AuthGuard><AdminNewsletterForm /></AuthGuard>} />
-            <Route path="/admin/newsletters/:id/edit" element={<AuthGuard><AdminNewsletterForm /></AuthGuard>} />
-            <Route path="/admin/newsletters/:id/view" element={<AuthGuard><AdminNewsletterView /></AuthGuard>} />
             <Route path="/dashboard" element={<AuthGuard><Dashboard /></AuthGuard>} />
             <Route path='/jury' element={<JuryIndex/>}/>
             <Route path='/jury/:id' element={<JuryShow/>}/>

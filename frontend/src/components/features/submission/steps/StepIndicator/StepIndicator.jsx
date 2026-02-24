@@ -32,15 +32,6 @@ const StepIndicator = ({ currentStep }) => {
                   {step.title}
                 </span>
               </div>
-              {index < submissionSteps.length - 1 && (
-                <div
-                  className={`submission-step-connector ${
-                    isCompleted
-                      ? 'submission-step-connector--completed'
-                      : 'submission-step-connector--pending'
-                  }`}
-                />
-              )}
             </div>
           );
         })}

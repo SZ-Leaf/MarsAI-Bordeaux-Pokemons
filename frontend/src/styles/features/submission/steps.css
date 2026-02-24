@@ -7,12 +7,12 @@
 }
 
 .submission-steps-track {
-  @apply flex items-center justify-center mb-2;
-  @apply gap-4 md:gap-6;
+  @apply flex items-center justify-between mb-2;
+  @apply w-full max-w-xl mx-auto;
 }
 
 .submission-step {
-  @apply flex items-center;
+  @apply flex items-center flex-1 justify-center;
 }
 
 .submission-step-inner {
@@ -25,15 +25,17 @@
 }
 
 .submission-step-circle--active {
-  @apply bg-[rgb(var(--color-blue))] border-[rgb(var(--color-blue))] text-white;
+  @apply bg-linear-to-r from-[#9d31ff] to-[#e61d8c];
+  @apply border-[#e61d8c] text-white;
 }
 
 .submission-step-circle--completed {
-  @apply bg-[rgb(var(--color-green))] border-[rgb(var(--color-green))] text-black;
+  @apply bg-linear-to-r from-[#9d31ff] to-[#e61d8c];
+  @apply border-[#e61d8c] text-white;
 }
 
 .submission-step-circle--pending {
-  @apply bg-white/5 border-white/10 text-[rgb(var(--color-grey))];
+  @apply bg-white/10 border-white/30 text-white/60;
 }
 
 .submission-step-label {
@@ -57,6 +59,6 @@
 }
 
 .submission-step-connector--pending {
-  @apply bg-white/10;
+  @apply bg-white/20;
 }
 

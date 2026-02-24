@@ -68,13 +68,21 @@ const PhoneInput = ({ value, onChange, error, placeholder, variant = 'light' }) 
     setIsDialCodeOpen(false);
     setSearchTerm('');
     
-    const number = displayNumber;
-    onChange(newDialCode + (number ? ' ' + number : ''));
+    const number = displayNumber?.trim() || '';
+    if (!number) {
+      onChange('');
+      return;
+    }
+    onChange(newDialCode + ' ' + number);
   };
 
   const handleNumberChange = (e) => {
     const number = e.target.value.replace(/\D/g, '');
-    onChange(selectedDialCode + (number ? ' ' + number : ''));
+    if (!number) {
+      onChange('');
+      return;
+    }
+    onChange(selectedDialCode + ' ' + number);
   };
 
   return (

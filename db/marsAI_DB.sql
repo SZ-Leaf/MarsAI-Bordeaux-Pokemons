@@ -239,6 +239,15 @@ CREATE TABLE `submissions_awards` (
   PRIMARY KEY (`submission_id`, `award_id`)
 );
 
+-- JURY TABLE
+CREATE TABLE jury (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  cover VARCHAR(255),
+  firstname VARCHAR(100) NOT NULL,
+  lastname VARCHAR(100) NOT NULL,
+  job VARCHAR(150),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- FOREIGN KEY CONSTRAINTS
 

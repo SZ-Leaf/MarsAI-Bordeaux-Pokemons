@@ -6,6 +6,7 @@ const useEvents = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [timeframe, setTimeframe] = useState('all'); // all | upcoming | past
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
@@ -36,11 +37,29 @@ const useEvents = () => {
     setIsDetailModalOpen(false);
   };
 
-  const filteredEvents = events.filter(
-    (event) =>
-      event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.location.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredEvents = events.filter((event) => {
+    const term = searchTerm.toLowerCase().trim();
+    const matchesSearch =
+      !term ||
+      event.title.toLowerCase().includes(term) ||
+      event.location.toLowerCase().includes(term);
+
+    if (!matchesSearch) return false;
+
+    if (timeframe === 'all') return true;
+
+    const now = new Date();
+    const end = new Date(event.end_date);
+
+    if (timeframe === 'upcoming') {
+      // événements à venir tant que la date de fin n'est pas passée
+      return end >= now;
+    }
+    if (timeframe === 'past') {
+      return end < now;
+    }
+    return true;
+  });
 
   return {
     events,
@@ -49,6 +68,8 @@ const useEvents = () => {
     error,
     searchTerm,
     setSearchTerm,
+    timeframe,
+    setTimeframe,
     selectedEvent,
     isDetailModalOpen,
     openDetailModal,

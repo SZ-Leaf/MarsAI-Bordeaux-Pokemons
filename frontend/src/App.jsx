@@ -7,6 +7,7 @@ import Submit from './pages/Submit.jsx';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import NewsletterConfirm from './pages/NewsletterConfirm';
+import ReservationConfirm from './pages/ReservationConfirm';
 import NewsletterUnsubscribe from './pages/NewsletterUnsubscribe';
 import { AuthGuard } from './components/features/admin/AdminLayout';
 import AdminNewslettersList from './pages/AdminNewslettersList';
@@ -47,6 +48,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
             <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
+            <Route path="/reservation/confirm" element={<ReservationConfirm />} />
             <Route path='/selector/dashboard' element={<SelectorDashboard/>}/>
             {/* <Route path='/selector/pending' element={<}/> */}
             <Route path="/admin/newsletters" element={<AuthGuard><AdminNewslettersList /></AuthGuard>} />

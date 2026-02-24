@@ -1,0 +1,53 @@
+/* ==========================================================================
+   PAGE EVENTS - Cartes et grille publique /events
+   ========================================================================== */
+
+.page-events .event-card {
+  @apply bg-[#05060b] rounded-3xl overflow-hidden border border-white/5 cursor-pointer;
+  @apply shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] hover:border-orange-500/60 transition-all flex flex-col h-full;
+  @apply min-h-[420px] md:min-h-[480px];
+}
+
+.page-events .event-card-image-container {
+  @apply relative h-60 md:h-72 w-full overflow-hidden;
+}
+
+.page-events .event-card-image {
+  @apply w-full h-full object-cover group-hover:scale-105 transition-transform duration-500;
+}
+
+.page-events .event-card-date-badge {
+  @apply absolute top-4 left-4 bg-black/70 backdrop-blur-md border border-white/20 rounded-2xl px-3 py-2 min-w-[56px] flex flex-col items-center justify-center;
+}
+
+.page-events .event-card-date-day {
+  @apply text-xl font-bold text-orange-400;
+}
+
+.page-events .event-card-date-month {
+  @apply text-[10px] font-semibold text-gray-200 uppercase;
+}
+
+.page-events .event-card-content {
+  @apply p-6 md:p-7 flex flex-col flex-grow gap-3;
+}
+
+.page-events .event-card-title {
+  @apply text-lg md:text-xl font-semibold text-white mb-1 group-hover:text-orange-400 transition-colors;
+}
+
+.page-events .event-card-info-container {
+  @apply mt-2 flex flex-col gap-1.5 text-sm text-gray-300;
+}
+
+.page-events .event-card-info-item {
+  @apply flex items-center text-gray-300 text-sm;
+}
+
+.page-events .event-card-info-icon {
+  @apply mr-2 text-orange-500 flex-shrink-0;
+}
+
+.page-events .event-card-button {
+  @apply mt-5 w-full py-3 bg-gradient-to-r from-blue-600 to-purple-500 hover:from-blue-500 hover:to-orange-500 text-white rounded-xl text-sm font-semibold transition-all;
+}

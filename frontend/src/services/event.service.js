@@ -48,10 +48,35 @@ export const deleteEvent = async (id) => {
   });
 };
 
+/**
+ * Crée une réservation pour un événement public
+ * @param {number|string} eventId
+ * @param {{ first_name: string, last_name: string, email: string }} payload
+ */
+export const createReservation = async (eventId, payload) => {
+  return apiCall(`/api/events/${eventId}/reservation`, {
+    method: 'POST',
+    body: payload,
+  });
+};
+
+/**
+ * Confirme une réservation à partir d'un token reçu par e-mail
+ * @param {string} token
+ */
+export const confirmReservation = async (token) => {
+  const search = new URLSearchParams({ token });
+  return apiCall(`/api/events/reservation/confirm?${search.toString()}`, {
+    method: 'GET',
+  });
+};
+
 export default {
   getEvents,
   getEventById,
   createEvent,
   updateEvent,
   deleteEvent,
+  createReservation,
+  confirmReservation,
 };

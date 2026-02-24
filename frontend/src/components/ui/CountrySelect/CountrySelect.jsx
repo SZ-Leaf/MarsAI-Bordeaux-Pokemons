@@ -1,6 +1,4 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-// import { countries } from '../../constants/countries';
-import Select from 'react-select';
 import countryList from 'react-select-country-list';
 import { useLanguage } from '../../../context/LanguageContext';
 

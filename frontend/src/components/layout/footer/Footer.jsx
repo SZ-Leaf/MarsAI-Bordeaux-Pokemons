@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import '../../../styles/main.css';
 import { subscribeNewsletter } from '../../../services/newsletter.service';
+import NewsletterSuccessModal from './NewsletterSuccessModal';
 
 function getErrorMessage(err) {
   const m = err?.message;
@@ -23,6 +24,7 @@ const Footer = () => {
   const [consent, setConsent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   const selectedOption = LANG_OPTIONS.find((o) => o.value === language) || LANG_OPTIONS[0];
 
@@ -51,10 +53,10 @@ const Footer = () => {
     setIsSubscribed(false);
     try {
       await subscribeNewsletter(trimmedEmail, true, language);
-      alert('Vérifiez votre email pour confirmer votre inscription.');
       setEmail('');
       setConsent(false);
       setIsSubscribed(true);
+      setIsSuccessModalOpen(true);
     } catch (err) {
       alert(getErrorMessage(err));
     } finally {
@@ -223,6 +225,11 @@ const Footer = () => {
           </div>
         </div>
       </div>
+      <NewsletterSuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={() => setIsSuccessModalOpen(false)}
+        language={language}
+      />
     </footer>
   );
 };

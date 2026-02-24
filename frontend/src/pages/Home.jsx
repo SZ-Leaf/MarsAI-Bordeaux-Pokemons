@@ -127,7 +127,7 @@ const Home = () => {
         <h2 className="section-title-medium text-center mb-16">
           UN FESTIVAL <span className="stats-accent">NOUVELLE GÉNÉRATION</span>
         </h2>
-        
+
         <div className="features-grid">
           {FEATURES.map((feature, index) => (
             <Card
@@ -214,7 +214,13 @@ const Home = () => {
           ))}
         </div>
 
-        <button className="btn btn-adventure">REJOINDRE L'AVENTURE</button>
+        <button
+          type="button"
+          className="btn btn-adventure"
+          onClick={openSubmitModal}
+        >
+          REJOINDRE L'AVENTURE
+        </button>
       </Section>
 
       {/* 5. CONFERENCES SECTION */}

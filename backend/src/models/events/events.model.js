@@ -54,37 +54,43 @@ export const deleteEvent = async (eventId) => {
 export const getEvents = async (filters = {}) => {
   const { title, start_date, end_date, timeframe } = filters;
 
-  let query = 'SELECT * FROM events WHERE 1=1';
+  let query = `
+    SELECT e.*, COUNT(r.id) AS reservations
+    FROM events e
+    LEFT JOIN reservations r ON r.event_id = e.id
+  `;
+
   const params = [];
 
   if (title) {
-    query += ' AND title LIKE ?';
+    query += ' AND e.title LIKE ?';
     params.push(`%${title}%`);
   }
 
   if (timeframe === 'upcoming') {
-    query += ' AND end_date >= NOW()';
+    query += ' AND e.end_date >= NOW()';
   } else if (timeframe === 'past') {
-    query += ' AND end_date < NOW()';
+    query += ' AND e.end_date < NOW()';
   }
 
   if (start_date) {
-    query += ' AND start_date >= ?';
+    query += ' AND e.start_date >= ?';
     params.push(start_date);
   }
 
   if (end_date) {
-    query += ' AND end_date <= ?';
+    query += ' AND e.end_date <= ?';
     params.push(end_date);
   }
 
-  const sortOrder = timeframe === 'upcoming' ? 'ASC' : 'DESC';
-  query += ` ORDER BY start_date ${sortOrder}`;
+  query += `
+    GROUP BY e.id
+    ORDER BY e.start_date ${timeframe === 'upcoming' ? 'ASC' : 'DESC'}
+  `;
 
   const [rows] = await db.pool.execute(query, params);
   return rows;
 };
-
 export const getEventById = async (eventId) => {
   const [rows] = await db.pool.execute(
     'SELECT * FROM events WHERE id = ?',

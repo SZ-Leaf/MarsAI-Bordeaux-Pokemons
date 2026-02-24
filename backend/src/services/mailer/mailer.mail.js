@@ -131,6 +131,17 @@ const sendNewsletterBulk = async (newsletter, subscribers) => {
 
 const sendReservationConfirmation = async (email, token) => {
    const confirmationLink = `http://localhost:3000/api/events/:id/reservation/confirm?token=${token}&email=${email}`;
+   await transporter.sendMail({
+    from: '"Mars AI" <no-reply@marsai.com>',
+    to: email,
+    subject: "Confirmation invitation",
+    html: `
+       <p>Confirm:</p>
+       <a href="${confirmationLink}">${confirmationLink}</a>
+    `
+ });
+
+ return true;
 };
 
 // Email de confirmation de soumission de film (envoyé au créateur)

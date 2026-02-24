@@ -27,6 +27,8 @@ export const createReservationController = async (req, res) => {
 
     const token = generateReservationConfirmToken(reservationId, email);
 
+    console.log(token);
+
     await sendReservationConfirmation(email, token, reservationId);
 
     return sendSuccess(

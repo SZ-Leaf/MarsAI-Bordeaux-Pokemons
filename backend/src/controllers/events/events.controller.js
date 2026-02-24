@@ -149,7 +149,6 @@ export const getEventByIdController = async (req, res) => {
     if (!Number.isInteger(eventId) || eventId <= 0) {
       return sendError(res, 400, 'ID invalide', 'Invalid ID', null);
     }
-
     const event = await getEventById(eventId);
     if (!event) return sendError(res, 404, 'Événement introuvable', 'Event not found', null);
 

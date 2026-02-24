@@ -1,0 +1,62 @@
+/* ==========================================================================
+   FEATURE - SUBMISSION - STEPS
+   ========================================================================== */
+
+.submission-steps-wrapper {
+  @apply mb-8;
+}
+
+.submission-steps-track {
+  @apply flex items-center justify-center mb-2;
+  @apply gap-4 md:gap-6;
+}
+
+.submission-step {
+  @apply flex items-center;
+}
+
+.submission-step-inner {
+  @apply flex flex-col items-center;
+}
+
+.submission-step-circle {
+  @apply w-10 h-10 rounded-full flex items-center justify-center border-2;
+  @apply text-xs font-bold;
+}
+
+.submission-step-circle--active {
+  @apply bg-[rgb(var(--color-blue))] border-[rgb(var(--color-blue))] text-white;
+}
+
+.submission-step-circle--completed {
+  @apply bg-[rgb(var(--color-green))] border-[rgb(var(--color-green))] text-black;
+}
+
+.submission-step-circle--pending {
+  @apply bg-white/5 border-white/10 text-[rgb(var(--color-grey))];
+}
+
+.submission-step-label {
+  @apply text-xs mt-2 text-center whitespace-nowrap;
+}
+
+.submission-step-label--active {
+  @apply font-bold text-[rgb(var(--color-blue))];
+}
+
+.submission-step-label--inactive {
+  @apply text-[rgb(var(--color-grey))];
+}
+
+.submission-step-connector {
+  @apply h-1 w-16 mx-2;
+}
+
+.submission-step-connector--completed {
+  @apply bg-[rgb(var(--color-green))];
+}
+
+.submission-step-connector--pending {
+  @apply bg-white/10;
+}
+

@@ -2,6 +2,8 @@
    FEATURE - SUBMISSION
    ========================================================================== */
 
+@import "./steps.css";
+
 /* Submission Card */
 .submission-container-card {
    @apply overflow-hidden flex flex-col;

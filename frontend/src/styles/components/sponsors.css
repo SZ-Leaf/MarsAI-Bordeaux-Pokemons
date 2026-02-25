@@ -2,12 +2,55 @@
    COMPOSANTS SPONSORS
    ========================================================================== */
 
+.sponsors-section {
+  @apply w-full border-t border-white/10 bg-[#05040a] py-16 mt-8;
+}
+
+.sponsors-inner {
+  @apply max-w-[80%] mx-auto flex flex-col gap-10;
+}
+
+.sponsors-header {
+  @apply flex flex-col gap-4 items-start;
+}
+
+.sponsors-label {
+  @apply text-[10px] font-bold tracking-[0.3em] uppercase text-[#e61d8c];
+}
+
+.sponsors-title {
+  @apply text-2xl md:text-4xl font-black text-white uppercase tracking-tight;
+}
+
+/* Harmonise la taille du logo dans le h2 sponsors */
+.sponsors-title .navbar-logo {
+  @apply text-2xl md:text-4xl font-black text-white uppercase tracking-tight;
+}
+
+.sponsors-subtitle {
+  @apply text-xs md:text-sm text-white/50 max-w-xl;
+}
+
+.sponsors-marquees {
+  @apply flex flex-col gap-4;
+}
+
+.marquee-row {
+  @apply rounded-[40px] border border-white/8 bg-[#0b0b12]/80 backdrop-blur-md;
+  @apply px-4 md:px-8 py-6 md:py-8;
+}
+
+.marquee-row-secondary {
+  @apply border-white/5 bg-[#05040a]/80;
+}
+
 .marquee-container {
   overflow: hidden;
   user-select: none;
   display: flex;
   position: relative;
-  padding: 10px 0;
+  padding: 8px 0;
+  width: 100%;
   mask-image: linear-gradient(
     to right,
     transparent,
@@ -21,8 +64,8 @@
 .marquee-content-right {
   display: flex;
   flex-shrink: 0;
-  gap: 2rem;
-  padding-right: 2rem;
+  gap: 2.5rem;
+  padding-right: 2.5rem;
   min-width: 100%;
   align-items: center;
 }
@@ -33,6 +76,15 @@
 .marquee-container:hover .marquee-content-left,
 .marquee-container:hover .marquee-content-right {
   animation-play-state: paused;
+}
+
+.sponsor-logo-link {
+  @apply mx-4 md:mx-6 flex items-center justify-center opacity-80;
+  @apply transition-transform duration-300 hover:scale-110 hover:opacity-100;
+}
+
+.sponsor-logo {
+  @apply h-14 md:h-20 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300;
 }
 
 @keyframes scroll-left {

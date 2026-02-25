@@ -26,6 +26,8 @@ const storage = multer.diskStorage({
         folder = 'events/tmp';
       } else if (req.originalUrl.includes('/jury')) {
         folder = 'jury/tmp';
+      } else if (req.originalUrl.includes('/awards')) {
+        folder = 'awards/tmp';
       }
     }
 
@@ -95,6 +97,7 @@ export const uploadSubmissionFiles = upload.fields([
 export const uploadEventCover = upload.single('cover');
 export const uploadSponsorCover = upload.single('cover');
 export const uploadJuryCover = upload.single('cover');
+export const uploadAwardCover = upload.single('cover');
 
 export const handleUploadError = (err, req, res, next) => {
   if (err) {

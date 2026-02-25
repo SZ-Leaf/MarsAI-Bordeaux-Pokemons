@@ -329,3 +329,16 @@ CREATE INDEX idx_submissions_awards_award_id ON submissions_awards(award_id);
 
 INSERT INTO roles (`title`) VALUES ('user'), ('admin');
 INSERT INTO social_networks (`title`, `logo`) VALUES ('fb', 'fb-logl'), ('ig', 'ig-logo'), ('linkedin', 'lkin-logo'), ('x', 'x-logo'), ('tiktok', 'tiktok-logo'), ('website', 'website-logo');
+
+-- Ajout de la colonne submission_id pour la table awards
+ALTER TABLE awards
+ADD COLUMN submission_id INT NULL;
+--Changement de nom pour la colonne rank (nom réservé en SQL)
+ALTER TABLE awards CHANGE COLUMN `rank` award_rank INT NOT NULL;
+--Ajout de fk sur submission_id
+ALTER TABLE awards
+ADD CONSTRAINT fk_awards_submission
+FOREIGN KEY (submission_id)
+REFERENCES submissions(id)
+ON DELETE SET NULL
+ON UPDATE CASCADE;

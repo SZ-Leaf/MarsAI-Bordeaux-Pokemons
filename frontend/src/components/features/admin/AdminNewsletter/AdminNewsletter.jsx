@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Send, Users, Mail, ArrowLeft, Download, Trash2, Eye, Edit3, Plus } from 'lucide-react';
+import { Send, Users, Mail, ArrowLeft, Download, Trash2, Eye, Edit3, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AdminSectionHeader, AdminStatCard } from '../shared';
 import { CKEditor } from '../../../shared/lib';
 import { useLanguage } from '../../../../context/LanguageContext';
@@ -10,7 +10,9 @@ import {
   updateNewsletter,
   deleteNewsletter,
   sendNewsletter,
+  getNewsletterStats,
   listSubscribers,
+  deleteSubscriber,
 } from '../../../../services/newsletter.service';
 
 function getMessage(err) {
@@ -36,7 +38,7 @@ function escapeCsvCell(value) {
 
 // ─── List sub-view ───────────────────────────────────────────────────────────
 
-const NewsletterList = ({ language, onNew, onEdit, onView }) => {
+const NewsletterList = ({ language, onNew, onEdit, onView, onSubscribers }) => {
   const [newsletters, setNewsletters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionId, setActionId] = useState(null);
@@ -118,6 +120,11 @@ const NewsletterList = ({ language, onNew, onEdit, onView }) => {
         offset += limit;
       } while (chunk.length === limit);
 
+      if (all.length === 0) {
+        alert(language === 'fr' ? 'Aucun abonné à exporter.' : 'No subscribers to export.');
+        return;
+      }
+
       const header = 'email';
       const rows = all.map((s) => escapeCsvCell(s.email));
       const csv = [header, ...rows].join('\n');
@@ -182,16 +189,28 @@ const NewsletterList = ({ language, onNew, onEdit, onView }) => {
               ? (language === 'fr' ? 'Export...' : 'Exporting...')
               : (language === 'fr' ? 'Télécharger' : 'Download')
           }
+          onButtonClick={handleExportCsv}
+          buttonDisabled={exporting}
           icon={Download}
           iconColor="text-green-400"
         />
       </div>
 
       <div className="bg-[#1a1a1a] rounded-3xl border border-gray-800/50 overflow-hidden mt-8">
-        <div className="p-6 border-b border-gray-800 flex justify-between items-center">
+        <div className="p-6 border-b border-gray-800 flex justify-between items-center flex-wrap gap-4">
           <h3 className="font-bold">
             {language === 'fr' ? 'Historique des newsletters' : 'Newsletter history'}
           </h3>
+          {onSubscribers && (
+            <button
+              type="button"
+              onClick={onSubscribers}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-700 hover:bg-white/5 text-sm font-medium text-gray-300 hover:text-white transition-colors cursor-pointer"
+            >
+              <Users size={16} />
+              {language === 'fr' ? 'Voir la liste des abonnés' : 'View subscribers list'}
+            </button>
+          )}
         </div>
 
         {loading ? (
@@ -488,6 +507,7 @@ const NewsletterForm = ({ language, editId, onBack, onSaved }) => {
 
 const NewsletterView = ({ language, newsletterId, onBack }) => {
   const [newsletter, setNewsletter] = useState(null);
+  const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -496,7 +516,18 @@ const NewsletterView = ({ language, newsletterId, onBack }) => {
       try {
         const res = await getNewsletterById(newsletterId);
         const n = res?.data?.newsletter ?? res?.newsletter;
-        if (!cancelled && n) setNewsletter(n);
+        if (!cancelled && n) {
+          setNewsletter(n);
+          if (n.status === 'sent') {
+            try {
+              const statsRes = await getNewsletterStats(newsletterId);
+              const s = statsRes?.data?.stats ?? statsRes?.stats;
+              if (!cancelled && s) setStats(s);
+            } catch {
+              // ignore stats failure
+            }
+          }
+        }
       } catch (err) {
         if (!cancelled) alert(getMessage(err));
       } finally {
@@ -546,6 +577,32 @@ const NewsletterView = ({ language, newsletterId, onBack }) => {
 
       <h1 className="text-3xl font-bold mb-8">{newsletter.title}</h1>
 
+      {stats && (
+        <section className="mb-8 p-4 rounded-xl border border-gray-800 bg-[#1a1a1a]">
+          <h2 className="text-lg font-semibold mb-3 pb-2 border-b border-gray-800">
+            {language === 'fr' ? 'Statistiques d\'envoi' : 'Send statistics'}
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+            <div>
+              <span className="text-gray-500">{language === 'fr' ? 'Total envoyé' : 'Total sent'}</span>
+              <p className="font-bold text-white">{Number(stats.total_sent ?? 0).toLocaleString()}</p>
+            </div>
+            <div>
+              <span className="text-gray-500">{language === 'fr' ? 'Succès' : 'Success'}</span>
+              <p className="font-bold text-green-500">{Number(stats.success_count ?? 0).toLocaleString()}</p>
+            </div>
+            <div>
+              <span className="text-gray-500">{language === 'fr' ? 'Échecs' : 'Failed'}</span>
+              <p className="font-bold text-red-500">{Number(stats.failed_count ?? 0).toLocaleString()}</p>
+            </div>
+            <div>
+              <span className="text-gray-500">{language === 'fr' ? 'Taux de succès' : 'Success rate'}</span>
+              <p className="font-bold text-white">{Number(stats.success_rate ?? 0).toFixed(1)}%</p>
+            </div>
+          </div>
+        </section>
+      )}
+
       <section className="mb-8">
         <h2 className="text-lg font-semibold mb-3 pb-2 border-b border-gray-800">
           Version française
@@ -581,6 +638,161 @@ const NewsletterView = ({ language, newsletterId, onBack }) => {
   );
 };
 
+// ─── Subscribers list sub-view ──────────────────────────────────────────────
+
+const PAGE_SIZE = 20;
+
+const SubscribersList = ({ language, onBack }) => {
+  const [subscribers, setSubscribers] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [actionId, setActionId] = useState(null);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const res = await listSubscribers({ limit: PAGE_SIZE, offset });
+      const list = res?.data?.subscribers ?? res?.subscribers ?? [];
+      const tot = res?.data?.total ?? res?.total ?? 0;
+      setSubscribers(Array.isArray(list) ? list : []);
+      setTotal(tot);
+    } catch (err) {
+      alert(getMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    load();
+  }, [offset]);
+
+  const handleDelete = async (id, email) => {
+    const msg = language === 'fr'
+      ? `Supprimer l'abonné « ${email} » de la liste ?`
+      : `Remove subscriber "${email}" from the list?`;
+    if (!window.confirm(msg)) return;
+    setActionId(id);
+    try {
+      await deleteSubscriber(id);
+      await load();
+    } catch (err) {
+      alert(getMessage(err));
+    } finally {
+      setActionId(null);
+    }
+  };
+
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const currentPage = Math.floor(offset / PAGE_SIZE) + 1;
+  const canPrev = offset > 0;
+  const canNext = offset + PAGE_SIZE < total;
+
+  return (
+    <>
+      <button
+        onClick={onBack}
+        className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6 bg-transparent border-none cursor-pointer p-0"
+      >
+        <ArrowLeft size={18} />
+        {language === 'fr' ? 'Retour à la liste' : 'Back to list'}
+      </button>
+
+      <h1 className="text-3xl font-bold mb-6">
+        {language === 'fr' ? 'Liste des abonnés' : 'Subscribers list'}
+      </h1>
+
+      <div className="bg-[#1a1a1a] rounded-3xl border border-gray-800/50 overflow-hidden">
+        <div className="p-6 border-b border-gray-800 flex justify-between items-center flex-wrap gap-4">
+          <h3 className="font-bold">
+            {language === 'fr' ? 'Tous les abonnés' : 'All subscribers'} ({total.toLocaleString()})
+          </h3>
+        </div>
+
+        {loading ? (
+          <div className="p-8 text-center text-gray-500">
+            {language === 'fr' ? 'Chargement...' : 'Loading...'}
+          </div>
+        ) : subscribers.length === 0 ? (
+          <div className="p-8 text-center text-gray-500">
+            {language === 'fr' ? 'Aucun abonné.' : 'No subscribers.'}
+          </div>
+        ) : (
+          <>
+            <table className="w-full text-left">
+              <thead>
+                <tr className="text-gray-500 text-[10px] uppercase font-bold border-b border-gray-800">
+                  <th className="px-6 py-4">Email</th>
+                  <th className="px-6 py-4">{language === 'fr' ? 'Langue' : 'Language'}</th>
+                  <th className="px-6 py-4">{language === 'fr' ? 'Confirmé' : 'Confirmed'}</th>
+                  <th className="px-6 py-4">{language === 'fr' ? 'Désinscrit' : 'Unsubscribed'}</th>
+                  <th className="px-6 py-4">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-800">
+                {subscribers.map((s) => (
+                  <tr key={s.id} className="hover:bg-white/5 transition-colors">
+                    <td className="px-6 py-4 font-medium text-sm text-pink-400">{s.email}</td>
+                    <td className="px-6 py-4 text-sm text-gray-400">{s.language ?? '—'}</td>
+                    <td className="px-6 py-4">
+                      <span className={s.confirmed ? 'text-green-500' : 'text-gray-500'}>
+                        {s.confirmed ? (language === 'fr' ? 'Oui' : 'Yes') : (language === 'fr' ? 'Non' : 'No')}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={s.unsubscribed ? 'text-orange-500' : 'text-gray-500'}>
+                        {s.unsubscribed ? (language === 'fr' ? 'Oui' : 'Yes') : (language === 'fr' ? 'Non' : 'No')}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => handleDelete(s.id, s.email)}
+                        disabled={actionId === s.id}
+                        className="text-red-400 hover:text-red-300 transition-colors cursor-pointer bg-transparent border-none p-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                        title={language === 'fr' ? 'Supprimer' : 'Delete'}
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {totalPages > 1 && (
+              <div className="p-4 border-t border-gray-800 flex items-center justify-between">
+                <span className="text-sm text-gray-500">
+                  {language === 'fr' ? 'Page' : 'Page'} {currentPage} / {totalPages}
+                </span>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setOffset((o) => Math.max(0, o - PAGE_SIZE))}
+                    disabled={!canPrev}
+                    className="flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-700 hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                  >
+                    <ChevronLeft size={16} />
+                    {language === 'fr' ? 'Précédent' : 'Previous'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setOffset((o) => o + PAGE_SIZE)}
+                    disabled={!canNext}
+                    className="flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-700 hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                  >
+                    {language === 'fr' ? 'Suivant' : 'Next'}
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </>
+  );
+};
+
 // ─── Main component ─────────────────────────────────────────────────────────
 
 const AdminNewsletter = () => {
@@ -601,6 +813,13 @@ const AdminNewsletter = () => {
           onNew={() => navigateTo('form')}
           onEdit={(id) => navigateTo('form', id)}
           onView={(id) => navigateTo('view', id)}
+          onSubscribers={() => navigateTo('subscribers')}
+        />
+      )}
+      {view === 'subscribers' && (
+        <SubscribersList
+          language={language}
+          onBack={() => navigateTo('list')}
         />
       )}
       {view === 'form' && (

@@ -5,7 +5,7 @@ export const getCurrentUserService = async () => {
    const res = await apiCall('/api/auth/me', {
     method: 'GET'
    });
-   return res.data?.user ?? res.data ?? res;
+   return res?.data?.user ?? res?.data ?? res;
 };
 
 export const getUsersService = async () => {
@@ -28,7 +28,7 @@ export const loginService = async (email, password) => {
     method: 'POST',
     body: JSON.stringify({ email, password })
    });
-   return res;
+   return res?.data ?? res;
 };
 
 export const registerService = async (firstname, lastname, password, token) => {

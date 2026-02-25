@@ -24,6 +24,11 @@
   max-width: var(--header-content-max-width, none);
 }
 
+.header-pill-content .language-switch-button {
+  justify-self: end;
+  @apply flex items-center gap-2 cursor-pointer;
+}
+
 @media (max-width: 768px) {
   .header-pill-container {
     @apply fixed bottom-0 top-auto left-0 translate-x-0 w-full max-w-full;

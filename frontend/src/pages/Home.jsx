@@ -1,8 +1,12 @@
 import React from 'react';
-import { ArrowRight, Plus, Calendar, Play, Users, Award, Clock, MapPin, Target, Zap, Rocket } from 'lucide-react';
+import { ArrowRight, Plus, Calendar, Clock, MapPin } from 'lucide-react';
 import { Card } from '../components/ui';
+import useModal from '../hooks/useModal';
+import { SubmitModal } from '../components/features/submission';
 import '../styles/main.css';
-
+import Sponsors from '../components/sponsors/Sponsors';
+import { getFEATURES, getFILMS, getSTATS, getCONFERENCES, getOBJECTIVES } from '../constants/homepage';
+import { useLanguage } from '../context/LanguageContext';
 // --- Shared Internal Components ---
 
 const Section = ({ id, children, className = '', wide = false }) => (
@@ -23,92 +27,51 @@ const SectionLabel = ({ children, centered = false }) => (
   </div>
 );
 
-// --- Page Data ---
-
-const FEATURES = [
-  { title: "1 MINUTE", description: "FORMAT ULTRA-COURT POUR UN IMPACT MAXIMUM.", className: "card-purple" },
-  { title: "GRATUITÉ", description: "CONFÉRENCES ET WORKSHOPS ACCESSIBLES.", className: "card-green" },
-  { title: "POUR TOUS", description: "PROFESSIONNELS, ÉTUDIANTS ET CURIEUX.", className: "card-pink" },
-  { title: "EXPERTISE", description: "LEADERS MONDIAUX DE L'IA GÉNÉRATIVE.", className: "card-blue" }
-];
-
-const FILMS = [
-  { title: "PROTOCOL ALPHA", director: "DIR. STARK", image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop" },
-  { title: "NEURAL DREAM", director: "DIR. VANCE", image: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1000&auto=format&fit=crop" },
-  { title: "CYBER MARSEILLE", director: "DIR. LUPIN", image: "https://images.unsplash.com/photo-1633167606207-d840b5070fc2?q=80&w=1000&auto=format&fit=crop" }
-];
-
-const STATS = [
-  { title: "2 MOIS", subtitle: "DE PRÉPARATION", color: "text-purple-500", borderClass: "border-purple" },
-  { title: "50 FILMS", subtitle: "EN SÉLECTION", color: "text-emerald-400", borderClass: "border-emerald" },
-  { title: "WEB 3.0", subtitle: "EXPÉRIENCE", color: "text-pink-500", borderClass: "border-pink" },
-  { title: "J4", subtitle: "MARSEILLE", color: "text-cyan-400", borderClass: "border-cyan" }
-];
-
-const CONFERENCES = [
-  { title: "PROJECTIONS", description: "Diffusion sur écran géant en présence des réalisateurs.", icon: Play },
-  { title: "WORKSHOPS", description: "Sessions pratiques pour maîtriser les outils IA.", icon: Users },
-  { title: "AWARDS", description: "Cérémonie de clôture récompensant l'audace.", icon: Award }
-];
-
-const OBJECTIVES = [
-  {
-    title: "L'HUMAIN AU CENTRE",
-    description: "METTRE L'HUMAIN AU CŒUR DE LA CRÉATION POUR NE PAS PERDRE L'ÉMOTION.",
-    icon: Target,
-    color: "text-emerald-400",
-    bgColor: "bg-emerald-400/10",
-    borderClass: "border-emerald"
-  },
-  {
-    title: "CHALLENGE CRÉATIF",
-    description: "CHALLENGER LA CRÉATIVITÉ GRÂCE À UN FORMAT ULTRA-COURT DE 60S.",
-    icon: Zap,
-    color: "text-blue-400",
-    bgColor: "bg-blue-400/10",
-    borderClass: "border-blue"
-  },
-  {
-    title: "FUTURS SOUHAITABLES",
-    description: "EXPLORER LES FUTURS DÉSIRABLES VIA LES TECHNOLOGIES ÉMERGENTES.",
-    icon: Rocket,
-    color: "text-purple-400",
-    bgColor: "bg-purple-400/10",
-    borderClass: "border-purple"
-  }
-];
-
 // --- Main Component ---
 
 const Home = () => {
+  const { isOpen: isSubmitModalOpen, openModal: openSubmitModal, closeModal: closeSubmitModal } = useModal();
+  const { language } = useLanguage();
+
+  const FEATURES = getFEATURES(language);
+  const FILMS = getFILMS(language);
+  const STATS = getSTATS(language);
+  const CONFERENCES = getCONFERENCES(language);
+  const OBJECTIVES = getOBJECTIVES(language);
+
   return (
     <div className="home-container">
       {/* 1. HERO SECTION */}
       <main className="hero-section">
         <div className="hero-badge animate-fade-in">
           <span className="sparkle">✨</span>
-          LE PROTOCOLE TEMPOREL 2026
+          {language === 'fr' ? "LE PROTOCOLE TEMPOREL 2026" : "TEMPORAL PROTOCOL 2026"}
         </div>
 
         <h1 className="hero-title">
-          MARS<span className="gradient-text">AI</span>
+          {language === 'fr' ? "MARS" : "MARS"}<span className="gradient-text">AI</span>
         </h1>
 
         <h2 className="hero-subtitle">
-          IMAGINEZ DES <span className="gradient-text-alt">FUTURS</span> SOUHAITABLES
+          {language === 'fr' ? "IMAGINEZ DES " : "IMAGINE "}<span className="gradient-text-alt">FUTURS</span> {language === 'fr' ? "SOUHAITABLES" : "DESIRABLES"}
         </h2>
 
         <div className="hero-description-container">
-          <p className="hero-description">Le festival de courts-métrages de 60 secondes réalisés par IA.</p>
-          <p className="hero-description">2 jours d'immersion au cœur de Marseille.</p>
+          <p className="hero-description">{language === 'fr' ? "Le festival de courts-métrages de 60 secondes réalisés par IA." : "The festival of 60 second short films made by AI."}</p>
+          <p className="hero-description">{language === 'fr' ? "2 jours d'immersion au cœur de Marseille." : "2 days of immersion in the heart of Marseille."}</p>
         </div>
 
         <div className="hero-actions">
           <button className="btn btn-primary flex items-center gap-2 group">
-            VOIR LES FILMS <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+            {language === 'fr' ? "VOIR LES FILMS" : "SEE THE FILMS"} <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
           </button>
-          <button className="btn btn-secondary flex items-center gap-2 group">
-            MON ESPACE AI <Plus size={18} className="text-purple-400 transition-transform group-hover:rotate-90" />
+          <button
+            type="button"
+            className="btn btn-secondary flex items-center gap-2 group"
+            onClick={openSubmitModal}
+          >
+            {language === 'fr' ? "SOUMETTRE UN FILM" : "SUBMIT A FILM"}
+            <Plus size={18} className="text-purple-400 transition-transform group-hover:rotate-90" />
           </button>
         </div>
       </main>
@@ -116,9 +79,9 @@ const Home = () => {
       {/* 2. FEATURES SECTION */}
       <Section className="py-20">
         <h2 className="section-title-medium text-center mb-16">
-          UN FESTIVAL <span className="stats-accent">NOUVELLE GÉNÉRATION</span>
+          {language === 'fr' ? "UN FESTIVAL " : "A FESTIVAL "}<span className="stats-accent">{language === 'fr' ? "NOUVELLE GÉNÉRATION" : "NEW GENERATION"}</span>
         </h2>
-        
+
         <div className="features-grid">
           {FEATURES.map((feature, index) => (
             <Card
@@ -134,21 +97,21 @@ const Home = () => {
 
       {/* 3. FILMS SECTION */}
       <Section id="films">
-        <SectionLabel>LE PROJET MARS.A.I</SectionLabel>
+        <SectionLabel>{language === 'fr' ? "LE PROJET MARS.A.I" : "THE MARS.A.I PROJECT"}</SectionLabel>
 
         <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-12">
           <div className="max-w-2xl">
             <h2 className="section-title-xl section-title-huge">
-              FILMS EN<br />
-              <span className="fade-text">COMPÉTITION</span>
+              {language === 'fr' ? "FILMS EN" : "FILMS IN"}<br />
+              <span className="fade-text">{language === 'fr' ? "COMPÉTITION" : "COMPETITION"}</span>
             </h2>
             <p className="section-description">
-              Découvrez une sélection d'œuvres pionnières explorant les nouvelles frontières de l'imaginaire assisté par l'IA.
+              {language === 'fr' ? "Découvrez une sélection d'œuvres pionnières explorant les nouvelles frontières de l'imaginaire assisté par l'IA." : "Discover a selection of pioneering works exploring the new frontiers of imagination assisted by AI."}
             </p>
           </div>
 
           <button className="view-selection-btn">
-            VOIR LA SÉLECTION
+            {language === 'fr' ? "VOIR LA SÉLECTION" : "SEE THE SELECTION"}
             <div className="arrow-circle"><ArrowRight size={20} /></div>
           </button>
         </div>
@@ -170,7 +133,7 @@ const Home = () => {
       {/* 3.5 OBJECTIVES SECTION */}
       <Section id="objectives" className="flex flex-col items-center">
         <h2 className="section-title-medium text-center mb-24">
-          OBJECTIFS DU <span className="stats-accent">FESTIVAL</span>
+          {language === 'fr' ? "OBJECTIFS DU " : "OBJECTIVES OF "}<span className="stats-accent">{language === 'fr' ? "FESTIVAL" : "FESTIVAL"}</span>
         </h2>
 
         <div className="objectives-grid">
@@ -192,8 +155,8 @@ const Home = () => {
       {/* 4. PROTOCOL SECTION */}
       <Section id="protocol" className="flex flex-col items-center">
         <div className="text-center mb-20">
-          <SectionLabel centered>IMMERSION TOTALE</SectionLabel>
-          <h2 className="section-title-xl">LE PROTOCOLE<br />TEMPOREL</h2>
+          <SectionLabel centered>{language === 'fr' ? "IMMERSION TOTALE" : "TOTAL IMMERSION"}</SectionLabel>
+          <h2 className="section-title-xl">{language === 'fr' ? "LE PROTOCOLE TEMPOREL" : "THE TEMPORAL PROTOCOL"}</h2>
         </div>
 
         <div className="stats-grid-home">
@@ -205,27 +168,33 @@ const Home = () => {
           ))}
         </div>
 
-        <button className="btn btn-adventure">REJOINDRE L'AVENTURE</button>
+        <button
+          type="button"
+          className="btn btn-adventure"
+          onClick={openSubmitModal}
+        >
+          {language === 'fr' ? "REJOINDRE L'AVENTURE" : "JOIN THE ADVENTURE"}
+        </button>
       </Section>
 
       {/* 5. CONFERENCES SECTION */}
       <Section id="conferences">
         <div className="conf-content-top">
           <h2 className="section-title-xl">
-            DEUX JOURNÉES DE
+            {language === 'fr' ? "DEUX JOURNÉES DE" : "TWO DAYS OF"}<br />
           </h2>
-          <span className="purple-underline">CONFÉRENCES GRATUITES</span>
+          <span className="purple-underline">{language === 'fr' ? "CONFÉRENCES GRATUITES" : "FREE CONFERENCES"}</span>
 
           <div className="conf-info-container">
             <ol className="conf-list">
-              <li>Débats engagés sur l'éthique et le future</li>
-              <li>Confrontations d'idées entre artistes et tech</li>
-              <li>Interrogations stimulantes sur la création</li>
+              <li>{language === 'fr' ? "Débats engagés sur l'éthique et le future" : "Engaged debates on ethics and future"}</li>
+              <li>{language === 'fr' ? "Confrontations d'idées entre artistes et tech" : "Confrontations of ideas between artists and tech"}</li>
+              <li>{language === 'fr' ? "Interrogations stimulantes sur la création" : "Stimulating interrogations on creation"}</li>
             </ol>
 
             <button className="btn-agenda">
               <Calendar size={18} className="text-pink-400" />
-              AGENDA COMPLET
+              {language === 'fr' ? "AGENDA COMPLET" : "COMPLETE AGENDA"}
             </button>
           </div>
         </div>
@@ -248,19 +217,19 @@ const Home = () => {
       <Section id="night">
         <div className="night-container">
           <div className="night-content">
-            <div className="night-badge">SOIRÉE DE CLÔTURE</div>
+            <div className="night-badge">{language === 'fr' ? "SOIRÉE DE CLÔTURE" : "CLOSING NIGHT"}</div>
             <h2 className="night-title">MARS.A.I<br /><span className="night-accent">NIGHT</span></h2>
             <div className="night-description">
-              <p>Fête Électro mêlant IA et futurs souhaitables.</p>
-              <p>Une expérience immersive sonore et visuelle.</p>
+              <p>{language === 'fr' ? "Fête Électro mêlant IA et futurs souhaitables." : "Electro party mixing AI and desirable futures."}</p>
+              <p>{language === 'fr' ? "Une expérience immersive sonore et visuelle." : "An immersive sound and visual experience."}</p>
             </div>
           </div>
 
           <div className="night-card">
             <div className="night-card-icon"><Clock size={48} /></div>
-            <div className="night-card-date">13 JUIN</div>
-            <div className="night-card-info">DÈS 19H00 • MARSEILLE</div>
-            <button className="btn btn-primary w-full mt-6">RÉSERVER</button>
+            <div className="night-card-date">{language === 'fr' ? "13 JUIN" : "13 JUNE"}</div>
+            <div className="night-card-info">{language === 'fr' ? "DÈS 19H00 • MARSEILLE" : "STARTING AT 19H00 • MARSEILLE"}</div>
+            <button className="btn btn-primary w-full mt-6">{language === 'fr' ? "RÉSERVER" : "RESERVE"}</button>
           </div>
         </div>
       </Section>
@@ -270,25 +239,27 @@ const Home = () => {
         <div className="venue-header">
           <div className="venue-badge">
             <MapPin size={14} className="text-blue" />
-            LE LIEU
+            {language === 'fr' ? "LE LIEU" : "THE PLACE"}
           </div>
-          <h2 className="venue-main-title">LA<span className="neon-text-blue">PLATEFORME</span></h2>
+          <h2 className="venue-main-title">
+            <span className="neon-text-blue">LA PLATEFORME</span>
+          </h2>
 
           <div className="venue-info-bar">
-            <div className="info-item-blue">MARSEILLE, HUB<br />CRÉATIF</div>
+            <div className="info-item-blue">{language === 'fr' ? "MARSEILLE, HUB" : "MARSEILLE, HUB"}<br />{language === 'fr' ? "CRÉATIF" : "CREATIVE"}</div>
             <div className="info-item-white"><strong>12 Rue d'Uzes, 13002</strong><br />Marseille</div>
-            <div className="info-item-white">ACCÈS TRAM T2/T3 ARRÊT ARENC LE SILO</div>
+            <div className="info-item-white">{language === 'fr' ? "ACCÈS TRAM T2/T3 ARRÊT ARENC LE SILO" : "TRAM T2/T3 STOP ARENC LE SILO"}</div>
           </div>
         </div>
 
         <div className="venue-cards-grid">
           <div className="venue-description-card border-blue">
-            <h3 className="venue-card-title text-blue underline decoration-2 underline-offset-8">SALLE DES SUCRES</h3>
-            <p className="venue-card-text">Futur sanctuaire des conférences et de la remise des prix de Mars.A.I. Un espace majestueux alliant patrimoine et technologie.</p>
+            <h3 className="venue-card-title text-blue underline decoration-2 underline-offset-8">{language === 'fr' ? "SALLE DES SUCRES" : "SUGAR SALON"}</h3>
+            <p className="venue-card-text">{language === 'fr' ? "Futur sanctuaire des conférences et de la remise des prix de Mars.A.I. Un espace majestueux alliant patrimoine et technologie." : "Future sanctuary for conferences and the awarding of prizes for Mars.A.I. A majestic space combining heritage and technology."}</p>
           </div>
           <div className="venue-description-card border-purple">
-            <h3 className="venue-card-title text-purple-500 underline decoration-2 underline-offset-8">SALLE PLAZA</h3>
-            <p className="venue-card-text">L'épicentre du festival : accueil, animations, workshops et restauration. Le point de rencontre de tous les participants.</p>
+            <h3 className="venue-card-title text-purple-500 underline decoration-2 underline-offset-8">{language === 'fr' ? "SALLE PLAZA" : "PLAZA SALON"}</h3>
+            <p className="venue-card-text">{language === 'fr' ? "L'épicentre du festival : accueil, animations, workshops et restauration. Le point de rencontre de tous les participants." : "The epicenter of the festival: reception, animations, workshops and catering. The meeting point for all participants."}</p>
           </div>
         </div>
 
@@ -310,7 +281,7 @@ const Home = () => {
               className="venue-map-overlay"
             >
               <MapPin size={20} className="mr-2" />
-              Ouvrir dans Google Maps
+              {language === 'fr' ? "Ouvrir dans Google Maps" : "Open in Google Maps"}
             </a>
           </div>
         </div>
@@ -320,22 +291,25 @@ const Home = () => {
       <Section className="py-32">
         <div className="stats-numbers-container">
           <div className="stats-title-block">
-            <h2 className="section-title-xl">CHIFFRES<br /><span className="stats-accent">PROJETÉS</span></h2>
-            <p className="stats-tagline">ÉCHELLE MONDIALE, IMPACT LOCAL.</p>
+            <h2 className="section-title-xl">{language === 'fr' ? "CHIFFRES" : "NUMBERS"}<br /><span className="stats-accent">{language === 'fr' ? "PROJETÉS" : "PROJECTED"}</span></h2>
+            <p className="stats-tagline">{language === 'fr' ? "ÉCHELLE MONDIALE, IMPACT LOCAL." : "GLOBAL SCALE, LOCAL IMPACT."}</p>
           </div>
 
           <div className="stats-cards-wrapper">
             <div className="stats-number-card">
               <div className="stats-value">+120</div>
-              <div className="stats-label">PAYS REPRÉSENTÉS</div>
+              <div className="stats-label">{language === 'fr' ? "PAYS REPRÉSENTÉS" : "REPRESENTED COUNTRIES"}</div>
             </div>
             <div className="stats-number-card">
               <div className="stats-value">+600</div>
-              <div className="stats-label">FILMS SOUMIS</div>
+              <div className="stats-label">{language === 'fr' ? "FILMS SOUMIS" : "SUBMITTED FILMS"}</div>
             </div>
           </div>
         </div>
       </Section>
+      <Sponsors />
+
+      <SubmitModal isOpen={isSubmitModalOpen} onClose={closeSubmitModal} />
     </div>
   );
 };

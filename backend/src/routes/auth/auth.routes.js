@@ -14,6 +14,7 @@ import { inviteUserController,
    getPendingInvitesController,
    deleteInvitationController
 } from '../../controllers/auth/user.controller.js';
+import { createPublicRateLimit } from '../../middlewares/public_rate_limit.middleware.js';
 
 const authRoutes = Router();
 
@@ -36,22 +37,22 @@ authRoutes.delete('/:id', authenticate, requireRole([3]), deleteUserController);
 authRoutes.get('/me', authenticate, getCurrentUserController);
 
 // login route
-authRoutes.post('/login', loginUserController);
+authRoutes.post('/login', createPublicRateLimit(5, 'minute'), loginUserController);
 
 // logout route
 authRoutes.post('/logout', authenticate, logoutUserController);
 
 // update user route
-authRoutes.put('/:id', authenticate, updateUserController);
+authRoutes.put('/:id', createPublicRateLimit(5, 'minute'), authenticate, updateUserController);
 
 // update user password route
-authRoutes.patch('/password-update', authenticate, updateUserPasswordController);
+authRoutes.patch('/password-update', createPublicRateLimit(5, 'minute'), authenticate, updateUserPasswordController);
 
 // forgot password route
-authRoutes.post('/forgot-password', forgotPasswordController);
+authRoutes.post('/forgot-password', createPublicRateLimit(2, 'minute'), forgotPasswordController);
 
 // reset password route
-authRoutes.post('/reset-password', resetPasswordController);
+authRoutes.post('/reset-password', createPublicRateLimit(10, 'minute'), resetPasswordController);
 
 // get all users route
 authRoutes.get('/users', authenticate, requireRole([3]), getAllUsersController);

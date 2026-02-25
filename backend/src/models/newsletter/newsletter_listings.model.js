@@ -54,6 +54,25 @@ export const getActiveSubscribers = async (connection) => {
    return rows;
 };
 
+// Compte total des abonnés avec les mêmes filtres que getSubscribers
+export const getSubscribersCount = async (connection, { confirmed, unsubscribed } = {}) => {
+   let query = "SELECT COUNT(*) as total FROM newsletter_listings WHERE 1=1";
+   const params = [];
+
+   if (confirmed !== undefined) {
+      query += " AND confirmed = ?";
+      params.push(confirmed);
+   }
+
+   if (unsubscribed !== undefined) {
+      query += " AND unsubscribed = ?";
+      params.push(unsubscribed);
+   }
+
+   const [[row]] = await connection.execute(query, params);
+   return row?.total ?? 0;
+};
+
 // Liste tous les abonnés avec filtres et pagination
 // LIMIT/OFFSET en littéraux (MySQL peut refuser les paramètres préparés)
 export const getSubscribers = async (connection, { confirmed, unsubscribed, limit = 20, offset = 0 }) => {

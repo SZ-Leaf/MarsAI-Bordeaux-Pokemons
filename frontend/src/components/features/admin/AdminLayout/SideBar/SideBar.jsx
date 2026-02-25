@@ -53,7 +53,7 @@ const SideBar = ({ activeView, onViewChange }) => {
       {/* Sidebar Footer */}
       <div className="sidebar-footer">
             <button className="sidebar-logout-btn">
-                Log out
+                {language === 'fr' ? 'Se déconnecter' : 'Logout'}
             </button>
       </div>
     </aside>

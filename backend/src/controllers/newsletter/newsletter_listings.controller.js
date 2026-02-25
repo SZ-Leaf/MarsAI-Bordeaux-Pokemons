@@ -14,6 +14,7 @@ import {
    confirmSubscription,
    unsubscribeEmail,
    getSubscribers,
+   getSubscribersCount,
    deleteSubscriber
 } from "../../models/newsletter/newsletter_listings.model.js";
 
@@ -137,16 +138,22 @@ export const unsubscribe = async (req, res) => {
 export const listSubscribers = async (req, res) => {
    const { confirmed, unsubscribed, limit = 20, offset = 0 } = req.query;
    const connection = await db.pool.getConnection();
+   const filters = {
+      confirmed: confirmed !== undefined ? parseInt(confirmed) : undefined,
+      unsubscribed: unsubscribed !== undefined ? parseInt(unsubscribed) : undefined,
+   };
 
    try {
-      const subscribers = await getSubscribers(connection, {
-         confirmed: confirmed !== undefined ? parseInt(confirmed) : undefined,
-         unsubscribed: unsubscribed !== undefined ? parseInt(unsubscribed) : undefined,
-         limit: parseInt(limit),
-         offset: parseInt(offset)
-      });
+      const [subscribers, total] = await Promise.all([
+         getSubscribers(connection, {
+            ...filters,
+            limit: parseInt(limit),
+            offset: parseInt(offset)
+         }),
+         getSubscribersCount(connection, filters)
+      ]);
 
-      return sendSuccess(res, 200, "Abonnés récupérés", "Subscribers retrieved", { subscribers });
+      return sendSuccess(res, 200, "Abonnés récupérés", "Subscribers retrieved", { subscribers, total });
 
    } catch (error) {
       console.error("Error listing subscribers:", error);

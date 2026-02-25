@@ -18,13 +18,14 @@ import {
    listSubscribers,
    deleteSubscriberController
 } from '../../controllers/newsletter/newsletter_listings.controller.js';
+import { createPublicRateLimit } from '../../middlewares/public_rate_limit.middleware.js';
 
 const router = Router();
 
 // ========== ROUTES PUBLIQUES ==========
-router.post('/subscribe', validate(subscribeSchema), subscribe);
-router.get('/confirm', confirm);
-router.get('/unsubscribe', unsubscribe);
+router.post('/subscribe', createPublicRateLimit(5, 'minute'), validate(subscribeSchema), subscribe);
+router.get('/confirm', createPublicRateLimit(5, 'minute'), confirm);
+router.get('/unsubscribe', createPublicRateLimit(5, 'minute'), unsubscribe);
 
 // ========== ROUTES ADMIN ==========
 

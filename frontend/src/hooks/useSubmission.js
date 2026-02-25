@@ -162,7 +162,7 @@ export const useSubmission = () => {
     const errorKeys = Object.keys(errors);
     
     // Étape 1 : CGU + reCAPTCHA
-    if (errorKeys.some(key => ['termsAccepted', 'ageConfirmed', 'recaptchaToken'].includes(key))) {
+    if (errorKeys.some(key => ['termsAccepted', 'ageConfirmed'].includes(key))) {
       return 1;
     }
     
@@ -182,7 +182,8 @@ export const useSubmission = () => {
     // Étape 4 : Réalisateur et Contributeurs
     if (errorKeys.some(key => key.startsWith('creator_') || 
         key.startsWith('socials_') || 
-        key.startsWith('collaborators_'))) {
+        key.startsWith('collaborators_') ||
+        key.startsWith('recaptchaToken'))) {
       return 4;
     }
     

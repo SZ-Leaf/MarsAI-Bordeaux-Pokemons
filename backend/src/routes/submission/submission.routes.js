@@ -15,7 +15,6 @@ router.post(
 router.get(
   '/',
   authenticate,
-  requireRole([2, 3]),
   getSubmissionsController
 );
 

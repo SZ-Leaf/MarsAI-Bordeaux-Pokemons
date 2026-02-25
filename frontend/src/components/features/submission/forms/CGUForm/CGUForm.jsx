@@ -38,15 +38,6 @@ const CGUForm = ({ formData, errors, updateField }) => {
         />
       </div>
 
-      <div>
-        <p className="text-sm text-gray-300 mb-2">Vérification anti-robot</p>
-        <Recaptcha
-          siteKey={siteKey}
-          onChange={(token) => updateField('recaptchaToken', token || '')}
-          onExpire={() => updateField('recaptchaToken', '')}
-          error={errors.recaptchaToken}
-        />
-      </div>
       
       <div className="bg-surface p-4 rounded text-sm text-gray-300">
         <p className="mb-2">

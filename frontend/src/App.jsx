@@ -1,25 +1,21 @@
 import './styles/main.css';
 import Home from './pages/Home';
-import TestsGraphique from './pages/TestsGraphique';
 import { Header, Footer } from './components/layout';
 import { Routes, Route, useLocation } from 'react-router';
-import Submit from './pages/Submit.jsx';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import NewsletterConfirm from './pages/NewsletterConfirm';
 import ReservationConfirm from './pages/ReservationConfirm';
 import NewsletterUnsubscribe from './pages/NewsletterUnsubscribe';
 import { AuthGuard } from './components/features/admin/AdminLayout';
-import AdminNewslettersList from './pages/AdminNewslettersList';
-import AdminNewsletterForm from './pages/AdminNewsletterForm';
-import AdminNewsletterView from './pages/AdminNewsletterView';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
-import SelectorDashboard from './pages/SelectorDashboard.jsx';
 import Dashboard from './pages/Dashboard';
 import Events from './pages/Events';
-import JuryIndex from './components/jury/JuryIndex.jsx';
-import JuryShow from './components/jury/JuryShow.jsx';
+import Selection from './pages/Selection';
+import AwardsIndex from './components/awards/AwardsIndex.jsx';
+import JuryIndex from './components/features/admin/AdminConfig/AdminJury/jury/JuryIndex.jsx';
+import JuryShow from './components/features/admin/AdminConfig/AdminJury/jury/JuryShow.jsx';
 
 function App() {
   const location = useLocation();
@@ -30,46 +26,36 @@ function App() {
     <LanguageProvider>
       <AuthProvider>
         {/* Header desktop uniquement sur page selector, sinon toujours visible. Caché sur l'admin. */}
-        {!isAdminPage && (isSelectorPage ? (
+        {!isAdminPage && (
           <div className="hidden md:block">
             <Header />
           </div>
-        ) : (
-          <Header />
-        ))}
+        )}
         
         <div className={isSelectorPage || isAdminPage ? '' : 'pt-0 md:pt-24'}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/events" element={<Events />} />
-            <Route path="/ui-kit" element={<TestsGraphique />} />
-            <Route path="/submit" element={<Submit />} />
+            <Route path="/selection" element={<Selection />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
             <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
             <Route path="/reservation/confirm" element={<ReservationConfirm />} />
-            <Route path='/selector/dashboard' element={<SelectorDashboard/>}/>
-            {/* <Route path='/selector/pending' element={<}/> */}
-            <Route path="/admin/newsletters" element={<AuthGuard><AdminNewslettersList /></AuthGuard>} />
-            <Route path="/admin/newsletters/new" element={<AuthGuard><AdminNewsletterForm /></AuthGuard>} />
-            <Route path="/admin/newsletters/:id/edit" element={<AuthGuard><AdminNewsletterForm /></AuthGuard>} />
-            <Route path="/admin/newsletters/:id/view" element={<AuthGuard><AdminNewsletterView /></AuthGuard>} />
             <Route path="/dashboard" element={<AuthGuard><Dashboard /></AuthGuard>} />
             <Route path='/jury' element={<JuryIndex/>}/>
             <Route path='/jury/:id' element={<JuryShow/>}/>
+            <Route path='/awards' element={<AwardsIndex/>}/>
             <Route path="*" element={<div>404 - Page Not Found</div>} />
           </Routes>
         </div>
         
         {/* Footer caché en mobile sur la page selector, visible desktop. Caché sur l'admin. */}
-        {!isAdminPage && (isSelectorPage ? (
+        {!isAdminPage && (
           <div className="hidden md:block">
             <Footer />
           </div>
-        ) : (
-          <Footer />
-        ))}
+        )}
       </AuthProvider>
     </LanguageProvider>
   );

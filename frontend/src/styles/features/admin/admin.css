@@ -4,12 +4,11 @@
 
 .admin-dashboard-container {
     @apply min-h-screen bg-[#0a0a0a] text-white flex;
-    --header-left: auto;
-    --header-right: 32px;
-    --header-width: calc(100% - 350px);
-    --header-transform: none;
+    --header-left: calc(15rem + 2rem);
+    --header-right: 2rem;
+    --header-width: auto;
     --header-max-width: none;
-    --header-content-width: 100%;
+    --header-transform: none;
 }
 
 .main-content {
@@ -86,7 +85,7 @@
 
 /* Admin Sidebar */
 .sidebar {
-    @apply w-63 bg-[#121212] flex flex-col p-3 sticky justify-between top-0 h-screen overflow-y-auto border-r border-gray-800;
+    @apply w-60 bg-[#121212] flex flex-col px-3 sticky justify-evenly top-0 h-screen overflow-y-auto border-r border-gray-800;
 }
 
 .sidebar-user-profile {

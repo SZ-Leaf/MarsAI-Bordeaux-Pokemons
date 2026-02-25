@@ -10,6 +10,8 @@ const AdminStatCard = ({
   progress, 
   progressColor, 
   buttonText, 
+  onButtonClick, 
+  buttonDisabled, 
   icon: Icon, 
   iconColor = "text-blue-400" 
 }) => {
@@ -45,7 +47,12 @@ const AdminStatCard = ({
       )}
 
       {buttonText && (
-        <button className="mt-4 w-full border border-gray-700 hover:bg-white/5 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-colors">
+        <button
+          type="button"
+          onClick={onButtonClick}
+          disabled={buttonDisabled}
+          className="mt-4 w-full border border-gray-700 hover:bg-white/5 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        >
           {buttonText}
         </button>
       )}

@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import '../../../styles/main.css';
 import { subscribeNewsletter } from '../../../services/newsletter.service';
+import NewsletterSuccessModal from './NewsletterSuccessModal';
+import { useLanguage } from '../../../context/LanguageContext';
 
 function getErrorMessage(err) {
   const m = err?.message;
@@ -16,13 +18,14 @@ const LANG_OPTIONS = [
 ];
 
 const Footer = () => {
+  const { language } = useLanguage();
   const [email, setEmail] = useState('');
-  const [language, setLanguage] = useState('fr');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const langDropdownRef = useRef(null);
   const [consent, setConsent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   const selectedOption = LANG_OPTIONS.find((o) => o.value === language) || LANG_OPTIONS[0];
 
@@ -51,10 +54,10 @@ const Footer = () => {
     setIsSubscribed(false);
     try {
       await subscribeNewsletter(trimmedEmail, true, language);
-      alert('Vérifiez votre email pour confirmer votre inscription.');
       setEmail('');
       setConsent(false);
       setIsSubscribed(true);
+      setIsSuccessModalOpen(true);
     } catch (err) {
       alert(getErrorMessage(err));
     } finally {
@@ -73,7 +76,7 @@ const Footer = () => {
               MARS<span className="gradient-text">AI</span>
             </div>
             <p className="footer-tagline">
-              "La plateforme mondiale dédiée à l'univers Pokémon, ancrée dans la lumière de Bordeaux."
+              "{language === 'fr' ? "Un événement dédié à lintelligence artificielle pour explorer ses innovations, ses applications concrètes et son impact sur le futur des entreprises et de la société" : "An event dedicated to AI to explore its innovations, its concrete applications and its impact on the future of businesses and society."}"
             </p>
             
             {/* Icônes sociales */}
@@ -105,27 +108,26 @@ const Footer = () => {
           <div className="footer-column">
             <h4 className="footer-column-title navigation-title">NAVIGATION</h4>
             <ul className="footer-links">
-              <li><a href="#pokedex">Pokédex</a></li>
-              <li><a href="#types">Types Pokémon</a></li>
-              <li><a href="#combat">Combat</a></li>
-              <li><a href="#collection">Collection</a></li>
+              <li><a href="/selection">{language === 'fr' ? "Sélection" : "Selection"}</a></li>
+              <li><a href="/events">{language === 'fr' ? "Événements" : "Events"}</a></li>
+              <li><a href="/jury">{language === 'fr' ? "Jury" : "Jury"}</a></li>
             </ul>
           </div>
 
           {/* Section Centre-Droite - Légal */}
           <div className="footer-column">
-            <h4 className="footer-column-title legal-title">LÉGAL</h4>
+            <h4 className="footer-column-title legal-title">{language === 'fr' ? "LÉGAL" : "LEGAL"}</h4>
             <ul className="footer-links">
-              <li><a href="#about">À propos</a></li>
-              <li><a href="#faq">FAQ</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li><a href="/about">{language === 'fr' ? "À propos" : "About"}</a></li>
+              <li><a href="/faq">{language === 'fr' ? "FAQ" : "FAQ"}</a></li>
+              <li><a href="/contact">{language === 'fr' ? "Contact" : "Contact"}</a></li>
             </ul>
           </div>
 
           {/* Section Droite - Newsletter Card */}
           <div className="footer-newsletter-card">
             <h3 className="newsletter-card-title">
-              RESTEZ CONNECTÉ
+              {language === 'fr' ? "RESTEZ CONNECTÉ" : "STAY CONNECTED"}
             </h3>
             <form className="newsletter-form" onSubmit={handleSubmit}>
               <div className="newsletter-row">
@@ -138,7 +140,7 @@ const Footer = () => {
                     className="newsletter-lang-select"
                     onClick={() => !isSubmitting && setLangDropdownOpen((v) => !v)}
                     disabled={isSubmitting}
-                    aria-label="Langue de la newsletter"
+                    aria-label={language === 'fr' ? "Langue de la newsletter" : "Language of the newsletter"}
                     aria-expanded={langDropdownOpen}
                     aria-haspopup="listbox"
                   >
@@ -156,7 +158,7 @@ const Footer = () => {
                     <ul
                       className="newsletter-lang-dropdown"
                       role="listbox"
-                      aria-label="Choisir la langue"
+                      aria-label={language === 'fr' ? "Choisir la langue" : "Choose the language"}
                     >
                       {LANG_OPTIONS.map((opt) => (
                         <li
@@ -184,7 +186,7 @@ const Footer = () => {
                 </div>
                 <input
                   type="email"
-                  placeholder="Votre email"
+                  placeholder={language === 'fr' ? "Votre email" : "Your email"}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="newsletter-input"
@@ -196,7 +198,7 @@ const Footer = () => {
                   className="btn btn-primary newsletter-btn"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Envoi...' : isSubscribed ? '✓ Inscrit' : "S'inscrire"}
+                  {isSubmitting ? language === 'fr' ? 'Envoi...' : 'Sending...' : isSubscribed ? language === 'fr' ? '✓ Inscrit' : '✓ Subscribed' : language === 'fr' ? "S'inscrire" : "Subscribe"}
                 </button>
               </div>
               <label className="newsletter-consent">
@@ -206,7 +208,7 @@ const Footer = () => {
                   onChange={(e) => setConsent(e.target.checked)}
                   disabled={isSubmitting}
                 />
-                <span>J'accepte de recevoir la newsletter.</span>
+                <span>{language === 'fr' ? "J'accepte de recevoir la newsletter." : "I accept to receive the newsletter."}</span>
               </label>
             </form>
           </div>
@@ -215,14 +217,19 @@ const Footer = () => {
         {/* Copyright */}
         <div className="footer-bottom">
           <p className="footer-copyright">
-            © 2026 MARS A.I PROTOCOL • BORDEAUX HUB
+            © 2026 MARS A.I PROTOCOL • MARSEILLE HUB
           </p>
           <div className="footer-credits">
-            <span className="credits-text">DESIGN SYSTÈME CYBER•PREMIUM</span>
-            <a href="#legal" className="legal-link">LÉGAL</a>
+            <span className="credits-text">{language === 'fr' ? "DESIGN SYSTÈME CYBER•PREMIUM" : "DESIGN SYSTEM CYBER•PREMIUM"}</span>
+            <a href="#legal" className="legal-link">{language === 'fr' ? "LÉGAL" : "LEGAL"}</a>
           </div>
         </div>
       </div>
+      <NewsletterSuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={() => setIsSuccessModalOpen(false)}
+        language={language}
+      />
     </footer>
   );
 };

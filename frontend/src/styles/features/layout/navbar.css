@@ -4,7 +4,7 @@
 
 .navbar-logo {
   @apply font-sans text-2xl font-black text-white uppercase tracking-wide;
-  @apply flex-shrink-0 cursor-default;
+  @apply flex-shrink-0 cursor-pointer;
   @apply justify-self-start;
 }
 

@@ -1,5 +1,6 @@
 import { sendSuccess, sendError } from "../../helpers/response.helper.js";
 import awardModel from "../../models/awards/awards.model.js";
+import { getSubmissionById } from "../../models/submissions/submissions.model.js";
 import fs from "fs";
 import path from "path";
 
@@ -68,36 +69,52 @@ export const awardShow = async (req, res) => {
 };
 
 export const awardCreate = async (req, res) => {
+  console.log("BODY:", req.body);
+  console.log("FILE:", req.file);
+
   const file = req.file ?? req.files?.cover?.[0];
   const uploadedPath = file?.path;
 
   try {
-    const { title, rank, submission_id, description } = req.body;
+    const { title, award_rank, description } = req.body;
 
-    // Si cover uploadée, on stocke le chemin, sinon null
     const cover = file ? `uploads/awards/tmp/${file.filename}` : null;
+    const submission_id = null;
 
-    const { id } = await awardModel.createAward({
+    const created = await awardModel.createAward({
       title,
-      rank,
-      submission_id: submission_id ?? null,
+      award_rank,
+      submission_id,
       cover,
       description: description ?? null,
     });
 
+    // récupérer l'award complet (celui qui servira à l'affichage)
+    const fullAward = await awardModel.getAwardById(created.id);
+
     return sendSuccess(
-      res, 201, "Nouvel award créé avec succès", "New award created successfully", { id });
+      res,
+      201,
+      "Nouvel award créé avec succès",
+      "New award created successfully",
+      fullAward
+    );
   } catch (error) {
     console.error("Erreur awardCreate:", error);
 
-    // rollback si upload déjà fait
     if (uploadedPath) {
       fs.unlink(uploadedPath, (err) => {
         if (err && err.code !== "ENOENT") console.error("Rollback cover error:", err);
       });
     }
 
-    return sendError(res, 500, "Impossible de créer un nouvel award", "Unable to create a new award", null);
+    return sendError(
+      res,
+      500,
+      "Impossible de créer un nouvel award",
+      "Unable to create a new award",
+      null
+    );
   }
 };
 
@@ -120,7 +137,7 @@ export const awardUpdate = async (req, res) => {
       return sendError(res, 404, "Award introuvable", "Award not found", null);
     }
 
-    const { title, rank, submission_id, description, cover } = req.body;
+    const { title, award_rank, submission_id, description, cover } = req.body;
 
     // PUT : si pas de nouveau fichier, on prend cover du body si présent, sinon on conserve l’existant
     const newCover = file
@@ -129,7 +146,7 @@ export const awardUpdate = async (req, res) => {
 
     await awardModel.updateAward(id, {
       title,
-      rank,
+      award_rank,
       submission_id: submission_id ?? null,
       cover: newCover,
       description: description ?? null,
@@ -203,20 +220,47 @@ export const awardSetSubmission = async (req, res) => {
     }
 
     const award = await awardModel.getAwardById(awardId);
-
     if (!award) {
       return sendError(res, 404, "Award introuvable", "Award not found", null);
     }
 
-    // submission_id peut être un int ou null (désassigner)
-    await awardModel.setAwardSubmission(awardId, submission_id ?? null);
+    // désassignation autorisée
+    if (submission_id === null) {
+      await awardModel.setAwardSubmission(awardId, null);
+      const updated = await awardModel.getAwardById(awardId);
+      return sendSuccess(res, 200, "Soumission retirée", "Submission removed", updated);
+    }
 
+    //vérification d'existence de la soumission
+    const submission = await getSubmissionById(Number(submission_id));
+    if (!submission) {
+      return sendError(
+        res,
+        404,
+        "Soumission introuvable",
+        "Submission not found",
+        null
+      );
+    }
+
+    await awardModel.setAwardSubmission(awardId, submission_id);
     const updated = await awardModel.getAwardById(awardId);
 
     return sendSuccess(
-      res, 200, "Soumission associée à l'award", "Submission linked to award", updated);
+      res,
+      200,
+      "Soumission associée à l'award",
+      "Submission linked to award",
+      updated
+    );
   } catch (error) {
     console.error("Erreur awardSetSubmission:", error);
-    return sendError(res, 500, "Impossible d'associer la soumission à l'award", "Unable to link submission to award", null);
+    return sendError(
+      res,
+      500,
+      "Impossible d'associer la soumission à l'award",
+      "Unable to link submission to award",
+      null
+    );
   }
 };

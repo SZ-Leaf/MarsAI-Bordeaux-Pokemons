@@ -10,7 +10,7 @@ export const awardCreateSchema = z.object({
     .min(1, "Titre requis")
     .max(150, "Titre trop long"),
 
-  rank: z.coerce
+  award_rank: z.coerce
     .number()
     .int("Rank invalide")
     .min(0, "Rank invalide")
@@ -43,7 +43,7 @@ export const awardUpdateSchema = z.object({
     .min(1, "Titre requis")
     .max(150),
 
-  rank: z.coerce
+  award_rank: z.coerce
     .number()
     .int()
     .min(0)

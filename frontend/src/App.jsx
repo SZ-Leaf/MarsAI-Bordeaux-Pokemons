@@ -13,9 +13,9 @@ import { LanguageProvider } from './context/LanguageContext';
 import Dashboard from './pages/Dashboard';
 import Events from './pages/Events';
 import Selection from './pages/Selection';
-import AwardsIndex from './components/awards/AwardsIndex.jsx';
 import JuryIndex from './components/features/admin/AdminConfig/AdminJury/jury/JuryIndex.jsx';
 import JuryShow from './components/features/admin/AdminConfig/AdminJury/jury/JuryShow.jsx';
+import Awards from './pages/Awards';
 
 function App() {
   const location = useLocation();
@@ -43,9 +43,9 @@ function App() {
             <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
             <Route path="/reservation/confirm" element={<ReservationConfirm />} />
             <Route path="/dashboard" element={<AuthGuard><Dashboard /></AuthGuard>} />
-            <Route path='/jury' element={<JuryIndex/>}/>
-            <Route path='/jury/:id' element={<JuryShow/>}/>
-            <Route path='/awards' element={<AwardsIndex/>}/>
+            <Route path='/jury' element={<JuryIndex />}/>
+            <Route path='/jury/:id' element={<JuryShow />}/>
+            <Route path='/awards' element={<Awards />}/>
             <Route path="*" element={<div>404 - Page Not Found</div>} />
           </Routes>
         </div>

@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import {
   deleteAwardService,
   setAwardSubmissionService,
-} from "../../services/award.service.js";
+} from "../../../../../../services/award.service.js";
 import {
   getSubmissionById,
   getSubmissionsService,
-} from "../../services/submission.service.js";
+} from "../../../../../../services/submission.service.js";
 import AwardEditModal from "./AwardEditModal.jsx";
 
 export default function AwardCard({ award, submission, onAwardUpdated, onAwardDeleted }) {

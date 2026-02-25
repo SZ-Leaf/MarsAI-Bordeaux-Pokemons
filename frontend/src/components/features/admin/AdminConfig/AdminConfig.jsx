@@ -4,6 +4,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { useLanguage } from '../../../../context/LanguageContext';
 import AdminJury from './AdminJury';
+import AdminAwards from './AdminAwards';
 import AdminSponsors from './AdminSponsors';
 import AdminCMS from '../AdminCMS/AdminCMS';
 
@@ -43,7 +44,7 @@ const AdminConfig = () => {
    
          <Box sx={{ mt: 3 }}>
          {tab === 'jury' && <AdminJury />}
-         {tab === 'awards' && <div>Awards content</div>}
+         {tab === 'awards' && <AdminAwards />}
          {tab === 'sponsors' && <AdminSponsors />}
          {tab === 'cms' && <AdminCMS />}
          </Box>

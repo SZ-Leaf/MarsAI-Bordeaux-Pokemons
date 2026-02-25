@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
-import { useAwardsWithSubmissions } from "../../hooks/useAwardsWithSubmissions";
-import AwardCard from "../../components/awards/AwardCard";
-import AwardCreateModal from "../../components/awards/AwardCreateModal.jsx";
+import { useAwardsWithSubmissions } from "../../../../../../hooks/useAwardsWithSubmissions.js";
+import AwardCard from "./AwardCard.jsx";
+import AwardCreateModal from "./AwardCreateModal.jsx";
 
 export default function AwardsIndex() {
   const { awards, setAwards, submissionsById, setSubmissionsById, loading, error } =

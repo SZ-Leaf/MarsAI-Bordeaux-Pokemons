@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Modal from "../ui/Modal/Modal.jsx";
-import AwardForm from "../awards/AwardForm.jsx";
-import { createAwardService } from "../../services/award.service.js";
+import Modal from "../../../../../ui/Modal/Modal.jsx";
+import AwardForm from "./AwardForm.jsx";
+import { createAwardService } from "../../../../../../services/award.service.js";
 
 export default function AwardCreateModal({ isOpen, onClose, onCreated }) {
   const [submitting, setSubmitting] = useState(false);

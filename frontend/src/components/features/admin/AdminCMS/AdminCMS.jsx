@@ -6,15 +6,15 @@ const AdminCMS = () => {
   const { language } = useLanguage();
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 max-w-5xl mx-auto">
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl md:text-3xl font-bold text-white">
+        <h1 className="text-2xl md:text-3xl font-black gradient-text">
           {language === 'fr' ? 'CMS Homepage' : 'Homepage CMS'}
         </h1>
         <p className="text-sm text-white/60 max-w-2xl">
           {language === 'fr'
-            ? "Maquette d'interface CMS pour modifier les textes de la homepage. (Démo visuelle uniquement, sans sauvegarde réelle.)"
-            : 'CMS interface mockup to edit homepage texts. (Visual demo only, no real saving.)'}
+            ? "Maquette d'interface CMS pour modifier les textes de la homepage."
+            : 'CMS interface mockup to edit homepage texts.'}
         </p>
       </div>
 
@@ -22,26 +22,27 @@ const AdminCMS = () => {
         <div className="flex gap-3 flex-wrap">
           <button
             type="button"
-            className="px-4 py-2 rounded-md bg-blue-600/40 text-sm font-semibold text-white/60 cursor-not-allowed"
+            className="btn-adventure text-xs md:text-sm font-bold rounded-full cursor-not-allowed opacity-60"
             disabled
           >
             {language === 'fr'
-              ? 'Sauvegarder (démo)'
-              : 'Save (demo)'}
+              ? 'Sauvegarder'
+              : 'Save'}
           </button>
           <button
             type="button"
-            className="px-4 py-2 rounded-md bg-white/5 text-sm font-semibold text-white/60 border border-white/10 cursor-not-allowed"
+            className="btn-agenda text-xs md:text-sm cursor-not-allowed opacity-40"
             disabled
           >
-            {language === 'fr' ? 'Réinitialiser (démo)' : 'Reset (demo)'}
+            {language === 'fr' ? 'Réinitialiser' : 'Reset'}
           </button>
         </div>
       </div>
 
       {/* HERO */}
-      <section className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-black/30 p-4 md:p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-white/60">
+      <section className="flex flex-col gap-4 rounded-3xl border border-blue/30 bg-bg/80 p-4 md:p-6 shadow-[0_0_30px_rgba(43,127,255,0.15)]">
+        <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-blue flex items-center gap-3">
+          <span className="w-8 h-px bg-blue/60" />
           {language === 'fr' ? 'Section Hero' : 'Hero section'}
         </h2>
 
@@ -119,8 +120,8 @@ const AdminCMS = () => {
       </section>
 
       {/* FEATURES */}
-      <section className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-black/30 p-4 md:p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-white/60">
+      <section className="flex flex-col gap-4 rounded-3xl border border-purple-500/30 bg-bg/80 p-4 md:p-6 shadow-[0_0_30px_rgba(157,49,255,0.18)]">
+        <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-purple-400">
           {language === 'fr'
             ? 'Cartes "Features"'
             : '"Features" cards'}
@@ -135,7 +136,7 @@ const AdminCMS = () => {
           {[1, 2, 3, 4].map((index) => (
             <div
               key={index}
-              className="flex flex-col gap-3 rounded-xl border border-white/10 bg-black/40 p-4 opacity-70"
+              className="flex flex-col gap-3 card-dark-premium p-4 opacity-80 border-blue/20"
             >
               <div className="text-xs font-semibold text-white/60">
                 {language === 'fr'

@@ -21,7 +21,7 @@ export default function AwardsIndex() {
     if (!item?.id) return;
 
     // update award dans la liste
-    setAwards((prev) => prev.map((a) => (a.id === item.id ? item : a)));
+    setAwards((prev) => (prev || []).map((a) => (a.id === item.id ? item : a)));
 
     // update cache submissions pour afficher titre + créateur
     if (fullSubmission?.id) {
@@ -30,6 +30,9 @@ export default function AwardsIndex() {
         [Number(fullSubmission.id)]: fullSubmission,
       }));
     }
+  };
+  const handleAwardDeleted = (awardId) => {
+    setAwards((prev) => (prev || []).filter((a) => a.id !== awardId));
   };
 
   if (loading) return <div className="p-6 text-zinc-200">Chargement…</div>;
@@ -63,6 +66,7 @@ export default function AwardsIndex() {
                 award?.submission_id ? submissionsById[Number(award.submission_id)] : null
               }
               onAwardUpdated={handleAwardUpdated}
+              onAwardDeleted={handleAwardDeleted}
             />
           ))}
         </div>

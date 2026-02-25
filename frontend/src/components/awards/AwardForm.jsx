@@ -1,11 +1,20 @@
 import { useMemo, useRef, useState } from "react";
 
-export default function AwardCreateForm({ submitting, apiError, onCancel, onSubmit }) {
+export default function AwardForm({
+  submitting,
+  apiError,
+  onCancel,
+  onSubmit,
+  initialValues,
+  submitLabel = "Créer",
+}) {
   const fileRef = useRef(null);
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [awardRank, setAwardRank] = useState("");
+  const [title, setTitle] = useState(initialValues?.title ?? "");
+  const [description, setDescription] = useState(initialValues?.description ?? "");
+  const [awardRank, setAwardRank] = useState(
+    initialValues?.award_rank == null ? "" : String(initialValues.award_rank)
+  );
   const [coverFile, setCoverFile] = useState(null);
 
   const preview = useMemo(() => (coverFile ? URL.createObjectURL(coverFile) : null), [coverFile]);
@@ -19,7 +28,7 @@ export default function AwardCreateForm({ submitting, apiError, onCancel, onSubm
       title: title.trim(),
       description: description.trim(),
       award_rank: awardRank === "" ? null : Number(awardRank),
-      coverFile,
+      coverFile, // null => garder cover existante
     });
   };
 
@@ -129,7 +138,7 @@ export default function AwardCreateForm({ submitting, apiError, onCancel, onSubm
           className="rounded-xl bg-white/90 px-3 py-2 text-sm text-black hover:bg-white disabled:opacity-60"
           disabled={submitting || !title.trim()}
         >
-          {submitting ? "…" : "Créer"}
+          {submitting ? "…" : submitLabel}
         </button>
       </div>
     </form>

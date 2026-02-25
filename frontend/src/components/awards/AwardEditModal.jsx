@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Modal from "../ui/Modal/Modal.jsx";
-import AwardForm from "../awards/AwardForm.jsx";
-import { createAwardService } from "../../services/award.service.js";
+import AwardForm from "../../components/awards/AwardForm.jsx";
+import { updateAwardService } from "../../services/award.service.js";
 
-export default function AwardCreateModal({ isOpen, onClose, onCreated }) {
+export default function AwardEditModal({ isOpen, onClose, award, onUpdated }) {
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState(null);
 
@@ -15,21 +15,13 @@ export default function AwardCreateModal({ isOpen, onClose, onCreated }) {
       const fd = new FormData();
       fd.append("title", title);
       fd.append("description", description ?? "");
-
-      if (award_rank != null && award_rank !== "") {
-        fd.append("award_rank", String(award_rank));
-      }
+      if (award_rank != null && award_rank !== "") fd.append("award_rank", String(award_rank));
       if (coverFile) fd.append("cover", coverFile);
 
-      const res = await createAwardService(fd);
+      const res = await updateAwardService(award.id, fd);
+      const updated = res?.data ?? res;
 
-      const created = res?.data;
-
-      if (!created?.id) {
-        throw new Error("Réponse API invalide: award non retourné");
-      }
-
-      onCreated?.(created);
+      onUpdated?.(updated);
       onClose?.();
       return res;
     } catch (e) {
@@ -41,12 +33,18 @@ export default function AwardCreateModal({ isOpen, onClose, onCreated }) {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Ajouter un award" size="md">
+    <Modal isOpen={isOpen} onClose={onClose} title="Modifier un award" size="md">
       <AwardForm
         submitting={submitting}
         apiError={apiError}
         onCancel={onClose}
         onSubmit={handleSubmit}
+        submitLabel="Enregistrer"
+        initialValues={{
+          title: award?.title ?? "",
+          description: award?.description ?? "",
+          award_rank: award?.award_rank ?? null,
+        }}
       />
     </Modal>
   );

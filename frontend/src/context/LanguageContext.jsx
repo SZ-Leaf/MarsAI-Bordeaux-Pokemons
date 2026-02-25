@@ -2,12 +2,18 @@ import { createContext, useContext, useState, useEffect } from "react";
 
 const LanguageContext = createContext();
 
+const STORAGE_KEY = 'lang';
+const getBrowserLang = () => (navigator.language.startsWith('fr') ? 'fr' : 'en');
+
 export const LanguageProvider = ({ children }) => {
-   const defaultLang = localStorage.getItem('lang') || (navigator.language.startsWith('fr') ? 'fr' : 'en');
-   const [language, setLanguage] = useState(defaultLang);
+   const [language, setLanguage] = useState(() => {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored === 'fr' || stored === 'en') return stored;
+      return getBrowserLang();
+   });
 
    useEffect(() => {
-      localStorage.setItem('lang', language);
+      localStorage.setItem(STORAGE_KEY, language);
    }, [language]);
 
    return (

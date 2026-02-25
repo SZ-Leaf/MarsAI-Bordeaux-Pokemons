@@ -17,7 +17,6 @@ const navItems = () => {
             { id: 'invitations', label: { fr: 'Invitations', en: 'Invitations' }, icon: Send },
             { id: 'newsletter', label: { fr: 'Newsletter', en: 'Newsletter' }, icon: Mail },
             { id: 'events', label: { fr: 'Évènements', en: 'Events' }, icon: Calendar },
-            { id: 'jury', label: { fr: 'Jury & Prix', en: 'Jury & Awards' }, icon: Award },
         ] : []),
         ...(user.role_id === 3 ? [
             { id: 'users', label: { fr: 'Utilisateurs', en: 'Users' }, icon: Users },

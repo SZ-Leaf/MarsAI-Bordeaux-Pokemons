@@ -23,16 +23,6 @@ const Header = () => {
         {/* Navbar (Icons) */}
         <Navbar />
 
-        {/* Language Switch Button */}
-        {/* <button
-          className="language-switch-button"
-          onClick={() => {
-            language === 'fr' ? setLanguage('en') : setLanguage('fr');
-          }}
-        >
-          <Globe size={22} strokeWidth={1.5} className="text-white" />
-          <span className="text-white">{language === 'fr' ? 'FR' : 'EN'}</span>
-        </button> */}
         <LanguageSwitch language={language} setLanguage={setLanguage} />
 
       </div>

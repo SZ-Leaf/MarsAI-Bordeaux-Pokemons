@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Plus, Edit2, Trash2, Loader2 } from 'lucide-react';
-import { AdminSectionHeader, AdminSearchInput } from '../shared';
-import { juryService } from '../../../../services/jury.service';
-import JuryCreateModal from '../../../jury/JuryCreateModal';
-import JuryEditModal from '../../../jury/JuryEditModal';
-import '../../../../styles/main.css';
+import { AdminSectionHeader, AdminSearchInput } from '../../shared';
+import { juryService } from '../../../../../services/jury.service';
+import JuryCreateModal from '../../../../jury/JuryCreateModal';
+import JuryEditModal from '../../../../jury/JuryEditModal';
 
 const coverUrl = (cover) => {
   if (!cover) return null;

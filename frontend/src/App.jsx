@@ -13,6 +13,7 @@ import Dashboard from './pages/Dashboard';
 import Events from './pages/Events';
 import JuryIndex from './components/jury/JuryIndex.jsx';
 import JuryShow from './components/jury/JuryShow.jsx';
+import Selection from './pages/Selection';
 
 function App() {
   const location = useLocation();
@@ -35,6 +36,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/events" element={<Events />} />
+            <Route path="/selection" element={<Selection />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />

@@ -8,7 +8,7 @@ const Navbar = () => {
   
   const navItems = [
     { id: 'home', icon: Home, path: '/', label: 'Accueil' },
-    { id: 'trophy', icon: Trophy, path: '/selector', label: 'Sélection' },
+    { id: 'trophy', icon: Trophy, path: '/selection', label: 'Sélection' },
     { id: 'calendar', icon: Calendar, path: '/events', label: 'Calendrier' },
     { id: 'jury', icon: Users, path: '/jury', label: 'Jury' },
     { id: 'dashboard', icon: LayoutDashboard, path: '/dashboard', label: 'Admin' },

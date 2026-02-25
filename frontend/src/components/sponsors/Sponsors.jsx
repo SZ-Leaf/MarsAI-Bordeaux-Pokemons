@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { getSponsorsService } from "../../services/sponsors.service.js";
+import { useLanguage } from "../../context/LanguageContext.jsx";
+import { Link } from "react-router-dom";
 
 
 export default function Sponsors() {
   const [sponsors, setSponsors] = useState([]);
-
+  const { language } = useLanguage();
   useEffect(() => {
     const fetchSponsors = async () => {
       try {
@@ -31,16 +33,16 @@ export default function Sponsors() {
     <section className="sponsors-section">
       <div className="sponsors-inner">
         <div className="sponsors-header">
-          <p className="sponsors-label">PARTENAIRES</p>
-          <h2 className="sponsors-title">ILS SOUTIENNENT <Link
+          <p className="sponsors-label">{language === 'fr' ? 'PARTENAIRES' : 'SPONSORS'}</p>
+          <h2 className="sponsors-title">{language === 'fr' ? 'ILS SOUTIENNENT' : 'THEY SUPPORT'} <Link
             to="/"
             className="navbar-logo cursor-pointer "
             aria-label="Retour à la page d'accueil"
           >
-            MARS<span className="gradient-text">AI</span>
+            {language === 'fr' ? 'MARS' : 'MARS'}<span className="gradient-text">{language === 'fr' ? 'AI' : 'AI'}</span>
           </Link></h2>
           <p className="sponsors-subtitle">
-            Un réseau de partenaires engagés qui rendent possible le festival.
+            {language === 'fr' ? 'Un réseau de partenaires engagés qui rendent possible le festival.' : 'A network of committed partners who make the festival possible.'}
           </p>
         </div>
 

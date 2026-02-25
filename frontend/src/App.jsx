@@ -11,10 +11,10 @@ import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 import Dashboard from './pages/Dashboard';
 import Events from './pages/Events';
-import JuryIndex from './components/jury/JuryIndex.jsx';
-import JuryShow from './components/jury/JuryShow.jsx';
 import Selection from './pages/Selection';
 import AwardsIndex from './components/awards/AwardsIndex.jsx';
+import JuryIndex from './components/features/admin/AdminConfig/AdminJury/jury/JuryIndex.jsx';
+import JuryShow from './components/features/admin/AdminConfig/AdminJury/jury/JuryShow.jsx';
 
 function App() {
   const location = useLocation();

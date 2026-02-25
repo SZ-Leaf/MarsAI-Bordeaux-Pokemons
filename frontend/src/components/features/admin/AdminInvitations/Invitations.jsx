@@ -140,7 +140,7 @@ const Invitations = () => {
       <div className="space-y-4">
          <AdminSectionHeader
             title="Invitations" 
-            subtitle="Gérez les invitations envoyées aux utilisateurs."
+            subtitle={language === 'fr' ? "Gérez les invitations d'enregistrement." : "Manage register invitations."}
          />
          {/* Invite button */}
          <div className="flex justify-end">

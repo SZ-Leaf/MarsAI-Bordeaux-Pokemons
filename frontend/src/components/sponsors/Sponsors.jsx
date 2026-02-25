@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { apiCall } from "../../utils/api.js";
+import { getSponsorsService } from "../../services/sponsors.service.js";
 
 
 export default function Sponsors() {
@@ -8,7 +8,7 @@ export default function Sponsors() {
   useEffect(() => {
     const fetchSponsors = async () => {
       try {
-        const res = await apiCall("/api/sponsors");
+        const res = await getSponsorsService();
         setSponsors(res.data.sponsors);
       } catch (error) {
         console.error("Erreur fetch sponsors :", error);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { juryService } from "../../services/jury.service";
-import JuryCard from "../../components/jury/JuryCard.jsx";
+import { juryService } from "../../../../../../services/jury.service";
+import JuryCard from "./JuryCard.jsx";
 
 export default function JuryIndex() {
   const [items, setItems] = useState([]);

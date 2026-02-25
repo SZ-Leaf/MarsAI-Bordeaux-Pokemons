@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import AdminJury from './AdminJury';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { useLanguage } from '../../../../context/LanguageContext';
+import AdminJury from './AdminJury';
+import AdminSponsors from './AdminSponsors';
 
 
 const AdminConfig = () => {
@@ -43,7 +44,7 @@ const AdminConfig = () => {
          <Box sx={{ mt: 3 }}>
             {tab === 'jury' && <AdminJury />}
             {tab === 'awards' && <div>Awards content</div>}
-            {tab === 'sponsors' && <div>Sponsors content</div>}
+            {tab === 'sponsors' && <AdminSponsors />}
             {tab === 'cms' && <div>CMS content</div>}
          </Box>
      </Box>

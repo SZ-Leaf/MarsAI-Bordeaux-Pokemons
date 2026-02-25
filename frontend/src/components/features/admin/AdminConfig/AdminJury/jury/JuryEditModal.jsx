@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Modal from "../ui/Modal/Modal.jsx";
-import JuryForm from "../../components/jury/JuryForm.jsx";    // adapte
-import { juryService } from "../../services/jury.service";
+import Modal from "../../../../../../components/ui/Modal/Modal.jsx";
+import JuryForm from "./JuryForm.jsx";
+import { juryService } from "../../../../../../services/jury.service";
 
 const toPublicUrl = (cover) => {
   if (!cover) return null;

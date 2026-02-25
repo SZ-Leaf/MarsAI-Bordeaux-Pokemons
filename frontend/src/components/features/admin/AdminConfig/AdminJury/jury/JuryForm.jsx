@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { zodFieldErrors } from "../../services/jury.service";
+import { zodFieldErrors } from "../../../../../../services/jury.service";
 
 export default function JuryForm({
   initialValues = { firstname: "", lastname: "", job: "", coverUrl: null },

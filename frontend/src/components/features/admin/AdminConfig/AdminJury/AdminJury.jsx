@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Plus, Edit2, Trash2, Loader2 } from 'lucide-react';
 import { AdminSectionHeader, AdminSearchInput } from '../../shared';
 import { juryService } from '../../../../../services/jury.service';
-import JuryCreateModal from '../../../../jury/JuryCreateModal';
-import JuryEditModal from '../../../../jury/JuryEditModal';
+import JuryCreateModal from './jury/JuryCreateModal';
+import JuryEditModal from './jury/JuryEditModal';
+import { useLanguage } from '../../../../../context/LanguageContext';
 
 const coverUrl = (cover) => {
   if (!cover) return null;
@@ -11,6 +12,7 @@ const coverUrl = (cover) => {
 };
 
 const AdminJury = () => {
+  const {language} = useLanguage();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState(null);
@@ -59,9 +61,9 @@ const AdminJury = () => {
     <div className="p-2">
       <AdminSectionHeader
         title="Jury"
-        subtitle="Gérez les membres du jury du festival."
+        subtitle={language === 'fr' ? 'Gérez les membres du jury du festival.' : 'Manage the jury members of the festival.'}
         action={{
-          label: 'Ajouter un membre',
+          label: language === 'fr' ? 'Ajouter un membre' : 'Add a member',
           icon: Plus,
           onClick: () => setCreateOpen(true),
           color: 'blue',
@@ -80,7 +82,7 @@ const AdminJury = () => {
       <div className="bg-[#1a1a1a] rounded-3xl border border-gray-800/50 overflow-hidden">
         <div className="p-6 border-b border-gray-800">
           <AdminSearchInput
-            placeholder="Rechercher par nom ou activité..."
+            placeholder={language === 'fr' ? 'Rechercher par nom ou activité...' : 'Search by name or activity...'}
             className="w-96"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -103,7 +105,7 @@ const AdminJury = () => {
                 onClick={() => setCreateOpen(true)}
                 className="mt-4 px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg text-xs font-bold uppercase hover:bg-blue-500/30"
               >
-                Ajouter un membre
+                {language === 'fr' ? 'Ajouter un membre' : 'Add a member'}
               </button>
             )}
           </div>
@@ -111,8 +113,8 @@ const AdminJury = () => {
           <table className="w-full text-left">
             <thead>
               <tr className="text-gray-500 text-[10px] uppercase font-bold border-b border-gray-800">
-                <th className="px-6 py-4">Membre</th>
-                <th className="px-6 py-4">Activité</th>
+                <th className="px-6 py-4">{language === 'fr' ? 'Membre' : 'Member'}</th>
+                <th className="px-6 py-4">{language === 'fr' ? 'Activité' : 'Activity'}</th>
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>

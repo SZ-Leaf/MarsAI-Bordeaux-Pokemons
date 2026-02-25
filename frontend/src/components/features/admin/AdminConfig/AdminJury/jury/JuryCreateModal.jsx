@@ -1,11 +1,13 @@
 import { useState } from "react";
-import Modal from "../ui/Modal/Modal.jsx";
+import Modal from "../../../../../../components/ui/Modal/Modal.jsx";
 import JuryForm from "./JuryForm.jsx";
-import { juryService } from "../../services/jury.service.js";
+import { juryService } from "../../../../../../services/jury.service.js";
+import { useLanguage } from "../../../../../../context/LanguageContext.jsx";
 
 export default function JuryCreateModal({ isOpen, onClose, onCreated }) {
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState(null);
+  const {language} = useLanguage();
 
   const handleCreate = async ({ firstname, lastname, job, coverFile }) => {
     setSubmitting(true);
@@ -26,13 +28,13 @@ export default function JuryCreateModal({ isOpen, onClose, onCreated }) {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Ajouter un membre du jury" size="md">
+    <Modal isOpen={isOpen} onClose={onClose} title={language === 'fr' ? 'Ajouter un membre du jury' : 'Add a jury member'} size="md">
       <JuryForm
         initialValues={{ firstname: "", lastname: "", job: "", coverUrl: null }}
         onSubmit={handleCreate}
         submitting={submitting}
         apiError={apiError}
-        submitLabel="Créer"
+        submitLabel={language === 'fr' ? 'Créer' : 'Create'}
         onCancel={onClose}
       />
     </Modal>

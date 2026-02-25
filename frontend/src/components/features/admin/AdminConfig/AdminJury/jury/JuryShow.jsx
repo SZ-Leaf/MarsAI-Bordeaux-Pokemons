@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link, useParams } from "react-router";
-import { juryService } from "../../services/jury.service";
-import JuryDetails from "../../components/jury/JuryDetails.jsx";
+import { juryService } from "../../../../../../services/jury.service";
+import JuryDetails from "./JuryDetails.jsx";
 
 export default function JuryShow() {
   const { id } = useParams();

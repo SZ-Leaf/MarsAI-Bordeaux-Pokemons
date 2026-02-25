@@ -241,7 +241,9 @@ const Home = () => {
             <MapPin size={14} className="text-blue" />
             {language === 'fr' ? "LE LIEU" : "THE PLACE"}
           </div>
-          <h2 className="venue-main-title">LA<span className="neon-text-blue">PLATEFORME</span></h2>
+          <h2 className="venue-main-title">
+            <span className="neon-text-blue">LA PLATEFORME</span>
+          </h2>
 
           <div className="venue-info-bar">
             <div className="info-item-blue">{language === 'fr' ? "MARSEILLE, HUB" : "MARSEILLE, HUB"}<br />{language === 'fr' ? "CRÉATIF" : "CREATIVE"}</div>

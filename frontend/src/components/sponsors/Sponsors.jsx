@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getSponsorsService } from "../../services/sponsors.service.js";
 import { useLanguage } from "../../context/LanguageContext.jsx";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 
 export default function Sponsors() {

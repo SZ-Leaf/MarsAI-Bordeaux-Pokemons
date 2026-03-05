@@ -125,6 +125,47 @@ export async function countPendingSubmissions(user_id) {
   return rows[0]?.total ?? 0;
 }
 
+export async function adminGetAllReportedSubmissions({ limit = 50, offset = 0 } = {}) {
+  const lim = Math.min(parseInt(limit, 10) || 50, 200);
+  const off = Math.max(parseInt(offset, 10) || 0, 0);
+
+  const [rows] = await db.pool.execute(
+    `SELECT
+        s.id,
+        s.english_title,
+        s.original_title,
+        s.created_at,
+        COUNT(DISTINCT sm.user_id) AS report_count,
+        MAX(sm.updated_at) AS last_reported_at
+     FROM submissions s
+     JOIN selector_memo sm ON sm.submission_id = s.id
+     WHERE sm.selection_list = 'REPORT'
+     GROUP BY s.id, s.english_title, s.original_title, s.created_at
+     ORDER BY last_reported_at DESC
+     LIMIT ${lim} OFFSET ${off}`
+  );
+
+  return rows;
+}
+//l'admin récupère toutes les soumissions qui sont dans la playlist report de chaque user
+export async function adminGetReportsBySubmission(submission_id) {
+  const submissionId = Number(submission_id);
+
+  const [rows] = await db.pool.execute(
+    `SELECT
+        sm.id,
+        sm.user_id,
+        sm.submission_id,
+        sm.updated_at AS reported_at
+     FROM selector_memo sm
+     WHERE sm.selection_list = 'REPORT'
+       AND sm.submission_id = ?
+     ORDER BY sm.updated_at DESC`,
+    [submissionId]
+  );
+
+  return rows;
+}
 
   
   

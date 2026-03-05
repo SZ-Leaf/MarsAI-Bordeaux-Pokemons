@@ -6,7 +6,9 @@ import {
   getPlaylist as getPlaylistModel,
   getAllPlaylists,
   findPendingSubmissions,
-  countPendingSubmissions
+  countPendingSubmissions,
+  adminGetAllReportedSubmissions,
+  adminGetReportsBySubmission
 } from '../../models/selector/selector_memo.model.js';
 
 
@@ -138,3 +140,24 @@ export async function getPendingSubmissions(req, res) {
     return sendError(res, 500, "Erreur lors de la récupération des vidéos à traiter", "Error while retrieving pending videos", null);
   }
 }
+
+export const adminReportedList = async (req, res) => {
+  try {
+    const rows = await adminGetAllReportedSubmissions({
+      limit: req.query.limit,
+      offset: req.query.offset,
+    });
+    return sendSuccess(res, 200,"Vidéos reportées par tous les utilisateurs récupérées avec succès","Reported videos retrieved with success", rows);
+  } catch (err) {
+    return sendError(res, 500, "Erreur serveur", "ADMIN_REPORTED_LIST_FAILED", err);
+  }
+};
+
+export const adminReportedDetail = async (req, res) => {
+  try {
+    const rows = await adminGetReportsBySubmission(req.params.submissionId);
+    return sendSuccess(res, 200,"Détails des signalements récupérés avec succès.","Report details successfully retrieved", rows);
+  } catch (err) {
+    return sendError(res, 500, "Erreur serveur", "ADMIN_REPORTED_DETAIL_FAILED", err);
+  }
+};

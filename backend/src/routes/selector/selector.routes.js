@@ -4,7 +4,9 @@ import {
   deleteMemo,
   getPlaylist,
   getAllPlaylistsCount,
-  getPendingSubmissions
+  getPendingSubmissions,
+  adminReportedList,
+  adminReportedDetail
 } from "../../controllers/selector/selector_memo.controller.js";
 import { authenticate } from "../../middlewares/auth.middleware.js";
 import { validate } from "../../middlewares/validation.js";
@@ -19,5 +21,9 @@ router.get("/submissions/pending", authenticate, getPendingSubmissions);
 // Rating operations - separate from playlists
 router.post("/rate/:id", authenticate, validate(rateSubmissionSchema), createSelectorMemo);
 router.delete("/rate/:id", authenticate, deleteMemo);
+
+//récupération des reported videos de tous les users
+router.get("/admin/reported",adminReportedList);
+router.get("/admin/reported/:submissionId", adminReportedDetail);
 
 export default router;

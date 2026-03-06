@@ -1,0 +1,51 @@
+services:
+  backend:
+    build: ./backend
+    container_name: double-service-backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      PORT: 3000
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: marsai
+      DB_USER: root
+      DB_PASSWORD: root
+
+  frontend:
+    build: ./frontend
+    container_name: double-service-frontend
+    depends_on:
+      - backend
+    ports:
+      - "3001:80"
+
+  db:
+    image: mysql:8
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root   # mot de passe pour root
+      MYSQL_DATABASE: marsai      # base créée automatiquement
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: demo-phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8086:80"
+    depends_on:
+      - db
+
+volumes:
+  db_data:

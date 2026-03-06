@@ -10,11 +10,11 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/api': {
-          target: env.API_URL || 'http://localhost:3000',
+          target: env.API_URL || 'http://backend:3000',
           changeOrigin: true,
         },
         '/uploads': {
-          target: env.API_URL || 'http://localhost:3000',
+          target: env.API_URL || 'http://backend:3000',
           changeOrigin: true,
         }
       }

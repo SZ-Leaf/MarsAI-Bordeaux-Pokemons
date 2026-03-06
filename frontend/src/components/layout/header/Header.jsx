@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router';
-import Navbar from '../Navbar/Navbar';
+import { Link } from 'react-router-dom';
+import Navbar from '../navbar/Navbar';
 import '../../../styles/main.css';
 import { useLanguage } from '../../../context/LanguageContext';
 import LanguageSwitch from './LanguageSwitch';

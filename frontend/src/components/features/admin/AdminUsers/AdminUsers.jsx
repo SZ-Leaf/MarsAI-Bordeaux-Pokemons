@@ -7,6 +7,7 @@ import { useAuth } from '../../../../hooks/useAuth';
 import { getUsersService } from '../../../../services/auth.service';
 import { changeUserRoleService, deleteUserService } from './adminUsersServices';
 
+
 const roleIdToLabel = (roleId, language) => {
   const labels = {
     1: language === 'fr' ? 'Selecteur' : 'Selector',
@@ -30,7 +31,7 @@ const formatDate = (value, language) => {
 };
 
 const AdminUsers = () => {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const { language } = useLanguage();
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -129,6 +130,9 @@ const AdminUsers = () => {
       setUsers((prev) =>
         prev.map((u) => (u.id === userId ? { ...u, role_id: new_role_id } : u))
       );
+      if (user?.id === userId) {
+        await refreshUser();
+      }
       setRoleEditUser(null);
     } catch (err) {
       setActionError(err?.message || (language === 'fr' ? 'Erreur lors du changement de rôle' : 'Error changing role'));

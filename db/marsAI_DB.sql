@@ -327,7 +327,7 @@ CREATE INDEX idx_submissions_awards_submission_id ON submissions_awards(submissi
 CREATE INDEX idx_submissions_awards_award_id ON submissions_awards(award_id);
 
 
-INSERT INTO roles (`title`) VALUES ('user'), ('admin');
+INSERT INTO roles (`title`) VALUES ('slector'),('admin'), ('super_admin');
 INSERT INTO social_networks (`title`, `logo`) VALUES ('fb', 'fb-logl'), ('ig', 'ig-logo'), ('linkedin', 'lkin-logo'), ('x', 'x-logo'), ('tiktok', 'tiktok-logo'), ('website', 'website-logo');
 
 -- Ajout de la colonne submission_id pour la table awards

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TABS } from './adminCmsConfig';
+import { TABS } from '../adminCmsConfig';
 
 const CmsTabs = ({ activeTab, onTabChange }) => {
   return (

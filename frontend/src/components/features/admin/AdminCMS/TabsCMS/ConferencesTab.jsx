@@ -1,7 +1,7 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
-import SectionCard from './SectionCard';
-import BilingualField from './BilingualField';
+import SectionCard from '../SectionCard';
+import BilingualField from '../BilingualField';
 
 const ICONS = ['Play', 'Users', 'Award', 'Target', 'Zap', 'Rocket'];
 

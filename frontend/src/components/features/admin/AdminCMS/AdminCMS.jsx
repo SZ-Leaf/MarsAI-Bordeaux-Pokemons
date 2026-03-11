@@ -2,13 +2,15 @@ import React from 'react';
 import { Loader2 } from 'lucide-react';
 import { useHomepageCms } from './useHomepageCms';
 import CmsActionBar from './CmsActionBar';
-import CmsTabs from './CmsTabs';
-import HeroTab from './HeroTab';
-import FeaturesTab from './FeaturesTab';
-import FilmsTab from './FilmsTab';
-import StatsTab from './StatsTab';
-import ConferencesTab from './ConferencesTab';
-import ObjectivesTab from './ObjectivesTab';
+import {
+  CmsTabs,
+  HeroTab,
+  FeaturesTab,
+  FilmsTab,
+  StatsTab,
+  ConferencesTab,
+  ObjectivesTab,
+} from './TabsCMS';
 
 const AdminCMS = () => {
   const {

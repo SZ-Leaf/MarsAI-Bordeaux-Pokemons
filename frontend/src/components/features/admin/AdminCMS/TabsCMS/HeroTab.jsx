@@ -1,5 +1,5 @@
 import React from 'react';
-import BilingualField from './BilingualField';
+import BilingualField from '../BilingualField';
 
 const HeroTab = ({ data, onChange }) => {
   const set = (key) => (val) => onChange({ ...data, [key]: val });

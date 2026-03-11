@@ -1,7 +1,7 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
-import SectionCard from './SectionCard';
-import BilingualField from './BilingualField';
+import SectionCard from '../SectionCard';
+import BilingualField from '../BilingualField';
 
 const inputClass =
   'w-full px-3 py-2 rounded-md bg-black/40 border border-white/10 text-sm text-white outline-none focus:border-blue/60 transition-colors';

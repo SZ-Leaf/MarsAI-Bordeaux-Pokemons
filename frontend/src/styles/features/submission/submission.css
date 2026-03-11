@@ -43,7 +43,7 @@
 .submission-reports {
   position: absolute;
   top: 8px;
-  left: 72%;
+  right: 2%;
   background: rgba(220, 38, 38, 0.92);
   color: white;
   font-size: 12px;

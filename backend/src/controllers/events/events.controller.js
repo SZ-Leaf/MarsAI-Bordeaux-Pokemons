@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
 import { createEvent, updateEvent, updateEventCover, deleteEvent, getEvents, getEventById } from '../../models/events/events.model.js';
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
-import { eventSchema } from '../../utils/schemas/event.schemas.js';
+import { eventSchema } from '@marsai/schemas';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

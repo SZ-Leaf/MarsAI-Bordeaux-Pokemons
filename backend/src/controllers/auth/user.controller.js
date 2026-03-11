@@ -4,7 +4,7 @@ import { sendInviteMail, sendForgotPasswordMail } from "../../services/mailer/ma
 import { signToken } from "../../services/jwt/jwt.token.js";
 import { sendError, sendSuccess } from "../../helpers/response.helper.js";
 import { generateForgotPasswordToken, verifyForgotPasswordToken } from "../../services/mailer/mailer.tokens.js";
-import { registerUserSchema, updateUserSchema, userPasswordSchema } from "../../utils/schemas/user.schemas.js";
+import { registerUserSchema, updateUserSchema, userPasswordSchema } from "@marsai/schemas";
 import { checkEmail } from "../../utils/email.validator.js";
 import { log } from "console";
 

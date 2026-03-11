@@ -8,7 +8,7 @@ import {
   getSponsors
 } from '../../models/sponsors/sponsors.model.js';
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
-import { sponsorSchema } from '../../utils/schemas/sponsor.schemas.js';
+import { sponsorSchema } from '@marsai/schemas';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

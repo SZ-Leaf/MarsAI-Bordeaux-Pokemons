@@ -7,7 +7,7 @@ import {
   step3Schema, 
   step4Schema,
   formatZodErrors 
-} from '../schemas/submissionSchema.js';
+} from '@marsai/schemas';
 import { createTag } from "../services/tag.service.js";
 
 

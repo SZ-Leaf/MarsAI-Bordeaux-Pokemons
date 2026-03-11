@@ -2,7 +2,7 @@ import { Modal } from '../../../../ui';
 import FormFieldModal from '../SocialModal/FormFieldModal';
 import ModalActions from '../SocialModal/ModalActions';
 import { useModalForm } from '../../../../../hooks/useModalForm.js';
-import { collaboratorSchema } from '../../../../../schemas/submissionSchema.js';
+import { collaboratorSchema } from '@marsai/schemas';
 import { genderOptions } from '../../../../../constants/formOptions.js';
 
 const CollaboratorModal = ({ isOpen, onClose, collaborator, collaboratorIndex, onSave, errors }) => {

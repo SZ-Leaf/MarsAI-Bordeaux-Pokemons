@@ -8,7 +8,7 @@ import {
 } from "../../controllers/selector/selector_memo.controller.js";
 import { authenticate } from "../../middlewares/auth.middleware.js";
 import { validate } from "../../middlewares/validation.js";
-import { rateSubmissionSchema } from "../../utils/schemas/selector.schemas.js";
+import { rateSubmissionSchema } from "@marsai/schemas";
 
 const router = Router();
 

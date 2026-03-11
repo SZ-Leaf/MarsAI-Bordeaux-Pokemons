@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { listTags, findTagById, createTag, getPopularTags } from "../controllers/tags/tags.controller.js";
 import { validate } from "../middlewares/validation.js";
-import { tagSchema } from "../utils/schemas/tags.schema.js";
+import { tagSchema } from "@marsai/schemas";
 import { createPublicRateLimit } from '../middlewares/public_rate_limit.middleware.js';
 
 const router = Router();

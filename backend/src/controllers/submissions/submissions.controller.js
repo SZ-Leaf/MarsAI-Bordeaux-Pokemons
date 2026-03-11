@@ -8,7 +8,7 @@ import galleryModel from '../../models/submissions/gallery.model.js';
 import socialModel from '../../models/socials/socials.model.js';
 import submissions_tagsModel from '../../models/tags/submissions_tags.model.js';
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
-import { submissionSchema } from '../../utils/schemas/submission.schemas.js';
+import { submissionSchema } from '@marsai/schemas';
 import { verifyRecaptcha } from '../../utils/recaptcha.js';
 import { sendSubmissionConfirmation } from '../../services/mailer/mailer.mail.js';
 import db from '../../config/db_pool.js';

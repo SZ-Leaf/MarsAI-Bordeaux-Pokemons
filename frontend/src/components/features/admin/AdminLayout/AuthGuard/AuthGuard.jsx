@@ -8,7 +8,7 @@ export default function AuthGuard({ children }) {
     return <div>Loading...</div>;
   }
   if (!user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
   return children;
 }

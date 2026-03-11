@@ -4,7 +4,7 @@ import { authenticate, requireRole } from '../../middlewares/auth.middleware.js'
 
 const router = express.Router();
 
-router.get('/auth/youtube', authenticate, requireRole([3]), startYoutubeAuth);
-router.get('/oauth2callback', authenticate, requireRole([3]), youtubeCallback);
+router.get('/auth/youtube', startYoutubeAuth);
+router.get('/oauth2callback', youtubeCallback);
 
 export default router;

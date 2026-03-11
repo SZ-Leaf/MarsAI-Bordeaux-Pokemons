@@ -4,11 +4,12 @@ import { fileURLToPath } from 'url';
 import { getVideoDurationInSeconds } from 'get-video-duration';
 
 // Models & Helpers
-import { createSubmission, updateFilePaths, getSubmissions, getSubmissionById } from '../../models/submissions/submissions.model.js';
+import { createSubmission, updateFilePaths, getSubmissions, getSubmissionById, updateYoutubeLinkInDatabase } from '../../models/submissions/submissions.model.js';
 import collaboratorModel from '../../models/submissions/collaborators.model.js';
 import galleryModel from '../../models/submissions/gallery.model.js';
 import socialModel from '../../models/socials/socials.model.js';
 import submissions_tagsModel from '../../models/tags/submissions_tags.model.js';
+import {getTagsBySubmissionId} from '../../models/tags/submissions_tags_youtube.model.js';
 import { sendError, sendSuccess } from '../../helpers/response.helper.js';
 import { submissionSchema } from '../../utils/schemas/submission.schemas.js';
 import { verifyRecaptcha } from '../../utils/recaptcha.js';
@@ -327,16 +328,22 @@ export const submitController = async (req, res) => {
 
     let youtubeId = null;
     try {
+
+      const tagsRows = await getTagsBySubmissionId(submissionId);
+      const youtubeTags = tagsRows.map(t => t.title);
+
       const ytResponse = await uploadVideo({
         title: validatedData.english_title || validatedData.french_title,
         description: validatedData.english_description || validatedData.french_description,
-        tags: validatedData.tagIds.map(String),
+        tags: youtubeTags,
         filePath: finalVideoPath
       });
 
       youtubeId = ytResponse.id;
 
       if (youtubeId) {
+        await updateYoutubeLinkInDatabase(youtubeId, submissionId);
+
         await uploadThumbnail({ videoId: youtubeId, thumbnailPath: finalCoverPath });
 
         if (finalSubtitlesPath) {

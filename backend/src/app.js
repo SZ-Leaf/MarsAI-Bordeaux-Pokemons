@@ -6,8 +6,11 @@ import { fileURLToPath } from 'url';
 import routes from './routes/index.js';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+import { startYoutubeCron } from './crons/youtube.cron.js';
+
 dotenv.config();
 
+startYoutubeCron();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

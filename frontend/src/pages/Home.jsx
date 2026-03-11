@@ -1,5 +1,5 @@
-import React from 'react';
-import { ArrowRight, Plus, Calendar, Clock, MapPin } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowRight, Plus, Calendar, Clock, MapPin, Play, Users, Award, Target, Zap, Rocket } from 'lucide-react';
 import { Card } from '../components/ui';
 import useModal from '../hooks/useModal';
 import { SubmitModal } from '../components/features/submission';
@@ -7,6 +7,10 @@ import '../styles/main.css';
 import Sponsors from '../components/sponsors/Sponsors';
 import { getFEATURES, getFILMS, getSTATS, getCONFERENCES, getOBJECTIVES } from '../constants/homepage';
 import { useLanguage } from '../context/LanguageContext';
+import { getHomepageService } from '../services/homepage.service';
+
+const ICON_MAP = { Play, Users, Award, Target, Zap, Rocket };
+
 // --- Shared Internal Components ---
 
 const Section = ({ id, children, className = '', wide = false }) => (
@@ -27,17 +31,45 @@ const SectionLabel = ({ children, centered = false }) => (
   </div>
 );
 
+const t = (field, language) => {
+  if (!field || typeof field !== 'object') return field ?? '';
+  return field[language] ?? field.fr ?? '';
+};
+
 // --- Main Component ---
 
 const Home = () => {
   const { isOpen: isSubmitModalOpen, openModal: openSubmitModal, closeModal: closeSubmitModal } = useModal();
   const { language } = useLanguage();
+  const [cmsData, setCmsData] = useState(null);
 
-  const FEATURES = getFEATURES(language);
-  const FILMS = getFILMS(language);
-  const STATS = getSTATS(language);
-  const CONFERENCES = getCONFERENCES(language);
-  const OBJECTIVES = getOBJECTIVES(language);
+  useEffect(() => {
+    getHomepageService()
+      .then((res) => setCmsData(res.data))
+      .catch(() => {});
+  }, []);
+
+  const FEATURES = cmsData
+    ? cmsData.features.map((f) => ({ ...f, title: t(f.title, language), description: t(f.description, language) }))
+    : getFEATURES(language);
+
+  const FILMS = cmsData
+    ? cmsData.films.map((f) => ({ ...f, title: t(f.title, language) }))
+    : getFILMS(language);
+
+  const STATS = cmsData
+    ? cmsData.stats.map((s) => ({ ...s, title: t(s.title, language), subtitle: t(s.subtitle, language) }))
+    : getSTATS(language);
+
+  const CONFERENCES = cmsData
+    ? cmsData.conferences.map((c) => ({ ...c, title: t(c.title, language), description: t(c.description, language), icon: ICON_MAP[c.icon] ?? Play }))
+    : getCONFERENCES(language);
+
+  const OBJECTIVES = cmsData
+    ? cmsData.objectives.map((o) => ({ ...o, title: t(o.title, language), description: t(o.description, language), icon: ICON_MAP[o.icon] ?? Target }))
+    : getOBJECTIVES(language);
+
+  const hero = cmsData?.hero ?? null;
 
   return (
     <div className="home-container">
@@ -45,7 +77,7 @@ const Home = () => {
       <main className="hero-section">
         <div className="hero-badge animate-fade-in">
           <span className="sparkle">✨</span>
-          {language === 'fr' ? "LE PROTOCOLE TEMPOREL 2026" : "TEMPORAL PROTOCOL 2026"}
+          {hero ? t(hero.badge, language) : (language === 'fr' ? "LE PROTOCOLE TEMPOREL 2026" : "TEMPORAL PROTOCOL 2026")}
         </div>
 
         <h1 className="hero-title">
@@ -57,20 +89,20 @@ const Home = () => {
         </h2>
 
         <div className="hero-description-container">
-          <p className="hero-description">{language === 'fr' ? "Le festival de courts-métrages de 60 secondes réalisés par IA." : "The festival of 60 second short films made by AI."}</p>
-          <p className="hero-description">{language === 'fr' ? "2 jours d'immersion au cœur de Marseille." : "2 days of immersion in the heart of Marseille."}</p>
+          <p className="hero-description">{hero ? t(hero.descriptionLine1, language) : (language === 'fr' ? "Le festival de courts-métrages de 60 secondes réalisés par IA." : "The festival of 60 second short films made by AI.")}</p>
+          <p className="hero-description">{hero ? t(hero.descriptionLine2, language) : (language === 'fr' ? "2 jours d'immersion au cœur de Marseille." : "2 days of immersion in the heart of Marseille.")}</p>
         </div>
 
         <div className="hero-actions">
           <button className="btn btn-primary flex items-center gap-2 group">
-            {language === 'fr' ? "VOIR LES FILMS" : "SEE THE FILMS"} <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+            {hero ? t(hero.ctaPrimary, language) : (language === 'fr' ? "VOIR LES FILMS" : "SEE THE FILMS")} <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
           </button>
           <button
             type="button"
             className="btn btn-secondary flex items-center gap-2 group"
             onClick={openSubmitModal}
           >
-            {language === 'fr' ? "SOUMETTRE UN FILM" : "SUBMIT A FILM"}
+            {hero ? t(hero.ctaSecondary, language) : (language === 'fr' ? "SOUMETTRE UN FILM" : "SUBMIT A FILM")}
             <Plus size={18} className="text-purple-400 transition-transform group-hover:rotate-90" />
           </button>
         </div>

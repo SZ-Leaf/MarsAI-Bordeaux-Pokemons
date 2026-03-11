@@ -1,0 +1,225 @@
+{
+  "hero": {
+    "badge": {
+      "fr": "LE PROTOCOLE TEMPOREL 2026",
+      "en": "TEMPORAL PROTOCOL 2026"
+    },
+    "descriptionLine1": {
+      "fr": "Le festival de courts-métrages de 60 secondes réalisés par IA.",
+      "en": "The festival of 60 second short films made by AI."
+    },
+    "descriptionLine2": {
+      "fr": "2 jours d'immersion au cœur de Marseille.",
+      "en": "2 days of immersion in the heart of Marseille."
+    },
+    "ctaPrimary": {
+      "fr": "VOIR LES FILMS",
+      "en": "SEE THE FILMS"
+    },
+    "ctaSecondary": {
+      "fr": "SOUMETTRE UN FILM",
+      "en": "SUBMIT A FILM"
+    }
+  },
+  "features": [
+    {
+      "title": {
+        "fr": "1 MINUTE",
+        "en": "1 MINUTE"
+      },
+      "description": {
+        "fr": "FORMAT ULTRA-COURT POUR UN IMPACT MAXIMUM.",
+        "en": "MAXIMUM IMPACT WITH ULTRA-SHORT FORMAT."
+      },
+      "className": "card-purple"
+    },
+    {
+      "title": {
+        "fr": "GRATUITÉ",
+        "en": "FREE"
+      },
+      "description": {
+        "fr": "CONFÉRENCES ET WORKSHOPS ACCESSIBLES.",
+        "en": "ACCESSIBLE CONFERENCES AND WORKSHOPS."
+      },
+      "className": "card-green"
+    },
+    {
+      "title": {
+        "fr": "POUR TOUS",
+        "en": "FOR ALL"
+      },
+      "description": {
+        "fr": "PROFESSIONNELS, ÉTUDIANTS ET CURIEUX.",
+        "en": "PROFESSIONALS, STUDENTS AND CURIOUS."
+      },
+      "className": "card-pink"
+    },
+    {
+      "title": {
+        "fr": "EXPERTISE",
+        "en": "EXPERTISE"
+      },
+      "description": {
+        "fr": "LEADERS MONDIAUX DE L'IA GÉNÉRATIVE.",
+        "en": "GLOBAL LEADERS OF GENERATIVE AI."
+      },
+      "className": "card-blue"
+    }
+  ],
+  "films": [
+    {
+      "title": {
+        "fr": "PROTOCOL ALPHA",
+        "en": "PROTOCOL ALPHA"
+      },
+      "director": "DIR. STARK",
+      "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop"
+    },
+    {
+      "title": {
+        "fr": "NEURAL DREAM",
+        "en": "NEURAL DREAM"
+      },
+      "director": "DIR. VANCE",
+      "image": "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1000&auto=format&fit=crop"
+    },
+    {
+      "title": {
+        "fr": "CYBER MARSEILLE",
+        "en": "CYBER MARSEILLE"
+      },
+      "director": "DIR. LUPIN",
+      "image": "https://images.unsplash.com/photo-1633167606207-d840b5070fc2?q=80&w=1000&auto=format&fit=crop"
+    }
+  ],
+  "stats": [
+    {
+      "title": {
+        "fr": "2 MOIS",
+        "en": "2 MONTHS"
+      },
+      "subtitle": {
+        "fr": "DE PRÉPARATION",
+        "en": "PREPARATION"
+      },
+      "color": "text-purple-500",
+      "borderClass": "border-purple"
+    },
+    {
+      "title": {
+        "fr": "50 FILMS",
+        "en": "50 FILMS"
+      },
+      "subtitle": {
+        "fr": "EN SÉLECTION",
+        "en": "IN SELECTION"
+      },
+      "color": "text-emerald-400",
+      "borderClass": "border-emerald"
+    },
+    {
+      "title": {
+        "fr": "WEB 3.0",
+        "en": "WEB 3.0"
+      },
+      "subtitle": {
+        "fr": "EXPÉRIENCE",
+        "en": "EXPERIENCE"
+      },
+      "color": "text-pink-500",
+      "borderClass": "border-pink"
+    },
+    {
+      "title": {
+        "fr": "J4",
+        "en": "J4"
+      },
+      "subtitle": {
+        "fr": "MARSEILLE",
+        "en": "MARSEILLE"
+      },
+      "color": "text-cyan-400",
+      "borderClass": "border-cyan"
+    }
+  ],
+  "conferences": [
+    {
+      "title": {
+        "fr": "PROJECTIONS",
+        "en": "PROJECTIONS"
+      },
+      "description": {
+        "fr": "Diffusion sur écran géant en présence des réalisateurs.",
+        "en": "Diffusion on giant screen in presence of directors."
+      },
+      "icon": "Play"
+    },
+    {
+      "title": {
+        "fr": "WORKSHOPS",
+        "en": "WORKSHOPS"
+      },
+      "description": {
+        "fr": "Sessions pratiques pour maîtriser les outils IA.",
+        "en": "Practical sessions to master AI tools."
+      },
+      "icon": "Users"
+    },
+    {
+      "title": {
+        "fr": "AWARDS",
+        "en": "AWARDS"
+      },
+      "description": {
+        "fr": "Cérémonie de clôture récompensant l'audace.",
+        "en": "Closing ceremony rewarding audacity."
+      },
+      "icon": "Award"
+    }
+  ],
+  "objectives": [
+    {
+      "title": {
+        "fr": "L'HUMAIN AU CENTRE",
+        "en": "L'HUMAIN AU CENTRE"
+      },
+      "description": {
+        "fr": "METTRE L'HUMAIN AU CŒUR DE LA CRÉATION POUR NE PAS PERDRE L'ÉMOTION.",
+        "en": "PUT THE HUMAN AT THE HEART OF CREATION TO NOT LOSE THE EMOTION."
+      },
+      "icon": "Target",
+      "color": "text-emerald-400",
+      "bgColor": "bg-emerald-400/10",
+      "borderClass": "border-emerald"
+    },
+    {
+      "title": {
+        "fr": "CHALLENGE CRÉATIF",
+        "en": "CREATIVE CHALLENGE"
+      },
+      "description": {
+        "fr": "CHALLENGER LA CRÉATIVITÉ GRÂCE À UN FORMAT ULTRA-COURT DE 60S.",
+        "en": "CHALLENGE CREATIVITY WITH AN ULTRA-SHORT FORMAT OF 60S."
+      },
+      "icon": "Zap",
+      "color": "text-blue-400",
+      "bgColor": "bg-blue-400/10",
+      "borderClass": "border-blue"
+    },
+    {
+      "title": {
+        "fr": "FUTURS SOUHAITABLES",
+        "en": "DESIRABLE FUTURES"
+      },
+      "description": {
+        "fr": "EXPLORER LES FUTURS DÉSIRABLES VIA LES TECHNOLOGIES ÉMERGENTES.",
+        "en": "EXPLORE DESIRABLE FUTURES VIA EMERGING TECHNOLOGIES."
+      },
+      "icon": "Rocket",
+      "color": "text-purple-400",
+      "bgColor": "bg-purple-400/10",
+      "borderClass": "border-purple"
+    }
+  ]
+}

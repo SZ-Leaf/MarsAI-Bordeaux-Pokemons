@@ -128,20 +128,23 @@ export async function countPendingSubmissions(user_id) {
 export async function adminGetAllReportedSubmissions({ limit = 50, offset = 0 } = {}) {
   const lim = Math.min(parseInt(limit, 10) || 50, 200);
   const off = Math.max(parseInt(offset, 10) || 0, 0);
-
+//agg =  aggregated data (alias pour la sous-requête)
   const [rows] = await db.pool.execute(
     `SELECT
-        s.id,
-        s.english_title,
-        s.original_title,
-        s.created_at,
-        COUNT(DISTINCT sm.user_id) AS report_count,
-        MAX(sm.updated_at) AS last_reported_at
+        s.*,
+        agg.report_count,
+        agg.last_reported_at
      FROM submissions s
-     JOIN selector_memo sm ON sm.submission_id = s.id
-     WHERE sm.selection_list = 'REPORT'
-     GROUP BY s.id, s.english_title, s.original_title, s.created_at
-     ORDER BY last_reported_at DESC
+     JOIN (
+        SELECT
+          sm.submission_id,
+          COUNT(DISTINCT sm.user_id) AS report_count,
+          MAX(sm.updated_at) AS last_reported_at
+        FROM selector_memo sm
+        WHERE sm.selection_list = 'REPORT'
+        GROUP BY sm.submission_id
+     ) agg ON agg.submission_id = s.id
+     ORDER BY agg.last_reported_at DESC
      LIMIT ${lim} OFFSET ${off}`
   );
 

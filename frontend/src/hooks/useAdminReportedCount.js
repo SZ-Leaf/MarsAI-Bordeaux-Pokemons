@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
-import api from "../../services/api"; // adapte
+
+const API = import.meta.env.VITE_API_URL;
 
 export function useAdminReportedCount({ limit = 200, offset = 0 } = {}) {
   const [items, setItems] = useState([]);
@@ -11,10 +12,18 @@ export function useAdminReportedCount({ limit = 200, offset = 0 } = {}) {
       setLoading(true);
       setError(null);
 
-      const res = await api.get(`/api/selector/admin/reported?limit=${limit}&offset=${offset}`);
+      const res = await fetch(
+        `${API}/api/selector/admin/reported?limit=${limit}&offset=${offset}`,
+        { credentials: "include" }
+      );
 
-      // compat sendSuccess: { success, data }
-      const data = res?.data?.data ?? res?.data ?? [];
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
+      const json = await res.json();
+
+      const data = json?.data ?? json ?? [];
       setItems(Array.isArray(data) ? data : []);
     } catch (e) {
       setError(e);
@@ -29,6 +38,7 @@ export function useAdminReportedCount({ limit = 200, offset = 0 } = {}) {
   }, [fetchList]);
 
   const totalVideos = useMemo(() => items.length, [items]);
+
   const totalReports = useMemo(
     () => items.reduce((acc, r) => acc + (Number(r.report_count) || 0), 0),
     [items]

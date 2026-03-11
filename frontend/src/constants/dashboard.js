@@ -1,4 +1,4 @@
-import { LayoutDashboard, Film, Users, Calendar, Settings, Mail, Send, SquareX, Award } from 'lucide-react';
+import { LayoutDashboard, Film, Users, Calendar, Settings, Mail, Send, SquareX, Award, TriangleAlert } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 
 const navItems = () => {
@@ -17,6 +17,7 @@ const navItems = () => {
             { id: 'invitations', label: { fr: 'Invitations', en: 'Invitations' }, icon: Send },
             { id: 'newsletter', label: { fr: 'Newsletter', en: 'Newsletter' }, icon: Mail },
             { id: 'events', label: { fr: 'Évènements', en: 'Events' }, icon: Calendar },
+            { id: 'reports', label: {fr: 'Vidéos signalées', en:'Reported videos'}, icon: TriangleAlert},
         ] : []),
         ...(user.role_id === 3 ? [
             { id: 'users', label: { fr: 'Utilisateurs', en: 'Users' }, icon: Users },

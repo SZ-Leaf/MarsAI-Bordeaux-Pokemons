@@ -40,3 +40,17 @@
 .submission-country {
    @apply text-right;
 }
+.submission-reports {
+  position: absolute;
+  top: 8px;
+  left: 72%;
+  background: rgba(220, 38, 38, 0.92);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

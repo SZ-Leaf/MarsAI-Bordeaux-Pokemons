@@ -8,7 +8,7 @@ import {
   adminReportedList,
   adminReportedDetail
 } from "../../controllers/selector/selector_memo.controller.js";
-import { authenticate } from "../../middlewares/auth.middleware.js";
+import { authenticate, requireRole } from "../../middlewares/auth.middleware.js";
 import { validate } from "../../middlewares/validation.js";
 import { rateSubmissionSchema } from "../../utils/schemas/selector.schemas.js";
 
@@ -23,7 +23,7 @@ router.post("/rate/:id", authenticate, validate(rateSubmissionSchema), createSel
 router.delete("/rate/:id", authenticate, deleteMemo);
 
 //récupération des reported videos de tous les users
-router.get("/admin/reported",adminReportedList);
-router.get("/admin/reported/:submissionId", adminReportedDetail);
+router.get("/admin/reported",authenticate, requireRole([2, 3]), adminReportedList);
+router.get("/admin/reported/:submissionId",authenticate, requireRole([2, 3]), adminReportedDetail);
 
 export default router;

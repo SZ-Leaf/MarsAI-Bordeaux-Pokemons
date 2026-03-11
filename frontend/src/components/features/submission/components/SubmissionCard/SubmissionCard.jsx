@@ -3,7 +3,7 @@ import { Star } from 'lucide-react';
 import '../../../../../styles/main.css';
 import { useLanguage } from '../../../../../context/LanguageContext';
 
-const SubmissionCard = ({submission, onVideoClick}) => {
+const SubmissionCard = ({submission, onVideoClick,showReportCount = false}) => {
    const {language} = useLanguage();
 
    function formatDuration(seconds) {
@@ -13,12 +13,24 @@ const SubmissionCard = ({submission, onVideoClick}) => {
    }
 
    const rating = submission.memo_rating;
+   const reportCount = submission.report_count || 0;
+   const getReportLabel = (count, language) => {
+      if (language === "fr") {
+         return count > 1 ? "Signalements" : "Signalement";
+      }
+      return count > 1 ? "Reports" : "Report";
+   };
 
    return (
       <article className="submission-container-card" key={submission.id}>
          <div className="submission-image-container" onClick={onVideoClick}>
             <img className="submission-image" src={`${import.meta.env.VITE_API_URL}${submission.cover}`} alt={submission.english_title} />
             <p className="submission-duration">{formatDuration(submission.duration_seconds)}</p>
+            {showReportCount && submission.report_count > 0 && (
+               <div className="submission-reports">
+                  {reportCount} {getReportLabel(reportCount, language)}
+               </div>
+            )}
             {rating != null && (
                <div className="submission-rating">
                   <Star size={12} fill="currentColor" />

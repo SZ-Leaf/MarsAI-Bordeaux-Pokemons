@@ -47,19 +47,5 @@ export const usePlaylists = () => {
       glowClass: "shadow-red-500/20",
       hoverClass: "hover:border-red-700/70 hover:bg-red-500/10",
     },
-    {
-      key: "admin_reported",
-      title: language === "fr" ? "Vidéos signalées (admin)" : "Reported videos (admin)",
-      icon: "pi pi-flag-fill",
-      description:
-        language === "fr"
-          ? "Vidéos signalées par tous les utilisateurs"
-          : "Videos reported by all users",
-      borderClass: "border-red-500/40",
-      accentClass: "text-red-300",
-      accentBarClass: "bg-red-500/60",
-      glowClass: "shadow-red-500/20",
-      hoverClass: "hover:border-red-700/70 hover:bg-red-500/10",
-    }
   ];
 };

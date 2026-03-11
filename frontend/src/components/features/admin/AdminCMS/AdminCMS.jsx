@@ -1,20 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Loader2, Save, RotateCcw, Plus, Trash2, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { useLanguage } from '../../../../context/LanguageContext';
 import { getHomepageService, updateHomepageService } from '../../../../services/homepage.service';
 
-// ─── Helpers ───────────────────────────────────────────────────────────────────
 
-const TABS = ['hero', 'features', 'films', 'stats', 'conferences', 'objectives'];
-
-const TAB_LABELS = {
-  hero:        { fr: 'Hero',         en: 'Hero' },
-  features:    { fr: 'Features',     en: 'Features' },
-  films:       { fr: 'Films',        en: 'Films' },
-  stats:       { fr: 'Stats',        en: 'Stats' },
-  conferences: { fr: 'Conférences',  en: 'Conferences' },
-  objectives:  { fr: 'Objectifs',    en: 'Objectives' },
-};
+const TABS = [
+  { key: 'hero',        label: 'Hero' },
+  { key: 'features',    label: 'Features' },
+  { key: 'films',       label: 'Films' },
+  { key: 'stats',       label: 'Stats' },
+  { key: 'conferences', label: 'Conférences' },
+  { key: 'objectives',  label: 'Objectifs' },
+];
 
 const INITIAL_DATA = {
   hero: {
@@ -30,8 +26,6 @@ const INITIAL_DATA = {
   conferences: [],
   objectives:  [],
 };
-
-// ─── Sub-components ────────────────────────────────────────────────────────────
 
 const BilingualField = ({ label, value, onChange, multiline = false }) => {
   const inputClass =
@@ -101,27 +95,23 @@ const SectionCard = ({ title, onDelete, children }) => (
 
 // ─── Tab panels ────────────────────────────────────────────────────────────────
 
-const HeroTab = ({ data, onChange, language }) => {
+const HeroTab = ({ data, onChange }) => {
   const set = (key) => (val) => onChange({ ...data, [key]: val });
-  const l = (fr, en) => (language === 'fr' ? fr : en);
 
   return (
     <div className="flex flex-col gap-5">
-      <BilingualField label={l('Badge', 'Badge')}          value={data.badge}            onChange={set('badge')} />
-      <BilingualField label={l('Description ligne 1', 'Description line 1')} value={data.descriptionLine1} onChange={set('descriptionLine1')} multiline />
-      <BilingualField label={l('Description ligne 2', 'Description line 2')} value={data.descriptionLine2} onChange={set('descriptionLine2')} multiline />
-      <BilingualField label={l('CTA principal', 'Primary CTA')}       value={data.ctaPrimary}   onChange={set('ctaPrimary')} />
-      <BilingualField label={l('CTA secondaire', 'Secondary CTA')}    value={data.ctaSecondary} onChange={set('ctaSecondary')} />
+      <BilingualField label="Badge"            value={data.badge}            onChange={set('badge')} />
+      <BilingualField label="Description ligne 1" value={data.descriptionLine1} onChange={set('descriptionLine1')} multiline />
+      <BilingualField label="Description ligne 2" value={data.descriptionLine2} onChange={set('descriptionLine2')} multiline />
+      <BilingualField label="CTA principal"    value={data.ctaPrimary}       onChange={set('ctaPrimary')} />
+      <BilingualField label="CTA secondaire"   value={data.ctaSecondary}     onChange={set('ctaSecondary')} />
     </div>
   );
 };
 
-const FeaturesTab = ({ data, onChange, language }) => {
-  const l = (fr, en) => (language === 'fr' ? fr : en);
-
+const FeaturesTab = ({ data, onChange }) => {
   const updateItem = (i, key, val) => {
-    const next = data.map((f, idx) => (idx === i ? { ...f, [key]: val } : f));
-    onChange(next);
+    onChange(data.map((f, idx) => (idx === i ? { ...f, [key]: val } : f)));
   };
 
   const addItem = () =>
@@ -134,11 +124,11 @@ const FeaturesTab = ({ data, onChange, language }) => {
   return (
     <div className="flex flex-col gap-4">
       {data.map((feature, i) => (
-        <SectionCard key={i} title={l(`Carte #${i + 1}`, `Card #${i + 1}`)} onDelete={() => removeItem(i)}>
-          <BilingualField label={l('Titre', 'Title')}       value={feature.title}       onChange={(v) => updateItem(i, 'title', v)} />
-          <BilingualField label={l('Description', 'Description')} value={feature.description} onChange={(v) => updateItem(i, 'description', v)} multiline />
+        <SectionCard key={i} title={`Carte #${i + 1}`} onDelete={() => removeItem(i)}>
+          <BilingualField label="Titre"       value={feature.title}       onChange={(v) => updateItem(i, 'title', v)} />
+          <BilingualField label="Description" value={feature.description} onChange={(v) => updateItem(i, 'description', v)} multiline />
           <div className="flex flex-col gap-1">
-            <span className="text-xs font-semibold text-white/60">{l('Style', 'Style')}</span>
+            <span className="text-xs font-semibold text-white/60">Style</span>
             <select
               className="px-3 py-2 rounded-md bg-black/40 border border-white/10 text-sm text-white outline-none focus:border-blue/60"
               value={feature.className}
@@ -154,18 +144,15 @@ const FeaturesTab = ({ data, onChange, language }) => {
         onClick={addItem}
         className="flex items-center gap-2 text-sm text-blue/80 hover:text-blue transition-colors self-start"
       >
-        <Plus size={15} /> {l('Ajouter une carte', 'Add a card')}
+        <Plus size={15} /> Ajouter une carte
       </button>
     </div>
   );
 };
 
-const FilmsTab = ({ data, onChange, language }) => {
-  const l = (fr, en) => (language === 'fr' ? fr : en);
-
+const FilmsTab = ({ data, onChange }) => {
   const updateItem = (i, key, val) => {
-    const next = data.map((f, idx) => (idx === i ? { ...f, [key]: val } : f));
-    onChange(next);
+    onChange(data.map((f, idx) => (idx === i ? { ...f, [key]: val } : f)));
   };
 
   const addItem = () =>
@@ -179,10 +166,10 @@ const FilmsTab = ({ data, onChange, language }) => {
   return (
     <div className="flex flex-col gap-4">
       {data.map((film, i) => (
-        <SectionCard key={i} title={l(`Film #${i + 1}`, `Film #${i + 1}`)} onDelete={() => removeItem(i)}>
-          <BilingualField label={l('Titre', 'Title')} value={film.title} onChange={(v) => updateItem(i, 'title', v)} />
+        <SectionCard key={i} title={`Film #${i + 1}`} onDelete={() => removeItem(i)}>
+          <BilingualField label="Titre" value={film.title} onChange={(v) => updateItem(i, 'title', v)} />
           <div className="flex flex-col gap-1">
-            <span className="text-xs font-semibold text-white/60">{l('Réalisateur', 'Director')}</span>
+            <span className="text-xs font-semibold text-white/60">Réalisateur</span>
             <input
               type="text"
               className={inputClass}
@@ -191,7 +178,7 @@ const FilmsTab = ({ data, onChange, language }) => {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-xs font-semibold text-white/60">{l('URL image', 'Image URL')}</span>
+            <span className="text-xs font-semibold text-white/60">URL de l'image</span>
             <input
               type="text"
               className={inputClass}
@@ -209,18 +196,15 @@ const FilmsTab = ({ data, onChange, language }) => {
         onClick={addItem}
         className="flex items-center gap-2 text-sm text-blue/80 hover:text-blue transition-colors self-start"
       >
-        <Plus size={15} /> {l('Ajouter un film', 'Add a film')}
+        <Plus size={15} /> Ajouter un film
       </button>
     </div>
   );
 };
 
-const StatsTab = ({ data, onChange, language }) => {
-  const l = (fr, en) => (language === 'fr' ? fr : en);
-
+const StatsTab = ({ data, onChange }) => {
   const updateItem = (i, key, val) => {
-    const next = data.map((s, idx) => (idx === i ? { ...s, [key]: val } : s));
-    onChange(next);
+    onChange(data.map((s, idx) => (idx === i ? { ...s, [key]: val } : s)));
   };
 
   const addItem = () =>
@@ -234,16 +218,16 @@ const StatsTab = ({ data, onChange, language }) => {
   return (
     <div className="flex flex-col gap-4">
       {data.map((stat, i) => (
-        <SectionCard key={i} title={l(`Stat #${i + 1}`, `Stat #${i + 1}`)} onDelete={() => removeItem(i)}>
-          <BilingualField label={l('Valeur', 'Value')}   value={stat.title}    onChange={(v) => updateItem(i, 'title', v)} />
-          <BilingualField label={l('Sous-titre', 'Subtitle')} value={stat.subtitle} onChange={(v) => updateItem(i, 'subtitle', v)} />
+        <SectionCard key={i} title={`Stat #${i + 1}`} onDelete={() => removeItem(i)}>
+          <BilingualField label="Valeur"     value={stat.title}    onChange={(v) => updateItem(i, 'title', v)} />
+          <BilingualField label="Sous-titre" value={stat.subtitle} onChange={(v) => updateItem(i, 'subtitle', v)} />
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1">
-              <span className="text-xs font-semibold text-white/60">{l('Couleur texte', 'Text color')}</span>
+              <span className="text-xs font-semibold text-white/60">Couleur du texte</span>
               <input type="text" className={inputClass} value={stat.color} onChange={(e) => updateItem(i, 'color', e.target.value)} />
             </div>
             <div className="flex flex-col gap-1">
-              <span className="text-xs font-semibold text-white/60">{l('Classe bordure', 'Border class')}</span>
+              <span className="text-xs font-semibold text-white/60">Classe de bordure</span>
               <input type="text" className={inputClass} value={stat.borderClass} onChange={(e) => updateItem(i, 'borderClass', e.target.value)} />
             </div>
           </div>
@@ -254,19 +238,17 @@ const StatsTab = ({ data, onChange, language }) => {
         onClick={addItem}
         className="flex items-center gap-2 text-sm text-blue/80 hover:text-blue transition-colors self-start"
       >
-        <Plus size={15} /> {l('Ajouter une stat', 'Add a stat')}
+        <Plus size={15} /> Ajouter une stat
       </button>
     </div>
   );
 };
 
-const ConferencesTab = ({ data, onChange, language }) => {
-  const l = (fr, en) => (language === 'fr' ? fr : en);
+const ConferencesTab = ({ data, onChange }) => {
   const ICONS = ['Play', 'Users', 'Award', 'Target', 'Zap', 'Rocket'];
 
   const updateItem = (i, key, val) => {
-    const next = data.map((c, idx) => (idx === i ? { ...c, [key]: val } : c));
-    onChange(next);
+    onChange(data.map((c, idx) => (idx === i ? { ...c, [key]: val } : c)));
   };
 
   const addItem = () =>
@@ -277,11 +259,11 @@ const ConferencesTab = ({ data, onChange, language }) => {
   return (
     <div className="flex flex-col gap-4">
       {data.map((conf, i) => (
-        <SectionCard key={i} title={l(`Conférence #${i + 1}`, `Conference #${i + 1}`)} onDelete={() => removeItem(i)}>
-          <BilingualField label={l('Titre', 'Title')}       value={conf.title}       onChange={(v) => updateItem(i, 'title', v)} />
-          <BilingualField label={l('Description', 'Description')} value={conf.description} onChange={(v) => updateItem(i, 'description', v)} multiline />
+        <SectionCard key={i} title={`Conférence #${i + 1}`} onDelete={() => removeItem(i)}>
+          <BilingualField label="Titre"       value={conf.title}       onChange={(v) => updateItem(i, 'title', v)} />
+          <BilingualField label="Description" value={conf.description} onChange={(v) => updateItem(i, 'description', v)} multiline />
           <div className="flex flex-col gap-1">
-            <span className="text-xs font-semibold text-white/60">{l('Icône', 'Icon')}</span>
+            <span className="text-xs font-semibold text-white/60">Icône</span>
             <select
               className="px-3 py-2 rounded-md bg-black/40 border border-white/10 text-sm text-white outline-none focus:border-blue/60"
               value={conf.icon}
@@ -297,19 +279,17 @@ const ConferencesTab = ({ data, onChange, language }) => {
         onClick={addItem}
         className="flex items-center gap-2 text-sm text-blue/80 hover:text-blue transition-colors self-start"
       >
-        <Plus size={15} /> {l('Ajouter une conférence', 'Add a conference')}
+        <Plus size={15} /> Ajouter une conférence
       </button>
     </div>
   );
 };
 
-const ObjectivesTab = ({ data, onChange, language }) => {
-  const l = (fr, en) => (language === 'fr' ? fr : en);
+const ObjectivesTab = ({ data, onChange }) => {
   const ICONS = ['Play', 'Users', 'Award', 'Target', 'Zap', 'Rocket'];
 
   const updateItem = (i, key, val) => {
-    const next = data.map((o, idx) => (idx === i ? { ...o, [key]: val } : o));
-    onChange(next);
+    onChange(data.map((o, idx) => (idx === i ? { ...o, [key]: val } : o)));
   };
 
   const addItem = () =>
@@ -323,12 +303,12 @@ const ObjectivesTab = ({ data, onChange, language }) => {
   return (
     <div className="flex flex-col gap-4">
       {data.map((obj, i) => (
-        <SectionCard key={i} title={l(`Objectif #${i + 1}`, `Objective #${i + 1}`)} onDelete={() => removeItem(i)}>
-          <BilingualField label={l('Titre', 'Title')}       value={obj.title}       onChange={(v) => updateItem(i, 'title', v)} />
-          <BilingualField label={l('Description', 'Description')} value={obj.description} onChange={(v) => updateItem(i, 'description', v)} multiline />
+        <SectionCard key={i} title={`Objectif #${i + 1}`} onDelete={() => removeItem(i)}>
+          <BilingualField label="Titre"       value={obj.title}       onChange={(v) => updateItem(i, 'title', v)} />
+          <BilingualField label="Description" value={obj.description} onChange={(v) => updateItem(i, 'description', v)} multiline />
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1">
-              <span className="text-xs font-semibold text-white/60">{l('Icône', 'Icon')}</span>
+              <span className="text-xs font-semibold text-white/60">Icône</span>
               <select
                 className="px-3 py-2 rounded-md bg-black/40 border border-white/10 text-sm text-white outline-none focus:border-blue/60"
                 value={obj.icon}
@@ -338,15 +318,15 @@ const ObjectivesTab = ({ data, onChange, language }) => {
               </select>
             </div>
             <div className="flex flex-col gap-1">
-              <span className="text-xs font-semibold text-white/60">{l('Classe bordure', 'Border class')}</span>
+              <span className="text-xs font-semibold text-white/60">Classe de bordure</span>
               <input type="text" className={inputClass} value={obj.borderClass} onChange={(e) => updateItem(i, 'borderClass', e.target.value)} />
             </div>
             <div className="flex flex-col gap-1">
-              <span className="text-xs font-semibold text-white/60">{l('Couleur texte', 'Text color')}</span>
+              <span className="text-xs font-semibold text-white/60">Couleur du texte</span>
               <input type="text" className={inputClass} value={obj.color} onChange={(e) => updateItem(i, 'color', e.target.value)} />
             </div>
             <div className="flex flex-col gap-1">
-              <span className="text-xs font-semibold text-white/60">{l('Couleur fond icône', 'Icon bg color')}</span>
+              <span className="text-xs font-semibold text-white/60">Couleur de fond de l'icône</span>
               <input type="text" className={inputClass} value={obj.bgColor} onChange={(e) => updateItem(i, 'bgColor', e.target.value)} />
             </div>
           </div>
@@ -357,7 +337,7 @@ const ObjectivesTab = ({ data, onChange, language }) => {
         onClick={addItem}
         className="flex items-center gap-2 text-sm text-blue/80 hover:text-blue transition-colors self-start"
       >
-        <Plus size={15} /> {l('Ajouter un objectif', 'Add an objective')}
+        <Plus size={15} /> Ajouter un objectif
       </button>
     </div>
   );
@@ -366,9 +346,6 @@ const ObjectivesTab = ({ data, onChange, language }) => {
 // ─── Main Component ────────────────────────────────────────────────────────────
 
 const AdminCMS = () => {
-  const { language } = useLanguage();
-  const l = (fr, en) => (language === 'fr' ? fr : en);
-
   const [activeTab, setActiveTab] = useState('hero');
   const [data, setData] = useState(INITIAL_DATA);
   const [originalData, setOriginalData] = useState(INITIAL_DATA);
@@ -429,11 +406,9 @@ const AdminCMS = () => {
 
       {/* Header */}
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl md:text-3xl font-black gradient-text">
-          {l('CMS Homepage', 'Homepage CMS')}
-        </h1>
+        <h1 className="text-2xl md:text-3xl font-black gradient-text">CMS Homepage</h1>
         <p className="text-sm text-white/50 max-w-2xl">
-          {l('Modifie les textes et contenus affichés sur la page d\'accueil.', 'Edit the texts and content displayed on the homepage.')}
+          Modifie les textes et contenus affichés sur la page d'accueil.
         </p>
       </div>
 
@@ -446,7 +421,7 @@ const AdminCMS = () => {
           className="btn-adventure flex items-center gap-2 text-xs md:text-sm font-bold rounded-full disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
-          {l('Sauvegarder', 'Save')}
+          Sauvegarder
         </button>
         <button
           type="button"
@@ -455,60 +430,48 @@ const AdminCMS = () => {
           className="btn-agenda flex items-center gap-2 text-xs md:text-sm disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <RotateCcw size={14} />
-          {l('Réinitialiser', 'Reset')}
+          Réinitialiser
         </button>
         {status === 'success' && (
           <span className="flex items-center gap-1.5 text-emerald-400 text-sm">
             <CheckCircle2 size={16} />
-            {l('Sauvegardé', 'Saved')}
+            Sauvegardé
           </span>
         )}
         {status === 'error' && (
           <span className="flex items-center gap-1.5 text-red-400 text-sm">
             <AlertCircle size={16} />
-            {l('Erreur', 'Error')}
+            Une erreur est survenue
           </span>
         )}
       </div>
 
       {/* Tabs */}
       <div className="flex gap-1 flex-wrap border-b border-white/10 pb-0">
-        {TABS.map((tab) => (
+        {TABS.map(({ key, label }) => (
           <button
-            key={tab}
+            key={key}
             type="button"
-            onClick={() => setActiveTab(tab)}
+            onClick={() => setActiveTab(key)}
             className={`px-4 py-2 text-xs md:text-sm font-semibold rounded-t-lg transition-colors border-b-2 -mb-px ${
-              activeTab === tab
+              activeTab === key
                 ? 'border-blue text-blue bg-blue/5'
                 : 'border-transparent text-white/50 hover:text-white/80'
             }`}
           >
-            {language === 'fr' ? TAB_LABELS[tab].fr : TAB_LABELS[tab].en}
+            {label}
           </button>
         ))}
       </div>
 
       {/* Tab content */}
       <div className="rounded-2xl border border-white/10 bg-bg/60 p-4 md:p-6 shadow-[0_0_30px_rgba(43,127,255,0.08)]">
-        {activeTab === 'hero' && (
-          <HeroTab data={data.hero} onChange={updateSection('hero')} language={language} />
-        )}
-        {activeTab === 'features' && (
-          <FeaturesTab data={data.features} onChange={updateSection('features')} language={language} />
-        )}
-        {activeTab === 'films' && (
-          <FilmsTab data={data.films} onChange={updateSection('films')} language={language} />
-        )}
-        {activeTab === 'stats' && (
-          <StatsTab data={data.stats} onChange={updateSection('stats')} language={language} />
-        )}
-        {activeTab === 'conferences' && (
-          <ConferencesTab data={data.conferences} onChange={updateSection('conferences')} language={language} />
-        )}
-        {activeTab === 'objectives' && (
-          <ObjectivesTab data={data.objectives} onChange={updateSection('objectives')} language={language} />
-        )}
+        {activeTab === 'hero'        && <HeroTab        data={data.hero}        onChange={updateSection('hero')} />}
+        {activeTab === 'features'    && <FeaturesTab    data={data.features}    onChange={updateSection('features')} />}
+        {activeTab === 'films'       && <FilmsTab       data={data.films}       onChange={updateSection('films')} />}
+        {activeTab === 'stats'       && <StatsTab       data={data.stats}       onChange={updateSection('stats')} />}
+        {activeTab === 'conferences' && <ConferencesTab data={data.conferences} onChange={updateSection('conferences')} />}
+        {activeTab === 'objectives'  && <ObjectivesTab  data={data.objectives}  onChange={updateSection('objectives')} />}
       </div>
 
     </div>

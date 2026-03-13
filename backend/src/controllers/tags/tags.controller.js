@@ -1,6 +1,6 @@
 import { sendSuccess, sendError } from "../../helpers/response.helper.js";
 import tags_model from "../../models/tags/tags.model.js";
-
+//liste de tous les tags
 export const listTags = async(req,res) => {
     try {
         const search = (req.query.search || "").trim();
@@ -17,7 +17,7 @@ export const listTags = async(req,res) => {
         return sendError(res, 500, "Erreur lors de la récupération des tags", "Error when trying to retrieve tags",null);
     }
 };
-
+//récupération d'un tag avec son id
 export const findTagById = async(req, res) => {
     try {
         const id = Number(req.params.id);
@@ -39,7 +39,7 @@ export const findTagById = async(req, res) => {
         return sendError(res, 500, "Erreur lors de la récupération du tag", "Error while retrieving tag", null);
     }
 };
-
+//création d'un tag
 export const createTag = async (req,res) => {
     try {
         const title = (req.body.title || "").trim().replace(/^./, c => c.toUpperCase());
@@ -60,7 +60,7 @@ export const createTag = async (req,res) => {
         return sendError(res, 500, "Erreur lors de la création du tag", "Error while creating tag", null);        
     }
 };
-
+//récupèration des tags les plus populaires
 export const getPopularTags = async (req,res) => {
     try {
         const limit = Number.isInteger(Number(req.query.limit)) && Number(req.query.limit) > 0

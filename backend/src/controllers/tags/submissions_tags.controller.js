@@ -1,7 +1,7 @@
 import submissions_tags_model from "../../models/tags/submissions_tags_model.js";
 import { sendSuccess, sendError } from "../../helpers/response.helper.js";
 import db from "../../config/db_pool.js";
-
+//ajout de tags à une soumission
 export const addTags = async (req,res) => {
     let connection;
 
@@ -43,7 +43,7 @@ export const addTags = async (req,res) => {
     }
 }
 
-
+//liste des tags d'une soumission
 export const listTagsForSubmission = async (req,res) => {
     let connection;
 

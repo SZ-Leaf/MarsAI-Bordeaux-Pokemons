@@ -184,125 +184,193 @@ const AdminUsers = () => {
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-gray-800/50">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-gray-800 bg-[#111]">
-                <th className="px-5 py-3">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="text-gray-500 uppercase text-[10px] font-bold tracking-wide shrink-0 cursor-pointer select-none hover:text-gray-300 transition-colors inline-flex items-center gap-1"
-                      onClick={() => toggleSort('user')}
-                    >
+        <div className="space-y-4">
+          {/* Search and Sort Mobile */}
+          <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+            <div className="relative flex-1 max-w-md">
+              <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={language === 'fr' ? 'Rechercher un utilisateur...' : 'Search user...'}
+                className="w-full pl-12 pr-4 py-3 rounded-2xl border border-gray-800 bg-[#1a1a1a] text-white text-sm focus:border-blue-500 outline-none transition-all shadow-lg"
+              />
+            </div>
+
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+              <select
+                value={sortKey}
+                onChange={(e) => setSortKey(e.target.value)}
+                className="bg-[#1a1a1a] border border-gray-800 rounded-xl px-4 py-2 text-xs text-gray-400 outline-none focus:border-blue-500 md:hidden"
+              >
+                <option value="user">{language === 'fr' ? 'Nom' : 'Name'}</option>
+                <option value="email">Email</option>
+                <option value="role_id">{language === 'fr' ? 'Rôle' : 'Role'}</option>
+                <option value="last_login">{language === 'fr' ? 'Connexion' : 'Login'}</option>
+                <option value="created_at">{language === 'fr' ? 'Création' : 'Created'}</option>
+              </select>
+              <button
+                onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')}
+                className="p-2 bg-[#1a1a1a] border border-gray-800 rounded-xl text-gray-400 md:hidden"
+              >
+                {sortDir === 'asc' ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-hidden rounded-2xl border border-gray-800 bg-[#1a1a1a]/30 shadow-xl">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b border-gray-800 bg-[#111]">
+                  <th className="px-6 py-4 cursor-pointer hover:bg-white/5 transition-colors" onClick={() => toggleSort('user')}>
+                    <div className="flex items-center gap-2 text-gray-500 uppercase text-[10px] font-black tracking-widest">
                       {language === 'fr' ? 'Utilisateur' : 'User'}
-                      {sortKey === 'user' && (sortDir === 'asc' ? <ArrowUp size={10} /> : <ArrowDown size={10} />)}
-                    </span>
-                    <div className="relative flex-1 max-w-[200px]">
-                      <Search size={12} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-600" />
-                      <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder={language === 'fr' ? 'Rechercher...' : 'Search...'}
-                        className="w-full pl-6 pr-2 py-1 rounded-lg border border-gray-700/50 bg-transparent text-white text-xs placeholder-gray-600 focus:border-gray-500 outline-none transition-colors"
-                      />
+                      {sortKey === 'user' && (sortDir === 'asc' ? <ArrowUp size={12} /> : <ArrowDown size={12} />)}
                     </div>
-                  </div>
-                </th>
-                <th
-                  className="px-5 py-3 text-gray-500 uppercase text-[10px] font-bold tracking-wide cursor-pointer select-none hover:text-gray-300 transition-colors"
-                  onClick={() => toggleSort('email')}
-                >
-                  <span className="inline-flex items-center gap-1">
-                    {language === 'fr' ? 'Email' : 'Email'}
-                    {sortKey === 'email' && (sortDir === 'asc' ? <ArrowUp size={10} /> : <ArrowDown size={10} />)}
-                  </span>
-                </th>
-                <th
-                  className="px-5 py-3 text-gray-500 uppercase text-[10px] font-bold tracking-wide cursor-pointer select-none hover:text-gray-300 transition-colors"
-                  onClick={() => toggleSort('role_id')}
-                >
-                  <span className="inline-flex items-center gap-1">
-                    {language === 'fr' ? 'Rôle' : 'Role'}
-                    {sortKey === 'role_id' && (sortDir === 'asc' ? <ArrowUp size={10} /> : <ArrowDown size={10} />)}
-                  </span>
-                </th>
-                <th
-                  className="px-5 py-3 text-gray-500 uppercase text-[10px] font-bold tracking-wide cursor-pointer select-none hover:text-gray-300 transition-colors"
-                  onClick={() => toggleSort('last_login')}
-                >
-                  <span className="inline-flex items-center gap-1">
-                    {language === 'fr' ? 'Dernière connexion' : 'Last login'}
-                    {sortKey === 'last_login' && (sortDir === 'asc' ? <ArrowUp size={10} /> : <ArrowDown size={10} />)}
-                  </span>
-                </th>
-                <th
-                  className="px-5 py-3 text-gray-500 uppercase text-[10px] font-bold tracking-wide cursor-pointer select-none hover:text-gray-300 transition-colors"
-                  onClick={() => toggleSort('created_at')}
-                >
-                  <span className="inline-flex items-center gap-1">
-                    {language === 'fr' ? 'Créé le' : 'Created'}
-                    {sortKey === 'created_at' && (sortDir === 'asc' ? <ArrowUp size={10} /> : <ArrowDown size={10} />)}
-                  </span>
-                </th>
-                <th className="px-5 py-3 text-gray-500 uppercase text-[10px] font-bold tracking-wide text-right">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {visibleUsers.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="px-5 py-10 text-center text-gray-500 text-sm">
-                    {language === 'fr' ? 'Aucun résultat' : 'No results'}
-                  </td>
+                  </th>
+                  <th className="px-6 py-4 cursor-pointer hover:bg-white/5 transition-colors" onClick={() => toggleSort('email')}>
+                    <div className="flex items-center gap-2 text-gray-500 uppercase text-[10px] font-black tracking-widest">
+                      {language === 'fr' ? 'Email' : 'Email'}
+                      {sortKey === 'email' && (sortDir === 'asc' ? <ArrowUp size={12} /> : <ArrowDown size={12} />)}
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 cursor-pointer hover:bg-white/5 transition-colors" onClick={() => toggleSort('role_id')}>
+                    <div className="flex items-center gap-2 text-gray-500 uppercase text-[10px] font-black tracking-widest">
+                      {language === 'fr' ? 'Rôle' : 'Role'}
+                      {sortKey === 'role_id' && (sortDir === 'asc' ? <ArrowUp size={12} /> : <ArrowDown size={12} />)}
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 cursor-pointer hover:bg-white/5 transition-colors" onClick={() => toggleSort('last_login')}>
+                    <div className="flex items-center gap-2 text-gray-500 uppercase text-[10px] font-black tracking-widest whitespace-nowrap">
+                      {language === 'fr' ? 'Dernière connexion' : 'Last login'}
+                      {sortKey === 'last_login' && (sortDir === 'asc' ? <ArrowUp size={12} /> : <ArrowDown size={12} />)}
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 text-right text-gray-500 uppercase text-[10px] font-black tracking-widest">
+                    Actions
+                  </th>
                 </tr>
-              ) : (
-                visibleUsers.map((u) => (
-                  <tr
-                    key={u.id}
-                    className="border-b border-gray-800/50 last:border-b-0 hover:bg-white/2 transition-colors"
-                  >
-                    <td className="px-5 py-4 text-white font-medium">
-                      {u.firstname} {u.lastname}
-                    </td>
-                    <td className="px-5 py-4 text-gray-400">{u.email ?? '—'}</td>
-                    <td className="px-5 py-4">
-                      <span className="inline-block px-2.5 py-1 rounded-lg bg-white/5 border border-gray-700 text-gray-300 text-xs font-medium">
-                        {roleIdToLabel(u.role_id, language)}
-                      </span>
-                    </td>
-                    <td className="px-5 py-4 text-gray-400">{formatDate(u.last_login, language)}</td>
-                    <td className="px-5 py-4 text-gray-400">{formatDate(u.created_at, language)}</td>
-                    <td className="px-5 py-4 text-right">
-                      <button
-                        type="button"
-                        disabled={u.role_id === 3}
-                        className={`p-2 rounded-lg ${u.role_id === 3 ? 'text-gray-600 cursor-not-allowed' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}
-                        title={u.role_id === 3 ? (language === 'fr' ? 'Super admin non modifiable' : 'Super admin cannot be edited') : (language === 'fr' ? 'Modifier le rôle' : 'Edit role')}
-                        aria-label="Edit role"
-                        onClick={() => { setActionError(null); setRoleEditUser(u); }}
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button
-                        type="button"
-                        disabled={u.role_id === 3}
-                        className={`p-2 rounded-lg ml-1 ${u.role_id === 3 ? 'text-gray-600 cursor-not-allowed' : 'text-gray-400 hover:text-red-400 hover:bg-gray-800'}`}
-                        title={u.role_id === 3 ? (language === 'fr' ? 'Super admin non supprimable' : 'Super admin cannot be deleted') : (language === 'fr' ? 'Supprimer' : 'Delete')}
-                        aria-label="Delete"
-                        onClick={() => { setActionError(null); setDeleteConfirmUser(u); }}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+              </thead>
+              <tbody className="divide-y divide-gray-800/50">
+                {visibleUsers.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500 italic">
+                      {language === 'fr' ? 'Aucun résultat' : 'No results'}
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  visibleUsers.map((u) => (
+                    <tr key={u.id} className="hover:bg-white/2 transition-colors group">
+                      <td className="px-6 py-4">
+                        <div className="font-bold text-white">{u.firstname} {u.lastname}</div>
+                        <div className="text-[10px] text-gray-500 uppercase mt-0.5 md:hidden">{formatDate(u.created_at, language)}</div>
+                      </td>
+                      <td className="px-6 py-4 text-gray-400 text-xs">{u.email ?? '—'}</td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-block px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter ${
+                          u.role_id === 3 ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20' : 
+                          u.role_id === 2 ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 
+                          'bg-gray-800 text-gray-400 border border-gray-700'
+                        }`}>
+                          {roleIdToLabel(u.role_id, language)}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-gray-500 text-xs">{formatDate(u.last_login, language)}</td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            type="button"
+                            disabled={u.role_id === 3}
+                            className={`p-2 rounded-xl transition-all ${u.role_id === 3 ? 'text-gray-800 cursor-not-allowed' : 'bg-white/5 text-gray-400 hover:text-white hover:bg-blue-600/20 border border-white/5 hover:border-blue-500/20'}`}
+                            onClick={() => { setActionError(null); setRoleEditUser(u); }}
+                          >
+                            <Edit2 size={14} />
+                          </button>
+                          <button
+                            type="button"
+                            disabled={u.role_id === 3}
+                            className={`p-2 rounded-xl transition-all ${u.role_id === 3 ? 'text-gray-800 cursor-not-allowed' : 'bg-white/5 text-gray-400 hover:text-red-400 hover:bg-red-600/20 border border-white/5 hover:border-red-500/20'}`}
+                            onClick={() => { setActionError(null); setDeleteConfirmUser(u); }}
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Cards View */}
+          <div className="md:hidden space-y-3">
+            {visibleUsers.length === 0 ? (
+              <div className="p-10 text-center text-gray-500 italic bg-[#1a1a1a] rounded-2xl border border-gray-800">
+                {language === 'fr' ? 'Aucun résultat' : 'No results'}
+              </div>
+            ) : (
+              visibleUsers.map((u) => (
+                <div key={u.id} className="p-5 bg-[#1a1a1a] rounded-[2rem] border border-gray-800/50 shadow-lg space-y-4">
+                  <div className="flex justify-between items-start">
+                    <div className="space-y-1">
+                      <div className="font-black text-lg text-white leading-none">{u.firstname} {u.lastname}</div>
+                      <div className="text-xs text-gray-500 truncate max-w-[200px]">{u.email}</div>
+                    </div>
+                    <span className={`inline-block px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter ${
+                      u.role_id === 3 ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20' : 
+                      u.role_id === 2 ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 
+                      'bg-gray-800 text-gray-400 border border-gray-700'
+                    }`}>
+                      {roleIdToLabel(u.role_id, language)}
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 py-3 border-y border-gray-800/50">
+                    <div>
+                      <div className="text-[9px] font-black text-gray-600 uppercase tracking-widest mb-1">{language === 'fr' ? 'Connexion' : 'Login'}</div>
+                      <div className="text-[11px] text-gray-400">{formatDate(u.last_login, language)}</div>
+                    </div>
+                    <div>
+                      <div className="text-[9px] font-black text-gray-600 uppercase tracking-widest mb-1">{language === 'fr' ? 'Création' : 'Created'}</div>
+                      <div className="text-[11px] text-gray-400">{formatDate(u.created_at, language)}</div>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      disabled={u.role_id === 3}
+                      className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-xs transition-all ${
+                        u.role_id === 3 
+                          ? 'bg-gray-800/50 text-gray-600 cursor-not-allowed' 
+                          : 'bg-blue-600/10 text-blue-400 border border-blue-500/20 active:scale-95'
+                      }`}
+                      onClick={() => { setActionError(null); setRoleEditUser(u); }}
+                    >
+                      <Edit2 size={14} /> {language === 'fr' ? 'Rôle' : 'Role'}
+                    </button>
+                    <button
+                      type="button"
+                      disabled={u.role_id === 3}
+                      className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-xs transition-all ${
+                        u.role_id === 3 
+                          ? 'bg-gray-800/50 text-gray-600 cursor-not-allowed' 
+                          : 'bg-red-600/10 text-red-400 border border-red-500/20 active:scale-95'
+                      }`}
+                      onClick={() => { setActionError(null); setDeleteConfirmUser(u); }}
+                    >
+                      <Trash2 size={14} /> {language === 'fr' ? 'Supprimer' : 'Delete'}
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
-      )}
+      )}}
 
       {/* Role update modal */}
       {roleEditUser && (

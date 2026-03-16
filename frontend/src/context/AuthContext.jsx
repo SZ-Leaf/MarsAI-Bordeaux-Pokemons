@@ -29,7 +29,7 @@ export const AuthProvider = ({children}) => {
             setUser(response);
             setError(null);
          } catch (error) {
-            if (error?.status === 401) {
+            if (error?.httpStatus === 401) {
               setUser(null);
               setError(null);
             } else {
@@ -116,7 +116,7 @@ export const AuthProvider = ({children}) => {
         setUser(user);
         return user;
       } catch (error) {
-         if (error?.status === 401) {
+         if (error?.httpStatus === 401) {
             setUser(null);
             setError(null);
             return null;

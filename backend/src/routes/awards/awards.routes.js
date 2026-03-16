@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validate } from "../../middlewares/validation.js";
-import { awardCreateSchema, awardUpdateSchema } from "../../utils/schemas/awards.schemas.js";
+import { awardCreateSchema, awardUpdateSchema } from "@marsai/schemas";
 import { awardCreate, awardDelete, awardsBySubmission, awardSetSubmission, awardShow, awardsList, awardsUnassigned, awardUpdate } from "../../controllers/awards/awards.controller.js";
 import { uploadAwardCover } from "../../middlewares/upload.js";
 

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { SideBar } from '../components/features/admin/AdminLayout';
 import { Header } from '../components/layout';
-import { AdminOverview, AdminUsers, VideoGallery, AdminEvents, AdminNewsletter, AdminInvitations, AdminConfig } from '../components/features/admin';
+import { AdminOverview, AdminUsers, VideoGallery, AdminEvents, AdminNewsletter, AdminInvitations, AdminConfig, AdminReports } from '../components/features/admin';
 import '../styles/main.css';
 
-const VALID_VIEWS = ['overview', 'users', 'films', 'events', 'newsletter', 'invitations', 'config'];
+const VALID_VIEWS = ['overview', 'users', 'films', 'reports', 'events', 'newsletter', 'invitations', 'config'];
 
 const getViewFromHash = () => {
   const h = window.location.hash.slice(1);
@@ -20,6 +20,7 @@ const Dashboard = () => {
     overview: AdminOverview,
     users: AdminUsers,
     films: VideoGallery,
+    reports: AdminReports,
     events: AdminEvents,
     newsletter: AdminNewsletter,
     invitations: AdminInvitations,

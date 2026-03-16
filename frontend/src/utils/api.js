@@ -64,7 +64,6 @@ export const apiCall = async (endpoint, options = {}) => {
     
     return data;
   } catch (error) {
-    console.error('Erreur API:', error);
     throw error;
   }
 };

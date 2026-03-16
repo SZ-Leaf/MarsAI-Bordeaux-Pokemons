@@ -7,7 +7,7 @@ import {
   step3Schema, 
   step4Schema,
   formatZodErrors 
-} from '../schemas/submissionSchema.js';
+} from '@marsai/schemas';
 import { createTag } from "../services/tag.service.js";
 
 
@@ -20,8 +20,8 @@ export const useSubmission = () => {
   // État du formulaire
   const [formData, setFormData] = useState({
     // Partie 1 : CGU + reCAPTCHA
-    termsAccepted: false,
-    ageConfirmed: false,
+    terms_of_use: false,
+    age_confirmed: false,
     recaptchaToken: '',
     
     // Partie 2 : Métadonnées vidéo
@@ -162,7 +162,7 @@ export const useSubmission = () => {
     const errorKeys = Object.keys(errors);
     
     // Étape 1 : CGU + reCAPTCHA
-    if (errorKeys.some(key => ['termsAccepted', 'ageConfirmed'].includes(key))) {
+    if (errorKeys.some(key => ['terms_of_use', 'age_confirmed'].includes(key))) {
       return 1;
     }
     
@@ -271,9 +271,9 @@ export const useSubmission = () => {
             createdIds.push(response.data.id);
           }
         } catch (error) {
-          // Cas : le tag existe déjà (409)
-          if (error.status === 409 && error.details?.data?.id) {
-            createdIds.push(error.details.data.id);
+          // Cas : le tag existe déjà (409) — apiCall throws the raw JSON response
+          if (error.httpStatus === 409 && error.data?.id) {
+            createdIds.push(error.data.id);
           } else {
             throw error;
           }
@@ -305,7 +305,7 @@ export const useSubmission = () => {
         creator_country: formData.creator_country,
         creator_address: formData.creator_address,
         referral_source: formData.referral_source || undefined,
-        terms_of_use: formData.termsAccepted,
+        terms_of_use: formData.terms_of_use,
         collaborators: (formData.collaborators && formData.collaborators.length > 0) ? formData.collaborators : undefined,
         socials: (formData.socials && formData.socials.length > 0) ? formData.socials : undefined,
         tagIds,
@@ -332,19 +332,19 @@ export const useSubmission = () => {
       setSubmitSuccess(result);
       return result;
     } catch (error) {
-      // Construire un message d'erreur détaillé
       let errorMessage = error.message || 'Erreur lors de la soumission';
-      // L'API renvoie souvent message: { fr, en } — on extrait une chaîne pour l'affichage
       if (typeof errorMessage === 'object' && errorMessage !== null && ('fr' in errorMessage || 'en' in errorMessage)) {
         errorMessage = errorMessage.fr || errorMessage.en || 'Erreur lors de la soumission';
       }
-      // Si l'erreur contient des détails de validation (erreurs Zod du backend)
-      if (error.details && Array.isArray(error.details)) {
-        const validationErrors = error.details
-          .map(detail => {
-            const msg = detail.message;
-            const msgStr = typeof msg === 'object' && msg !== null && ('fr' in msg || 'en' in msg) ? (msg.fr || msg.en) : msg;
-            return `${detail.field}: ${msgStr}`;
+      // error.data is the ZodIssue[] array returned by sendZodError
+      if (Array.isArray(error.data) && error.data.length > 0) {
+        const validationErrors = error.data
+          .map(issue => {
+            const field = Array.isArray(issue.path) ? issue.path.join('.') : (issue.path ?? '');
+            const msg = typeof issue.message === 'object' && issue.message !== null
+              ? (issue.message.fr || issue.message.en || JSON.stringify(issue.message))
+              : (issue.message ?? '');
+            return field ? `${field}: ${msg}` : msg;
           })
           .join(', ');
         errorMessage = `Erreurs de validation: ${validationErrors}`;
@@ -360,8 +360,8 @@ export const useSubmission = () => {
   const reset = () => {
     setCurrentStep(1);
     setFormData({
-      termsAccepted: false,
-      ageConfirmed: false,
+      terms_of_use: false,
+      age_confirmed: false,
       recaptchaToken: '',
       english_title: '',
       original_title: '',

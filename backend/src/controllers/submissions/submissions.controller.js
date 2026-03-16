@@ -1,46 +1,32 @@
-import { getVideoDurationInSeconds } from 'get-video-duration';
 import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
-import { createSubmission, updateFilePaths, getSubmissions, getSubmissionById } from '../../models/submissions/submissions.model.js';
+import { getVideoDurationInSeconds } from 'get-video-duration';
+
+// Models & Helpers
+import { createSubmission, updateFilePaths, getSubmissions, getSubmissionById, updateYoutubeLinkInDatabase } from '../../models/submissions/submissions.model.js';
 import collaboratorModel from '../../models/submissions/collaborators.model.js';
 import galleryModel from '../../models/submissions/gallery.model.js';
 import socialModel from '../../models/socials/socials.model.js';
 import submissions_tagsModel from '../../models/tags/submissions_tags.model.js';
-import { sendError, sendSuccess } from '../../helpers/response.helper.js';
-import { submissionSchema } from '../../utils/schemas/submission.schemas.js';
+import { sendError, sendSuccess, sendZodError } from '../../helpers/response.helper.js';
+import { submissionSchema } from '@marsai/schemas';
+import { ZodError } from 'zod';
+import {getTagsBySubmissionId} from '../../models/tags/submissions_tags_youtube.model.js';
 import { verifyRecaptcha } from '../../utils/recaptcha.js';
 import { sendSubmissionConfirmation } from '../../services/mailer/mailer.mail.js';
 import db from '../../config/db_pool.js';
 
+import { uploadVideo, uploadThumbnail, uploadOrUpdateCaptions } from '../../services/youtube.services.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Base path for uploads (from backend/src/controllers/submissions/)
 const getUploadsBasePath = () => {
   return path.join(__dirname, '../../../uploads');
 };
 
-// Supprime les fichiers temporaires uploadés par multer (uploads/submissions/tmp).
-async function cleanupTempFiles(req) {
-  if (!req.files) return;
-  const filesToClean = [
-    req.files.video?.[0]?.path,
-    req.files.cover?.[0]?.path,
-    req.files.subtitles?.[0]?.path,
-    ...(req.files.gallery || []).map(f => f.path)
-  ].filter(Boolean);
-  for (const p of filesToClean) {
-    try {
-      await fs.unlink(p);
-    } catch {
-      // Fichier déjà déplacé ou déjà supprimé
-    }
-  }
-}
-
 export const submitController = async (req, res) => {
-  try {
   //
   // reCAPTCHA (anti-robot)
   //
@@ -189,10 +175,22 @@ export const submitController = async (req, res) => {
 
   let validatedData;
   try {
-    validatedData = submissionSchema.parse(submissionData);
+    // Omit frontend-only fields AND file fields (video/cover/subtitles/gallery are
+    // multer uploads validated separately above — they are NOT in the JSON data body).
+    validatedData = submissionSchema
+      .omit({
+        age_confirmed: true,
+        recaptchaToken: true,
+        video: true,
+        cover: true,
+        subtitles: true,
+        gallery: true,
+      })
+      .parse(submissionData);
     console.log("BACK tagIds reçus :", validatedData.tagIds);
 
   } catch (err) {
+    if (err instanceof ZodError) return sendZodError(res, err);
     return sendError(res, 422, 'Données invalides', 'Invalid data', err.message);
   }
 
@@ -237,7 +235,7 @@ export const submitController = async (req, res) => {
 
     await submissions_tagsModel.addTagsToSubmission(connection, submissionId, validatedData.tagIds);
 
-    // 
+    //
     // create final folders directories for video, cover, subtitles and gallery
     //
 
@@ -341,6 +339,34 @@ export const submitController = async (req, res) => {
     await connection.commit();
     transactionStarted = false;
 
+    let youtubeId = null;
+    try {
+
+      const tagsRows = await getTagsBySubmissionId(submissionId);
+      const youtubeTags = tagsRows.map(t => t.title);
+
+      const ytResponse = await uploadVideo({
+        title: validatedData.english_title || validatedData.french_title,
+        description: validatedData.english_description || validatedData.french_description,
+        tags: youtubeTags,
+        filePath: finalVideoPath
+      });
+
+      youtubeId = ytResponse.id;
+
+      if (youtubeId) {
+        await updateYoutubeLinkInDatabase(youtubeId, submissionId);
+
+        await uploadThumbnail({ videoId: youtubeId, thumbnailPath: finalCoverPath });
+
+        if (finalSubtitlesPath) {
+          await uploadOrUpdateCaptions({ videoId: youtubeId, srtPath: finalSubtitlesPath });
+        }
+      }
+    } catch (ytError) {
+      console.warn('YouTube upload failed, but local submission is saved:', ytError.message);
+    }
+
     // Envoi d'un email de confirmation au créateur (ne pas bloquer la réponse en cas d'échec)
     try {
       await sendSubmissionConfirmation(
@@ -354,6 +380,7 @@ export const submitController = async (req, res) => {
 
     return sendSuccess(res, 201, 'Soumission créée avec succès', 'Submission created successfully', {
       submission_id: submissionId,
+      youtube_id: youtubeId,
       duration_seconds: durationSeconds
     });
 
@@ -371,6 +398,25 @@ export const submitController = async (req, res) => {
       }
     }
 
+    //
+    // cleanup remaining temporary files
+    //
+
+    if (req.files) {
+      const filesToClean = [
+        req.files.video?.[0]?.path,
+        req.files.cover?.[0]?.path,
+        req.files.subtitles?.[0]?.path,
+        ...(req.files.gallery || []).map(f => f.path)
+      ].filter(Boolean);
+
+      for (const p of filesToClean) {
+        try {
+          await fs.unlink(p);
+        } catch (_) { }
+      }
+    }
+
     console.error('Erreur soumission:', error);
 
     return sendError(res, 500, 'Erreur lors de la création de la soumission', 'Error creating submission', null);
@@ -379,9 +425,6 @@ export const submitController = async (req, res) => {
     if (connection) {
       connection.release();
     }
-  }
-  } finally {
-    await cleanupTempFiles(req);
   }
 };
 
@@ -394,13 +437,13 @@ export const getSubmissionsController = async (req, res) => {
     const parsedOffset = parseInt(offset);
 
     const safeSort = sortBy?.toLowerCase() === 'asc' ? 'ASC' : 'DESC';
-    const safeRated = rated 
-      ? (rated.toLowerCase() === 'rated' ? 'rated' : 'unrated') 
+    const safeRated = rated
+      ? (rated.toLowerCase() === 'rated' ? 'rated' : 'unrated')
       : null;
 
     const allowedPlaylists = ['all', 'favorites', 'watch_later', 'report'];
     const safePlaylist = playlist && allowedPlaylists.includes(playlist) ? playlist : null;
-    
+
     const filters = {
       type: type || null,
       limit: Number.isNaN(parsedLimit) ? 15 : parsedLimit,
@@ -416,7 +459,7 @@ export const getSubmissionsController = async (req, res) => {
     return sendSuccess(res, 200,
       'Soumissions récupérées avec succès',
       'Submissions retrieved successfully',
-      { 
+      {
         count: total,
         limit: filters.limit,
         offset: filters.offset,

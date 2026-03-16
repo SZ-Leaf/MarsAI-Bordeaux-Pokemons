@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { authenticate, requireRole } from '../../middlewares/auth.middleware.js';
 import { validate } from '../../middlewares/validation.js';
-import { subscribeSchema, newsletterSchema } from '../../utils/schemas/newsletter.schemas.js';
+import { subscribeSchema, newsletterSchema } from '@marsai/schemas';
 import {
    create,
    list,

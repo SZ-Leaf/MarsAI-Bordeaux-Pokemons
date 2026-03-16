@@ -2,7 +2,7 @@ import { Modal } from '../../../../ui';
 import FormFieldModal from './FormFieldModal';
 import ModalActions from './ModalActions';
 import { useModalForm } from '../../../../../hooks/useModalForm.js';
-import { socialSchema } from '../../../../../schemas/submissionSchema.js';
+import { socialSchema } from '@marsai/schemas';
 import { socialNetworks } from '../../../../../constants/formOptions.js';
 
 const SocialModal = ({ isOpen, onClose, social, socialIndex, onSave, errors }) => {

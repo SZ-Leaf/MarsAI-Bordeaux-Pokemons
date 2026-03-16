@@ -1,5 +1,5 @@
 import {ZodError} from "zod";
-import { sendError } from "../helpers/response.helper.js";
+import { sendZodError } from "../helpers/response.helper.js";
 import fs from 'fs';
 
 //permet la suppression des fichers uploadés(cover, par ex) si erreur de validation
@@ -25,14 +25,7 @@ export const validate = (schema) => (req, res, next) => {
   } catch (err) {
     if (err instanceof ZodError) {
       cleanupUploads(req);
-      console.log(err.errors);
-      return sendError(
-        res,
-        400,
-        "Erreur de validation",
-        "Validation error",
-        err.errors
-      );
+      return sendZodError(res, err);
     }
     next(err);
   }

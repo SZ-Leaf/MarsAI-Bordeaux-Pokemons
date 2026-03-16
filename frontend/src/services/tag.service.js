@@ -1,4 +1,5 @@
 import { apiCall } from '../utils/api';
+import { tagSchema } from '@marsai/schemas';
 
 // Récupérer les tags populaires
 export const getPopularTags = async (limit = 6) => {
@@ -14,6 +15,8 @@ export const searchTags = async (search, limit = 10) => {
 
 // Créer un nouveau tag
 export const createTag = async (title) => {
+  // Validation Zod partagée avec le backend
+  tagSchema.parse({ title: title.trim() });
   return apiCall('/api/tags', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

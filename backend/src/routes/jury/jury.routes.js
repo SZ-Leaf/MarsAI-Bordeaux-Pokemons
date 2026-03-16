@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { juryList, findJuryById, createNewJuryMember, deleteMemberById, updateMemberById } from "../../controllers/jury/jury.controller.js";
 import { validate } from "../../middlewares/validation.js";
-import { jurySchema } from "../../utils/schemas/jury.schema.js";
+import { jurySchema } from "@marsai/schemas";
 import { uploadJuryCover } from "../../middlewares/upload.js";
 import { authenticate, requireRole } from "../../middlewares/auth.middleware.js";
 import { createPublicRateLimit } from "../../middlewares/public_rate_limit.middleware.js";

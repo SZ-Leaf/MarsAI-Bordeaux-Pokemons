@@ -36,3 +36,22 @@ export const validateUrl = (url) => {
     return false;
   }
 };
+
+/**
+ * Transforme les erreurs Zod renvoyées par le backend en { field: message }.
+ * Compatible avec les réponses sendZodError (data: ZodIssue[]) et sendError (data: ZodIssue[]).
+ * @param {unknown} err - l'objet erreur catchée (peut contenir err.data ou err.errors)
+ * @returns {{ [field: string]: string }}
+ */
+export const zodFieldErrors = (err) => {
+  const issues = err?.data ?? err?.errors ?? err?.details ?? null;
+  if (!Array.isArray(issues)) return {};
+
+  const out = {};
+  for (const e of issues) {
+    const key = Array.isArray(e.path) ? e.path.join(".") : String(e.path ?? "");
+    if (!key) continue;
+    if (!out[key]) out[key] = e.message;
+  }
+  return out;
+};

@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Upload, Calendar, MapPin, Users, Clock, Loader2, Image as ImageIcon } from 'lucide-react';
 import useEventForm from '../../../../hooks/useEventForm';
+import { eventSchema } from '@marsai/schemas';
 import '../../../../styles/main.css';
 
 const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
@@ -10,11 +11,12 @@ const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
     previewUrl,
     loading,
     error,
+    fieldErrors,
     fileInputRef,
     onFieldChange,
     onFileChange,
     onSubmit,
-  } = useEventForm({ eventToEdit, isOpen, onRefresh, onClose });
+  } = useEventForm({ eventToEdit, isOpen, onRefresh, onClose, schema: eventSchema });
 
   return (
     <AnimatePresence>
@@ -104,6 +106,9 @@ const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
                     placeholder="Ex: Conférence IA & Créativité"
                     className="event-form-modal-input"
                   />
+                  {fieldErrors.title && (
+                    <p className="mt-1 text-xs text-red-400">{fieldErrors.title}</p>
+                  )}
                 </div>
 
                 <div>
@@ -121,6 +126,9 @@ const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
                       }}
                       className="event-form-modal-input-date-time"
                     />
+                    {fieldErrors.start_date && (
+                      <p className="mt-1 text-xs text-red-400">{fieldErrors.start_date}</p>
+                    )}
                     <input
                       type="time"
                       required
@@ -149,6 +157,9 @@ const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
                       }}
                       className="event-form-modal-input-date-time"
                     />
+                    {fieldErrors.end_date && (
+                      <p className="mt-1 text-xs text-red-400">{fieldErrors.end_date}</p>
+                    )}
                     <input
                       type="time"
                       required
@@ -175,6 +186,9 @@ const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
                     placeholder="Ex: Palais des Congrès, Bordeaux"
                     className="event-form-modal-input"
                   />
+                  {fieldErrors.location && (
+                    <p className="mt-1 text-xs text-red-400">{fieldErrors.location}</p>
+                  )}
                 </div>
 
                 <div>
@@ -190,6 +204,9 @@ const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
                     onChange={onFieldChange}
                     className="event-form-modal-input"
                   />
+                  {fieldErrors.places && (
+                    <p className="mt-1 text-xs text-red-400">{fieldErrors.places}</p>
+                  )}
                 </div>
 
                 <div className="event-form-modal-grid-full">
@@ -203,6 +220,9 @@ const AdminEventFormModal = ({ isOpen, onClose, eventToEdit, onRefresh }) => {
                     placeholder="Décrivez l'événement en quelques lignes..."
                     className="event-form-modal-textarea"
                   />
+                  {fieldErrors.description && (
+                    <p className="mt-1 text-xs text-red-400">{fieldErrors.description}</p>
+                  )}
                 </div>
               </div>
 

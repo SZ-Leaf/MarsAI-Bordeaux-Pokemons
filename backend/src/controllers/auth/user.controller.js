@@ -2,9 +2,10 @@ import { inviteUser, registerUser, deleteUser, getUserCredentials, loginUser, up
 import { hashPassword, verifyPassword } from "../../helpers/password/password_hasher.js";
 import { sendInviteMail, sendForgotPasswordMail } from "../../services/mailer/mailer.mail.js";
 import { signToken } from "../../services/jwt/jwt.token.js";
-import { sendError, sendSuccess } from "../../helpers/response.helper.js";
+import { sendError, sendSuccess, sendZodError } from "../../helpers/response.helper.js";
 import { generateForgotPasswordToken, verifyForgotPasswordToken } from "../../services/mailer/mailer.tokens.js";
-import { registerUserSchema, updateUserSchema, userPasswordSchema } from "../../utils/schemas/user.schemas.js";
+import { registerUserSchema, updateUserSchema, userPasswordSchema } from "@marsai/schemas";
+import { ZodError } from "zod";
 import { checkEmail } from "../../utils/email.validator.js";
 import { log } from "console";
 
@@ -192,9 +193,8 @@ const registerUserController = async (req, res) => {
       try {
          registerUserSchema.parse({ firstname, lastname, password });
       } catch (err) {
-         // Zod throws an object with `issues`, map them to your i18n messages
-         const firstError = err.errors?.[0]?.message || 'Invalid input';
-         return sendError(res, 400, firstError, firstError, null);
+         if (err instanceof ZodError) return sendZodError(res, err);
+         return sendError(res, 400, 'Données invalides', 'Invalid input', null);
       }
 
       // hash password
@@ -402,12 +402,11 @@ const updateUserController = async (req, res) => {
       firstname = firstname?.trim();
       lastname = lastname?.trim();
 
-      // validate input using Zod
       try {
          updateUserSchema.parse({ firstname, lastname });
       } catch (err) {
-         const firstError = err.errors?.[0]?.message || 'Invalid input';
-         return sendError(res, 400, firstError, firstError, null);
+         if (err instanceof ZodError) return sendZodError(res, err);
+         return sendError(res, 400, 'Données invalides', 'Invalid input', null);
       }
       const user = {
          firstname: firstname,
@@ -479,10 +478,10 @@ const updateUserPasswordController = async (req, res) => {
       }
 
       try {
-        userPasswordSchema.parse({ password: new_password });
+         userPasswordSchema.parse({ password: new_password });
       } catch (err) {
-         const firstError = err.errors?.[0]?.message || 'Invalid input';
-         return sendError(res, 400, firstError, firstError, null);
+         if (err instanceof ZodError) return sendZodError(res, err);
+         return sendError(res, 400, 'Données invalides', 'Invalid input', null);
       }
 
       // Hash and update password
@@ -580,8 +579,8 @@ const resetPasswordController = async (req, res) => {
       try {
          userPasswordSchema.parse({ password: new_password });
       } catch (err) {
-         const firstError = err.errors?.[0]?.message || 'Invalid input';
-         return sendError(res, 400, firstError, firstError, null);
+         if (err instanceof ZodError) return sendZodError(res, err);
+         return sendError(res, 400, 'Données invalides', 'Invalid input', null);
       }
 
       // verify token without calling the model for faster response

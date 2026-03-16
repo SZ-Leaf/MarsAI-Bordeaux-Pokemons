@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLanguage } from '../../../../../context/LanguageContext';
 import { Star, MessageSquare, Pencil, Trash2, Loader2, Heart, Clock, Flag } from 'lucide-react';
 import { saveMemo, deleteMemo } from '../../../../../services/memo.service';
+import { zodFieldErrors } from '../../../../../utils/validation';
 
 const PLAYLIST_OPTIONS = [
    {
@@ -42,6 +43,7 @@ const MemoBlock = ({ video, onMemoUpdate }) => {
    const [saving, setSaving] = useState(false);
    const [deleting, setDeleting] = useState(false);
    const [error, setError] = useState(null);
+   const [fieldErrors, setFieldErrors] = useState({});
 
    const enterEditMode = () => {
       setRatingValue(video?.memo_rating ?? 0);
@@ -49,16 +51,19 @@ const MemoBlock = ({ video, onMemoUpdate }) => {
       setPlaylist(video?.memo_selection_list ?? null);
       setIsEditing(true);
       setError(null);
+      setFieldErrors({});
    };
 
    const cancelEdit = () => {
       setIsEditing(false);
       setError(null);
+      setFieldErrors({});
    };
 
    const handleSave = async () => {
       setSaving(true);
       setError(null);
+      setFieldErrors({});
       try {
          const body = {};
 
@@ -76,7 +81,12 @@ const MemoBlock = ({ video, onMemoUpdate }) => {
          setIsEditing(false);
          onMemoUpdate?.();
       } catch (err) {
-         setError(language === "fr" ? "Erreur lors de l'enregistrement" : "Failed to save");
+         const fe = zodFieldErrors(err);
+         if (Object.keys(fe).length) {
+            setFieldErrors(fe);
+         } else {
+            setError(language === "fr" ? "Erreur lors de l'enregistrement" : "Failed to save");
+         }
       } finally {
          setSaving(false);
       }
@@ -259,6 +269,9 @@ const MemoBlock = ({ video, onMemoUpdate }) => {
                         <span className="text-yellow-400 font-bold ml-2">{ratingValue}/10</span>
                      )}
                   </div>
+                  {fieldErrors.rating && (
+                     <p className="text-xs text-red-400">{fieldErrors.rating}</p>
+                  )}
                </div>
 
                <div className="space-y-2">
@@ -267,7 +280,7 @@ const MemoBlock = ({ video, onMemoUpdate }) => {
                   </label>
                   <textarea
                      value={comment}
-                     onChange={(e) => setComment(e.target.value)}
+                     onChange={(e) => { setComment(e.target.value); setFieldErrors((p) => ({ ...p, comment: undefined })); }}
                      rows={3}
                      placeholder={
                         language === "fr"
@@ -276,9 +289,15 @@ const MemoBlock = ({ video, onMemoUpdate }) => {
                      }
                      className="w-full p-3 rounded-xl border border-gray-800 bg-[#0a0a0a] text-white placeholder-gray-600 focus:border-yellow-500/50 outline-none transition-colors resize-none"
                   />
+                  {fieldErrors.comment && (
+                     <p className="text-xs text-red-400">{fieldErrors.comment}</p>
+                  )}
                </div>
 
                <PlaylistButtons />
+               {fieldErrors.playlist && (
+                  <p className="text-xs text-red-400">{fieldErrors.playlist}</p>
+               )}
 
                <div className="flex items-center gap-3">
                   <button

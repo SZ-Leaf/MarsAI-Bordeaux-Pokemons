@@ -4,6 +4,7 @@ import { getSubmissionById } from "../../models/submissions/submissions.model.js
 import fs from "fs";
 import path from "path";
 
+//liste de tous les awards
 export const awardsList = async (req, res) => {
   try {
     const awards = await awardModel.getAllAwards();
@@ -15,7 +16,7 @@ export const awardsList = async (req, res) => {
     return sendError(res, 500, "Impossible de récupérer la liste des awards", "Unable to retrieve awards list", null);
   }
 };
-
+//liste des awards non-assignés (sans soumission associée)
 export const awardsUnassigned = async (req, res) => {
   try {
     const awards = await awardModel.getUnassignedAwards();
@@ -27,7 +28,7 @@ export const awardsUnassigned = async (req, res) => {
     return sendError(res, 500, "Impossible de récupérer les awards non assignés", "Unable to retrieve unassigned awards", null);
   }
 };
-
+//awards associés à une soumission
 export const awardsBySubmission = async (req, res) => {
   try {
     const submissionId = Number(req.params.submissionId);
@@ -45,7 +46,7 @@ export const awardsBySubmission = async (req, res) => {
     return sendError(res, 500, "Impossible de récupérer les awards de cette soumission", "Unable to retrieve awards for this submission", null);
   }
 };
-
+//vue (show) d'un award
 export const awardShow = async (req, res) => {
   try {
     const id = Number(req.params.id);
@@ -60,14 +61,13 @@ export const awardShow = async (req, res) => {
       return sendError(res, 404, "Award introuvable", "Award not found", null);
     }
 
-    return sendSuccess(
-      res, 200, `Award numéro ${id} récupéré avec succès`, `Award number ${id} retrieved successfully`, award);
+    return sendSuccess(res, 200, `Award numéro ${id} récupéré avec succès`, `Award number ${id} retrieved successfully`, award);
   } catch (error) {
     console.error("Erreur awardShow:", error);
     return sendError(res, 500, "Impossible de récupérer cet award", "Unable to retrieve this award", null);
   }
 };
-
+//création d'un award
 export const awardCreate = async (req, res) => {
   console.log("BODY:", req.body);
   console.log("FILE:", req.file);
@@ -92,13 +92,7 @@ export const awardCreate = async (req, res) => {
     // récupérer l'award complet (celui qui servira à l'affichage)
     const fullAward = await awardModel.getAwardById(created.id);
 
-    return sendSuccess(
-      res,
-      201,
-      "Nouvel award créé avec succès",
-      "New award created successfully",
-      fullAward
-    );
+    return sendSuccess(res, 201, "Nouvel award créé avec succès", "New award created successfully", fullAward);
   } catch (error) {
     console.error("Erreur awardCreate:", error);
 
@@ -108,16 +102,10 @@ export const awardCreate = async (req, res) => {
       });
     }
 
-    return sendError(
-      res,
-      500,
-      "Impossible de créer un nouvel award",
-      "Unable to create a new award",
-      null
-    );
+    return sendError(res, 500, "Impossible de créer un nouvel award", "Unable to create a new award", null);
   }
 };
-
+//update d'un award
 export const awardUpdate = async (req, res) => {
   const file = req.file ?? req.files?.cover?.[0];
   const uploadedPath = file?.path;
@@ -162,8 +150,7 @@ export const awardUpdate = async (req, res) => {
 
     const updatedAward = await awardModel.getAwardById(id);
 
-    return sendSuccess(
-      res, 200, "Award mis à jour", "Award updated", updatedAward);
+    return sendSuccess(res, 200, "Award mis à jour", "Award updated", updatedAward);
   } catch (error) {
     console.error("Erreur awardUpdate:", error);
 
@@ -177,7 +164,7 @@ export const awardUpdate = async (req, res) => {
     return sendError(res, 500, "Impossible de mettre à jour l'award", "Unable to update award", null);
   }
 };
-
+//suppression d'un award
 export const awardDelete = async (req, res) => {
   try {
     const id = Number(req.params.id);
@@ -209,7 +196,7 @@ export const awardDelete = async (req, res) => {
     return sendError(res, 500, "Impossible de supprimer cet award", "Unable to delete this award", null);
   }
 };
-
+//association d'un award à une soumission
 export const awardSetSubmission = async (req, res) => {
   try {
     const awardId = Number(req.params.id);

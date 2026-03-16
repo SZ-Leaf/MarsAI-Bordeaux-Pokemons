@@ -5,6 +5,8 @@ import { useNavigate } from "react-router";
 import { useLanguage } from "../../../../context/LanguageContext";
 import { responseHelper } from "../../../../helpers/responseHelper";
 import { useAlertHelper } from "../../../../helpers/alertHelper";
+import { registerUserSchema } from "@marsai/schemas";
+import { zodFieldErrors } from "../../../../utils/validation";
 
 const RegisterForm = ({ token }) => {
    const alertHelper = useAlertHelper();
@@ -13,6 +15,7 @@ const RegisterForm = ({ token }) => {
    const { language } = useLanguage();
    const { getMessageFromResponse, isSuccessResponse } = responseHelper();
    const [isSubmitting, setIsSubmitting] = useState(false);
+   const [fieldErrors, setFieldErrors] = useState({});
 
    useEffect(() => {
       if (user) {
@@ -36,15 +39,22 @@ const RegisterForm = ({ token }) => {
 
    const validateForm = () => {
       const { firstname, lastname, password, confirmPassword } = formData;
-      if (!firstname.trim() || !lastname.trim() || !password.trim() || !confirmPassword.trim()) {
-         alertHelper.requiredFields();
-         return false;
-      }
+
+      // Vérif rapide client (mot de passe identique)
       if (password !== confirmPassword) {
          alertHelper.passwordsMismatch();
          return false;
       }
-      return true;
+
+      try {
+         registerUserSchema.parse({ firstname, lastname, password });
+         setFieldErrors({});
+         return true;
+      } catch (err) {
+         const fe = zodFieldErrors(err);
+         if (Object.keys(fe).length) setFieldErrors(fe);
+         return false;
+      }
    };
 
    const handleSubmit = async (e) => {
@@ -65,7 +75,12 @@ const RegisterForm = ({ token }) => {
          alertHelper.showMessage(getMessageFromResponse(response));
          return;
       } catch (error) {
-         alertHelper.showMessage(error?.message);
+         const fe = zodFieldErrors(error);
+         if (Object.keys(fe).length) {
+            setFieldErrors(fe);
+         } else {
+            alertHelper.showMessage(error?.message);
+         }
       } finally {
          setIsSubmitting(false);
       }
@@ -88,6 +103,9 @@ const RegisterForm = ({ token }) => {
                   placeholder={language === 'fr' ? 'Prénom' : 'Firstname'}
                   autoComplete="given-name"
                />
+               {fieldErrors.firstname && (
+                  <p className="mt-1 text-xs text-red-300">{fieldErrors.firstname}</p>
+               )}
             </div>
             <div className="input-group">
                <label className="input-label" htmlFor="lastname">
@@ -103,6 +121,9 @@ const RegisterForm = ({ token }) => {
                   placeholder={language === 'fr' ? 'Nom' : 'Lastname'}
                   autoComplete="family-name"
                />
+               {fieldErrors.lastname && (
+                  <p className="mt-1 text-xs text-red-300">{fieldErrors.lastname}</p>
+               )}
             </div>
          </div>
 
@@ -121,6 +142,9 @@ const RegisterForm = ({ token }) => {
                   placeholder="••••••••"
                   autoComplete="new-password"
                />
+               {fieldErrors.password && (
+                  <p className="mt-1 text-xs text-red-300">{fieldErrors.password}</p>
+               )}
             </div>
             <div className="input-group">
                <label className="input-label" htmlFor="confirmPassword">

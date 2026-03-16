@@ -1,5 +1,6 @@
 import { apiCall } from '../utils/api';
 import { I18nError } from './error.service';
+import { updateUserSchema, userPasswordSchema } from '@marsai/schemas';
 
 export const getCurrentUserService = async () => {
    const res = await apiCall('/api/auth/me', {
@@ -63,12 +64,24 @@ export const updateUserService = async (id, {firstname, lastname}) => {
    }
    firstname = firstname?.trim();
    lastname = lastname?.trim();
-   if (!firstname && !lastname) {
-      throw new I18nError({
-         fr: 'Au moins un champ (prénom ou nom) doit être fourni',
-         en: 'At least one field (firstname or lastname) must be provided'
+
+   try {
+      updateUserSchema.parse({
+         firstname: firstname || undefined,
+         lastname: lastname || undefined,
       });
+   } catch (err) {
+      const msg = err?.errors?.[0]?.message || {
+         fr: 'Données utilisateur invalides',
+         en: 'Invalid user data'
+      };
+      throw new I18nError(
+         typeof msg === 'string'
+           ? { fr: msg, en: msg }
+           : msg
+      );
    }
+
    const body = {};
    if (firstname) body.firstname = firstname;
    if (lastname) body.lastname = lastname;
@@ -80,11 +93,19 @@ export const updateUserService = async (id, {firstname, lastname}) => {
 
 export const updateUserPasswordService = async (new_password) => {
    new_password = new_password?.trim();
-   if(!new_password) {
-      throw new I18nError({
+
+   try {
+      userPasswordSchema.parse({ password: new_password });
+   } catch (err) {
+      const msg = err?.errors?.[0]?.message || {
          fr: 'Nouveau mot de passe requis',
          en: 'New password is required'
-      });
+      };
+      throw new I18nError(
+         typeof msg === 'string'
+           ? { fr: msg, en: msg }
+           : msg
+      );
    }
    return apiCall(`/api/auth/password-update`, {
       method: 'PATCH',

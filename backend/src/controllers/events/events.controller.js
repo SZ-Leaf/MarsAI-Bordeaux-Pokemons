@@ -2,8 +2,9 @@ import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
 import { createEvent, updateEvent, updateEventCover, deleteEvent, getEvents, getEventById } from '../../models/events/events.model.js';
-import { sendError, sendSuccess } from '../../helpers/response.helper.js';
-import { eventSchema } from '../../utils/schemas/event.schemas.js';
+import { sendError, sendSuccess, sendZodError } from '../../helpers/response.helper.js';
+import { eventSchema } from '@marsai/schemas';
+import { ZodError } from 'zod';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,11 +25,11 @@ export const createEventController = async (req, res) => {
     });
   } catch (err) {
     if (coverFile) await fs.unlink(coverFile.path).catch(() => {});
+    if (err instanceof ZodError) return sendZodError(res, err);
     return sendError(res, 422, 'Données invalides', 'Invalid data', err.message);
   }
 
   try {
-    console.log(validatedData);
     const eventId = await createEvent({
       ...validatedData,
       cover: null,
@@ -58,14 +59,15 @@ export const createEventController = async (req, res) => {
 export const updateEventController = async (req, res) => {
   const coverFile = req.files?.cover?.[0] || req.file || null;
 
-  try {
-    const eventId = Number(req.params.id);
-    if (!Number.isInteger(eventId) || eventId <= 0) {
-      if (coverFile) await fs.unlink(coverFile.path).catch(() => {});
-      return sendError(res, 400, 'ID invalide', 'Invalid ID', null);
-    }
+  const eventId = Number(req.params.id);
+  if (!Number.isInteger(eventId) || eventId <= 0) {
+    if (coverFile) await fs.unlink(coverFile.path).catch(() => {});
+    return sendError(res, 400, 'ID invalide', 'Invalid ID', null);
+  }
 
-    const validatedData = eventSchema.parse({
+  let validatedData;
+  try {
+    validatedData = eventSchema.parse({
       title: req.body.title,
       description: req.body.description,
       start_date: req.body.start_date,
@@ -73,7 +75,13 @@ export const updateEventController = async (req, res) => {
       location: req.body.location,
       places: Number(req.body.places)
     });
+  } catch (err) {
+    if (coverFile) await fs.unlink(coverFile.path).catch(() => {});
+    if (err instanceof ZodError) return sendZodError(res, err);
+    return sendError(res, 422, 'Données invalides', 'Invalid data', err.message);
+  }
 
+  try {
     await updateEvent(eventId, validatedData);
 
     if (coverFile) {

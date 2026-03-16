@@ -4,11 +4,13 @@ import {
   deleteMemo,
   getPlaylist,
   getAllPlaylistsCount,
-  getPendingSubmissions
+  getPendingSubmissions,
+  adminReportedList,
+  adminReportedDetail
 } from "../../controllers/selector/selector_memo.controller.js";
-import { authenticate } from "../../middlewares/auth.middleware.js";
+import { authenticate, requireRole } from "../../middlewares/auth.middleware.js";
 import { validate } from "../../middlewares/validation.js";
-import { rateSubmissionSchema } from "../../utils/schemas/selector.schemas.js";
+import { rateSubmissionSchema } from "@marsai/schemas";
 
 const router = Router();
 
@@ -19,5 +21,9 @@ router.get("/submissions/pending", authenticate, getPendingSubmissions);
 // Rating operations - separate from playlists
 router.post("/rate/:id", authenticate, validate(rateSubmissionSchema), createSelectorMemo);
 router.delete("/rate/:id", authenticate, deleteMemo);
+
+//récupération des reported videos de tous les users
+router.get("/admin/reported",authenticate, requireRole([2, 3]), adminReportedList);
+router.get("/admin/reported/:submissionId",authenticate, requireRole([2, 3]), adminReportedDetail);
 
 export default router;

@@ -14,6 +14,8 @@ import {
   listSubscribers,
   deleteSubscriber,
 } from '../../../../services/newsletter.service';
+import { newsletterSchema } from '@marsai/schemas';
+import { zodFieldErrors } from '../../../../utils/validation';
 
 function getMessage(err) {
   const fr = err?.message?.fr ?? err?.message?.en;
@@ -312,6 +314,7 @@ const NewsletterForm = ({ language, editId, onBack, onSaved }) => {
   const [contentEn, setContentEn] = useState('');
   const [loading, setLoading] = useState(isEdit);
   const [submitting, setSubmitting] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     if (!isEdit) return;
@@ -337,23 +340,27 @@ const NewsletterForm = ({ language, editId, onBack, onSaved }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!title.trim() || !subject.trim() || !content.trim()) {
-      alert(language === 'fr' ? 'Remplissez tous les champs obligatoires (FR).' : 'Fill in all required fields (FR).');
-      return;
-    }
-    if (!subjectEn.trim() || !contentEn.trim()) {
-      alert(language === 'fr' ? 'Remplissez tous les champs obligatoires (EN).' : 'Fill in all required fields (EN).');
+    const payload = {
+      title: title.trim(),
+      subject: subject.trim(),
+      content,
+      subject_en: subjectEn.trim(),
+      content_en: contentEn,
+    };
+
+    try {
+      newsletterSchema.parse(payload);
+      setFieldErrors({});
+    } catch (err) {
+      const fe = zodFieldErrors(err);
+      if (Object.keys(fe).length) setFieldErrors(fe);
+      alert(language === 'fr'
+        ? 'Certains champs sont invalides. Merci de corriger le formulaire.'
+        : 'Some fields are invalid. Please fix the form.');
       return;
     }
     setSubmitting(true);
     try {
-      const payload = {
-        title: title.trim(),
-        subject: subject.trim(),
-        content,
-        subject_en: subjectEn.trim(),
-        content_en: contentEn,
-      };
       if (isEdit) {
         await updateNewsletter(editId, payload);
         alert(language === 'fr' ? 'Newsletter mise à jour.' : 'Newsletter updated.');
@@ -363,7 +370,15 @@ const NewsletterForm = ({ language, editId, onBack, onSaved }) => {
       }
       onSaved();
     } catch (err) {
-      alert(getMessage(err));
+      const fe = zodFieldErrors(err);
+      if (Object.keys(fe).length) {
+        setFieldErrors(fe);
+        alert(language === 'fr'
+          ? 'Certains champs sont invalides. Merci de corriger le formulaire.'
+          : 'Some fields are invalid. Please fix the form.');
+      } else {
+        alert(getMessage(err));
+      }
     } finally {
       setSubmitting(false);
     }
@@ -406,6 +421,9 @@ const NewsletterForm = ({ language, editId, onBack, onSaved }) => {
             placeholder={language === 'fr' ? 'Titre de la newsletter' : 'Newsletter title'}
             required
           />
+          {fieldErrors.title && (
+            <p className="mt-1 text-xs text-red-400">{fieldErrors.title}</p>
+          )}
         </div>
 
         <div className="border-t border-gray-800 pt-6">
@@ -428,6 +446,9 @@ const NewsletterForm = ({ language, editId, onBack, onSaved }) => {
                 placeholder={language === 'fr' ? "Sujet de l'email" : 'Email subject'}
                 required
               />
+              {fieldErrors.subject && (
+                <p className="mt-1 text-xs text-red-400">{fieldErrors.subject}</p>
+              )}
             </div>
             <div>
               <label className="text-gray-400 text-xs uppercase font-bold tracking-wide mb-2 block">
@@ -439,6 +460,9 @@ const NewsletterForm = ({ language, editId, onBack, onSaved }) => {
                 onChange={setContent}
                 placeholder={language === 'fr' ? 'Contenu de la newsletter...' : 'Newsletter content...'}
               />
+              {fieldErrors.content && (
+                <p className="mt-1 text-xs text-red-400">{fieldErrors.content}</p>
+              )}
             </div>
           </div>
         </div>
@@ -463,6 +487,9 @@ const NewsletterForm = ({ language, editId, onBack, onSaved }) => {
                 placeholder="Email subject"
                 required
               />
+              {fieldErrors.subject_en && (
+                <p className="mt-1 text-xs text-red-400">{fieldErrors.subject_en}</p>
+              )}
             </div>
             <div>
               <label className="text-gray-400 text-xs uppercase font-bold tracking-wide mb-2 block">
@@ -474,6 +501,9 @@ const NewsletterForm = ({ language, editId, onBack, onSaved }) => {
                 onChange={setContentEn}
                 placeholder="Newsletter content..."
               />
+              {fieldErrors.content_en && (
+                <p className="mt-1 text-xs text-red-400">{fieldErrors.content_en}</p>
+              )}
             </div>
           </div>
         </div>

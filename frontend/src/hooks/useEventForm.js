@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { createEvent, updateEvent } from '../services/event.service';
+import { zodFieldErrors } from '../utils/validation';
 
 const EMPTY_FORM = {
   title: '',
@@ -10,12 +11,13 @@ const EMPTY_FORM = {
   places: 100,
 };
 
-const useEventForm = ({ eventToEdit, isOpen, onRefresh, onClose }) => {
+const useEventForm = ({ eventToEdit, isOpen, onRefresh, onClose, schema }) => {
   const [formData, setFormData] = useState(EMPTY_FORM);
   const [cover, setCover] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -44,6 +46,7 @@ const useEventForm = ({ eventToEdit, isOpen, onRefresh, onClose }) => {
       setCover(null);
     }
     setError(null);
+    setFieldErrors({});
   }, [eventToEdit, isOpen]);
 
   const onFieldChange = (e) => {
@@ -65,6 +68,18 @@ const useEventForm = ({ eventToEdit, isOpen, onRefresh, onClose }) => {
     setError(null);
 
     try {
+      if (schema) {
+        try {
+          schema.parse({ ...formData, places: Number(formData.places) });
+          setFieldErrors({});
+        } catch (err) {
+          const fe = zodFieldErrors(err);
+          if (Object.keys(fe).length) setFieldErrors(fe);
+          setLoading(false);
+          return;
+        }
+      }
+
       const data = new FormData();
       Object.keys(formData).forEach((key) => data.append(key, formData[key]));
       if (cover) data.append('cover', cover);
@@ -79,7 +94,12 @@ const useEventForm = ({ eventToEdit, isOpen, onRefresh, onClose }) => {
       onClose();
     } catch (err) {
       console.error('Erreur lors de la soumission du formulaire:', err);
-      setError(err.message || "Une erreur est survenue lors de l'enregistrement.");
+      const fe = zodFieldErrors(err);
+      if (Object.keys(fe).length) {
+        setFieldErrors(fe);
+      } else {
+        setError(err.message || "Une erreur est survenue lors de l'enregistrement.");
+      }
     } finally {
       setLoading(false);
     }
@@ -91,6 +111,7 @@ const useEventForm = ({ eventToEdit, isOpen, onRefresh, onClose }) => {
     previewUrl,
     loading,
     error,
+    fieldErrors,
     fileInputRef,
     onFieldChange,
     onFileChange,

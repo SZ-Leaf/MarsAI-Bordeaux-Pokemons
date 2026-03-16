@@ -39,10 +39,21 @@ const LoginForm = () => {
             return;
          }
          const response = await login(formData);
-         alertHelper.showMessage(getMessageFromResponse(response));
+         console.log(response);
+
+         alertHelper.showMessage(
+            language === 'fr' ? 'Connexion réussie' : 'Login successful'
+         );
+         
+         // alertHelper.showMessage(getMessageFromResponse(response));
          navigate("/");
+
       } catch (error) {
-         alertHelper.showMessage(getMessageFromResponse(error));
+         console.log(error);
+         alertHelper.showMessage(
+            language === 'fr' ? 'Identifiants Incorrects' : 'Incorrect Credentials'
+         )
+         // alertHelper.showMessage(getMessageFromResponse(error));
       } finally {
          setIsSubmitting(false);
       }

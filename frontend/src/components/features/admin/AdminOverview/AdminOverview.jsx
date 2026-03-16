@@ -7,6 +7,7 @@ import {
   updateUserPasswordService,
 } from '../../../../services/auth.service';
 import { I18nError } from '../../../../services/error.service';
+import { zodFieldErrors } from '../../../../utils/validation';
 
 function getMessage(err) {
   if (err instanceof I18nError) {
@@ -33,6 +34,7 @@ const AdminOverview = () => {
   const [lastname, setLastname] = useState(user?.lastname ?? '');
   const [profileEditing, setProfileEditing] = useState(false);
   const [profileSubmitting, setProfileSubmitting] = useState(false);
+  const [profileFieldErrors, setProfileFieldErrors] = useState({});
 
   useEffect(() => {
     setFirstname(user?.firstname ?? '');
@@ -43,6 +45,7 @@ const AdminOverview = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordSubmitting, setPasswordSubmitting] = useState(false);
+  const [passwordFieldErrors, setPasswordFieldErrors] = useState({});
 
   const isFr = language === 'fr';
 
@@ -59,13 +62,19 @@ const AdminOverview = () => {
       return;
     }
     setProfileSubmitting(true);
+    setProfileFieldErrors({});
     try {
       await updateUserService(user.id, payload);
       await refreshUser();
       setProfileEditing(false);
       alert(isFr ? 'Profil mis à jour.' : 'Profile updated.');
     } catch (err) {
-      alert(getMessage(err));
+      const fe = zodFieldErrors(err);
+      if (Object.keys(fe).length) {
+        setProfileFieldErrors(fe);
+      } else {
+        alert(getMessage(err));
+      }
     } finally {
       setProfileSubmitting(false);
     }
@@ -75,6 +84,7 @@ const AdminOverview = () => {
     setFirstname(user?.firstname ?? '');
     setLastname(user?.lastname ?? '');
     setProfileEditing(false);
+    setProfileFieldErrors({});
   };
 
   const handleUpdatePassword = async (e) => {
@@ -90,13 +100,19 @@ const AdminOverview = () => {
       return;
     }
     setPasswordSubmitting(true);
+    setPasswordFieldErrors({});
     try {
       await updateUserPasswordService(pwd);
       setNewPassword('');
       setConfirmPassword('');
       alert(isFr ? 'Mot de passe mis à jour.' : 'Password updated.');
     } catch (err) {
-      alert(getMessage(err));
+      const fe = zodFieldErrors(err);
+      if (Object.keys(fe).length) {
+        setPasswordFieldErrors(fe);
+      } else {
+        alert(getMessage(err));
+      }
     } finally {
       setPasswordSubmitting(false);
     }
@@ -152,11 +168,14 @@ const AdminOverview = () => {
                 <input
                   type="text"
                   value={firstname}
-                  onChange={(e) => setFirstname(e.target.value)}
+                  onChange={(e) => { setFirstname(e.target.value); setProfileFieldErrors((p) => ({ ...p, firstname: undefined })); }}
                   disabled={!profileEditing}
                   className="w-full p-3 rounded-xl border border-gray-800 bg-[#0a0a0a] text-white focus:border-pink-500 outline-none transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                   placeholder={isFr ? 'Prénom' : 'First name'}
                 />
+                {profileFieldErrors.firstname && (
+                  <p className="mt-1 text-xs text-red-400">{profileFieldErrors.firstname}</p>
+                )}
               </div>
               <div>
                 <label className="text-gray-400 text-xs uppercase font-bold tracking-wide mb-2 block">
@@ -165,11 +184,14 @@ const AdminOverview = () => {
                 <input
                   type="text"
                   value={lastname}
-                  onChange={(e) => setLastname(e.target.value)}
+                  onChange={(e) => { setLastname(e.target.value); setProfileFieldErrors((p) => ({ ...p, lastname: undefined })); }}
                   disabled={!profileEditing}
                   className="w-full p-3 rounded-xl border border-gray-800 bg-[#0a0a0a] text-white focus:border-pink-500 outline-none transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                   placeholder={isFr ? 'Nom' : 'Last name'}
                 />
+                {profileFieldErrors.lastname && (
+                  <p className="mt-1 text-xs text-red-400">{profileFieldErrors.lastname}</p>
+                )}
               </div>
               {profileEditing ? (
                 <div className="flex gap-3">
@@ -223,11 +245,14 @@ const AdminOverview = () => {
                 <input
                   type="password"
                   value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
+                  onChange={(e) => { setNewPassword(e.target.value); setPasswordFieldErrors((p) => ({ ...p, password: undefined })); }}
                   className="w-full p-3 rounded-xl border border-gray-800 bg-[#0a0a0a] text-white focus:border-blue-500 outline-none transition-colors"
                   placeholder="••••••••"
                   autoComplete="new-password"
                 />
+                {passwordFieldErrors.password && (
+                  <p className="mt-1 text-xs text-red-400">{passwordFieldErrors.password}</p>
+                )}
               </div>
               <div>
                 <label className="text-gray-400 text-xs uppercase font-bold tracking-wide mb-2 block">

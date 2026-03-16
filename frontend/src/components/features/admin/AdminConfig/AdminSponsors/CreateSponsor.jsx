@@ -3,6 +3,8 @@ import { useLanguage } from '../../../../../context/LanguageContext';
 import { Loader2, ImagePlus } from 'lucide-react';
 import { createSponsorService } from '../../../../../services/sponsors.service';
 import Modal from '../../../../ui/Modal/Modal.jsx';
+import { sponsorSchema } from '@marsai/schemas';
+import { zodFieldErrors } from '../../../../../utils/validation';
 
 const ACCEPTED_IMAGE_TYPES = 'image/jpeg,image/jpg,image/png';
 
@@ -13,6 +15,7 @@ const CreateSponsor = ({ isOpen, onClose, onCreated }) => {
    const [submitting, setSubmitting] = useState(false);
    const [apiError, setApiError] = useState(null);
    const fileInputRef = useRef(null);
+   const [fieldErrors, setFieldErrors] = useState({});
 
    const handleChange = (e) => {
       setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -29,6 +32,14 @@ const CreateSponsor = ({ isOpen, onClose, onCreated }) => {
          setApiError(language === 'fr' ? 'Veuillez sélectionner une image.' : 'Please select an image.');
          return;
       }
+      try {
+         sponsorSchema.parse({ name: formData.name.trim(), url: formData.url.trim() });
+         setFieldErrors({});
+      } catch (err) {
+         const fe = zodFieldErrors(err);
+         if (Object.keys(fe).length) setFieldErrors(fe);
+         return;
+      }
       setSubmitting(true);
       setApiError(null);
       try {
@@ -42,7 +53,12 @@ const CreateSponsor = ({ isOpen, onClose, onCreated }) => {
             onClose?.();
          }
       } catch (err) {
-         setApiError(err?.message || err?.response?.data?.message || 'Une erreur est survenue');
+         const fe = zodFieldErrors(err);
+         if (Object.keys(fe).length) {
+            setFieldErrors(fe);
+         } else {
+            setApiError(err?.message || err?.response?.data?.message || 'Une erreur est survenue');
+         }
       } finally {
          setSubmitting(false);
       }
@@ -80,6 +96,9 @@ const CreateSponsor = ({ isOpen, onClose, onCreated }) => {
                   placeholder={language === 'fr' ? 'Nom du sponsor' : 'Sponsor name'}
                   required
                />
+               {fieldErrors.name && (
+                  <p className="mt-1 text-xs text-red-300">{fieldErrors.name}</p>
+               )}
             </div>
 
             <div>
@@ -122,6 +141,9 @@ const CreateSponsor = ({ isOpen, onClose, onCreated }) => {
                   className={inputClass}
                   placeholder="https://..."
                />
+               {fieldErrors.url && (
+                  <p className="mt-1 text-xs text-red-300">{fieldErrors.url}</p>
+               )}
             </div>
 
             <div className="flex justify-end gap-2 pt-2">

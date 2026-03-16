@@ -7,8 +7,9 @@ import {
   deleteSponsor,
   getSponsors
 } from '../../models/sponsors/sponsors.model.js';
-import { sendError, sendSuccess } from '../../helpers/response.helper.js';
-import { sponsorSchema } from '../../utils/schemas/sponsor.schemas.js';
+import { sendError, sendSuccess, sendZodError } from '../../helpers/response.helper.js';
+import { sponsorSchema } from '@marsai/schemas';
+import { ZodError } from 'zod';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,6 +31,7 @@ export const createSponsorController = async (req, res) => {
     });
   } catch (err) {
     await fs.unlink(coverFile.path).catch(() => {});
+    if (err instanceof ZodError) return sendZodError(res, err);
     return sendError(res, 422, 'Données invalides', 'Invalid data', err.message);
   }
 

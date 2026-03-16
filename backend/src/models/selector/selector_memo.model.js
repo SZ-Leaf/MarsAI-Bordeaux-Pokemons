@@ -124,7 +124,52 @@ export async function countPendingSubmissions(user_id) {
   //si rows[0] existe retourne le nombre correspondant au total sinon retourne 0
   return rows[0]?.total ?? 0;
 }
+// récupèration des soumissions signalées avec le nombre de signalements et la date du dernier report
+export async function adminGetAllReportedSubmissions({ limit = 50, offset = 0 } = {}) {
+  const lim = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 200);
+  const off = Math.max(parseInt(offset, 10) || 0, 0);
 
+  const [rows] = await db.pool.execute(
+    `SELECT
+        s.*,
+        agg.report_count,
+        agg.last_reported_at
+     FROM submissions s
+     JOIN (
+        SELECT
+          sm.submission_id,
+          COUNT(DISTINCT sm.user_id) AS report_count,
+          MAX(sm.updated_at) AS last_reported_at
+        FROM selector_memo sm
+        WHERE sm.selection_list = 'REPORT'
+        GROUP BY sm.submission_id
+     ) agg ON agg.submission_id = s.id
+     ORDER BY agg.last_reported_at DESC
+     LIMIT ? OFFSET ?`,
+    [lim, off]
+  );
+
+  return rows;
+}
+// récupèration du détail des signalements pour une soumission donnée
+export async function adminGetReportsBySubmission(submission_id) {
+  const submissionId = Number(submission_id);
+
+  const [rows] = await db.pool.execute(
+    `SELECT
+        sm.id,
+        sm.user_id,
+        sm.submission_id,
+        sm.updated_at AS reported_at
+     FROM selector_memo sm
+     WHERE sm.selection_list = 'REPORT'
+       AND sm.submission_id = ?
+     ORDER BY sm.updated_at DESC`,
+    [submissionId]
+  );
+
+  return rows;
+}
 
   
   

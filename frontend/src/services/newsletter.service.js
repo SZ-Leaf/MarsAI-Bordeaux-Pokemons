@@ -1,14 +1,20 @@
 import { apiCall } from '../utils/api';
+import { subscribeSchema } from '@marsai/schemas';
 
 // Inscription à la newsletter (envoie un email de confirmation)
 export const subscribeNewsletter = async (email, consent, language = 'fr') => {
+  const payload = {
+    email: email?.trim(),
+    consent: !!consent,
+    language: language === 'en' ? 'en' : 'fr',
+  };
+
+  // Validation Zod côté client
+  subscribeSchema.parse(payload);
+
   return apiCall('/api/newsletter/subscribe', {
     method: 'POST',
-    body: JSON.stringify({
-      email: email?.trim(),
-      consent: !!consent,
-      language: language === 'en' ? 'en' : 'fr',
-    }),
+    body: JSON.stringify(payload),
   });
 };
 

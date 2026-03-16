@@ -1,4 +1,6 @@
 import { useMemo, useRef, useState } from "react";
+import { awardCreateSchema, awardUpdateSchema } from "@marsai/schemas";
+import { zodFieldErrors } from "../../../../../../utils/validation";
 
 export default function AwardForm({
   submitting,
@@ -16,6 +18,7 @@ export default function AwardForm({
     initialValues?.award_rank == null ? "" : String(initialValues.award_rank)
   );
   const [coverFile, setCoverFile] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
 
   const preview = useMemo(() => (coverFile ? URL.createObjectURL(coverFile) : null), [coverFile]);
 
@@ -24,12 +27,37 @@ export default function AwardForm({
 
   const submit = async (e) => {
     e.preventDefault();
-    await onSubmit?.({
+    const payload = {
       title: title.trim(),
       description: description.trim(),
       award_rank: awardRank === "" ? null : Number(awardRank),
-      coverFile, // null => garder cover existante
-    });
+      cover: coverFile ? coverFile.name : null,
+    };
+
+    // Choisir le schéma selon création ou édition
+    const schema = initialValues ? awardUpdateSchema : awardCreateSchema;
+
+    try {
+      schema.parse(payload);
+      setFieldErrors({});
+    } catch (err) {
+      const fe = zodFieldErrors(err);
+      if (Object.keys(fe).length) setFieldErrors(fe);
+      return;
+    }
+
+    try {
+      await onSubmit?.({
+        title: payload.title,
+        description: payload.description,
+        award_rank: payload.award_rank,
+        coverFile,
+      });
+    } catch (e) {
+      const fe = zodFieldErrors(e);
+      if (Object.keys(fe).length) setFieldErrors(fe);
+      throw e;
+    }
   };
 
   return (
@@ -44,6 +72,9 @@ export default function AwardForm({
           required
           disabled={submitting}
         />
+        {fieldErrors.title && (
+          <p className="mt-1 text-xs text-red-300">{fieldErrors.title}</p>
+        )}
       </div>
 
       <div className="space-y-1">
@@ -57,6 +88,9 @@ export default function AwardForm({
           placeholder="1"
           disabled={submitting}
         />
+        {fieldErrors.award_rank && (
+          <p className="mt-1 text-xs text-red-300">{fieldErrors.award_rank}</p>
+        )}
       </div>
 
       <div className="space-y-1">
@@ -68,6 +102,9 @@ export default function AwardForm({
           placeholder="Ex: Prix décerné par le jury…"
           disabled={submitting}
         />
+        {fieldErrors.description && (
+          <p className="mt-1 text-xs text-red-300">{fieldErrors.description}</p>
+        )}
       </div>
 
       <div className="space-y-2">

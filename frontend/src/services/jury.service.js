@@ -1,5 +1,7 @@
 // src/services/jury.service.js
 import { apiCall } from "../utils/api";
+import { jurySchema } from "@marsai/schemas";
+export { zodFieldErrors } from "../utils/validation";
 
 const BASE = "/api/jury";
 
@@ -8,21 +10,6 @@ export const juryCoverUrl = (cover) => {
   if (!cover) return null;
   const normalized = String(cover).replace(/^\/+/, ""); // enlève slash éventuel
   return `/${normalized}`; // -> /uploads/...
-};
-
-// Transforme les erreurs Zod en { field: message }
-export const zodFieldErrors = (err) => {
-  // Ton apiCall throw "data" (objet) quand !ok
-  const errors = err?.data ?? err?.errors ?? err?.details ?? null;
-  if (!Array.isArray(errors)) return {};
-
-  const out = {};
-  for (const e of errors) {
-    const key = Array.isArray(e.path) ? e.path.join(".") : "";
-    if (!key) continue;
-    if (!out[key]) out[key] = e.message; // garde le premier message
-  }
-  return out;
 };
 
 export const juryService = {
@@ -39,6 +26,9 @@ export const juryService = {
 
   // POST /api/jury
   create({ firstname, lastname, job, coverFile } = {}) {
+    // Validation Zod côté client (sans cover)
+    jurySchema.parse({ firstname, lastname, job });
+
     const fd = new FormData();
     if (coverFile) fd.append("cover", coverFile);
     fd.append("firstname", firstname ?? "");

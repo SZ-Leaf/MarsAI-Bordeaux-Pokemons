@@ -23,18 +23,18 @@ const CGUForm = ({ formData, errors, updateField }) => {
       <div className="space-y-4">
         <Checkbox
           id="termsAccepted"
-          checked={formData.termsAccepted}
-          onChange={(e) => updateField('termsAccepted', e.target.checked)}
+          checked={formData.terms_of_use}
+          onChange={(e) => updateField('terms_of_use', e.target.checked)}
           label="J'accepte les conditions d'utilisation du festival"
-          error={errors.termsAccepted}
+          error={errors.terms_of_use}
         />
         
         <Checkbox
           id="ageConfirmed"
-          checked={formData.ageConfirmed}
-          onChange={(e) => updateField('ageConfirmed', e.target.checked)}
+          checked={formData.age_confirmed}
+          onChange={(e) => updateField('age_confirmed', e.target.checked)}
           label="Je confirme avoir 18 ans ou plus"
-          error={errors.ageConfirmed}
+          error={errors.age_confirmed}
         />
       </div>
 

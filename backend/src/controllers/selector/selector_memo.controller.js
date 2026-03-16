@@ -149,6 +149,7 @@ export const adminReportedList = async (req, res) => {
     });
     return sendSuccess(res, 200,"Vidéos reportées par tous les utilisateurs récupérées avec succès","Reported videos retrieved with success", rows);
   } catch (err) {
+    console.error("adminReportedList ERROR:", err);
     return sendError(res, 500, "Erreur serveur", "ADMIN_REPORTED_LIST_FAILED", err);
   }
 };

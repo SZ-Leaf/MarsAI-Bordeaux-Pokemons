@@ -9,7 +9,8 @@ const SubmissionsList = ({
    total,
    loading,
    onPageChange,
-   onVideoClick
+   onVideoClick,
+   showReportCount = false
 }) => {
    const {language} = useLanguage();
 
@@ -24,6 +25,7 @@ const SubmissionsList = ({
                   submission={submission}
                   key={submission.id}
                   onVideoClick={() => onVideoClick(index)}
+                  showReportCount={showReportCount}
                />
             ))}
          </div>

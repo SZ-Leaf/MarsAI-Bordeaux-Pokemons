@@ -7,3 +7,4 @@ export { default as AdminEventFormModal } from './AdminEventFormModal';
 export { default as AdminInvitations } from './AdminInvitations';
 export { default as AdminConfig } from './AdminConfig';
 export { default as AdminSubmissions } from './AdminSubmissions';
+export { default as AdminReports } from './AdminReports';

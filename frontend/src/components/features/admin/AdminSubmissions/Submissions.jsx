@@ -91,7 +91,7 @@ const Submissions = ({ onDetailToggle }) => {
    
          return () => clearTimeout(timeout);
       }
-   }, [activeIndex]);    
+   }, [activeIndex]);
 
 
    return (

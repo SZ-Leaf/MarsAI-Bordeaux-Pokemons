@@ -10,9 +10,11 @@ import eventRoutes from './events/event.routes.js';
 import reservationRoutes from './events/reservations.routes.js';
 import juryRoutes from './jury/jury.routes.js';
 import awardsRoutes from './awards/awards.routes.js';
+import homepageRoutes from './homepage/homepage.routes.js';
 
 const router = Router();
 
+router.use('/homepage', homepageRoutes);
 router.use('/submissions', submissionRoutes);
 router.use('/oauth', oauthRoutes);
 router.use('/auth', authRoutes);

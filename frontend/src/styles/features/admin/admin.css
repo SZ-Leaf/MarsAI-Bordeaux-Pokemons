@@ -4,7 +4,7 @@
 
 .admin-dashboard-container {
     @apply min-h-screen bg-[#0a0a0a] text-white flex;
-    --header-left: calc(15rem + 2rem);
+    --header-left: calc(16rem + 2rem);
     --header-right: 2rem;
     --header-width: auto;
     --header-max-width: none;
@@ -12,7 +12,7 @@
 }
 
 .main-content {
-    @apply flex-1 overflow-y-auto p-8 pt-24;
+    @apply flex-1 overflow-y-auto p-8 pt-24 transition-all duration-300;
 }
 
 .search-input {
@@ -20,15 +20,15 @@
 }
 
 .banner-img {
-    @apply w-full h-48 object-cover rounded-3xl mb-8;
+    @apply w-full h-48 object-cover rounded-3xl mb-8 transition-all;
 }
 
 .section-title {
-    @apply text-5xl font-bold mb-4 uppercase tracking-wider;
+    @apply text-3xl md:text-5xl font-bold mb-4 uppercase tracking-wider transition-all;
 }
 
 .section-subtitle {
-    @apply text-gray-400 text-lg mb-8 max-w-2xl leading-relaxed;
+    @apply text-gray-400 text-sm md:text-lg mb-8 max-w-2xl leading-relaxed transition-all;
 }
 
 .stats-grid {
@@ -85,7 +85,41 @@
 
 /* Admin Sidebar */
 .sidebar {
-    @apply w-60 bg-[#121212] flex flex-col px-3 sticky justify-evenly top-0 h-screen overflow-y-auto border-r border-gray-800;
+    @apply w-64 bg-[#121212] flex flex-col px-3 sticky justify-evenly top-0 h-screen overflow-y-auto border-r border-gray-800 transition-transform duration-300 z-[60];
+}
+
+/* Sidebar Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        @apply fixed left-0 top-0 -translate-x-full;
+        width: 17rem;
+    }
+
+    .sidebar.open {
+        @apply translate-x-0 shadow-2xl;
+    }
+
+    .main-content {
+        @apply p-4 pt-20 w-full; /* Reduced padding and ensure full width */
+    }
+
+    .admin-dashboard-container {
+        @apply flex-col;
+        --header-left: 1rem;
+        --header-right: 1rem;
+    }
+
+    .banner-img {
+        @apply h-32 mb-6; /* Smaller banner on mobile */
+    }
+}
+
+.sidebar-overlay {
+    @apply fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity;
+}
+
+.sidebar-toggle {
+    @apply fixed top-5 left-5 z-[70] p-2 bg-[#1a1a1a] border border-gray-800 rounded-xl text-white shadow-lg active:scale-95 transition-all;
 }
 
 .sidebar-user-profile {

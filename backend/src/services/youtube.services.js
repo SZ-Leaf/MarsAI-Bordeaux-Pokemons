@@ -72,7 +72,7 @@ export const checkYoutubeVideoStatus = async (videoId) => {
   let failureReason = video.processingDetails?.processingFailureReason || null;
   if (video.contentDetails?.regionRestriction) {
     status = 'blocked';
-    rejectionReason = `region_restricted: ${JSON.stringify(video.contentDetails.regionRestriction)}`;
+    rejectionReason = `region_restricted: ${JSON.stringify(video.contentDetails)}`;
   }
   if (status === 'rejected' && !rejectionReason) {
     if (video.contentDetails?.contentRating) rejectionReason = `content_rating: ${JSON.stringify(video.contentDetails.contentRating)}`;

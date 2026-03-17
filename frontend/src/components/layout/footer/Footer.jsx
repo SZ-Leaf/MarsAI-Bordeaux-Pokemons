@@ -3,13 +3,8 @@ import '../../../styles/main.css';
 import { subscribeNewsletter } from '../../../services/newsletter.service';
 import NewsletterSuccessModal from './NewsletterSuccessModal';
 import { useLanguage } from '../../../context/LanguageContext';
-
-function getErrorMessage(err) {
-  const m = err?.message;
-  if (typeof m === 'string') return m;
-  if (m && typeof m === 'object' && (m.fr || m.en)) return m.fr || m.en;
-  return 'Une erreur est survenue.';
-}
+import { subscribeSchema } from '@marsai/schemas';
+import { zodErrors, FieldError } from '../../../helpers/zodHelper';
 
 const FLAG_CDN = 'https://flagcdn.com/w40';
 const LANG_OPTIONS = [
@@ -18,7 +13,7 @@ const LANG_OPTIONS = [
 ];
 
 const Footer = () => {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [email, setEmail] = useState('');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const langDropdownRef = useRef(null);
@@ -26,6 +21,8 @@ const Footer = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [apiError, setApiError] = useState(null);
 
   const selectedOption = LANG_OPTIONS.find((o) => o.value === language) || LANG_OPTIONS[0];
 
@@ -41,25 +38,36 @@ const Footer = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const trimmedEmail = email?.trim();
-    if (!trimmedEmail) {
-      alert('Veuillez saisir votre email.');
+    setApiError(null);
+
+    try {
+      subscribeSchema.parse({ email: email.trim(), consent, language });
+      setFieldErrors({});
+    } catch (err) {
+      setFieldErrors(zodErrors(err, language));
       return;
     }
-    if (!consent) {
-      alert("Veuillez accepter de recevoir la newsletter.");
-      return;
-    }
+
     setIsSubmitting(true);
     setIsSubscribed(false);
     try {
-      await subscribeNewsletter(trimmedEmail, true, language);
+      await subscribeNewsletter(email.trim(), true, language);
       setEmail('');
       setConsent(false);
       setIsSubscribed(true);
       setIsSuccessModalOpen(true);
     } catch (err) {
-      alert(getErrorMessage(err));
+      const fe = zodErrors(err, language);
+      if (Object.keys(fe).length) {
+        setFieldErrors(fe);
+      } else {
+        const m = err?.message;
+        setApiError(
+          typeof m === 'object' && m !== null
+            ? (m[language] ?? m.fr ?? m.en ?? 'Une erreur est survenue.')
+            : (typeof m === 'string' ? m : 'Une erreur est survenue.'),
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -130,6 +138,9 @@ const Footer = () => {
               {language === 'fr' ? "RESTEZ CONNECTÉ" : "STAY CONNECTED"}
             </h3>
             <form className="newsletter-form" onSubmit={handleSubmit}>
+              {apiError && (
+                <p className="mt-1 text-xs text-red-400">{apiError}</p>
+              )}
               <div className="newsletter-row">
                 <div
                   className="newsletter-lang-select-wrap"
@@ -188,9 +199,8 @@ const Footer = () => {
                   type="email"
                   placeholder={language === 'fr' ? "Votre email" : "Your email"}
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => { setEmail(e.target.value); setFieldErrors((p) => ({ ...p, email: undefined })); }}
                   className="newsletter-input"
-                  required
                   disabled={isSubmitting}
                 />
                 <button
@@ -201,15 +211,17 @@ const Footer = () => {
                   {isSubmitting ? language === 'fr' ? 'Envoi...' : 'Sending...' : isSubscribed ? language === 'fr' ? '✓ Inscrit' : '✓ Subscribed' : language === 'fr' ? "S'inscrire" : "Subscribe"}
                 </button>
               </div>
+              <FieldError error={fieldErrors.email} className="newsletter-field-error" />
               <label className="newsletter-consent">
                 <input
                   type="checkbox"
                   checked={consent}
-                  onChange={(e) => setConsent(e.target.checked)}
+                  onChange={(e) => { setConsent(e.target.checked); setFieldErrors((p) => ({ ...p, consent: undefined })); }}
                   disabled={isSubmitting}
                 />
                 <span>{language === 'fr' ? "J'accepte de recevoir la newsletter." : "I accept to receive the newsletter."}</span>
               </label>
+              <FieldError error={fieldErrors.consent} className="newsletter-field-error" />
             </form>
           </div>
         </div>

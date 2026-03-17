@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { createEvent, updateEvent } from '../services/event.service';
-import { zodFieldErrors } from '../utils/validation';
+import { useLanguage } from '../context/LanguageContext';
+import { zodErrors } from '../helpers/zodHelper';
 
 const EMPTY_FORM = {
   title: '',
@@ -12,6 +13,7 @@ const EMPTY_FORM = {
 };
 
 const useEventForm = ({ eventToEdit, isOpen, onRefresh, onClose, schema }) => {
+  const { language } = useLanguage();
   const [formData, setFormData] = useState(EMPTY_FORM);
   const [cover, setCover] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -73,7 +75,7 @@ const useEventForm = ({ eventToEdit, isOpen, onRefresh, onClose, schema }) => {
           schema.parse({ ...formData, places: Number(formData.places) });
           setFieldErrors({});
         } catch (err) {
-          const fe = zodFieldErrors(err);
+          const fe = zodErrors(err, language);
           if (Object.keys(fe).length) setFieldErrors(fe);
           setLoading(false);
           return;
@@ -94,7 +96,7 @@ const useEventForm = ({ eventToEdit, isOpen, onRefresh, onClose, schema }) => {
       onClose();
     } catch (err) {
       console.error('Erreur lors de la soumission du formulaire:', err);
-      const fe = zodFieldErrors(err);
+      const fe = zodErrors(err, language);
       if (Object.keys(fe).length) {
         setFieldErrors(fe);
       } else {

@@ -4,7 +4,7 @@ import { Loader2, ImagePlus } from 'lucide-react';
 import { createSponsorService } from '../../../../../services/sponsors.service';
 import Modal from '../../../../ui/Modal/Modal.jsx';
 import { sponsorSchema } from '@marsai/schemas';
-import { zodFieldErrors } from '../../../../../utils/validation';
+import { zodErrors } from '../../../../../helpers/zodHelper';
 
 const ACCEPTED_IMAGE_TYPES = 'image/jpeg,image/jpg,image/png';
 
@@ -36,7 +36,7 @@ const CreateSponsor = ({ isOpen, onClose, onCreated }) => {
          sponsorSchema.parse({ name: formData.name.trim(), url: formData.url.trim() });
          setFieldErrors({});
       } catch (err) {
-         const fe = zodFieldErrors(err);
+         const fe = zodErrors(err, language);
          if (Object.keys(fe).length) setFieldErrors(fe);
          return;
       }
@@ -53,7 +53,7 @@ const CreateSponsor = ({ isOpen, onClose, onCreated }) => {
             onClose?.();
          }
       } catch (err) {
-         const fe = zodFieldErrors(err);
+         const fe = zodErrors(err, language);
          if (Object.keys(fe).length) {
             setFieldErrors(fe);
          } else {

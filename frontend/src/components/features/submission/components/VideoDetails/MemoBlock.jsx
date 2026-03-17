@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLanguage } from '../../../../../context/LanguageContext';
 import { Star, MessageSquare, Pencil, Trash2, Loader2, Heart, Clock, Flag } from 'lucide-react';
 import { saveMemo, deleteMemo } from '../../../../../services/memo.service';
-import { zodFieldErrors } from '../../../../../utils/validation';
+import { zodErrors } from '../../../../../helpers/zodHelper';
 
 const PLAYLIST_OPTIONS = [
    {
@@ -81,7 +81,7 @@ const MemoBlock = ({ video, onMemoUpdate }) => {
          setIsEditing(false);
          onMemoUpdate?.();
       } catch (err) {
-         const fe = zodFieldErrors(err);
+         const fe = zodErrors(err, language);
          if (Object.keys(fe).length) {
             setFieldErrors(fe);
          } else {

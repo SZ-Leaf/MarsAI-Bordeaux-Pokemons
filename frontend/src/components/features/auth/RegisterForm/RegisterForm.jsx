@@ -6,7 +6,7 @@ import { useLanguage } from "../../../../context/LanguageContext";
 import { responseHelper } from "../../../../helpers/responseHelper";
 import { useAlertHelper } from "../../../../helpers/alertHelper";
 import { registerUserSchema } from "@marsai/schemas";
-import { zodFieldErrors } from "../../../../utils/validation";
+import { zodErrors } from "../../../../helpers/zodHelper";
 
 const RegisterForm = ({ token }) => {
    const alertHelper = useAlertHelper();
@@ -51,7 +51,7 @@ const RegisterForm = ({ token }) => {
          setFieldErrors({});
          return true;
       } catch (err) {
-         const fe = zodFieldErrors(err);
+         const fe = zodErrors(err, language);
          if (Object.keys(fe).length) setFieldErrors(fe);
          return false;
       }
@@ -75,7 +75,7 @@ const RegisterForm = ({ token }) => {
          alertHelper.showMessage(getMessageFromResponse(response));
          return;
       } catch (error) {
-         const fe = zodFieldErrors(error);
+         const fe = zodErrors(error, language);
          if (Object.keys(fe).length) {
             setFieldErrors(fe);
          } else {

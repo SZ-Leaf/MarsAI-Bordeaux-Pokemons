@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { zodFieldErrors } from "../../../../../../services/jury.service";
+import { useLanguage } from "../../../../../../context/LanguageContext";
+import { zodErrors } from "../../../../../../helpers/zodHelper";
 
 export default function JuryForm({
   initialValues = { firstname: "", lastname: "", job: "", coverUrl: null },
@@ -9,6 +10,7 @@ export default function JuryForm({
   submitLabel = "Enregistrer",
   onCancel,
 }) {
+  const { language } = useLanguage();
   const fileInputRef = useRef(null);
 
   const [firstname, setFirstname] = useState(initialValues.firstname || "");
@@ -60,7 +62,7 @@ export default function JuryForm({
     try {
       await onSubmit?.({ firstname, lastname, job, coverFile, removeCover });
     } catch (err) {
-      const fe = zodFieldErrors(err);
+      const fe = zodErrors(err, language);
       if (Object.keys(fe).length) setFieldErrors(fe);
       throw err;
     }

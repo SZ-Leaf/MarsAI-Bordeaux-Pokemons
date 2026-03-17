@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useLanguage } from '../context/LanguageContext';
+import translateZodMessage from '../helpers/zodHelper';
 
 export const useModalForm = (
   initialData,
@@ -8,6 +10,8 @@ export const useModalForm = (
   isOpen,
   itemIndex = null
 ) => {
+  const { language } = useLanguage();
+
   const getInitialFormData = () => {
     return initialData ? { ...defaultValues, ...initialData } : { ...defaultValues };
   };
@@ -43,7 +47,7 @@ export const useModalForm = (
       if (error.errors && error.errors.length > 0) {
         setLocalErrors(prev => ({
           ...prev,
-          [field]: error.errors[0].message
+          [field]: translateZodMessage(error.errors[0].message, language),
         }));
       }
     }
@@ -59,7 +63,7 @@ export const useModalForm = (
         error.errors.forEach(err => {
           const field = err.path[0];
           if (field) {
-            finalErrors[field] = err.message;
+            finalErrors[field] = translateZodMessage(err.message, language);
           }
         });
         return finalErrors;

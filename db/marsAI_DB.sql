@@ -342,3 +342,13 @@ FOREIGN KEY (submission_id)
 REFERENCES submissions(id)
 ON DELETE SET NULL
 ON UPDATE CASCADE;
+
+
+ALTER TABLE submissions
+  CHANGE COLUMN youtube_url youtube_id VARCHAR(50) DEFAULT NULL;
+
+ALTER TABLE submissions
+  ADD COLUMN youtube_status VARCHAR(50) DEFAULT NULL AFTER youtube_id,
+  ADD COLUMN youtube_rejection_reason TEXT DEFAULT NULL AFTER youtube_status,
+  ADD COLUMN youtube_failure_reason TEXT DEFAULT NULL AFTER youtube_rejection_reason,
+  ADD COLUMN youtube_checked_at DATETIME DEFAULT NULL AFTER youtube_failure_reason;

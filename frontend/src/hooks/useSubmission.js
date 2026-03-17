@@ -1,17 +1,20 @@
 import { useState } from 'react';
 import { submitFilm } from '../services/submission.service';
-import { 
-  submissionSchema, 
-  step1Schema, 
-  step2Schema, 
-  step3Schema, 
+import {
+  submissionSchema,
+  step1Schema,
+  step2Schema,
+  step3Schema,
   step4Schema,
-  formatZodErrors 
+  formatZodErrors,
 } from '@marsai/schemas';
-import { createTag } from "../services/tag.service.js";
+import { createTag } from '../services/tag.service.js';
+import { useLanguage } from '../context/LanguageContext';
+import { translateErrors, zodErrors } from '../helpers/zodHelper';
 
 
 export const useSubmission = () => {
+  const { language } = useLanguage();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
@@ -130,10 +133,10 @@ export const useSubmission = () => {
     
     console.log(`Données envoyées à Zod (Step ${step}):`, formData);
     const result = schemas[step].safeParse(formData);
-    
+
     if (!result.success) {
       console.log('Issues Zod brutes:', result.error.issues);
-      const stepErrors = formatZodErrors(result.error);
+      const stepErrors = translateErrors(formatZodErrors(result.error), language);
       console.log('Erreurs de validation détectées:', stepErrors);
       setErrors(stepErrors);
       return false;
@@ -194,9 +197,9 @@ export const useSubmission = () => {
   const submit = async () => {
     // Validation complète avec Zod
     const result = submissionSchema.safeParse(formData);
-    
+
     if (!result.success) {
-      const validationErrors = formatZodErrors(result.error);
+      const validationErrors = translateErrors(formatZodErrors(result.error), language);
       setErrors(validationErrors);
       // Rediriger vers l'étape contenant les erreurs
       const stepWithErrors = getStepWithErrors(validationErrors);
@@ -332,24 +335,19 @@ export const useSubmission = () => {
       setSubmitSuccess(result);
       return result;
     } catch (error) {
-      let errorMessage = error.message || 'Erreur lors de la soumission';
-      if (typeof errorMessage === 'object' && errorMessage !== null && ('fr' in errorMessage || 'en' in errorMessage)) {
-        errorMessage = errorMessage.fr || errorMessage.en || 'Erreur lors de la soumission';
+      // If the backend returned Zod field errors, map them onto the form
+      const fe = zodErrors(error, language);
+      if (Object.keys(fe).length) {
+        setErrors(fe);
+        const stepWithErrors = getStepWithErrors(fe);
+        setCurrentStep(stepWithErrors);
+      } else {
+        let errorMessage = error.message || 'Erreur lors de la soumission';
+        if (typeof errorMessage === 'object' && errorMessage !== null && ('fr' in errorMessage || 'en' in errorMessage)) {
+          errorMessage = errorMessage.fr || errorMessage.en || 'Erreur lors de la soumission';
+        }
+        setSubmitError(errorMessage);
       }
-      // error.data is the ZodIssue[] array returned by sendZodError
-      if (Array.isArray(error.data) && error.data.length > 0) {
-        const validationErrors = error.data
-          .map(issue => {
-            const field = Array.isArray(issue.path) ? issue.path.join('.') : (issue.path ?? '');
-            const msg = typeof issue.message === 'object' && issue.message !== null
-              ? (issue.message.fr || issue.message.en || JSON.stringify(issue.message))
-              : (issue.message ?? '');
-            return field ? `${field}: ${msg}` : msg;
-          })
-          .join(', ');
-        errorMessage = `Erreurs de validation: ${validationErrors}`;
-      }
-      setSubmitError(errorMessage);
       console.error('Erreur lors de la soumission:', error);
       throw error;
     } finally {

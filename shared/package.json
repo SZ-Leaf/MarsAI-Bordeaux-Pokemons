@@ -4,7 +4,8 @@
    "type": "module",
    "main": "./schemas/index.js",
    "exports": {
-      ".": "./schemas/index.js"
+      ".": "./schemas/index.js",
+      "./i18n/*": "./i18n/*"
    },
    "dependencies": {
       "zod": "^4.3.6"

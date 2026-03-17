@@ -15,7 +15,7 @@ import {
   deleteSubscriber,
 } from '../../../../services/newsletter.service';
 import { newsletterSchema } from '@marsai/schemas';
-import { zodFieldErrors } from '../../../../utils/validation';
+import { zodErrors } from '../../../../helpers/zodHelper';
 
 function getMessage(err) {
   const fr = err?.message?.fr ?? err?.message?.en;
@@ -352,11 +352,8 @@ const NewsletterForm = ({ language, editId, onBack, onSaved }) => {
       newsletterSchema.parse(payload);
       setFieldErrors({});
     } catch (err) {
-      const fe = zodFieldErrors(err);
+      const fe = zodErrors(err, language);
       if (Object.keys(fe).length) setFieldErrors(fe);
-      alert(language === 'fr'
-        ? 'Certains champs sont invalides. Merci de corriger le formulaire.'
-        : 'Some fields are invalid. Please fix the form.');
       return;
     }
     setSubmitting(true);
@@ -370,12 +367,9 @@ const NewsletterForm = ({ language, editId, onBack, onSaved }) => {
       }
       onSaved();
     } catch (err) {
-      const fe = zodFieldErrors(err);
+      const fe = zodErrors(err, language);
       if (Object.keys(fe).length) {
         setFieldErrors(fe);
-        alert(language === 'fr'
-          ? 'Certains champs sont invalides. Merci de corriger le formulaire.'
-          : 'Some fields are invalid. Please fix the form.');
       } else {
         alert(getMessage(err));
       }

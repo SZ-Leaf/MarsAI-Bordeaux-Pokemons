@@ -1,0 +1,305 @@
+{
+   "zod_errors": {
+      "user": {
+         "firstname": {
+            "required": "Le prénom est obligatoire.",
+            "invalid": "Le prénom doit être une chaîne de caractères valide.",
+            "min": "Le prénom est trop court.",
+            "max": "Le prénom est trop long."
+         },
+         "lastname": {
+            "required": "Le nom est obligatoire.",
+            "invalid": "Le nom doit être une chaîne de caractères valide.",
+            "min": "Le nom est trop court.",
+            "max": "Le nom est trop long."
+         },
+         "password": {
+            "required": "Le mot de passe est obligatoire.",
+            "invalid": "Le mot de passe doit être une chaîne de caractères valide.",
+            "min": "Le mot de passe doit contenir au moins 8 caractères.",
+            "max": "Le mot de passe doit contenir au maximum 50 caractères.",
+            "uppercase": "Le mot de passe doit contenir au moins une lettre majuscule.",
+            "lowercase": "Le mot de passe doit contenir au moins une lettre minuscule.",
+            "number": "Le mot de passe doit contenir au moins un chiffre."
+         }
+      },
+      "submission": {
+         "terms_of_use": {
+            "required": "Vous devez accepter les conditions d'utilisation.",
+            "invalid": "Valeur invalide pour les conditions d'utilisation.",
+            "must_accept": "Vous devez accepter les conditions d'utilisation."
+         },
+         "age_confirmed": {
+            "required": "Vous devez confirmer que vous êtes majeur.",
+            "invalid": "Valeur invalide pour la confirmation d'âge.",
+            "must_accept": "Vous devez confirmer que vous êtes majeur."
+         },
+         "english_title": {
+            "required": "Le titre anglais est obligatoire.",
+            "invalid": "Le titre anglais doit être une chaîne de caractères valide.",
+            "max": "Le titre anglais est trop long."
+         },
+         "original_title": {
+            "max": "Le titre original est trop long."
+         },
+         "language": {
+            "required": "La langue est obligatoire.",
+            "invalid": "La langue doit être une chaîne de caractères valide."
+         },
+         "english_synopsis": {
+            "required": "Le synopsis anglais est obligatoire.",
+            "invalid": "Le synopsis anglais doit être une chaîne de caractères valide.",
+            "max": "Le synopsis anglais est trop long."
+         },
+         "original_synopsis": {
+            "max": "Le synopsis original est trop long."
+         },
+         "classification": {
+            "invalid": "La classification est invalide."
+         },
+         "tech_stack": {
+            "required": "La stack technique est obligatoire.",
+            "invalid": "La stack technique doit être une chaîne de caractères valide.",
+            "max": "La description de la stack technique est trop longue."
+         },
+         "creative_method": {
+            "required": "La méthode créative est obligatoire.",
+            "invalid": "La méthode créative doit être une chaîne de caractères valide.",
+            "max": "La description de la méthode créative est trop longue."
+         },
+         "video": {
+            "required": "Le fichier vidéo est obligatoire."
+         },
+         "cover": {
+            "required": "L'image de couverture est obligatoire."
+         },
+         "gallery": {
+            "max": "Vous pouvez téléverser au maximum 3 images dans la galerie."
+         },
+         "creator_firstname": {
+            "required": "Le prénom du créateur est obligatoire.",
+            "invalid": "Le prénom du créateur doit être une chaîne de caractères valide.",
+            "format": "Le prénom du créateur contient des caractères invalides."
+         },
+         "creator_lastname": {
+            "required": "Le nom du créateur est obligatoire.",
+            "invalid": "Le nom du créateur doit être une chaîne de caractères valide.",
+            "format": "Le nom du créateur contient des caractères invalides."
+         },
+         "creator_email": {
+            "required": "L'email du créateur est obligatoire.",
+            "invalid": "L'email du créateur doit être une chaîne de caractères valide.",
+            "format": "L'email du créateur doit être une adresse email valide."
+         },
+         "creator_phone": {
+            "format": "Le numéro de téléphone du créateur est invalide."
+         },
+         "creator_mobile": {
+            "required": "Le numéro de mobile du créateur est obligatoire.",
+            "invalid": "Le numéro de mobile du créateur doit être une chaîne de caractères valide.",
+            "format": "Le numéro de mobile du créateur est invalide."
+         },
+         "creator_gender": {
+            "required": "Le genre du créateur est obligatoire.",
+            "invalid": "Le genre du créateur est invalide."
+         },
+         "creator_country": {
+            "required": "Le pays du créateur est obligatoire.",
+            "invalid": "Le pays du créateur doit être une chaîne de caractères valide.",
+            "max": "Le nom du pays du créateur est trop long.",
+            "format": "Le pays du créateur contient des caractères invalides."
+         },
+         "creator_address": {
+            "required": "L'adresse du créateur est obligatoire.",
+            "invalid": "L'adresse du créateur doit être une chaîne de caractères valide.",
+            "max": "L'adresse du créateur est trop longue."
+         },
+         "referral_source": {
+            "invalid": "La source de recommandation est invalide."
+         },
+         "recaptchaToken": {
+            "required": "La vérification reCAPTCHA est obligatoire.",
+            "invalid": "Le jeton reCAPTCHA est invalide."
+         }
+      },
+      "newsletter_subscribe": {
+         "email": {
+            "required": "L'email est obligatoire.",
+            "invalid": "L'email doit être une chaîne de caractères valide.",
+            "format": "L'email doit être une adresse email valide."
+         },
+         "consent": {
+            "required": "Le consentement est obligatoire.",
+            "invalid": "Valeur invalide pour le consentement.",
+            "must_accept": "Vous devez consentir à recevoir la newsletter."
+         },
+         "language": {
+            "invalid": "La langue sélectionnée est invalide."
+         }
+      },
+      "newsletter": {
+         "title": {
+            "required": "Le titre de la newsletter est obligatoire.",
+            "invalid": "Le titre de la newsletter doit être une chaîne de caractères valide.",
+            "max": "Le titre de la newsletter est trop long."
+         },
+         "subject": {
+            "required": "L'objet de la newsletter est obligatoire.",
+            "invalid": "L'objet de la newsletter doit être une chaîne de caractères valide.",
+            "max": "L'objet de la newsletter est trop long."
+         },
+         "content": {
+            "required": "Le contenu de la newsletter est obligatoire.",
+            "invalid": "Le contenu de la newsletter doit être une chaîne de caractères valide."
+         },
+         "subject_en": {
+            "required": "L'objet anglais est obligatoire.",
+            "invalid": "L'objet anglais doit être une chaîne de caractères valide.",
+            "max": "L'objet anglais est trop long."
+         },
+         "content_en": {
+            "required": "Le contenu anglais est obligatoire.",
+            "invalid": "Le contenu anglais doit être une chaîne de caractères valide."
+         },
+         "status": {
+            "invalid": "Le statut de la newsletter est invalide."
+         }
+      },
+      "jury": {
+         "firstname": {
+            "required": "Le prénom est obligatoire.",
+            "invalid": "Le prénom doit être une chaîne de caractères valide.",
+            "min": "Le prénom est trop court.",
+            "max": "Le prénom est trop long."
+         },
+         "lastname": {
+            "required": "Le nom est obligatoire.",
+            "invalid": "Le nom doit être une chaîne de caractères valide.",
+            "min": "Le nom est trop court.",
+            "max": "Le nom est trop long."
+         },
+         "job": {
+            "required": "Le métier est obligatoire.",
+            "invalid": "Le métier doit être une chaîne de caractères valide.",
+            "min": "Le métier est trop court.",
+            "max": "Le métier est trop long."
+         }
+      },
+      "tag": {
+         "title": {
+            "required": "Le titre du tag est obligatoire.",
+            "invalid": "Le titre du tag doit être une chaîne de caractères valide.",
+            "min": "Le titre du tag est trop court.",
+            "max": "Le titre du tag est trop long."
+         }
+      },
+      "collaborator": {
+         "firstname": {
+            "required": "Le prénom du collaborateur est obligatoire.",
+            "invalid": "Le prénom du collaborateur doit être une chaîne de caractères valide.",
+            "format": "Le prénom du collaborateur contient des caractères invalides."
+         },
+         "lastname": {
+            "required": "Le nom du collaborateur est obligatoire.",
+            "invalid": "Le nom du collaborateur doit être une chaîne de caractères valide.",
+            "format": "Le nom du collaborateur contient des caractères invalides."
+         },
+         "email": {
+            "required": "L'email du collaborateur est obligatoire.",
+            "invalid": "L'email du collaborateur doit être une chaîne de caractères valide.",
+            "format": "L'email du collaborateur doit être une adresse email valide."
+         },
+         "gender": {
+            "required": "Le genre du collaborateur est obligatoire.",
+            "invalid": "Le genre du collaborateur est invalide."
+         },
+         "role": {
+            "required": "Le rôle du collaborateur est obligatoire.",
+            "invalid": "Le rôle du collaborateur doit être une chaîne de caractères valide.",
+            "max": "La description du rôle du collaborateur est trop longue."
+         }
+      },
+      "social": {
+         "network_id": {
+            "required": "Le réseau social est obligatoire.",
+            "invalid": "L'identifiant du réseau social est invalide."
+         },
+         "url": {
+            "required": "L'URL du réseau social est obligatoire.",
+            "invalid": "L'URL du réseau social doit être une URL valide.",
+            "https": "L'URL du réseau social doit commencer par https://.",
+            "max": "L'URL du réseau social est trop longue."
+         }
+      },
+      "award": {
+         "title": {
+            "required": "Le titre de la récompense est obligatoire.",
+            "invalid": "Le titre de la récompense doit être une chaîne de caractères valide.",
+            "max": "Le titre de la récompense est trop long."
+         },
+         "award_rank": {
+            "invalid": "Le rang de la récompense est invalide.",
+            "max": "Le rang de la récompense est trop élevé."
+         },
+         "description": {
+            "invalid": "La description de la récompense doit être une chaîne de caractères valide.",
+            "max": "La description de la récompense est trop longue."
+         }
+      },
+      "sponsor": {
+         "name": {
+            "required": "Le nom du sponsor est obligatoire.",
+            "invalid": "Le nom du sponsor doit être une chaîne de caractères valide."
+         },
+         "url": {
+            "required": "L'URL du sponsor est obligatoire.",
+            "invalid": "L'URL du sponsor doit être une chaîne de caractères valide.",
+            "format": "L'URL du sponsor doit être une URL valide."
+         }
+      },
+      "event": {
+         "title": {
+            "required": "Le titre de l'événement est obligatoire.",
+            "invalid": "Le titre de l'événement doit être une chaîne de caractères valide."
+         },
+         "description": {
+            "required": "La description de l'événement est obligatoire.",
+            "invalid": "La description de l'événement doit être une chaîne de caractères valide."
+         },
+         "location": {
+            "required": "Le lieu de l'événement est obligatoire.",
+            "invalid": "Le lieu de l'événement doit être une chaîne de caractères valide."
+         },
+         "places": {
+            "required": "Le nombre de places est obligatoire.",
+            "invalid": "Le nombre de places doit être un nombre valide.",
+            "integer": "Le nombre de places doit être un entier.",
+            "positive": "Le nombre de places doit être positif."
+         },
+         "start_date": {
+            "required": "La date de début est obligatoire.",
+            "invalid": "La date de début doit être une chaîne de caractères valide.",
+            "format": "La date de début doit être une date valide."
+         },
+         "end_date": {
+            "required": "La date de fin est obligatoire.",
+            "invalid": "La date de fin doit être une chaîne de caractères valide.",
+            "format": "La date de fin doit être une date valide."
+         }
+      },
+      "selector": {
+         "rating": {
+            "invalid": "La note doit être un nombre valide entre 1 et 10.",
+            "min": "La note doit être au minimum de 1.",
+            "max": "La note doit être au maximum de 10."
+         },
+         "comment": {
+            "invalid": "Le commentaire doit être une chaîne de caractères valide.",
+            "max": "Le commentaire est trop long."
+         },
+         "playlist": {
+            "invalid": "La valeur de la playlist est invalide."
+         }
+      }
+   }
+}

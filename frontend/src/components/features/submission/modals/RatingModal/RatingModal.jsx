@@ -3,36 +3,70 @@ import { createPortal } from 'react-dom';
 import { Modal } from '../../../../ui';
 import { TextArea } from '../../../../ui';
 import { StarRating } from '../../../../ui';
+import { useLanguage } from '../../../../../context/LanguageContext';
+import { rateSubmissionSchema } from '@marsai/schemas';
+import { zodErrors, FieldError } from '../../../../../helpers/zodHelper';
 
 const RatingModal = ({ isOpen, onClose, submission, onSubmit }) => {
+  const { language } = useLanguage();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [apiError, setApiError] = useState(null);
 
   const resetForm = () => {
     setRating(0);
     setComment('');
-    setMessage('');
+    setFieldErrors({});
+    setApiError(null);
   };
 
   const handleSubmit = async () => {
-    // Vérifier qu'au moins une valeur est fournie
+    setApiError(null);
+
+    // Business rule: at least rating or comment required
     if (rating === 0 && comment.trim() === '') {
-      setMessage('Veuillez fournir au moins une note ou un commentaire');
+      setFieldErrors({
+        rating: language === 'fr'
+          ? 'Veuillez fournir au moins une note ou un commentaire.'
+          : 'Please provide at least a rating or a comment.',
+      });
+      return;
+    }
+
+    // Schema validation for field formats
+    const payload = {
+      rating: rating > 0 ? rating : null,
+      comment: comment.trim() || null,
+    };
+
+    try {
+      rateSubmissionSchema.parse(payload);
+      setFieldErrors({});
+    } catch (err) {
+      setFieldErrors(zodErrors(err, language));
       return;
     }
 
     setIsSubmitting(true);
-    setMessage('');
-
     try {
-      await onSubmit(submission.id, rating, comment);
+      await onSubmit(submission.id, payload.rating, payload.comment);
       resetForm();
       onClose();
     } catch (error) {
       console.error('Erreur lors de la soumission:', error);
-      setMessage(error.message || 'Erreur lors de la soumission. Veuillez réessayer.');
+      const fe = zodErrors(error, language);
+      if (Object.keys(fe).length) {
+        setFieldErrors(fe);
+      } else {
+        const m = error?.message;
+        setApiError(
+          typeof m === 'object' && m !== null
+            ? (m[language] ?? m.fr ?? m.en ?? (language === 'fr' ? 'Erreur lors de la soumission.' : 'Submission failed.'))
+            : (typeof m === 'string' ? m : (language === 'fr' ? 'Erreur lors de la soumission.' : 'Submission failed.')),
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -48,7 +82,7 @@ const RatingModal = ({ isOpen, onClose, submission, onSubmit }) => {
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      title="Évaluer la vidéo"
+      title={language === 'fr' ? 'Évaluer la vidéo' : 'Rate the video'}
       size="md"
     >
       <div className="space-y-6">
@@ -62,38 +96,40 @@ const RatingModal = ({ isOpen, onClose, submission, onSubmit }) => {
         {/* Section de notation */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-white/80">
-            Note (optionnel)
+            {language === 'fr' ? 'Note (optionnel)' : 'Rating (optional)'}
           </label>
           <div className="py-4">
-            <StarRating 
+            <StarRating
               value={rating}
-              onChange={setRating}
+              onChange={(v) => { setRating(v); setFieldErrors((p) => ({ ...p, rating: undefined })); }}
               showLabel={true}
             />
           </div>
+          <FieldError error={fieldErrors.rating} />
         </div>
 
         {/* Section de commentaire */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-white/80">
-            Commentaire (optionnel)
+            {language === 'fr' ? 'Commentaire (optionnel)' : 'Comment (optional)'}
           </label>
           <TextArea
             value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            placeholder="Partagez votre avis sur cette vidéo..."
+            onChange={(e) => { setComment(e.target.value); setFieldErrors((p) => ({ ...p, comment: undefined })); }}
+            placeholder={language === 'fr' ? 'Partagez votre avis sur cette vidéo...' : 'Share your thoughts on this video...'}
             rows={5}
             maxLength={500}
             showCounter={true}
             variant="dark"
             className="w-full resize-none"
           />
+          <FieldError error={fieldErrors.comment} />
         </div>
 
-        {/* Message d'erreur */}
-        {message && (
+        {/* Erreur API générale */}
+        {apiError && (
           <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-            <p className="text-sm text-red-400">{message}</p>
+            <p className="text-sm text-red-400">{apiError}</p>
           </div>
         )}
 
@@ -107,7 +143,7 @@ const RatingModal = ({ isOpen, onClose, submission, onSubmit }) => {
                      disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={isSubmitting}
           >
-            Annuler
+            {language === 'fr' ? 'Annuler' : 'Cancel'}
           </button>
           <button
             type="button"
@@ -117,7 +153,9 @@ const RatingModal = ({ isOpen, onClose, submission, onSubmit }) => {
                      disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Envoi...' : 'Soumettre'}
+            {isSubmitting
+              ? (language === 'fr' ? 'Envoi...' : 'Submitting...')
+              : (language === 'fr' ? 'Soumettre' : 'Submit')}
           </button>
         </div>
       </div>

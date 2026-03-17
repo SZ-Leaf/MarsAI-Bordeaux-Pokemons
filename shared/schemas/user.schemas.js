@@ -6,14 +6,14 @@ export const registerUserSchema = z.object({
          required_error: 'zod_errors.user.firstname.required',
          invalid_type_error: 'zod_errors.user.firstname.invalid',
       })
-      .min(1, { message: 'zod_errors.user.firstname.min' })
+      .min(1, { message: 'zod_errors.user.firstname.required' })
       .max(25, { message: 'zod_errors.user.firstname.max' }),
    lastname: z
       .string({
          required_error: 'zod_errors.user.lastname.required',
          invalid_type_error: 'zod_errors.user.lastname.invalid',
       })
-      .min(1, { message: 'zod_errors.user.lastname.min' })
+      .min(1, { message: 'zod_errors.user.lastname.required' })
       .max(25, { message: 'zod_errors.user.lastname.max' }),
    password: z
       .string({

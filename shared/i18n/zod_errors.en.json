@@ -1,0 +1,305 @@
+{
+   "zod_errors": {
+      "user": {
+         "firstname": {
+            "required": "First name is required.",
+            "invalid": "First name must be a valid string.",
+            "min": "First name is too short.",
+            "max": "First name is too long."
+         },
+         "lastname": {
+            "required": "Last name is required.",
+            "invalid": "Last name must be a valid string.",
+            "min": "Last name is too short.",
+            "max": "Last name is too long."
+         },
+         "password": {
+            "required": "Password is required.",
+            "invalid": "Password must be a valid string.",
+            "min": "Password must be at least 8 characters.",
+            "max": "Password must be at most 50 characters.",
+            "uppercase": "Password must contain at least one uppercase letter.",
+            "lowercase": "Password must contain at least one lowercase letter.",
+            "number": "Password must contain at least one number."
+         }
+      },
+      "submission": {
+         "terms_of_use": {
+            "required": "You must accept the terms of use.",
+            "invalid": "Invalid value for terms of use.",
+            "must_accept": "You must accept the terms of use."
+         },
+         "age_confirmed": {
+            "required": "You must confirm you are of legal age.",
+            "invalid": "Invalid value for age confirmation.",
+            "must_accept": "You must confirm you are of legal age."
+         },
+         "english_title": {
+            "required": "English title is required.",
+            "invalid": "English title must be a valid string.",
+            "max": "English title is too long."
+         },
+         "original_title": {
+            "max": "Original title is too long."
+         },
+         "language": {
+            "required": "Language is required.",
+            "invalid": "Language must be a valid string."
+         },
+         "english_synopsis": {
+            "required": "English synopsis is required.",
+            "invalid": "English synopsis must be a valid string.",
+            "max": "English synopsis is too long."
+         },
+         "original_synopsis": {
+            "max": "Original synopsis is too long."
+         },
+         "classification": {
+            "invalid": "Classification is invalid."
+         },
+         "tech_stack": {
+            "required": "Tech stack is required.",
+            "invalid": "Tech stack must be a valid string.",
+            "max": "Tech stack description is too long."
+         },
+         "creative_method": {
+            "required": "Creative method is required.",
+            "invalid": "Creative method must be a valid string.",
+            "max": "Creative method description is too long."
+         },
+         "video": {
+            "required": "Video file is required."
+         },
+         "cover": {
+            "required": "Cover image is required."
+         },
+         "gallery": {
+            "max": "You can upload at most 3 gallery images."
+         },
+         "creator_firstname": {
+            "required": "Creator first name is required.",
+            "invalid": "Creator first name must be a valid string.",
+            "format": "Creator first name contains invalid characters."
+         },
+         "creator_lastname": {
+            "required": "Creator last name is required.",
+            "invalid": "Creator last name must be a valid string.",
+            "format": "Creator last name contains invalid characters."
+         },
+         "creator_email": {
+            "required": "Creator email is required.",
+            "invalid": "Creator email must be a valid string.",
+            "format": "Creator email must be a valid email address."
+         },
+         "creator_phone": {
+            "format": "Creator phone number is invalid."
+         },
+         "creator_mobile": {
+            "required": "Creator mobile phone is required.",
+            "invalid": "Creator mobile phone must be a valid string.",
+            "format": "Creator mobile phone number is invalid."
+         },
+         "creator_gender": {
+            "required": "Creator gender is required.",
+            "invalid": "Creator gender must be a valid value."
+         },
+         "creator_country": {
+            "required": "Creator country is required.",
+            "invalid": "Creator country must be a valid string.",
+            "max": "Creator country name is too long.",
+            "format": "Creator country contains invalid characters."
+         },
+         "creator_address": {
+            "required": "Creator address is required.",
+            "invalid": "Creator address must be a valid string.",
+            "max": "Creator address is too long."
+         },
+         "referral_source": {
+            "invalid": "Referral source is invalid."
+         },
+         "recaptchaToken": {
+            "required": "reCAPTCHA verification is required.",
+            "invalid": "Invalid reCAPTCHA token."
+         }
+      },
+      "newsletter_subscribe": {
+         "email": {
+            "required": "Email is required.",
+            "invalid": "Email must be a valid string.",
+            "format": "Email must be a valid email address."
+         },
+         "consent": {
+            "required": "Consent is required.",
+            "invalid": "Invalid value for consent.",
+            "must_accept": "You must consent to receive the newsletter."
+         },
+         "language": {
+            "invalid": "Selected language is invalid."
+         }
+      },
+      "newsletter": {
+         "title": {
+            "required": "Newsletter title is required.",
+            "invalid": "Newsletter title must be a valid string.",
+            "max": "Newsletter title is too long."
+         },
+         "subject": {
+            "required": "Newsletter subject is required.",
+            "invalid": "Newsletter subject must be a valid string.",
+            "max": "Newsletter subject is too long."
+         },
+         "content": {
+            "required": "Newsletter content is required.",
+            "invalid": "Newsletter content must be a valid string."
+         },
+         "subject_en": {
+            "required": "English subject is required.",
+            "invalid": "English subject must be a valid string.",
+            "max": "English subject is too long."
+         },
+         "content_en": {
+            "required": "English content is required.",
+            "invalid": "English content must be a valid string."
+         },
+         "status": {
+            "invalid": "Newsletter status is invalid."
+         }
+      },
+      "jury": {
+         "firstname": {
+            "required": "First name is required.",
+            "invalid": "First name must be a valid string.",
+            "min": "First name is too short.",
+            "max": "First name is too long."
+         },
+         "lastname": {
+            "required": "Last name is required.",
+            "invalid": "Last name must be a valid string.",
+            "min": "Last name is too short.",
+            "max": "Last name is too long."
+         },
+         "job": {
+            "required": "Job title is required.",
+            "invalid": "Job title must be a valid string.",
+            "min": "Job title is too short.",
+            "max": "Job title is too long."
+         }
+      },
+      "tag": {
+         "title": {
+            "required": "Tag title is required.",
+            "invalid": "Tag title must be a valid string.",
+            "min": "Tag title is too short.",
+            "max": "Tag title is too long."
+         }
+      },
+      "collaborator": {
+         "firstname": {
+            "required": "Collaborator first name is required.",
+            "invalid": "Collaborator first name must be a valid string.",
+            "format": "Collaborator first name contains invalid characters."
+         },
+         "lastname": {
+            "required": "Collaborator last name is required.",
+            "invalid": "Collaborator last name must be a valid string.",
+            "format": "Collaborator last name contains invalid characters."
+         },
+         "email": {
+            "required": "Collaborator email is required.",
+            "invalid": "Collaborator email must be a valid string.",
+            "format": "Collaborator email must be a valid email address."
+         },
+         "gender": {
+            "required": "Collaborator gender is required.",
+            "invalid": "Collaborator gender must be a valid value."
+         },
+         "role": {
+            "required": "Collaborator role is required.",
+            "invalid": "Collaborator role must be a valid string.",
+            "max": "Collaborator role description is too long."
+         }
+      },
+      "social": {
+         "network_id": {
+            "required": "Social network is required.",
+            "invalid": "Social network identifier is invalid."
+         },
+         "url": {
+            "required": "Social URL is required.",
+            "invalid": "Social URL must be a valid URL.",
+            "https": "Social URL must start with https://.",
+            "max": "Social URL is too long."
+         }
+      },
+      "award": {
+         "title": {
+            "required": "Award title is required.",
+            "invalid": "Award title must be a valid string.",
+            "max": "Award title is too long."
+         },
+         "award_rank": {
+            "invalid": "Award rank is invalid.",
+            "max": "Award rank is too large."
+         },
+         "description": {
+            "invalid": "Award description must be a valid string.",
+            "max": "Award description is too long."
+         }
+      },
+      "sponsor": {
+         "name": {
+            "required": "Sponsor name is required.",
+            "invalid": "Sponsor name must be a valid string."
+         },
+         "url": {
+            "required": "Sponsor URL is required.",
+            "invalid": "Sponsor URL must be a valid string.",
+            "format": "Sponsor URL must be a valid URL."
+         }
+      },
+      "event": {
+         "title": {
+            "required": "Event title is required.",
+            "invalid": "Event title must be a valid string."
+         },
+         "description": {
+            "required": "Event description is required.",
+            "invalid": "Event description must be a valid string."
+         },
+         "location": {
+            "required": "Event location is required.",
+            "invalid": "Event location must be a valid string."
+         },
+         "places": {
+            "required": "Number of places is required.",
+            "invalid": "Number of places must be a valid number.",
+            "integer": "Number of places must be an integer.",
+            "positive": "Number of places must be positive."
+         },
+         "start_date": {
+            "required": "Start date is required.",
+            "invalid": "Start date must be a valid string.",
+            "format": "Start date must be a valid date."
+         },
+         "end_date": {
+            "required": "End date is required.",
+            "invalid": "End date must be a valid string.",
+            "format": "End date must be a valid date."
+         }
+      },
+      "selector": {
+         "rating": {
+            "invalid": "Rating must be a valid number between 1 and 10.",
+            "min": "Rating must be at least 1.",
+            "max": "Rating must be at most 10."
+         },
+         "comment": {
+            "invalid": "Comment must be a valid string.",
+            "max": "Comment is too long."
+         },
+         "playlist": {
+            "invalid": "Playlist value is invalid."
+         }
+      }
+   }
+}

@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { awardCreateSchema, awardUpdateSchema } from "@marsai/schemas";
-import { zodFieldErrors } from "../../../../../../utils/validation";
+import { useLanguage } from "../../../../../../context/LanguageContext";
+import { zodErrors } from "../../../../../../helpers/zodHelper";
 
 export default function AwardForm({
   submitting,
@@ -10,6 +11,7 @@ export default function AwardForm({
   initialValues,
   submitLabel = "Créer",
 }) {
+  const { language } = useLanguage();
   const fileRef = useRef(null);
 
   const [title, setTitle] = useState(initialValues?.title ?? "");
@@ -41,7 +43,7 @@ export default function AwardForm({
       schema.parse(payload);
       setFieldErrors({});
     } catch (err) {
-      const fe = zodFieldErrors(err);
+      const fe = zodErrors(err, language);
       if (Object.keys(fe).length) setFieldErrors(fe);
       return;
     }
@@ -54,7 +56,7 @@ export default function AwardForm({
         coverFile,
       });
     } catch (e) {
-      const fe = zodFieldErrors(e);
+      const fe = zodErrors(e, language);
       if (Object.keys(fe).length) setFieldErrors(fe);
       throw e;
     }

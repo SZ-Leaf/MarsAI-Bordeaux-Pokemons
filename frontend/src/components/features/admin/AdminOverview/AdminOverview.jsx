@@ -7,7 +7,7 @@ import {
   updateUserPasswordService,
 } from '../../../../services/auth.service';
 import { I18nError } from '../../../../services/error.service';
-import { zodFieldErrors } from '../../../../utils/validation';
+import { zodErrors } from '../../../../helpers/zodHelper';
 
 function getMessage(err) {
   if (err instanceof I18nError) {
@@ -69,7 +69,7 @@ const AdminOverview = () => {
       setProfileEditing(false);
       alert(isFr ? 'Profil mis à jour.' : 'Profile updated.');
     } catch (err) {
-      const fe = zodFieldErrors(err);
+      const fe = zodErrors(err, language);
       if (Object.keys(fe).length) {
         setProfileFieldErrors(fe);
       } else {
@@ -107,7 +107,7 @@ const AdminOverview = () => {
       setConfirmPassword('');
       alert(isFr ? 'Mot de passe mis à jour.' : 'Password updated.');
     } catch (err) {
-      const fe = zodFieldErrors(err);
+      const fe = zodErrors(err, language);
       if (Object.keys(fe).length) {
         setPasswordFieldErrors(fe);
       } else {

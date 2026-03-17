@@ -9,7 +9,7 @@ export const jurySchema = z.object({
     })
     .trim()
     .min(2, {message: 'zod_errors.jury.firstname.min'})
-    .max(100, {message: 'zod_errors.jury.firstname.max_length'}),
+    .max(100, {message: 'zod_errors.jury.firstname.max'}),
 
     lastname: z
     .string({
@@ -18,7 +18,7 @@ export const jurySchema = z.object({
     })
     .trim()
     .min(2, {message: 'zod_errors.jury.lastname.min'})
-    .max(100, {message: 'zod_errors.jury.lastname.max_length'}),
+    .max(100, {message: 'zod_errors.jury.lastname.max'}),
 
     job: z
     .string({
@@ -27,7 +27,7 @@ export const jurySchema = z.object({
     })
     .trim()
     .min(2, {message: 'zod_errors.jury.job.min'})
-    .max(100, {message: 'zod_errors.jury.job.max_length'}),
+    .max(100, {message: 'zod_errors.jury.job.max'}),
 })
 
 

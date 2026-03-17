@@ -1,13 +1,11 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useAwardsWithSubmissions } from "../../../../../../hooks/useAwardsWithSubmissions.js";
 import AwardCard from "./AwardCard.jsx";
 import AwardCreateModal from "./AwardCreateModal.jsx";
 
-export default function AwardsIndex() {
+export default function AwardsIndex({ createOpen, setCreateOpen }) {
   const { awards, setAwards, submissionsById, setSubmissionsById, loading, error } =
     useAwardsWithSubmissions();
-
-  const [createOpen, setCreateOpen] = useState(false);
 
   const sorted = useMemo(() => {
     return [...(awards || [])].sort(
@@ -41,21 +39,6 @@ export default function AwardsIndex() {
   return (
     <section className="px-4 py-8">
       <div className="mx-auto w-full max-w-6xl">
-        {/* Header + bouton */}
-        <div className="mb-6 flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-white">Palmarès</h1>
-            <p className="mt-1 text-zinc-400">Assigne une soumission à chaque award.</p>
-          </div>
-
-          <button
-            className="rounded-xl bg-white/90 px-3 py-2 text-sm text-black hover:bg-white"
-            onClick={() => setCreateOpen(true)}
-          >
-            Ajouter un award
-          </button>
-        </div>
-
         {/* Grid */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {sorted.map((award) => (

@@ -24,16 +24,26 @@ const AdminConfig = () => {
             aria-label={language === 'fr' ? 'Configuration' : 'Configuration'}
             textColor="secondary"
             indicatorColor="secondary"
-            centered
+            variant="scrollable"
+            scrollButtons="auto"
+            allowScrollButtonsMobile
             sx={{
+               borderBottom: 1, 
+               borderColor: 'rgba(255,255,255,0.1)',
                '& .MuiTab-root': {
                  color: 'rgba(255,255,255,0.5)', // inactive
                  textTransform: 'none',
-                 fontWeight: 500,
+                 fontWeight: 700,
+                 fontSize: { xs: '0.75rem', md: '0.875rem' },
+                 minWidth: { xs: 'auto', md: 120 },
+                 padding: { xs: '12px 16px', md: '12px 24px' },
                },
                '& .Mui-selected': {
                  color: '#ffffff', // active
                },
+               '& .MuiTabs-indicator': {
+                 backgroundColor: '#3b82f6', // blue-500
+               }
             }}
          >
             <Tab label="Jury" value="jury" />

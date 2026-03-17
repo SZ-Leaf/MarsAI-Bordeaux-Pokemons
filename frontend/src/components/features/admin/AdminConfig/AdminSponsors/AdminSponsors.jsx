@@ -105,79 +105,139 @@ const AdminSponsors = () => {
                </p>
             </div>
          ) : (
-            <div className="bg-[#1a1a1a] rounded-3xl border border-gray-800/50 overflow-hidden">
-               <table className="w-full text-left">
-                  <thead>
-                     <tr className="text-gray-500 text-[10px] uppercase font-bold border-b border-gray-800">
-                        <th className="px-6 py-4">
-                           <button
-                              type="button"
-                              onClick={() => setSortByName((s) => (s === 'asc' ? 'desc' : 'asc'))}
-                              className="flex items-center gap-1.5 hover:text-gray-300 transition-colors"
-                           >
-                              {language === 'fr' ? 'Nom du sponsor' : 'Sponsor name'}
-                              <ArrowUpDown size={14} />
-                           </button>
-                        </th>
-                        <th className="px-6 py-4">{language === 'fr' ? 'Image' : 'Image'}</th>
-                        <th className="px-6 py-4">{language === 'fr' ? 'URL' : 'URL'}</th>
-                        <th className="px-6 py-4 text-right">Actions</th>
-                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-800">
-                     {sortedSponsors.map((sponsor) => {
-                        const src = imageSrc(sponsor);
-                        return (
-                           <tr key={sponsor.id} className="hover:bg-white/5 transition-colors group">
-                              <td className="px-6 py-4">
-                                 <span className="font-bold text-sm text-blue-400">{sponsor.name || '—'}</span>
-                              </td>
-                              <td className="px-6 py-4">
-                                 {src ? (
-                                    <img
-                                       src={src}
-                                       alt={sponsor.name || ''}
-                                       className="w-12 h-12 rounded-lg object-cover bg-gray-800"
-                                    />
-                                 ) : (
-                                    <div className="w-12 h-12 rounded-lg bg-gray-800 flex items-center justify-center text-gray-500 text-xs">
-                                       —
+            <div className="space-y-4">
+               {/* Sort Mobile */}
+               <div className="flex md:hidden justify-end">
+                  <button
+                     onClick={() => setSortByName((s) => (s === 'asc' ? 'desc' : 'asc'))}
+                     className="flex items-center gap-2 px-4 py-2 bg-[#1a1a1a] border border-gray-800 rounded-xl text-xs text-gray-400"
+                  >
+                     {language === 'fr' ? 'Trier par nom' : 'Sort by name'}
+                     <ArrowUpDown size={14} />
+                  </button>
+               </div>
+
+               {/* Desktop Table View */}
+               <div className="hidden md:block bg-[#1a1a1a] rounded-3xl border border-gray-800/50 overflow-hidden shadow-xl">
+                  <table className="w-full text-left">
+                     <thead>
+                        <tr className="text-gray-500 text-[10px] uppercase font-black tracking-widest border-b border-gray-800 bg-[#111]">
+                           <th className="px-6 py-4">
+                              <button
+                                 type="button"
+                                 onClick={() => setSortByName((s) => (s === 'asc' ? 'desc' : 'asc'))}
+                                 className="flex items-center gap-1.5 hover:text-gray-300 transition-colors"
+                              >
+                                 {language === 'fr' ? 'Nom du sponsor' : 'Sponsor name'}
+                                 <ArrowUpDown size={14} />
+                              </button>
+                           </th>
+                           <th className="px-6 py-4">{language === 'fr' ? 'Image' : 'Image'}</th>
+                           <th className="px-6 py-4">{language === 'fr' ? 'URL' : 'URL'}</th>
+                           <th className="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                     </thead>
+                     <tbody className="divide-y divide-gray-800">
+                        {sortedSponsors.map((sponsor) => {
+                           const src = imageSrc(sponsor);
+                           return (
+                              <tr key={sponsor.id} className="hover:bg-white/5 transition-colors group">
+                                 <td className="px-6 py-4">
+                                    <span className="font-bold text-sm text-blue-400">{sponsor.name || '—'}</span>
+                                 </td>
+                                 <td className="px-6 py-4">
+                                    {src ? (
+                                       <img
+                                          src={src}
+                                          alt={sponsor.name || ''}
+                                          className="w-12 h-12 rounded-lg object-cover bg-gray-800"
+                                       />
+                                    ) : (
+                                       <div className="w-12 h-12 rounded-lg bg-gray-800 flex items-center justify-center text-gray-500 text-xs">
+                                          —
+                                       </div>
+                                    )}
+                                 </td>
+                                 <td className="px-6 py-4">
+                                    {sponsor.url ? (
+                                       <a
+                                          href={sponsor.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="text-xs text-blue-400 hover:underline truncate max-w-[200px] inline-block"
+                                       >
+                                          {sponsor.url}
+                                       </a>
+                                    ) : (
+                                       <span className="text-xs text-gray-500">—</span>
+                                    )}
+                                 </td>
+                                 <td className="px-6 py-4 text-right">
+                                    <div className="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                                       <button
+                                          type="button"
+                                          onClick={() => handleDelete(sponsor.id)}
+                                          className="p-2 hover:bg-red-500/10 hover:text-red-400 rounded-lg transition-colors"
+                                          aria-label={language === 'fr' ? 'Supprimer' : 'Delete'}
+                                       >
+                                          <Trash2 size={16} />
+                                       </button>
                                     </div>
-                                 )}
-                              </td>
-                              <td className="px-6 py-4">
-                                 {sponsor.url ? (
+                                 </td>
+                              </tr>
+                           );
+                        })}
+                     </tbody>
+                  </table>
+               </div>
+
+               {/* Mobile Cards View */}
+               <div className="md:hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {sortedSponsors.map((sponsor) => {
+                     const src = imageSrc(sponsor);
+                     return (
+                        <div key={sponsor.id} className="p-4 bg-[#1a1a1a] rounded-[2rem] border border-gray-800/50 shadow-lg space-y-4">
+                           <div className="flex items-center gap-4">
+                              {src ? (
+                                 <img
+                                    src={src}
+                                    alt={sponsor.name || ''}
+                                    className="w-16 h-16 rounded-2xl object-cover bg-gray-800 shrink-0"
+                                 />
+                              ) : (
+                                 <div className="w-16 h-16 rounded-2xl bg-gray-800 flex items-center justify-center text-gray-500 text-xs shrink-0">
+                                    ?
+                                 </div>
+                              )}
+                              <div className="flex-1 min-w-0">
+                                 <div className="font-black text-white text-lg leading-tight truncate">{sponsor.name}</div>
+                                 {sponsor.url && (
                                     <a
                                        href={sponsor.url}
                                        target="_blank"
                                        rel="noopener noreferrer"
-                                       className="text-xs text-blue-400 hover:underline truncate max-w-[200px] inline-block"
+                                       className="text-[10px] text-blue-400 truncate block mt-1"
                                     >
                                        {sponsor.url}
                                     </a>
-                                 ) : (
-                                    <span className="text-xs text-gray-500">—</span>
                                  )}
-                              </td>
-                              <td className="px-6 py-4 text-right">
-                                 <div className="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button
-                                       type="button"
-                                       onClick={() => handleDelete(sponsor.id)}
-                                       className="p-2 hover:bg-red-500/10 hover:text-red-400 rounded-lg transition-colors"
-                                       aria-label={language === 'fr' ? 'Supprimer' : 'Delete'}
-                                    >
-                                       <Trash2 size={16} />
-                                    </button>
-                                 </div>
-                              </td>
-                           </tr>
-                        );
-                     })}
-                  </tbody>
-               </table>
+                              </div>
+                           </div>
+                           
+                           <button
+                              type="button"
+                              onClick={() => handleDelete(sponsor.id)}
+                              className="w-full flex items-center justify-center gap-2 py-3 bg-red-600/10 text-red-400 border border-red-500/20 rounded-2xl text-xs font-bold active:scale-95 transition-all"
+                           >
+                              <Trash2 size={14} />
+                              {language === 'fr' ? 'Supprimer' : 'Delete'}
+                           </button>
+                        </div>
+                     );
+                  })}
+               </div>
             </div>
-         )}
+         )}}
       </div>
    );
 };

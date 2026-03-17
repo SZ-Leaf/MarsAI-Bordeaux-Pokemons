@@ -6,6 +6,8 @@ import { useLanguage } from '../../../../../context/LanguageContext';
 const SubmissionCard = ({submission, onVideoClick,showReportCount = false}) => {
    const {language} = useLanguage();
 
+   const API_URL = import.meta.env.VITE_API_URL;
+
    function formatDuration(seconds) {
       const mins = Math.floor(seconds / 60);
       const secs = seconds % 60;
@@ -24,7 +26,15 @@ const SubmissionCard = ({submission, onVideoClick,showReportCount = false}) => {
    return (
       <article className="submission-container-card" key={submission.id}>
          <div className="submission-image-container" onClick={onVideoClick}>
-            <img className="submission-image" src={`${import.meta.env.VITE_API_URL}${submission.cover}`} alt={submission.english_title} />
+            <img
+               className="submission-image"
+               src={
+                  submission.cover?.startsWith('http')
+                     ? submission.cover
+                     : `${API_URL}${submission.cover}`
+               }
+               alt={submission.english_title}
+            />
             <p className="submission-duration">{formatDuration(submission.duration_seconds)}</p>
             {showReportCount && submission.report_count > 0 && (
                <div className="submission-reports">

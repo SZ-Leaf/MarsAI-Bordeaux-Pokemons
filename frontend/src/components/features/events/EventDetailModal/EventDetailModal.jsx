@@ -19,7 +19,9 @@ const EventDetailModal = ({ event, isOpen, onClose }) => {
   if (!event) return null;
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-  const imageUrl = event.cover ? `${API_URL}${event.cover}` : 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=1000&auto=format&fit=crop';
+  const imageUrl = event.cover
+    ? (event.cover.startsWith('http') ? event.cover : `${API_URL}${event.cover}`)
+    : 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=1000&auto=format&fit=crop';
 
   const dateStart = new Date(event.start_date);
   const dateEnd = new Date(event.end_date);

@@ -12,7 +12,9 @@ const EventCard = ({ event, onClick }) => {
   const time = dateObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-  const imageUrl = cover ? `${API_URL}${cover}` : 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=1000&auto=format&fit=crop';
+  const imageUrl = cover
+    ? (cover.startsWith('http') ? cover : `${API_URL}${cover}`)
+    : 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=1000&auto=format&fit=crop';
 
   return (
     <div 

@@ -3,6 +3,7 @@ import { getSponsorsService } from "../../services/sponsors.service.js";
 import { useLanguage } from "../../context/LanguageContext.jsx";
 import { Link } from "react-router";
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 export default function Sponsors() {
   const [sponsors, setSponsors] = useState([]);
@@ -60,7 +61,11 @@ export default function Sponsors() {
                       className="sponsor-logo-link"
                     >
                       <img
-                        src={`http://localhost:3000${sponsor.cover}`}
+                        src={
+                          sponsor.cover?.startsWith('http')
+                            ? sponsor.cover
+                            : `${API_URL}${sponsor.cover}`
+                        }
                         alt={sponsor.name}
                         className="sponsor-logo"
                       />

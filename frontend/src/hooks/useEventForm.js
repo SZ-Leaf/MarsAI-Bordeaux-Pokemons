@@ -38,7 +38,11 @@ const useEventForm = ({ eventToEdit, isOpen, onRefresh, onClose, schema }) => {
 
       if (eventToEdit.cover) {
         const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        setPreviewUrl(`${API_URL}${eventToEdit.cover}`);
+        setPreviewUrl(
+          eventToEdit.cover.startsWith('http')
+            ? eventToEdit.cover
+            : `${API_URL}${eventToEdit.cover}`
+        );
       } else {
         setPreviewUrl(null);
       }

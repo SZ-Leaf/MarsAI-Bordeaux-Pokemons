@@ -56,7 +56,7 @@ const SubmissionCard = ({submission, onVideoClick,showReportCount = false}) => {
             <div className="submission-details flex justify-between mt-2">
                <div className='submission-creator'>
                   <p>{language === 'fr' ? 'REALISATEUR' : 'DIRECTOR'}</p>
-                  <h5>{submission.creator_firstname}{submission.creator_lastname}</h5>
+                  <h5>{submission.creator_firstname} {submission.creator_lastname}</h5>
                </div>
                <div className='submission-country'>
                   <p>{language === 'fr' ? 'PAYS' : 'COUNTRY'}</p>

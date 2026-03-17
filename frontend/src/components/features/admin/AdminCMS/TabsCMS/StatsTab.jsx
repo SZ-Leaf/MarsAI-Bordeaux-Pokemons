@@ -40,9 +40,9 @@ const StatsTab = ({ data, onChange }) => {
       <button
         type="button"
         onClick={addItem}
-        className="flex items-center gap-2 text-sm text-blue/80 hover:text-blue transition-colors self-start"
+        className="flex items-center gap-2 px-3 py-2 md:p-0 text-sm text-blue/80 hover:text-blue transition-colors self-start border border-blue/20 md:border-none rounded-xl"
       >
-        <Plus size={15} /> Ajouter une stat
+        <Plus size={16} /> <span className="hidden md:inline">Ajouter une stat</span>
       </button>
     </div>
   );

@@ -6,7 +6,7 @@ import { useAuth } from '../../../../../hooks/useAuth';
 import { useLogout } from '../../../../../hooks/useLogout';
 
 
-const SideBar = ({ activeView, onViewChange }) => {
+const SideBar = ({ activeView, onViewChange, isOpen }) => {
   const { language } = useLanguage();
   const { user, isLoading} = useAuth();
   const { handleLogout } = useLogout();
@@ -14,7 +14,7 @@ const SideBar = ({ activeView, onViewChange }) => {
 
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
       {/* User Profile */}
       <div className="sidebar-user-profile">
         <div className="sidebar-avatar-container">

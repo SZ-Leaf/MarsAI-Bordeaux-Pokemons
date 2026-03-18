@@ -370,7 +370,7 @@ const AdminUsers = () => {
             )}
           </div>
         </div>
-      )}}
+      )}
 
       {/* Role update modal */}
       {roleEditUser && (

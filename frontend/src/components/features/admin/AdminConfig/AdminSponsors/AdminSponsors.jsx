@@ -237,7 +237,7 @@ const AdminSponsors = () => {
                   })}
                </div>
             </div>
-         )}}
+         )}
       </div>
    );
 };
